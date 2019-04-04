@@ -70,6 +70,13 @@ public final class Cuboid {
                 && base.getZ() <= vec.getZ() && vec.getZ() < max.getZ();
     }
 
+    public boolean contains(Location point) {
+        Vector3f max = MathUtil.add(base, size);
+        return base.getX() <= point.getBlockX() && point.getBlockX() < max.getX()
+                && base.getY() <= point.getBlockY() && point.getBlockY() < max.getY()
+                && base.getZ() <= point.getBlockZ() && point.getBlockZ() < max.getZ();
+    }
+
     public World getWorld() {
         return this.base.getWorld();
     }

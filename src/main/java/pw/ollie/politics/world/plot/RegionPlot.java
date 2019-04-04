@@ -20,6 +20,8 @@
 package pw.ollie.politics.world.plot;
 
 import pw.ollie.politics.Politics;
+import pw.ollie.politics.util.math.Cuboid;
+import pw.ollie.politics.util.math.Vector3f;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
@@ -29,11 +31,11 @@ import org.bukkit.Location;
 import java.util.Objects;
 
 public class RegionPlot extends Plot {
-    private final Object cuboid; // private final Cuboid cuboid;
+    private final Cuboid cuboid; // private final Cuboid cuboid;
 
     public RegionPlot(Location basePoint, int xSize, int ySize, int zSize) {
         super(Politics.getWorld(basePoint.getWorld()));
-        cuboid = null; //new Cuboid(basePoint, new Vector3(xSize, ySize, zSize)); // todo this was Spout code, need to change over
+        cuboid = new Cuboid(basePoint, new Vector3f(xSize, ySize, zSize));
     }
 
     public RegionPlot(BasicBSONObject object) {
@@ -62,25 +64,26 @@ public class RegionPlot extends Plot {
         if (!(zSize instanceof Integer)) {
             throw new IllegalArgumentException("zSize was not  an Integer.");
         }
-        // todo below was Spout code
-        cuboid = null; //new Cuboid(new Location(getPoliticsWorld().getWorld(), (Integer) x, (Integer) y, (Integer) z), new Vector3((Integer) xSize, (Integer) ySize, (Integer) zSize));
+        cuboid = new Cuboid(new Location(getPoliticsWorld().getWorld(), (Integer) x, (Integer) y, (Integer) z), new Vector3f((Integer) xSize, (Integer) ySize, (Integer) zSize));
     }
 
-    public Object getCuboid() { // public Cuboid getCuboid() {
+    public Cuboid getCuboid() {
         return cuboid;
     }
 
     @Override
     public Location getBasePoint() {
-        return null;
-        //return cuboid.getBase(); // todo move from Spout
+        return cuboid.getBase();
     }
 
     @Override
     public boolean contains(Location point) {
-        return false;
-        //return cuboid.contains(point); // todo move from spout
+        return cuboid.contains(point);
     }
+
+    /*
+     * Constructor used instead of fromBSONObject method
+     */
 
     @Override
     public BSONObject toBSONObject() {
@@ -88,11 +91,10 @@ public class RegionPlot extends Plot {
         obj.put("x", getX());
         obj.put("y", getY());
         obj.put("z", getZ());
-        // todo move from Spout code
-//        Vector3 size = cuboid.getSize();
-//        obj.put("xSize", size.getX());
-//        obj.put("ySize", size.getY());
-//        obj.put("zSize", size.getZ());
+        Vector3f size = cuboid.getSize();
+        obj.put("xSize", size.getX());
+        obj.put("ySize", size.getY());
+        obj.put("zSize", size.getZ());
         obj.put("type", PlotType.REGION.name());
         return obj;
     }
