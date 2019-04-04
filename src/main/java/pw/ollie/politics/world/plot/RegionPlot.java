@@ -31,7 +31,7 @@ import org.bukkit.Location;
 import java.util.Objects;
 
 public class RegionPlot extends Plot {
-    private final Cuboid cuboid; // private final Cuboid cuboid;
+    private final Cuboid cuboid;
 
     public RegionPlot(Location basePoint, int xSize, int ySize, int zSize) {
         super(Politics.getWorld(basePoint.getWorld()));
