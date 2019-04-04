@@ -20,6 +20,7 @@
 package pw.ollie.politics;
 
 import pw.ollie.politics.data.PoliticsFileSystem;
+import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.world.plot.PlotManager;
@@ -34,6 +35,8 @@ public final class PoliticsPlugin extends JavaPlugin {
     private PlotManager plotManager;
     private UniverseManager universeManager;
 
+    private PoliticsEventFactory eventFactory;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -43,6 +46,8 @@ public final class PoliticsPlugin extends JavaPlugin {
         this.privilegeManager = new PrivilegeManager(this);
         this.plotManager = new PlotManager(this);
         this.universeManager = new UniverseManager(this);
+
+        this.eventFactory = new PoliticsEventFactory(this);
     }
 
     @Override
@@ -64,6 +69,10 @@ public final class PoliticsPlugin extends JavaPlugin {
 
     public UniverseManager getUniverseManager() {
         return this.universeManager;
+    }
+
+    public PoliticsEventFactory getEventFactory() {
+        return this.eventFactory;
     }
 
     public static PoliticsPlugin instance() {

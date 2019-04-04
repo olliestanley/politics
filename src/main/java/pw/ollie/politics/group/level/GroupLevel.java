@@ -63,8 +63,8 @@ public final class GroupLevel {
         this.founder = founder;
     }
 
-    public void setAllowedChildren(Set<GroupLevel> set) {
-        allowedChildren = set;
+    public void setAllowedChildren(Set<GroupLevel> allowedChildren) {
+        this.allowedChildren = allowedChildren;
     }
 
     public String getId() {
