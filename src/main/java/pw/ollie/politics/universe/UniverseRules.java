@@ -19,13 +19,20 @@
  */
 package pw.ollie.politics.universe;
 
+import pw.ollie.politics.Politics;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.util.ConfigUtil;
 
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * A (configured) ruleset for a universe.
@@ -57,12 +64,50 @@ public final class UniverseRules {
         return groupLevels.get(name.toLowerCase());
     }
 
-//    public void save(Configuration config) {
-// TODO: implement saving to configuration - Bukkit doesn't provide as simple a way to do this as Spout did
-//    }
+    public void save(ConfigurationSection config) {
+        for (GroupLevel level : groupLevels.values()) {
+            ConfigurationSection node = ConfigUtil.getOrCreateSection(config, "levels." + level.getId());
+            level.save(node);
+        }
+    }
 
-    public static UniverseRules load(String name, YamlConfiguration config) {
-        return null;
-// TODO: implement loading from configuration - Bukkit doesn't provide as simple a way to do this as Spout did
+    public static UniverseRules load(String name, ConfigurationSection config) {
+        String description = config.getString("description", "No description given.");
+
+        Map<String, GroupLevel> levelMap = new HashMap<>();
+        // Get the levels turned into objects
+        Map<GroupLevel, List<String>> levels = new HashMap<>();
+
+        ConfigurationSection levelsNode = ConfigUtil.getOrCreateSection(config, "levels");
+        for (String levelKey : levelsNode.getKeys(false)) {
+            ConfigurationSection levelNode = levelsNode.getConfigurationSection(levelKey);
+            if (levelNode == null) {
+                Politics.getLogger().log(Level.SEVERE, "Failed to load a level for a universe ruleset",
+                        new InvalidConfigurationException("Error in universe ruleset '" + name + "': node '" + levelKey + "' formatted badly."));
+                continue;
+            }
+
+            ConfigurationSection levelSection = levelsNode.getConfigurationSection(levelKey);
+            if (levelSection == null) {
+                Politics.getLogger().log(Level.SEVERE, "Failed to load a level for a universe ruleset",
+                        new InvalidConfigurationException("Error in universe ruleset '" + name + "': node '" + levelKey + "' formatted badly."));
+                continue;
+            }
+
+            GroupLevel level = GroupLevel.load(levelKey, levelSection, levels);
+            levelMap.put(level.getId(), level);
+        }
+
+        // Turn these levels into only objects
+        for (Map.Entry<GroupLevel, List<String>> levelEntry : levels.entrySet()) {
+            Set<GroupLevel> allowed = new HashSet<>();
+            for (String ln : levelEntry.getValue()) {
+                GroupLevel level = levelMap.get(ln.toLowerCase());
+                allowed.add(level);
+            }
+            levelEntry.getKey().setAllowedChildren(allowed);
+        }
+
+        return new UniverseRules(name, description, levelMap);
     }
 }
