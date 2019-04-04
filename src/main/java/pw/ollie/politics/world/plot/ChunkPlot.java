@@ -32,11 +32,16 @@ import java.util.Objects;
 
 public class ChunkPlot extends Plot {
     private final Chunk chunk;
+    private final int baseX;
+    private final int baseZ;
 
     public ChunkPlot(PoliticsWorld world, int x, int z) {
         super(world);
         World bukkitWorld = world.getWorld();
         chunk = bukkitWorld.getChunkAt(x, z);
+
+        baseX = x * 16;
+        baseZ = z * 16;
     }
 
     public ChunkPlot(BasicBSONObject object) {
@@ -51,6 +56,8 @@ public class ChunkPlot extends Plot {
         }
         World bukkitWorld = this.getPoliticsWorld().getWorld();
         chunk = bukkitWorld.getChunkAt((Integer) x, (Integer) z);
+        baseX = chunk.getX() * 16;
+        baseZ = chunk.getZ() * 16;
     }
 
     public Chunk getChunk() {
@@ -59,14 +66,15 @@ public class ChunkPlot extends Plot {
 
     @Override
     public Location getBasePoint() {
-        return null;
-        //return chunk.getBase(); // todo this was Spout implementation, need to work out how to produce the same point in Bukkit
+        // I think 0 is good here for y?
+        return new Location(chunk.getWorld(), baseX, 0, baseZ);
     }
 
     @Override
     public boolean contains(Location point) {
-        return false;
-        //return chunk.contains(point); // todo this was Spout implementation
+        // todo check this
+        return baseX <= point.getBlockX() && baseX + 16 <= point.getBlockX()
+                && baseZ <= point.getBlockZ() && baseZ + 16 <= point.getBlockZ();
     }
 
     @Override
