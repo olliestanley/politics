@@ -177,7 +177,7 @@ public final class Group implements Comparable<Group>, Storable {
 //    }
 
     public void setProperty(int property, Object value) {
-//        PoliticsEventFactory.callGroupPropertySetEvent(this, property, value); TODO events
+        Politics.getEventFactory().callGroupPropertySetEvent(this, property, value);
         properties.put(property, value);
     }
 

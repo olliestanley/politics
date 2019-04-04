@@ -25,6 +25,7 @@ import gnu.trove.list.array.TIntArrayList;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
+import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.universe.Universe;
@@ -137,11 +138,10 @@ public abstract class Plot implements Storable {
     }
 
     public boolean addOwner(Group group) {
-        // todo events
-//        PlotOwnerChangeEvent event = PoliticsEventFactory.callPlotOwnerChangeEvent(this, group.getUid(), true);
-//        if (event.isCancelled()) {
-//            return false;
-//        }
+        PlotOwnerChangeEvent event = Politics.getEventFactory().callPlotOwnerChangeEvent(this, group.getUid(), true);
+        if (event.isCancelled()) {
+            return false;
+        }
 
         for (Group g : getOwners()) {
             if (g.equals(group)) {
@@ -161,11 +161,10 @@ public abstract class Plot implements Storable {
         if (!owners.contains(id)) {
             return true; // Not in there
         }
-        // todo events
-//        PlotOwnerChangeEvent event = PoliticsEventFactory.callPlotOwnerChangeEvent(this, id, true);
-//        if (event.isCancelled()) {
-//            return false;
-//        }
+        PlotOwnerChangeEvent event = Politics.getEventFactory().callPlotOwnerChangeEvent(this, id, true);
+        if (event.isCancelled()) {
+            return false;
+        }
         return owners.remove(id);
     }
 

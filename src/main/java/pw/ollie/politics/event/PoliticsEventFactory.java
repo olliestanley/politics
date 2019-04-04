@@ -20,6 +20,10 @@
 package pw.ollie.politics.event;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.event.group.GroupPropertySetEvent;
+import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.world.plot.Plot;
 
 import org.bukkit.event.Event;
 
@@ -28,6 +32,14 @@ public final class PoliticsEventFactory {
 
     public PoliticsEventFactory(PoliticsPlugin plugin) {
         this.plugin = plugin;
+    }
+
+    public GroupPropertySetEvent callGroupPropertySetEvent(Group group, int property, Object value) {
+        return callEvent(new GroupPropertySetEvent(group, property, value));
+    }
+
+    public PlotOwnerChangeEvent callPlotOwnerChangeEvent(Plot plot, int groupId, boolean add) {
+        return callEvent(new PlotOwnerChangeEvent(plot, groupId, add));
     }
 
     public <T extends Event> T callEvent(T event) {
