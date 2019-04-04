@@ -48,7 +48,7 @@ public final class UniverseRules {
     }
 
     public List<GroupLevel> getGroupLevels() {
-        return new ArrayList<GroupLevel>(groupLevels.values());
+        return new ArrayList<>(groupLevels.values());
     }
 
     public GroupLevel getGroupLevel(String name) {
