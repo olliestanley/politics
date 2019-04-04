@@ -152,7 +152,7 @@
                         <url>${project.organization.url}</url>
                         <license>Affero General Public License Version 3</license>
                         <licenseUrl>http://www.gnu.org/licenses/agpl-3.0.txt</licenseUrl>
-                        <copyright>Copyright (c) ${project.inceptionYear}-2012, ${project.organization.name}</copyright>
+                        <copyright>Copyright (c) ${project.inceptionYear}</copyright>
                     </properties>
                     <includes>
                         <include>src/main/java/**</include>

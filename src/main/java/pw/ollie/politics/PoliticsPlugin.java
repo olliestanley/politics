@@ -1,7 +1,7 @@
 /*
  * This file is part of Politics.
  *
- * Copyright (c) 2019-2012, ${project.organization.name} Oliver Stanley
+ * Copyright (c) 2019 Oliver Stanley
  * Politics is licensed under the Affero General Public License Version 3.
  *
  * This program is free software: you can redistribute it and/or modify
