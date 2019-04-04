@@ -19,5 +19,38 @@
  */
 package pw.ollie.politics.universe;
 
-public final class Universe {
+import pw.ollie.politics.data.Storable;
+
+import org.bson.BSONObject;
+
+public final class Universe implements Storable {
+    private String name;
+    private UniverseRules rules;
+
+    public Universe(String name, UniverseRules rules) {
+        this.name = name;
+        this.rules = rules;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public UniverseRules getRules() {
+        return this.rules;
+    }
+
+    @Override
+    public BSONObject toBSONObject() {
+        return null;
+    }
+
+    @Override
+    public boolean canStore() {
+        return false;
+    }
+
+    public static Universe fromBSONObject(BSONObject bson) {
+        return null;
+    }
 }

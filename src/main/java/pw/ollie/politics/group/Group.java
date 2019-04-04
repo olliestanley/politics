@@ -19,5 +19,5 @@
  */
 package pw.ollie.politics.group;
 
-public final class GroupLevel {
+public final class Group {
 }
