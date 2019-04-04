@@ -63,17 +63,18 @@ public final class WorldConfig {
 //        return new Vector3(plotSizeX, plotSizeY, plotSizeZ);
 //    }
 //
-//    public void save(Configuration config) {
+    public void save(Object config) { // was Configuration not Object
 //        config.getNode("plotsize.x").setValue(plotSizeX);
 //        config.getNode("plotsize.y").setValue(plotSizeY);
 //        config.getNode("plotsize.z").setValue(plotSizeZ);
-//    }
+    }
 //
-//    public static WorldConfig load(String name, Configuration config) {
+    public static WorldConfig load(String name, Object config) { // was Configuration not Object
 //        final WorldConfig wc = new WorldConfig(name);
 //        wc.plotSizeX = config.getNode("plotsize.x").getInt(1);
 //        wc.plotSizeY = config.getNode("plotsize.y").getInt(8);
 //        wc.plotSizeZ = config.getNode("plotsize.z").getInt(1);
 //        return wc;
-//    }
+        return null;
+    }
 }

@@ -19,10 +19,13 @@
  */
 package pw.ollie.politics;
 
+import pw.ollie.politics.data.PoliticsFileSystem;
 import pw.ollie.politics.universe.UniverseManager;
-import pw.ollie.politics.world.PlotManager;
+import pw.ollie.politics.world.PoliticsWorld;
+import pw.ollie.politics.world.plot.PlotManager;
 
 import org.bukkit.Server;
+import org.bukkit.World;
 
 import java.util.logging.Logger;
 
@@ -35,12 +38,24 @@ public final class Politics {
         return Politics.getPlugin().getServer();
     }
 
+    public static PoliticsFileSystem getFileSystem() {
+        return Politics.getPlugin().getFileSystem();
+    }
+
     public static PlotManager getPlotManager() {
         return Politics.getPlugin().getPlotManager();
     }
 
     public static UniverseManager getUniverseManager() {
         return Politics.getPlugin().getUniverseManager();
+    }
+
+    public static PoliticsWorld getWorld(World world) {
+        return Politics.getPlugin().getPlotManager().getWorld(world);
+    }
+
+    public static PoliticsWorld getWorld(String world) {
+        return Politics.getPlugin().getPlotManager().getWorld(world);
     }
 
     public static Logger getLogger() {

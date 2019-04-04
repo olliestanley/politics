@@ -22,7 +22,7 @@ package pw.ollie.politics;
 import pw.ollie.politics.data.PoliticsFileSystem;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
-import pw.ollie.politics.world.PlotManager;
+import pw.ollie.politics.world.plot.PlotManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

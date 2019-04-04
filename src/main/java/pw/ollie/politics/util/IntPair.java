@@ -17,27 +17,41 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.world;
+package pw.ollie.politics.util;
 
-import pw.ollie.politics.PoliticsPlugin;
+import java.util.Objects;
 
-import org.bukkit.World;
-
-// todo implement this
-public final class PlotManager {
-    private final PoliticsPlugin plugin;
-
-    public PlotManager(PoliticsPlugin plugin) {
-        this.plugin = plugin;
+public final class IntPair {
+    public static IntPair of(int x, int z) {
+        return new IntPair(x, z);
     }
 
-    public PoliticsWorld getWorld(World world) {
-        // might be implemented differently later
-        return this.getWorld(world.getName());
+    private final int x, z;
+
+    private IntPair(int x, int z) {
+        this.x = x;
+        this.z = z;
     }
 
-    public PoliticsWorld getWorld(String name) {
-        // placeholder to allow compilation
-        return null;
+    public int getX() {
+        return x;
+    }
+
+    public int getZ() {
+        return z;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof IntPair) {
+            IntPair oth = (IntPair) o;
+            return oth.x == x && oth.z == z;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, z);
     }
 }
