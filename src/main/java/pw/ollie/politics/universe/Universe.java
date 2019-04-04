@@ -17,32 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics;
+package pw.ollie.politics.universe;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
-import pw.ollie.politics.data.PoliticsFileSystem;
-import pw.ollie.politics.universe.UniverseManager;
-
-public final class PoliticsPlugin extends JavaPlugin {
-    private PoliticsFileSystem fileSystem;
-    private UniverseManager universeManager;
-
-    @Override
-    public void onEnable() {
-        this.fileSystem = new PoliticsFileSystem(this);
-        this.universeManager = new UniverseManager(this);
-    }
-
-    @Override
-    public void onDisable() {
-    }
-
-    public PoliticsFileSystem getFileSystem() {
-        return this.fileSystem;
-    }
-
-    public UniverseManager getUniverseManager() {
-        return this.universeManager;
-    }
+public final class Universe {
 }
