@@ -20,6 +20,8 @@
 package pw.ollie.politics.group.level;
 
 import pw.ollie.politics.Politics;
+import pw.ollie.politics.group.privilege.Privilege;
+import pw.ollie.politics.util.ConfigUtil;
 
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -121,35 +123,35 @@ public final class GroupLevel {
         return founder != null;
     }
 
-    // TODO: saving and loading of group level configuration. Below code is Spout Engine and needs significant changes
-//    public void save(ConfigurationNode node) {
-//        node.getChild("name").setValue(name);
-//        node.getChild("rank").setValue(rank);
-//        List<String> children = new ArrayList<>();
-//        for (GroupLevel child : getAllowedChildren()) {
-//            children.add(child.getId());
-//        }
-//        node.getChild("children").setValue(children);
-//        node.getChild("plural").setValue(plural);
-//
-//        ConfigurationNode rolesNode = node.getChild("roles");
-//        for (Entry<String, Role> role : roles.entrySet()) {
-//            String roleName = role.getKey();
-//            Role value = role.getValue();
-//            List<String> privNames = new ArrayList<>();
-//            for (Privilege priv : value.getPrivileges()) {
-//                privNames.add(priv.getName());
-//            }
-//
-//            rolesNode.getChild(roleName).setValue(privNames);
-//        }
-//
-//        // TODO track serialization
-//
-//        node.getChild("initial").setValue(initial.getId());
-//        node.getChild("founder").setValue(founder.getId());
-//    }
-//
+    public void save(ConfigurationSection node) {
+        node.set("name", name);
+        node.set("rank", rank);
+        List<String> children = new ArrayList<>();
+        for (GroupLevel child : getAllowedChildren()) {
+            children.add(child.getId());
+        }
+        node.set("children", children);
+        node.set("plural", plural);
+
+        ConfigurationSection rolesNode = ConfigUtil.getOrCreateSection(node, "roles");
+        for (Map.Entry<String, Role> role : roles.entrySet()) {
+            String roleName = role.getKey();
+            Role value = role.getValue();
+            List<String> privNames = new ArrayList<>();
+            for (Privilege priv : value.getPrivileges()) {
+                privNames.add(priv.getName());
+            }
+
+            rolesNode.set(roleName + ".name", value.getName());
+            rolesNode.set(roleName + ".privileges", privNames);
+        }
+
+        // TODO RoleTrack serialization (loading implemented already below)
+
+        node.set("initial", initial.getId());
+        node.set("founder", founder.getId());
+    }
+
     public static GroupLevel load(String id, ConfigurationSection node, Map<GroupLevel, List<String>> levels) {
         String levelName = node.getString("name", id);
 
