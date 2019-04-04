@@ -21,12 +21,19 @@ package pw.ollie.politics.world;
 
 import pw.ollie.politics.Politics;
 
+import org.bukkit.World;
+
 // todo implement this
 public final class PlotManager {
     private final Politics plugin;
 
     public PlotManager(Politics plugin) {
         this.plugin = plugin;
+    }
+
+    public PoliticsWorld getWorld(World world) {
+        // might be implemented differently later
+        return this.getWorld(world.getName());
     }
 
     public PoliticsWorld getWorld(String name) {

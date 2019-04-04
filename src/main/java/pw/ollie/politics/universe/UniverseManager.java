@@ -26,6 +26,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.InvalidConfigurationException;
 import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.world.PoliticsWorld;
 
@@ -43,8 +44,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 
 public final class UniverseManager {
@@ -65,11 +68,11 @@ public final class UniverseManager {
         return this.plugin;
     }
 
-    public Universe getUniverse(final String name) {
+    public Universe getUniverse(String name) {
         return universes.get(name.toLowerCase());
     }
 
-    public UniverseRules getRules(final String rulesName) {
+    public UniverseRules getRules(String rulesName) {
         return rules.get(rulesName);
     }
 
@@ -78,7 +81,7 @@ public final class UniverseManager {
     }
 
     public Universe getUniverse(World world, GroupLevel level) {
-        final PoliticsWorld cw = null; // Politics.getWorld(world); TODO - when PoliticsWorld is properly implemented
+        PoliticsWorld cw = plugin.getPlotManager().getWorld(world);
         if (cw == null) {
             return null;
         }
@@ -97,25 +100,25 @@ public final class UniverseManager {
         return groups.get(id);
     }
 
-//    public Group getGroupByTag(final String tag) {
-//        for (Group g : groups.valueCollection()) {
-//            if (g.getStringProperty(GroupProperty.TAG).equalsIgnoreCase(tag)) {
-//                return g;
-//            }
-//        }
-//        return null;
-//    }
+    public Group getGroupByTag(String tag) {
+        for (Group g : groups.valueCollection()) {
+            if (g.getStringProperty(GroupProperty.TAG).equalsIgnoreCase(tag)) {
+                return g;
+            }
+        }
+        return null;
+    }
 
     public Universe getUniverse(PoliticsWorld world, GroupLevel level) {
-        final Map<GroupLevel, Universe> levelUniverses = worldLevels.get(world);
+        Map<GroupLevel, Universe> levelUniverses = worldLevels.get(world);
         if (levelUniverses == null) {
             return null;
         }
-        return levelUniverses.get(world);
+        return levelUniverses.get(level);
     }
 
     public List<GroupLevel> getLevelsOfWorld(PoliticsWorld world) {
-        final Map<GroupLevel, Universe> levelUniverses = worldLevels.get(world);
+        Map<GroupLevel, Universe> levelUniverses = worldLevels.get(world);
         if (levelUniverses == null) {
             return new ArrayList<>();
         }
@@ -123,17 +126,17 @@ public final class UniverseManager {
     }
 
     public Universe createUniverse(String name, UniverseRules theRules) {
-        final Universe universe = new Universe(name, theRules);
+        Universe universe = new Universe(name, theRules);
         universes.put(name, universe);
         return universe;
     }
 
-//    public void destroyUniverse(Universe universe) {
-//        universes.remove(universe.getName());
-//        for (Group group : universe.getGroups()) {
-//            universe.destroyGroup(group);
-//        }
-//    }
+    public void destroyUniverse(Universe universe) {
+        universes.remove(universe.getName());
+        for (Group group : universe.getGroups()) {
+            universe.destroyGroup(group);
+        }
+    }
 
     public int nextId() {
         while (getGroupById(nextId) != null) {
@@ -146,7 +149,7 @@ public final class UniverseManager {
         File rulesDir = this.plugin.getFileSystem().getRulesDir();
         this.rules = new THashMap<>();
 
-        for (File file : rulesDir.listFiles()) {
+        for (File file : Objects.requireNonNull(rulesDir.listFiles())) {
             String fileName = file.getName();
             if (!fileName.endsWith(".yml") || fileName.length() <= 4) {
                 continue;
@@ -166,7 +169,7 @@ public final class UniverseManager {
         groups = new TIntObjectHashMap<>();
         File universesDir = this.plugin.getFileSystem().getUniversesDir();
 
-        for (File file : universesDir.listFiles()) {
+        for (File file : Objects.requireNonNull(universesDir.listFiles())) {
             String fileName = file.getName();
             if (!fileName.endsWith(".ptu") || fileName.length() <= 4) {
                 continue;
@@ -184,32 +187,28 @@ public final class UniverseManager {
             Universe universe = Universe.fromBSONObject(object);
             universes.put(universe.getName(), universe);
 
-//            for (Group group : universe.getGroups()) {
-//                if (groups.put(group.getUid(), group) != null) {
-//                    Politics.logger().log(Level.WARNING, "Duplicate group id " + group.getUid() + "!");
-//                }
-//                if (group.getUid() > nextId) {
-//                    nextId = group.getUid();
-//                }
-//            }
+            for (Group group : universe.getGroups()) {
+                if (groups.put(group.getUid(), group) != null) {
+                    Politics.instance().getLogger().log(Level.WARNING, "Duplicate group id " + group.getUid() + "!");
+                }
+                if (group.getUid() > nextId) {
+                    nextId = group.getUid();
+                }
+            }
         }
 
         // Populate World levels
         worldLevels = new THashMap<>();
         for (Universe universe : universes.values()) {
             for (GroupLevel level : universe.getRules().getGroupLevels()) {
-//                for (PoliticsWorld world : universe.getWorlds()) {
-//                    Map<GroupLevel, Universe> levelMap = worldLevels.get(world);
-//                    if (levelMap == null) {
-//                        levelMap = new HashMap<>();
-//                        worldLevels.put(world, levelMap);
-//                    }
-//                    Universe prev = levelMap.put(level, universe);
-//                    if (prev != null) {
-//                        new InvalidConfigurationException("Multiple universes are conflicting on the same world! Universe name: "
-//                                + universe.getName() + "; Rules name: " + universe.getRules().getName()).printStackTrace();
-//                    }
-//                }
+                for (PoliticsWorld world : universe.getWorlds()) {
+                    Map<GroupLevel, Universe> levelMap = worldLevels.computeIfAbsent(world, k -> new HashMap<>());
+                    Universe prev = levelMap.put(level, universe);
+                    if (prev != null) {
+                        new InvalidConfigurationException("Multiple universes are conflicting on the same world! Universe name: "
+                                + universe.getName() + "; Rules name: " + universe.getRules().getName()).printStackTrace();
+                    }
+                }
             }
         }
     }
@@ -218,14 +217,15 @@ public final class UniverseManager {
         BSONEncoder encoder = new BasicBSONEncoder();
         File universesDir = this.plugin.getFileSystem().getUniversesDir();
 
-        for (final Universe universe : universes.values()) {
+        for (Universe universe : universes.values()) {
             if (!universe.canStore()) {
                 continue;
             }
-            final String fileName = universe.getName() + ".cou";
-            final File universeFile = new File(universesDir, fileName);
 
-            final byte[] data = encoder.encode(universe.toBSONObject());
+            String fileName = universe.getName() + ".cou";
+            File universeFile = new File(universesDir, fileName);
+
+            byte[] data = encoder.encode(universe.toBSONObject());
             try {
                 FileUtils.writeByteArrayToFile(universeFile, data);
             } catch (IOException ex) {
