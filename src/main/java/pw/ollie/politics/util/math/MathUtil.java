@@ -17,41 +17,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.util;
+package pw.ollie.politics.util.math;
 
-import java.util.Objects;
+import org.bukkit.Location;
 
-public final class IntPair {
-    public static IntPair of(int x, int z) {
-        return new IntPair(x, z);
+public final class MathUtil {
+    public static Vector3f add(Location one, Vector3f two) {
+        return new Vector3f(one.getBlockX() + two.getX(), one.getBlockY() + two.getY(), one.getBlockZ() + two.getZ());
     }
 
-    private final int x, z;
-
-    private IntPair(int x, int z) {
-        this.x = x;
-        this.z = z;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getZ() {
-        return z;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof IntPair) {
-            IntPair oth = (IntPair) o;
-            return oth.x == x && oth.z == z;
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, z);
+    private MathUtil() {
+        throw new UnsupportedOperationException();
     }
 }

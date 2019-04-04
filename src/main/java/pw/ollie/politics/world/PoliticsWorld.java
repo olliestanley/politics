@@ -24,7 +24,7 @@ import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
-import pw.ollie.politics.util.IntPair;
+import pw.ollie.politics.util.math.IntPair;
 import pw.ollie.politics.world.plot.ChunkPlot;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.PlotType;
