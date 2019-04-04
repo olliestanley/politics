@@ -23,16 +23,17 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
-import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.InvalidConfigurationException;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupLevel;
+import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.apache.commons.io.FileUtils;
 
 import org.bson.BSONDecoder;
 import org.bson.BSONEncoder;
+import org.bson.BSONObject;
 import org.bson.BasicBSONDecoder;
 import org.bson.BasicBSONEncoder;
 
@@ -42,13 +43,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
 public final class UniverseManager {
-    private final PoliticsPlugin plugin;
+    private final Politics plugin;
 
     private Map<String, Universe> universes;
     private Map<String, UniverseRules> rules;
@@ -57,11 +57,11 @@ public final class UniverseManager {
 
     private int nextId = 0xffffffff;
 
-    public UniverseManager(PoliticsPlugin plugin) {
+    public UniverseManager(Politics plugin) {
         this.plugin = plugin;
     }
 
-    public PoliticsPlugin getPlugin() {
+    public Politics getPlugin() {
         return this.plugin;
     }
 
@@ -180,13 +180,13 @@ public final class UniverseManager {
                 continue;
             }
 
-//            BSONObject object = decoder.readObject(data);
-//            Universe universe = Universe.fromBSONObject(object);
-//            universes.put(universe.getName(), universe);
-//
+            BSONObject object = decoder.readObject(data);
+            Universe universe = Universe.fromBSONObject(object);
+            universes.put(universe.getName(), universe);
+
 //            for (Group group : universe.getGroups()) {
 //                if (groups.put(group.getUid(), group) != null) {
-//                    PoliticsPlugin.logger().log(Level.WARNING, "Duplicate group id " + group.getUid() + "!");
+//                    Politics.logger().log(Level.WARNING, "Duplicate group id " + group.getUid() + "!");
 //                }
 //                if (group.getUid() > nextId) {
 //                    nextId = group.getUid();

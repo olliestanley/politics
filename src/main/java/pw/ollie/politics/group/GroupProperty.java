@@ -17,16 +17,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.world;
+package pw.ollie.politics.group;
 
-import pw.ollie.politics.group.level.GroupLevel;
+public final class GroupProperty {
+    public static final int TAG = 0x0;
+    public static final int NAME = 0x1;
+    public static final int SPAWN = 0x2;
 
-import java.util.List;
-
-// todo implement
-public final class PoliticsWorld {
-    public List<GroupLevel> getLevels() {
-        // this is just a placeholder to prevent compile issue elsewhere
-        return null;
+    private GroupProperty() {
+        throw new UnsupportedOperationException();
     }
 }

@@ -17,16 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.world;
+package pw.ollie.politics.group.privilege;
 
-import pw.ollie.politics.group.level.GroupLevel;
-
-import java.util.List;
-
-// todo implement
-public final class PoliticsWorld {
-    public List<GroupLevel> getLevels() {
-        // this is just a placeholder to prevent compile issue elsewhere
-        return null;
-    }
+public enum PrivilegeType {
+    GROUP,
+    PLOT;
 }

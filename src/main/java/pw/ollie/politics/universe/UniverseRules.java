@@ -19,7 +19,7 @@
  */
 package pw.ollie.politics.universe;
 
-import pw.ollie.politics.group.GroupLevel;
+import pw.ollie.politics.group.level.GroupLevel;
 
 import java.util.ArrayList;
 import java.util.List;

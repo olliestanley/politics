@@ -17,16 +17,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.world;
+package pw.ollie.politics.group;
 
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.universe.Universe;
 
-import java.util.List;
+import java.util.Set;
 
-// todo implement
-public final class PoliticsWorld {
-    public List<GroupLevel> getLevels() {
-        // this is just a placeholder to prevent compile issue elsewhere
+public final class Citizen {
+    private final String name;
+    private final Universe universe;
+
+    public Citizen(String name, Universe universe) {
+        this.name = name;
+        this.universe = universe;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Set<Group> getGroups() {
+        return universe.getCitizenGroups(name);
+    }
+
+    public Group getGroup(GroupLevel level) {
+        for (Group group : getGroups()) {
+            if (group.getLevel().equals(level)) {
+                return group;
+            }
+        }
         return null;
+    }
+
+    public Universe getUniverse() {
+        return universe;
+    }
+
+    public void invalidateGroups() {
+        universe.invalidateCitizenGroups(name);
     }
 }

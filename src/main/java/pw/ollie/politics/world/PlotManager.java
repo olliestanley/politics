@@ -17,7 +17,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.group;
+package pw.ollie.politics.world;
 
-public final class GroupLevel {
+import pw.ollie.politics.Politics;
+
+// todo implement this
+public final class PlotManager {
+    private final Politics plugin;
+
+    public PlotManager(Politics plugin) {
+        this.plugin = plugin;
+    }
+
+    public PoliticsWorld getWorld(String name) {
+        // placeholder to allow compilation
+        return null;
+    }
 }

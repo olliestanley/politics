@@ -23,19 +23,27 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pw.ollie.politics.data.PoliticsFileSystem;
 import pw.ollie.politics.universe.UniverseManager;
+import pw.ollie.politics.world.PlotManager;
 
-public final class PoliticsPlugin extends JavaPlugin {
+public final class Politics extends JavaPlugin {
+    private static Politics instance;
+
     private PoliticsFileSystem fileSystem;
     private UniverseManager universeManager;
+    private PlotManager plotManager;
 
     @Override
     public void onEnable() {
+        instance = this;
+
         this.fileSystem = new PoliticsFileSystem(this);
         this.universeManager = new UniverseManager(this);
+        this.plotManager = new PlotManager(this);
     }
 
     @Override
     public void onDisable() {
+        instance = null;
     }
 
     public PoliticsFileSystem getFileSystem() {
@@ -44,5 +52,13 @@ public final class PoliticsPlugin extends JavaPlugin {
 
     public UniverseManager getUniverseManager() {
         return this.universeManager;
+    }
+
+    public PlotManager getPlotManager() {
+        return this.plotManager;
+    }
+
+    public static Politics instance() {
+        return instance;
     }
 }
