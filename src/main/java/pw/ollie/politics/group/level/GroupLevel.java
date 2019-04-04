@@ -19,12 +19,19 @@
  */
 package pw.ollie.politics.group.level;
 
+import pw.ollie.politics.Politics;
+
+import org.bukkit.configuration.ConfigurationSection;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 public final class GroupLevel {
     private static final String DEFAULT_TRACK = "default";
@@ -115,7 +122,7 @@ public final class GroupLevel {
     }
 
     // TODO: saving and loading of group level configuration. Below code is Spout Engine and needs significant changes
-//    public void save(final ConfigurationNode node) {
+//    public void save(ConfigurationNode node) {
 //        node.getChild("name").setValue(name);
 //        node.getChild("rank").setValue(rank);
 //        List<String> children = new ArrayList<>();
@@ -143,144 +150,119 @@ public final class GroupLevel {
 //        node.getChild("founder").setValue(founder.getId());
 //    }
 //
-//    public static GroupLevel load(String id, final ConfigurationNode node, final Map<GroupLevel, List<String>> levels) {
-//        // Load name
-//        String levelName = node.getNode("name").getString(id);
-//
-//        // Make id lowercase
-//        id = id.toLowerCase();
-//
-//        // Load rank
-//        int rank = node.getNode("rank").getInt();
-//
-//        // Load children
-//        List<String> children = node.getNode("children").getStringList();
-//
-//        // Load roles
-//        Map<String, Role> rolesMap = new HashMap<String, Role>();
-//        for (Entry<String, ConfigurationNode> roleEntry : node.getNode("roles").getChildren().entrySet()) {
-//            String roleId = roleEntry.getKey();
-//            Role role = Role.load(roleId, roleEntry.getValue());
-//            rolesMap.put(roleId, role);
-//        }
-//
-//        // Load plural
-//        String plural = node.getNode("plural").getString(levelName + "s");
-//
-//        // Load allowed commands
-//        Map<String, List<String>> commands = new HashMap<String, List<String>>();
-//
-//        // Set for checking for alias overlaps.
-//        Set<String> alreadyLoadedCommands = new HashSet<>();
-//
-//        // Command node
-//        ConfigurationNode commandNode = node.getNode("commands");
-//        for (Entry<String, ConfigurationNode> commandAliasEntry : commandNode.getChildren().entrySet()) {
-//            // Name of the command we want to alias
-//            String commandName = commandAliasEntry.getKey().toLowerCase();
-//
-//            // Get the list we're putting aliases in
-//            List<String> theAliases = commands.get(commandName);
-//            if (theAliases == null) {
-//                theAliases = new ArrayList<>();
-//                commands.put(commandName, theAliases);
-//            }
-//
-//            ConfigurationNode aliasesNode = commandAliasEntry.getValue();
-//
-//            // Check for list, if so add specified aliases. Does not
-//            // include the normal name unless explicitly specified.
-//            if (aliasesNode.getValue() instanceof List) {
-//                List<String> aliases = aliasesNode.getStringList();
-//                for (String alias : aliases) {
-//                    alias = alias.toLowerCase();
-//                    if (alreadyLoadedCommands.contains(alias)) {
-//                        PoliticsPlugin.instance().getLogger().log(Level.WARNING,
-//                                "Duplicate entry for command `" + alias + "'; not adding it to aliases for " + commandName + ".");
-//                        continue;
-//                    }
-//                    theAliases.add(alias);
-//                    alreadyLoadedCommands.add(alias);
-//                }
-//
-//                // Else, we don't care, they specified it.
-//            } else {
-//                if (alreadyLoadedCommands.contains(commandName)) {
-//                    PoliticsPlugin.instance().getLogger().log(Level.WARNING, "Duplicate entry for command `" + commandName + "'; not adding " + commandName + ".");
-//                    continue;
-//                }
-//                theAliases.add(commandName);
-//                alreadyLoadedCommands.add(commandName);
-//            }
-//        }
-//
-//        // Our variables
-//        Map<String, RoleTrack> tracks = new HashMap<String, RoleTrack>();
-//        Role initial;
-//        Role founder;
-//
-//        if (rolesMap.isEmpty()) {
-//            initial = null;
-//            founder = null;
-//        } else {
-//            ConfigurationNode tracksNode = node.getChild("tracks");
-//            for (Entry<String, ConfigurationNode> trackEntry : tracksNode.getChildren().entrySet()) {
-//                RoleTrack track = RoleTrack.load(trackEntry.getKey(), trackEntry.getValue(), rolesMap);
-//                tracks.put(track.getId(), track);
-//            }
-//            if (!tracks.containsKey(DEFAULT_TRACK)) {
-//                RoleTrack def;
-//                if (tracks.isEmpty()) {
-//                    final List<Role> rolesSorted = new LinkedList<Role>(rolesMap.values());
-//                    Collections.sort(rolesSorted);
-//                    def = new RoleTrack(DEFAULT_TRACK, rolesSorted);
-//                } else {
-//                    def = tracks.entrySet().iterator().next().getValue();
-//                }
-//                tracks.put(DEFAULT_TRACK, def);
-//            }
-//
-//            String initialName = node.getChild("initial").getString();
-//            if (initialName == null) {
-//                int lowest = Integer.MAX_VALUE;
-//                Role lowestRole = null;
-//                for (Role role : rolesMap.values()) {
-//                    if (role.getRank() <= lowest) { // Incase of max value for
-//                        // rank
-//                        lowest = role.getRank();
-//                        lowestRole = role;
-//                    }
-//                }
-//                initial = lowestRole;
-//            } else {
-//                initial = rolesMap.get(initialName.toLowerCase());
-//                if (initial == null) {
-//                    throw new IllegalStateException("Invalid initial role '" + initialName + "'.");
-//                }
-//            }
-//
-//            String founderName = node.getChild("founder").getString();
-//            if (founderName == null) {
-//                int highest = 0;
-//                Role highestRole = null;
-//                for (final Role role : rolesMap.values()) {
-//                    if (role.getRank() > highest) {
-//                        highest = role.getRank();
-//                        highestRole = role;
-//                    }
-//                }
-//                founder = highestRole;
-//            } else {
-//                founder = rolesMap.get(founderName.toLowerCase());
-//                if (founder == null) {
-//                    throw new IllegalStateException("Invalid founder role '" + founderName + "'.");
-//                }
-//            }
-//        }
-//
-//        GroupLevel theLevel = new GroupLevel(id, levelName, rank, rolesMap, plural, commands, tracks, initial, founder);
-//        // Children so we can get our allowed children in the future
-//        levels.put(theLevel, children);
-//        return theLevel;
-//    }
+    public static GroupLevel load(String id, ConfigurationSection node, Map<GroupLevel, List<String>> levels) {
+        String levelName = node.getString("name", id);
+
+        id = id.toLowerCase();
+
+        int rank = node.getInt("rank");
+
+        // Load children
+        List<String> children = node.getStringList("children");
+
+        // Load roles
+        Map<String, Role> rolesMap = new HashMap<>();
+        ConfigurationSection rolesNode = node.getConfigurationSection("roles");
+        if (rolesNode != null) {
+            for (String roleId : rolesNode.getKeys(false)) {
+                ConfigurationSection roleNode = rolesNode.getConfigurationSection(roleId);
+                Role role = Role.load(roleId, roleNode);
+                rolesMap.put(roleId, role);
+            }
+        }
+
+        String plural = node.getString("plural", levelName + "s");
+
+        Map<String, List<String>> commands = new HashMap<>();
+        // Set for checking for alias overlaps.
+        Set<String> alreadyLoadedCommands = new HashSet<>();
+        ConfigurationSection commandsNode = node.getConfigurationSection("commands");
+        for (String commandId : commandsNode.getKeys(false)) {
+            String commandName = commandId.toLowerCase();
+
+            // Get the list we're putting aliases in
+            List<String> theAliases = commands.computeIfAbsent(commandName, k -> new ArrayList<>());
+            List<String> commandAliases = commandsNode.getStringList(commandId);
+            if (commandAliases.size() > 0) {
+                for (String alias : commandAliases) {
+                    alias = alias.toLowerCase();
+                    if (alreadyLoadedCommands.contains(alias)) {
+                        Politics.getLogger().log(Level.WARNING,
+                                "Duplicate entry for command `" + alias + "'; not adding it to aliases for " + commandName + ".");
+                        continue;
+                    }
+
+                    theAliases.add(alias);
+                    alreadyLoadedCommands.add(alias);
+                }
+            }
+        }
+
+        Map<String, RoleTrack> tracks = new HashMap<>();
+        Role initial = null;
+        Role founder = null;
+
+        if (!rolesMap.isEmpty()) {
+            ConfigurationSection tracksNode = node.getConfigurationSection("tracks");
+            for (String trackKey : tracksNode.getKeys(false)) {
+                List<String> rolesNames = tracksNode.getStringList(trackKey);
+                RoleTrack track = RoleTrack.load(trackKey, rolesNames, rolesMap);
+                tracks.put(track.getId(), track);
+            }
+
+            if (!tracks.containsKey(DEFAULT_TRACK)) {
+                RoleTrack def;
+                if (tracks.isEmpty()) {
+                    List<Role> rolesSorted = new LinkedList<>(rolesMap.values());
+                    Collections.sort(rolesSorted);
+                    def = new RoleTrack(DEFAULT_TRACK, rolesSorted);
+                } else {
+                    def = tracks.entrySet().iterator().next().getValue();
+                }
+
+                tracks.put(DEFAULT_TRACK, def);
+            }
+
+            // initial = starting role
+            String initialName = node.getString("initial");
+            if (initialName != null) {
+                initial = rolesMap.get(initialName.toLowerCase());
+            }
+            if (initial == null) {
+                int lowest = Integer.MAX_VALUE;
+                Role lowestRole = null;
+                for (Role role : rolesMap.values()) {
+                    if (role.getRank() <= lowest) {
+                        lowest = role.getRank();
+                        lowestRole = role;
+                    }
+                }
+                initial = lowestRole;
+                Politics.getLogger().log(Level.WARNING, "No initial role specified in configuration, defaulting to lowest rank...");
+            }
+
+            // founder role
+            String founderName = node.getString("founder");
+            if (founderName != null) {
+                founder = rolesMap.get(founderName.toLowerCase());
+            }
+            if (founderName == null) {
+                int highest = 0;
+                Role highestRole = null;
+                for (Role role : rolesMap.values()) {
+                    if (role.getRank() > highest) {
+                        highest = role.getRank();
+                        highestRole = role;
+                    }
+                }
+                founder = highestRole;
+                Politics.getLogger().log(Level.WARNING, "No initial role specified in configuration, defaulting to lowest rank...");
+            }
+        }
+
+        GroupLevel theLevel = new GroupLevel(id, levelName, rank, rolesMap, plural, commands, tracks, initial, founder);
+        // Children so we can get our allowed children in the future
+        levels.put(theLevel, children);
+        return theLevel;
+    }
 }

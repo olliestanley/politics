@@ -22,6 +22,7 @@ package pw.ollie.politics.group.level;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class RoleTrack implements Iterable<Role> {
     private final String id;
@@ -61,18 +62,16 @@ public class RoleTrack implements Iterable<Role> {
         return roles.listIterator();
     }
 
-    // todo: code below is Spout Engine
-//    public static RoleTrack load(String id, ConfigurationNode node, Map<String, Role> roles) {
-//        List<String> rolesNames = node.getStringList(new LinkedList<String>());
-//        List<Role> rolesList = new LinkedList<>();
-//        for (String roleName : rolesNames) {
-//            Role role = roles.get(roleName.toLowerCase());
-//            if (role == null) {
-//                throw new IllegalStateException("The role '" + roleName + "' does not exist.");
-//            }
-//            rolesList.add(role);
-//        }
-//
-//        return new RoleTrack(id, rolesList);
-//    }
+    public static RoleTrack load(String id, List<String> rolesNames, Map<String, Role> roles) {
+        List<Role> rolesList = new LinkedList<>();
+        for (String roleName : rolesNames) {
+            Role role = roles.get(roleName.toLowerCase());
+            if (role == null) {
+                throw new IllegalStateException("The role '" + roleName + "' does not exist.");
+            }
+            rolesList.add(role);
+        }
+
+        return new RoleTrack(id, rolesList);
+    }
 }

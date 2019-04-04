@@ -19,9 +19,15 @@
  */
 package pw.ollie.politics.group.level;
 
+import pw.ollie.politics.Politics;
 import pw.ollie.politics.group.privilege.Privilege;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.bukkit.configuration.ConfigurationSection;
+
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public final class Role implements Comparable<Role> {
@@ -57,23 +63,22 @@ public final class Role implements Comparable<Role> {
         return name;
     }
 
-    // todo: code below is Spout Engine
-//    public static Role load(String id, ConfigurationNode node) {
-//        String name = node.getNode("name").getString(StringUtils.capitalize(id));
-//        List<String> privs = node.getNode("privileges").getStringList(new ArrayList<String>());
-//        Set<Privilege> privileges = new HashSet<Privilege>();
-//        for (String priv : privs) {
-//            Privilege p = Politics.getPrivilegeManager().getPrivilege(priv);
-//            if (p == null) {
-//                continue;
-//            }
-//        }
-//        int rank = node.getNode("rank").getInt(1);
-//        return new Role(id, name, privileges, rank);
-//    }
+    public static Role load(String id, ConfigurationSection node) {
+        String name = node.getString("name", StringUtils.capitalize(id));
+        List<String> privs = node.getStringList("privileges");
+        Set<Privilege> privileges = new HashSet<>();
+        for (String priv : privs) {
+            Privilege p = Politics.getPrivilegeManager().getPrivilege(priv);
+            if (p == null) {
+                continue;
+            }
+        }
+        int rank = node.getInt("rank", 1);
+        return new Role(id, name, privileges, rank);
+    }
 
     @Override
-    public int compareTo(final Role other) {
+    public int compareTo(Role other) {
         if (rank == other.getRank()) {
             return id.compareToIgnoreCase(other.getId());
         }

@@ -20,6 +20,7 @@
 package pw.ollie.politics;
 
 import pw.ollie.politics.data.PoliticsFileSystem;
+import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.plot.PlotManager;
@@ -40,6 +41,10 @@ public final class Politics {
 
     public static PoliticsFileSystem getFileSystem() {
         return Politics.getPlugin().getFileSystem();
+    }
+
+    public static PrivilegeManager getPrivilegeManager() {
+        return Politics.getPlugin().getPrivilegeManager();
     }
 
     public static PlotManager getPlotManager() {
