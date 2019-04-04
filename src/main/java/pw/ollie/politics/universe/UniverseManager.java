@@ -20,12 +20,16 @@
 package pw.ollie.politics.universe;
 
 import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.THashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.data.InvalidConfigurationException;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupLevel;
 import pw.ollie.politics.world.PoliticsWorld;
+
+import org.apache.commons.io.FileUtils;
 
 import org.bson.BSONDecoder;
 import org.bson.BSONEncoder;
@@ -36,10 +40,12 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public final class UniverseManager {
     private final PoliticsPlugin plugin;
@@ -92,7 +98,7 @@ public final class UniverseManager {
     }
 
 //    public Group getGroupByTag(final String tag) {
-//        for (final Group g : groups.valueCollection()) {
+//        for (Group g : groups.valueCollection()) {
 //            if (g.getStringProperty(GroupProperty.TAG).equalsIgnoreCase(tag)) {
 //                return g;
 //            }
@@ -138,7 +144,7 @@ public final class UniverseManager {
 
     public void loadRules() {
         File rulesDir = this.plugin.getFileSystem().getRulesDir();
-        this.rules = new HashMap<>();
+        this.rules = new THashMap<>();
 
         for (File file : rulesDir.listFiles()) {
             String fileName = file.getName();
@@ -156,7 +162,7 @@ public final class UniverseManager {
 
     public void loadUniverses() {
         BSONDecoder decoder = new BasicBSONDecoder();
-        universes = new HashMap<>();
+        universes = new THashMap<>();
         groups = new TIntObjectHashMap<>();
         File universesDir = this.plugin.getFileSystem().getUniversesDir();
 
@@ -167,18 +173,18 @@ public final class UniverseManager {
             }
 
             byte[] data;
-//            try {
-//                data = FileUtils.readFileToByteArray(file);
-//            } catch (IOException ex) {
-//                new InvalidConfigurationException("Could not read universe file `" + fileName + "'!", ex).printStackTrace();
-//                continue;
-//            }
+            try {
+                data = FileUtils.readFileToByteArray(file);
+            } catch (IOException ex) {
+                new InvalidConfigurationException("Could not read universe file `" + fileName + "'!", ex).printStackTrace();
+                continue;
+            }
 
 //            BSONObject object = decoder.readObject(data);
 //            Universe universe = Universe.fromBSONObject(object);
 //            universes.put(universe.getName(), universe);
 //
-//            for (final Group group : universe.getGroups()) {
+//            for (Group group : universe.getGroups()) {
 //                if (groups.put(group.getUid(), group) != null) {
 //                    PoliticsPlugin.logger().log(Level.WARNING, "Duplicate group id " + group.getUid() + "!");
 //                }
@@ -189,7 +195,7 @@ public final class UniverseManager {
         }
 
         // Populate World levels
-        worldLevels = new HashMap<>();
+        worldLevels = new THashMap<>();
         for (Universe universe : universes.values()) {
             for (GroupLevel level : universe.getRules().getGroupLevels()) {
 //                for (PoliticsWorld world : universe.getWorlds()) {
@@ -220,12 +226,12 @@ public final class UniverseManager {
             final File universeFile = new File(universesDir, fileName);
 
             final byte[] data = encoder.encode(universe.toBSONObject());
-//            try {
-//                FileUtils.writeByteArrayToFile(universeFile, data);
-//            } catch (final IOException ex) {
-//                PoliticsPlugin.logger().log(Level.SEVERE, "Could not save universe file `" + fileName + "' due to error!", ex);
-//                continue;
-//            }
+            try {
+                FileUtils.writeByteArrayToFile(universeFile, data);
+            } catch (IOException ex) {
+                this.plugin.getLogger().log(Level.SEVERE, "Could not save universe file `" + fileName + "' due to error!", ex);
+                continue;
+            }
             // TODO make backups
         }
     }
