@@ -38,7 +38,8 @@ public final class Politics extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        this.fileSystem = new PoliticsFileSystem(this);
+        this.fileSystem = new PoliticsFileSystem(this.getDataFolder());
+
         this.privilegeManager = new PrivilegeManager(this);
         this.plotManager = new PlotManager(this);
         this.universeManager = new UniverseManager(this);

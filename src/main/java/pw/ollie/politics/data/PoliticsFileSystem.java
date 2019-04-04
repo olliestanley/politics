@@ -19,8 +19,6 @@
  */
 package pw.ollie.politics.data;
 
-import pw.ollie.politics.Politics;
-
 import java.io.File;
 
 public final class PoliticsFileSystem {
@@ -30,8 +28,8 @@ public final class PoliticsFileSystem {
     private final File worldConfigDir;
     private final File worldsDir;
 
-    public PoliticsFileSystem(Politics plugin) {
-        this.baseDir = plugin.getDataFolder();
+    public PoliticsFileSystem(File baseDir) {
+        this.baseDir = baseDir;
         this.rulesDir = new File(baseDir, "rules/");
         this.universesDir = new File(baseDir, "data/universes/");
         this.worldConfigDir = new File(baseDir, "worlds/");
