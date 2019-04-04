@@ -25,6 +25,7 @@ import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.world.plot.PlotManager;
 
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PoliticsPlugin extends JavaPlugin {
@@ -48,6 +49,9 @@ public final class PoliticsPlugin extends JavaPlugin {
         this.universeManager = new UniverseManager(this);
 
         this.eventFactory = new PoliticsEventFactory(this);
+
+        PluginManager pluginManager = this.getServer().getPluginManager();
+        pluginManager.registerEvents(new PoliticsListener(this), this);
     }
 
     @Override

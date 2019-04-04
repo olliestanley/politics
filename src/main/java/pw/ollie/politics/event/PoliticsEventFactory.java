@@ -21,10 +21,12 @@ package pw.ollie.politics.event;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.event.group.GroupPropertySetEvent;
+import pw.ollie.politics.event.player.PlayerChangePlotEvent;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.world.plot.Plot;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
 public final class PoliticsEventFactory {
@@ -40,6 +42,10 @@ public final class PoliticsEventFactory {
 
     public PlotOwnerChangeEvent callPlotOwnerChangeEvent(Plot plot, int groupId, boolean add) {
         return callEvent(new PlotOwnerChangeEvent(plot, groupId, add));
+    }
+
+    public PlayerChangePlotEvent callPlayerChangePlotEvent(Player player, Plot from, Plot to) {
+        return callEvent(new PlayerChangePlotEvent(player, from, to));
     }
 
     public <T extends Event> T callEvent(T event) {

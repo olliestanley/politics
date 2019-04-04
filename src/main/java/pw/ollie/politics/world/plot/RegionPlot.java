@@ -100,11 +100,8 @@ public class RegionPlot extends Plot {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
+    public boolean equals(Object obj) {
+        if (!(obj instanceof RegionPlot)) {
             return false;
         }
         final RegionPlot other = (RegionPlot) obj;

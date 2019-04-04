@@ -72,7 +72,7 @@ public class ChunkPlot extends Plot {
 
     @Override
     public boolean contains(Location point) {
-        // todo check this
+        // check this
         return baseX <= point.getBlockX() && baseX + 16 <= point.getBlockX()
                 && baseZ <= point.getBlockZ() && baseZ + 16 <= point.getBlockZ();
     }
@@ -87,11 +87,8 @@ public class ChunkPlot extends Plot {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ChunkPlot)) {
             return false;
         }
         ChunkPlot other = (ChunkPlot) obj;
