@@ -19,11 +19,11 @@
  */
 package pw.ollie.politics;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
 import pw.ollie.politics.data.PoliticsFileSystem;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.world.PlotManager;
+
+import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Politics extends JavaPlugin {
     private static Politics instance;

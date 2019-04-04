@@ -19,10 +19,6 @@
  */
 package pw.ollie.politics.universe;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 
@@ -32,6 +28,10 @@ import pw.ollie.politics.group.Citizen;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.world.PoliticsWorld;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
@@ -368,7 +368,7 @@ public final class Universe implements Storable {
 
         List<Group> groupz = new ArrayList<>(groups.valueCollection());
         Universe universe = new Universe(aname, rules, worlds, groupz, children);
-        for (final Group group : groupz) {
+        for (Group group : groupz) {
             group.initialize(universe);
         }
         return universe;

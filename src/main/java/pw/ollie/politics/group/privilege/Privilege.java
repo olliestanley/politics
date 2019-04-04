@@ -47,8 +47,8 @@ public final class Privilege {
     }
 
     public static Set<Privilege> all(Set<Privilege>... sets) {
-        final Set<Privilege> result = new HashSet<>();
-        for (final Set<Privilege> set : sets) {
+        Set<Privilege> result = new HashSet<>();
+        for (Set<Privilege> set : sets) {
             result.addAll(set);
         }
 

@@ -313,6 +313,7 @@ public final class Group implements Comparable<Group>, Storable {
         if (!(playersObj instanceof BasicBSONObject)) {
             throw new IllegalStateException("Stupid server admin... don't mess with the data!");
         }
+
         BasicBSONObject playersBson = (BasicBSONObject) playersObj;
         Map<String, Role> players = new HashMap<>();
         for (Map.Entry<String, Object> entry : playersBson.entrySet()) {
