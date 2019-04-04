@@ -32,6 +32,14 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <id>DziNeIT</id>
+            <name>Oliver Stanley</name>
+            <email>oliver@stanley.pm</email>
+        </developer>
+    </developers>
+
     <!-- Source code -->
     <scm>
         <developerConnection>scm:git:git@github.com:DziNeIT/${project.name}.git</developerConnection>
