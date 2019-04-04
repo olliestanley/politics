@@ -20,11 +20,13 @@
 package pw.ollie.politics;
 
 import pw.ollie.politics.data.PoliticsFileSystem;
+import pw.ollie.politics.data.SaveTask;
 import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.world.plot.PlotManager;
 
+import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,6 +40,8 @@ public final class PoliticsPlugin extends JavaPlugin {
 
     private PoliticsEventFactory eventFactory;
 
+    private SaveTask saveTask;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -45,17 +49,32 @@ public final class PoliticsPlugin extends JavaPlugin {
         this.fileSystem = new PoliticsFileSystem(this.getDataFolder());
 
         this.privilegeManager = new PrivilegeManager(this);
+
         this.plotManager = new PlotManager(this);
+        this.plotManager.loadWorldConfigs();
+        this.plotManager.loadWorlds();
+
         this.universeManager = new UniverseManager(this);
+        this.universeManager.loadRules();
+        this.universeManager.loadUniverses();
 
         this.eventFactory = new PoliticsEventFactory(this);
 
-        PluginManager pluginManager = this.getServer().getPluginManager();
+        this.saveTask = new SaveTask(this);
+        this.saveTask.runTaskTimer(this, 5 * 60 * 20, 5 * 60 * 20);
+
+        Server server = this.getServer();
+        PluginManager pluginManager = server.getPluginManager();
         pluginManager.registerEvents(new PoliticsListener(this), this);
     }
 
     @Override
     public void onDisable() {
+        this.saveTask.cancel();
+
+        this.plotManager.saveWorlds();
+        this.universeManager.saveUniverses();
+
         instance = null;
     }
 
