@@ -42,7 +42,7 @@ public class RoleTrack implements Iterable<Role> {
 
     public Role getPreviousRole(Role role) {
         int index = roles.indexOf(role);
-        if (index < 0 || index <= 0) {
+        if (index < 0 || index >= roles.size()) {
             return null;
         }
         return roles.get(index - 1);

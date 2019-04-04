@@ -21,5 +21,5 @@ package pw.ollie.politics.world.plot;
 
 public enum PlotType {
     CHUNK,
-    REGION;
+    REGION
 }

@@ -44,12 +44,13 @@ public final class PrivilegeManager {
     }
 
     public boolean registerPrivileges(Privilege... privileges) {
+        boolean retVal = true;
         for (Privilege p : privileges) {
             if (!registerPrivilege(p)) {
-                return false;
+                retVal = false;
             }
         }
-        return true;
+        return retVal;
     }
 
     public Privilege getPrivilege(String name) {

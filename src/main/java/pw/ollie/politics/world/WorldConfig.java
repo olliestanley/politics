@@ -26,7 +26,7 @@ public final class WorldConfig {
     private int plotSizeY = 1;
     private int plotSizeZ = 1;
 
-    public WorldConfig(final String name) {
+    public WorldConfig(String name) {
         this.name = name;
     }
 
@@ -38,7 +38,7 @@ public final class WorldConfig {
         return plotSizeX;
     }
 
-    public void setPlotSizeX(final int plotSizeX) {
+    public void setPlotSizeX(int plotSizeX) {
         this.plotSizeX = plotSizeX;
     }
 
@@ -46,7 +46,7 @@ public final class WorldConfig {
         return plotSizeY;
     }
 
-    public void setPlotSizeY(final int plotSizeY) {
+    public void setPlotSizeY(int plotSizeY) {
         this.plotSizeY = plotSizeY;
     }
 
@@ -54,14 +54,9 @@ public final class WorldConfig {
         return plotSizeZ;
     }
 
-    public void setPlotSizeZ(final int plotSizeZ) {
+    public void setPlotSizeZ(int plotSizeZ) {
         this.plotSizeZ = plotSizeZ;
     }
-
-    // todo below is Spout Engine code
-//    public Vector3 getPlotSizeVector() {
-//        return new Vector3(plotSizeX, plotSizeY, plotSizeZ);
-//    }
 //
     public void save(Object config) { // was Configuration not Object
 //        config.getNode("plotsize.x").setValue(plotSizeX);
@@ -70,7 +65,7 @@ public final class WorldConfig {
     }
 //
     public static WorldConfig load(String name, Object config) { // was Configuration not Object
-//        final WorldConfig wc = new WorldConfig(name);
+//        WorldConfig wc = new WorldConfig(name);
 //        wc.plotSizeX = config.getNode("plotsize.x").getInt(1);
 //        wc.plotSizeY = config.getNode("plotsize.y").getInt(8);
 //        wc.plotSizeZ = config.getNode("plotsize.z").getInt(1);

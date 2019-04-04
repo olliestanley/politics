@@ -107,7 +107,7 @@ public final class PoliticsWorld implements Storable {
 //     * @param z
 //     * @return the internal list of owners for given location
 //     */
-//    TIntList getInternalOwnerList(final int x, final int y, final int z) {
+//    TIntList getInternalOwnerList(int x, int y, int z) {
 //        plots.get(x, y, z).geto
 //        TIntList list = owners.get(x, y, z);
 //        if (list == null) {
