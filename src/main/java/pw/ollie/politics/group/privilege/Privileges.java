@@ -33,7 +33,7 @@ public final class Privileges {
         public static final Privilege UNCLAIM = new Privilege("UNCLAIM", PrivilegeType.GROUP);
         public static final Privilege SET_SPAWN = new Privilege("SET_SPAWN", PrivilegeType.GROUP);
         public static final Privilege SPAWN_OTHER = new Privilege("SPAWN_OTHER", PrivilegeType.GROUP);
-        public static final Privilege[] ALL = { CLAIM, DISBAND, INFO, INVITE, KICK, LEAVE, ONLINE, SET_ROLE, SET_SPAWN, SPAWN, SPAWN_OTHER, UNCLAIM };
+        public static final Privilege[] ALL = {CLAIM, DISBAND, INFO, INVITE, KICK, LEAVE, ONLINE, SET_ROLE, SET_SPAWN, SPAWN, SPAWN_OTHER, UNCLAIM};
     }
 
     public static final class Plot {
@@ -43,7 +43,7 @@ public final class Privileges {
     public static final class GroupPlot {
         public static final Privilege BUILD = new Privilege("BUILD", PrivilegeType.GROUP, PrivilegeType.PLOT);
         public static final Privilege INTERACT = new Privilege("INTERACT", PrivilegeType.GROUP, PrivilegeType.PLOT);
-        public static final Privilege[] ALL = { BUILD, INTERACT };
+        public static final Privilege[] ALL = {BUILD, INTERACT};
     }
 
     private Privileges() {

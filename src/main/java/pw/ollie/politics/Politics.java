@@ -17,9 +17,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.group.privilege;
+package pw.ollie.politics;
 
-public enum PrivilegeType {
-    GROUP,
-    PLOT
+import pw.ollie.politics.universe.UniverseManager;
+import pw.ollie.politics.world.PlotManager;
+
+import org.bukkit.Server;
+
+import java.util.logging.Logger;
+
+public final class Politics {
+    public static PoliticsPlugin getPlugin() {
+        return PoliticsPlugin.instance();
+    }
+
+    public static Server getServer() {
+        return Politics.getPlugin().getServer();
+    }
+
+    public static PlotManager getPlotManager() {
+        return Politics.getPlugin().getPlotManager();
+    }
+
+    public static UniverseManager getUniverseManager() {
+        return Politics.getPlugin().getUniverseManager();
+    }
+
+    public static Logger getLogger() {
+        return Politics.getPlugin().getLogger();
+    }
+
+    private Politics() {
+        throw new UnsupportedOperationException();
+    }
 }

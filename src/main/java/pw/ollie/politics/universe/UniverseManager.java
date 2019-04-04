@@ -23,6 +23,7 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
+import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.data.InvalidConfigurationException;
 import pw.ollie.politics.group.Group;
@@ -189,7 +190,7 @@ public final class UniverseManager {
 
             for (Group group : universe.getGroups()) {
                 if (groups.put(group.getUid(), group) != null) {
-                    PoliticsPlugin.instance().getLogger().log(Level.WARNING, "Duplicate group id " + group.getUid() + "!");
+                    Politics.getLogger().log(Level.WARNING, "Duplicate group id " + group.getUid() + "!");
                 }
                 if (group.getUid() > nextId) {
                     nextId = group.getUid();

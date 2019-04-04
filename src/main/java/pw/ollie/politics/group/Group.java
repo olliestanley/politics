@@ -23,7 +23,7 @@ import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
-import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.level.Role;
@@ -188,7 +188,7 @@ public final class Group implements Comparable<Group>, Storable {
     public List<Player> getImmediateOnlinePlayers() {
         List<Player> players = new ArrayList<>();
         for (String pn : getImmediatePlayers()) {
-            final Player player = PoliticsPlugin.instance().getServer().getPlayer(pn);
+            Player player = Politics.getServer().getPlayer(pn);
             if (player != null) {
                 players.add(player);
             }
