@@ -19,16 +19,16 @@
  */
 package pw.ollie.politics.group.privilege;
 
-import pw.ollie.politics.Politics;
+import pw.ollie.politics.PoliticsPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public final class PrivilegeManager {
-    private final Politics plugin;
+    private final PoliticsPlugin plugin;
     private final Map<String, Privilege> privileges = new HashMap<>();
 
-    public PrivilegeManager(Politics plugin) {
+    public PrivilegeManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
 
         loadDefaultPrivileges();

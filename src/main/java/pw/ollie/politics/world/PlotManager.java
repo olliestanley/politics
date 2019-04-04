@@ -19,15 +19,15 @@
  */
 package pw.ollie.politics.world;
 
-import pw.ollie.politics.Politics;
+import pw.ollie.politics.PoliticsPlugin;
 
 import org.bukkit.World;
 
 // todo implement this
 public final class PlotManager {
-    private final Politics plugin;
+    private final PoliticsPlugin plugin;
 
-    public PlotManager(Politics plugin) {
+    public PlotManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
     }
 

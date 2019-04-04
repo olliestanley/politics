@@ -195,7 +195,7 @@ public final class GroupLevel {
 //                for (String alias : aliases) {
 //                    alias = alias.toLowerCase();
 //                    if (alreadyLoadedCommands.contains(alias)) {
-//                        Politics.instance().getLogger().log(Level.WARNING,
+//                        PoliticsPlugin.instance().getLogger().log(Level.WARNING,
 //                                "Duplicate entry for command `" + alias + "'; not adding it to aliases for " + commandName + ".");
 //                        continue;
 //                    }
@@ -206,7 +206,7 @@ public final class GroupLevel {
 //                // Else, we don't care, they specified it.
 //            } else {
 //                if (alreadyLoadedCommands.contains(commandName)) {
-//                    Politics.instance().getLogger().log(Level.WARNING, "Duplicate entry for command `" + commandName + "'; not adding " + commandName + ".");
+//                    PoliticsPlugin.instance().getLogger().log(Level.WARNING, "Duplicate entry for command `" + commandName + "'; not adding " + commandName + ".");
 //                    continue;
 //                }
 //                theAliases.add(commandName);

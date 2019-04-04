@@ -21,6 +21,8 @@ package pw.ollie.politics.universe;
 
 import pw.ollie.politics.group.level.GroupLevel;
 
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,8 +60,9 @@ public final class UniverseRules {
 //    public void save(Configuration config) {
 // TODO: implement saving to configuration - Bukkit doesn't provide as simple a way to do this as Spout did
 //    }
-//
-//    public static UniverseRules load(String name, Configuration config) {
+
+    public static UniverseRules load(String name, YamlConfiguration config) {
+        return null;
 // TODO: implement loading from configuration - Bukkit doesn't provide as simple a way to do this as Spout did
-//    }
+    }
 }

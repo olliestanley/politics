@@ -26,8 +26,8 @@ import pw.ollie.politics.world.PlotManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class Politics extends JavaPlugin {
-    private static Politics instance;
+public final class PoliticsPlugin extends JavaPlugin {
+    private static PoliticsPlugin instance;
 
     private PoliticsFileSystem fileSystem;
     private PrivilegeManager privilegeManager;
@@ -66,7 +66,7 @@ public final class Politics extends JavaPlugin {
         return this.universeManager;
     }
 
-    public static Politics instance() {
+    public static PoliticsPlugin instance() {
         return instance;
     }
 }

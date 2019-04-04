@@ -23,7 +23,7 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
-import pw.ollie.politics.Politics;
+import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.data.InvalidConfigurationException;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
@@ -51,7 +51,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 
 public final class UniverseManager {
-    private final Politics plugin;
+    private final PoliticsPlugin plugin;
 
     private Map<String, Universe> universes;
     private Map<String, UniverseRules> rules;
@@ -60,11 +60,11 @@ public final class UniverseManager {
 
     private int nextId = 0xffffffff;
 
-    public UniverseManager(Politics plugin) {
+    public UniverseManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
     }
 
-    public Politics getPlugin() {
+    public PoliticsPlugin getPlugin() {
         return this.plugin;
     }
 
@@ -157,9 +157,9 @@ public final class UniverseManager {
 
             String name = fileName.substring(0, fileName.length() - 4);
             YamlConfiguration configFile = YamlConfiguration.loadConfiguration(file);
-            //UniverseRules thisRules = UniverseRules.load(name, configFile);
-            //String ruleName = thisRules.getName();
-            //rules.put(ruleName.toLowerCase(), thisRules);
+            UniverseRules thisRules = UniverseRules.load(name, configFile);
+            String ruleName = thisRules.getName(); // todo may need null check depending on future implementation of UniverseRules#load
+            rules.put(ruleName.toLowerCase(), thisRules);
         }
     }
 
@@ -189,7 +189,7 @@ public final class UniverseManager {
 
             for (Group group : universe.getGroups()) {
                 if (groups.put(group.getUid(), group) != null) {
-                    Politics.instance().getLogger().log(Level.WARNING, "Duplicate group id " + group.getUid() + "!");
+                    PoliticsPlugin.instance().getLogger().log(Level.WARNING, "Duplicate group id " + group.getUid() + "!");
                 }
                 if (group.getUid() > nextId) {
                     nextId = group.getUid();

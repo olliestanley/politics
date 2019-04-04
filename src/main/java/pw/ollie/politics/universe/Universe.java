@@ -22,7 +22,7 @@ package pw.ollie.politics.universe;
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 
-import pw.ollie.politics.Politics;
+import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.group.Citizen;
 import pw.ollie.politics.group.Group;
@@ -79,7 +79,7 @@ public final class Universe implements Storable {
     private void buildCitizenCache() {
         CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
 
-        builder.maximumSize(Politics.instance().getServer().getMaxPlayers());
+        builder.maximumSize(PoliticsPlugin.instance().getServer().getMaxPlayers());
         builder.expireAfterAccess(10L, TimeUnit.MINUTES);
 
         citizenGroupCache = builder.build(new CacheLoader<String, Set<Group>>() {
@@ -206,7 +206,7 @@ public final class Universe implements Storable {
     }
 
     public Group createGroup(GroupLevel level) {
-        Group group = new Group(Politics.instance().getUniverseManager().nextId(), level);
+        Group group = new Group(PoliticsPlugin.instance().getUniverseManager().nextId(), level);
 
         groups.add(group);
         getInternalGroups(level).add(group);
@@ -246,7 +246,7 @@ public final class Universe implements Storable {
         try {
             return new HashSet<>(citizenGroupCache.get(player));
         } catch (final ExecutionException e) {
-            Politics.instance().getLogger().log(Level.SEVERE, "Could not load a set of citizen groups! This is a PROBLEM!", e);
+            PoliticsPlugin.instance().getLogger().log(Level.SEVERE, "Could not load a set of citizen groups! This is a PROBLEM!", e);
             return null;
         }
     }
@@ -295,7 +295,7 @@ public final class Universe implements Storable {
 
         String aname = bobject.getString("name");
         String rulesName = bobject.getString("rules");
-        UniverseRules rules = Politics.instance().getUniverseManager().getRules(rulesName);
+        UniverseRules rules = PoliticsPlugin.instance().getUniverseManager().getRules(rulesName);
 
         if (rules == null) {
             throw new IllegalStateException("Rules do not exist!");
@@ -310,9 +310,9 @@ public final class Universe implements Storable {
         BasicBSONList worldsBson = (BasicBSONList) worldsObj;
         for (Object worldName : worldsBson) {
             String name = worldName.toString();
-            PoliticsWorld world = Politics.instance().getPlotManager().getWorld(name);
+            PoliticsWorld world = PoliticsPlugin.instance().getPlotManager().getWorld(name);
             if (world == null) {
-                Politics.instance().getLogger().log(Level.WARNING, "GroupWorld `" + name + "' could not be found! (Did you delete it?)");
+                PoliticsPlugin.instance().getLogger().log(Level.WARNING, "GroupWorld `" + name + "' could not be found! (Did you delete it?)");
             } else {
                 worlds.add(world);
             }

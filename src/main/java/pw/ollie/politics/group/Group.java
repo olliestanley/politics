@@ -23,7 +23,7 @@ import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
-import pw.ollie.politics.Politics;
+import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.level.Role;
@@ -138,7 +138,7 @@ public final class Group implements Comparable<Group>, Storable {
 //        try {
 //            return (Transform) PropertySerializer.deserialize(s);
 //        } catch (final PropertyDeserializationException ex) {
-//            Politics.instance().getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a transform!", ex);
+//            PoliticsPlugin.instance().getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a transform!", ex);
 //            return def;
 //        }
 //    }
@@ -164,7 +164,7 @@ public final class Group implements Comparable<Group>, Storable {
 //        try {
 //            setProperty(property, PropertySerializer.serialize(value));
 //        } catch (final PropertySerializationException e) {
-//            Politics.getLogger().log(Level.SEVERE, "Error serializing property!", e);
+//            PoliticsPlugin.getLogger().log(Level.SEVERE, "Error serializing property!", e);
 //        }
 //    }
 //
@@ -172,7 +172,7 @@ public final class Group implements Comparable<Group>, Storable {
 //        try {
 //            setProperty(property, PropertySerializer.serialize(value));
 //        } catch (final PropertySerializationException e) {
-//            Politics.getLogger().log(Level.SEVERE, "Error serializing property!", e);
+//            PoliticsPlugin.getLogger().log(Level.SEVERE, "Error serializing property!", e);
 //        }
 //    }
 
@@ -188,7 +188,7 @@ public final class Group implements Comparable<Group>, Storable {
     public List<Player> getImmediateOnlinePlayers() {
         List<Player> players = new ArrayList<>();
         for (String pn : getImmediatePlayers()) {
-            final Player player = Politics.instance().getServer().getPlayer(pn);
+            final Player player = PoliticsPlugin.instance().getServer().getPlayer(pn);
             if (player != null) {
                 players.add(player);
             }
