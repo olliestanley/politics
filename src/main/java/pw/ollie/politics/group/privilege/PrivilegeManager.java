@@ -34,9 +34,9 @@ public final class PrivilegeManager {
         loadDefaultPrivileges();
     }
 
-    private final void loadDefaultPrivileges() {
-//        registerPrivileges(GroupPrivileges.ALL);
-//        registerPrivileges(GroupPlotPrivileges.ALL);
+    private void loadDefaultPrivileges() {
+        registerPrivileges(Privileges.Group.ALL);
+        registerPrivileges(Privileges.GroupPlot.ALL);
     }
 
     public boolean registerPrivilege(Privilege privilege) {

@@ -32,6 +32,7 @@ import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
+import org.bson.types.BasicBSONList;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -58,23 +59,19 @@ public abstract class Plot implements Storable {
     public Plot(BasicBSONObject object) {
         world = Politics.getWorld(object.getString("world", null));
         if (object.containsField("owners")) {
-            // todo turn the field owners into a TIntList
-            owners = null;
+            TIntList ownersList = new TIntArrayList();
+            BasicBSONList ownersBSON = (BasicBSONList) object.get("owners");
+            for (Object obj : ownersBSON) {
+                if (!(obj instanceof Integer)) {
+                    throw new IllegalArgumentException("obj is not an Integer!");
+                }
+                int val = (Integer) obj;
+                ownersList.add(val);
+            }
+            owners = ownersList;
         } else {
             owners = new TIntArrayList();
         }
-
-        // todo based on toBSONObject(), below code never made sense
-//      BasicBSONList list = DataUtils.getList(object);
-//      TIntList tList = new TIntArrayList();
-//      for (Object obj : list) {
-//          if (!(obj instanceof Integer)) {
-//              throw new IllegalArgumentException("obj is not an Integer!");
-//          }
-//          int val = (Integer) obj;
-//          tList.add(val);
-//      }
-//      owners = tList;
     }
 
     public PoliticsWorld getPoliticsWorld() {
@@ -205,20 +202,11 @@ public abstract class Plot implements Storable {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (!(obj instanceof Plot)) {
             return false;
         }
         Plot other = (Plot) obj;
-        if (!Objects.equals(world, other.world)) {
-            return false;
-        }
-        if (!Objects.equals(owners, other.owners)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(world, other.world) && Objects.equals(owners, other.owners);
     }
 
     @Override
