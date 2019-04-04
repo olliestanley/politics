@@ -103,13 +103,12 @@ public final class PoliticsWorld implements Storable {
 //     * if it doesn't exist.
 //     *
 //     * @param x
-//     * @param y
 //     * @param z
 //     * @return the internal list of owners for given location
 //     */
-//    TIntList getInternalOwnerList(int x, int y, int z) {
-//        plots.get(x, y, z).geto
-//        TIntList list = owners.get(x, y, z);
+//    TIntList getInternalOwnerList(int x, int z) {
+//        plots.get(x, z).geto
+//        TIntList list = owners.get(x, z);
 //        if (list == null) {
 //            list = new TIntArrayList();
 //            owners.put(x, y, z, list);
@@ -120,12 +119,11 @@ public final class PoliticsWorld implements Storable {
 //     * Gets the list of owners at the given location.
 //     *
 //     * @param x
-//     * @param y
 //     * @param z
 //     * @return
 //     */
-//    public TIntList getOwnerIds(final int x, final int y, final int z) {
-//        return new TIntArrayList(getInternalOwnerList(x, y, z));
+//    public TIntList getOwnerIds(int x, int z) {
+//        return new TIntArrayList(getInternalOwnerList(x, z));
 //    }
 
     public List<Group> getOwners(int x, int z) {
@@ -147,6 +145,10 @@ public final class PoliticsWorld implements Storable {
     public List<GroupLevel> getLevels() {
         return Politics.getUniverseManager().getLevelsOfWorld(this);
     }
+
+    /*
+     * Note: PoliticsWorld does not have a fromBSONObject method due to the Constructor with similar functionality
+     */
 
     @Override
     public BSONObject toBSONObject() {

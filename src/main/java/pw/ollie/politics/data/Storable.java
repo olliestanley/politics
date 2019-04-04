@@ -22,7 +22,7 @@ package pw.ollie.politics.data;
 import org.bson.BSONObject;
 
 /**
- * Classes implementing Storable should have static <code>fromBSONObject(BSONObject)</code>
+ * Classes implementing Storable should generally have static <code>fromBSONObject(BSONObject)</code>
  */
 public interface Storable {
     BSONObject toBSONObject();

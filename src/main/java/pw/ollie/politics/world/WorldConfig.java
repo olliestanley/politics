@@ -19,6 +19,8 @@
  */
 package pw.ollie.politics.world;
 
+import org.bukkit.configuration.ConfigurationSection;
+
 public final class WorldConfig {
     private final String name;
 
@@ -57,19 +59,16 @@ public final class WorldConfig {
     public void setPlotSizeZ(int plotSizeZ) {
         this.plotSizeZ = plotSizeZ;
     }
-//
-    public void save(Object config) { // was Configuration not Object
-//        config.getNode("plotsize.x").setValue(plotSizeX);
-//        config.getNode("plotsize.y").setValue(plotSizeY);
-//        config.getNode("plotsize.z").setValue(plotSizeZ);
+
+    public void save(ConfigurationSection config) {
+        config.set("plotsize.x", plotSizeX);
+        config.set("plotsize.z", plotSizeZ);
     }
-//
-    public static WorldConfig load(String name, Object config) { // was Configuration not Object
-//        WorldConfig wc = new WorldConfig(name);
-//        wc.plotSizeX = config.getNode("plotsize.x").getInt(1);
-//        wc.plotSizeY = config.getNode("plotsize.y").getInt(8);
-//        wc.plotSizeZ = config.getNode("plotsize.z").getInt(1);
-//        return wc;
-        return null;
+
+    public static WorldConfig load(String name, ConfigurationSection config) {
+        WorldConfig wc = new WorldConfig(name);
+        wc.plotSizeX = config.getInt("plotsize.x", 1);
+        wc.plotSizeZ = config.getInt("plotsize.z", 1);
+        return wc;
     }
 }
