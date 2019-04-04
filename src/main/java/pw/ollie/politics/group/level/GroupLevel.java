@@ -146,7 +146,15 @@ public final class GroupLevel {
             rolesNode.set(roleName + ".privileges", privNames);
         }
 
-        // TODO RoleTrack serialization (loading implemented already below)
+        ConfigurationSection tracksNode = ConfigUtil.getOrCreateSection(node, "tracks");
+        for (Map.Entry<String, RoleTrack> trackEntry : tracks.entrySet()) {
+            List<String> roleNames = new LinkedList<>();
+            for (Role role : trackEntry.getValue().getRoles()) {
+                roleNames.add(role.getName());
+            }
+
+            tracksNode.set(trackEntry.getKey(), roleNames);
+        }
 
         node.set("initial", initial.getId());
         node.set("founder", founder.getId());
