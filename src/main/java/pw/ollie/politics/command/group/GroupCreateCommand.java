@@ -20,11 +20,15 @@
 package pw.ollie.politics.command.group;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsSubCommand;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.universe.Universe;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +39,45 @@ public class GroupCreateCommand extends GroupSubCommand {
     }
 
     @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        String founderName = null;
+        if (sender instanceof Player) {
+            founderName = sender.getName();
+        }
+        if (hasAdmin(sender) && args.hasValueFlag("f")) {
+            founderName = args.getValueFlag("f").getStringValue();
+        }
+
+        // Check for a founder, this would only happen if he is not a player
+        if (founderName == null) {
+            throw new CommandException("The founder for the to-be-created " + groupLevel.getName()
+                    + " is unknown. A founder can be specified with the `-f' option.");
+        }
+
+        Universe universe = findUniverse(sender, args);
+
+        StringBuilder nameBuilder = new StringBuilder();
+        for (int i = 0; i < args.length(); i++) {
+            nameBuilder.append(args.getString(i)).append(' ');
+        }
+
+        String name = nameBuilder.toString().trim();
+        String tag = name.toLowerCase().replace(" ", "-");
+        if (args.hasValueFlag("t")) {
+            tag = args.getValueFlag("t").getStringValue();
+        }
+
+        Group group = universe.createGroup(groupLevel);
+        group.setRole(founderName, groupLevel.getFounder());
+        group.setProperty(GroupProperty.NAME, name);
+        group.setProperty(GroupProperty.TAG, tag);
+
+        if (plugin.getEventFactory().callGroupCreateEvent(group, sender).isCancelled()) {
+            universe.destroyGroup(group);
+            throw new CommandException(groupLevel.getName() + " creation denied!");
+        }
+
+        sender.sendMessage("Your " + groupLevel.getName() + " was created successfully.");
     }
 
     @Override

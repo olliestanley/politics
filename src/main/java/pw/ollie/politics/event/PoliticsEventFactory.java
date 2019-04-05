@@ -20,6 +20,7 @@
 package pw.ollie.politics.event;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.event.group.GroupCreateEvent;
 import pw.ollie.politics.event.group.GroupPropertySetEvent;
 import pw.ollie.politics.event.player.PlayerChangePlotEvent;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
@@ -29,6 +30,7 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.world.plot.Plot;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
@@ -37,6 +39,10 @@ public final class PoliticsEventFactory {
 
     public PoliticsEventFactory(PoliticsPlugin plugin) {
         this.plugin = plugin;
+    }
+
+    public GroupCreateEvent callGroupCreateEvent(Group group, CommandSender creator) {
+        return callEvent(new GroupCreateEvent(group, creator));
     }
 
     public GroupPropertySetEvent callGroupPropertySetEvent(Group group, int property, Object value) {
