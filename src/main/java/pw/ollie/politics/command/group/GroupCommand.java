@@ -27,6 +27,16 @@ public final class GroupCommand extends PoliticsBaseCommand {
     public GroupCommand(PoliticsPlugin plugin, GroupLevel groupLevel) {
         super(plugin, groupLevel.getName(), "Base command for " + groupLevel.getName() + "-related actions.");
 
-        // todo register subcommands here
+        this.registerSubCommand(new GroupClaimCommand());
+        this.registerSubCommand(new GroupCreateCommand());
+        this.registerSubCommand(new GroupDemoteCommand());
+        this.registerSubCommand(new GroupDestroyCommand());
+        this.registerSubCommand(new GroupInfoCommand());
+        this.registerSubCommand(new GroupListCommand());
+        this.registerSubCommand(new GroupPromoteCommand());
+        this.registerSubCommand(new GroupSetRoleCommand());
+        this.registerSubCommand(new GroupSetSpawnCommand());
+        this.registerSubCommand(new GroupSpawnCommand());
+        this.registerSubCommand(new GroupUnclaimCommand());
     }
 }
