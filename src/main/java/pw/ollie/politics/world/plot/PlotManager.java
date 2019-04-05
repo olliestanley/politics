@@ -23,6 +23,7 @@ import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldConfig;
+import pw.ollie.politics.world.plot.protection.PlotProtectionListener;
 
 import org.apache.commons.io.FileUtils;
 
@@ -51,11 +52,13 @@ public final class PlotManager {
 
     public PlotManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
+
+        plugin.getServer().getPluginManager().registerEvents(new PlotProtectionListener(plugin), plugin);
     }
 
     public void loadWorldConfigs() {
         configs = new HashMap<>();
-        for (File file : Politics.getFileSystem().getWorldConfigDir().listFiles()) {
+        for (File file : plugin.getFileSystem().getWorldConfigDir().listFiles()) {
             String fileName = file.getName();
             if (!fileName.endsWith(".yml") || fileName.length() <= 4) {
                 continue;
@@ -73,7 +76,7 @@ public final class PlotManager {
         BasicBSONDecoder decoder = new BasicBSONDecoder();
         worlds = new HashMap<>();
 
-        for (File file : Politics.getFileSystem().getWorldsDir().listFiles()) {
+        for (File file : plugin.getFileSystem().getWorldsDir().listFiles()) {
             String fileName = file.getName();
             if (!fileName.endsWith(".ptw") || fileName.length() <= 4) {
                 continue;
@@ -85,7 +88,7 @@ public final class PlotManager {
             try {
                 data = FileUtils.readFileToByteArray(file);
             } catch (IOException ex) {
-                Politics.getLogger().log(Level.SEVERE, "Could not read world file `" + fileName + "'!", ex);
+                plugin.getLogger().log(Level.SEVERE, "Could not read world file `" + fileName + "'!", ex);
                 continue;
             }
 
@@ -112,7 +115,7 @@ public final class PlotManager {
             try {
                 FileUtils.writeByteArrayToFile(worldFile, data);
             } catch (IOException ex) {
-                Politics.getLogger().log(Level.SEVERE, "Could not save universe file `" + fileName + "' due to error!", ex);
+                plugin.getLogger().log(Level.SEVERE, "Could not save universe file `" + fileName + "' due to error!", ex);
                 continue;
             }
         }
@@ -129,7 +132,7 @@ public final class PlotManager {
             try {
                 tc.save(toSave);
             } catch (IOException e) {
-                Politics.getLogger().log(Level.SEVERE, "Could not write a world config file!", e);
+                plugin.getLogger().log(Level.SEVERE, "Could not write a world config file!", e);
             }
             configs.put(name, conf);
         }
