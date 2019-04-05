@@ -20,8 +20,12 @@
 package pw.ollie.politics.command.group;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.group.privilege.Privileges;
 
 import org.bukkit.command.CommandSender;
 
@@ -34,7 +38,15 @@ public class GroupDestroyCommand extends GroupSubCommand {
     }
 
     @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        Group group = findGroup(sender, args);
+
+        if (!group.can(sender, Privileges.Group.DISBAND) && !hasAdmin(sender)) {
+            throw new CommandException("You aren't allowed to disband this group!");
+        }
+
+        group.getUniverse().destroyGroup(group);
+        sender.sendMessage("The group " + group.getStringProperty(GroupProperty.NAME) + " has been disbanded!");
     }
 
     @Override
