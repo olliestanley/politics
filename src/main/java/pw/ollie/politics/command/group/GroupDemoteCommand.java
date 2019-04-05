@@ -20,13 +20,15 @@
 package pw.ollie.politics.command.group;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsSubCommand;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.group.level.Role;
+import pw.ollie.politics.group.level.RoleTrack;
 
 import org.bukkit.command.CommandSender;
-
-import java.util.List;
+import org.bukkit.entity.Player;
 
 public class GroupDemoteCommand extends GroupSubCommand {
     GroupDemoteCommand(GroupLevel groupLevel) {
@@ -34,7 +36,45 @@ public class GroupDemoteCommand extends GroupSubCommand {
     }
 
     @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        Group group = findGroup(sender, args);
+
+        Player player = plugin.getServer().getPlayer(args.getString(0, false));
+        if (player == null) {
+            throw new CommandException("That player is not online.");
+        }
+        if (!group.isImmediateMember(player.getName())) {
+            throw new CommandException("That player is not a member of the group!");
+        }
+
+        RoleTrack track;
+        String trackName = null;
+        if (args.hasValueFlag("t")) {
+            trackName = args.getValueFlag("t").getStringValue();
+            track = group.getLevel().getTrack(args.getValueFlag("t").getStringValue().toLowerCase());
+        } else  {
+            track = group.getLevel().getDefaultTrack();
+        }
+
+        if (track == null) {
+            throw new CommandException("There isn't a track named '" + trackName + "'!");
+        }
+
+        Role role = group.getRole(player.getName());
+        Role next = track.getPreviousRole(role);
+        if (next == null) {
+            throw new CommandException("There is no role to demote to!");
+        }
+
+        if (!hasAdmin(sender)) {
+            Role myRole = group.getRole(sender.getName());
+            if (myRole.getRank() - role.getRank() <= 0) {
+                throw new CommandException("You can't demote someone with a rank higher than yours!");
+            }
+        }
+
+        group.setRole(player.getName(), next);
+        sender.sendMessage(player.getName() + " was demoted to " + next.getName() + " in the group!");
     }
 
     @Override
