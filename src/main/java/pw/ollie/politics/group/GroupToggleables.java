@@ -19,13 +19,26 @@
  */
 package pw.ollie.politics.group;
 
-public final class GroupProperty {
-    public static final int TAG = 0x0;
-    public static final int NAME = 0x1;
-    public static final int SPAWN = 0x2;
-    public static final int OPEN = 0x3;
+import gnu.trove.map.hash.THashMap;
 
-    private GroupProperty() {
+import java.util.Map;
+
+public final class GroupToggleables {
+    private static final Map<String, Integer> toggleableProperties = new THashMap<>();
+
+    static {
+        toggleableProperties.put("open", GroupProperty.OPEN);
+    }
+
+    public static boolean isToggleableProperty(String name) {
+        return toggleableProperties.containsKey(name);
+    }
+
+    public static int getPropertyId(String name) {
+        return toggleableProperties.get(name);
+    }
+
+    private GroupToggleables() {
         throw new UnsupportedOperationException();
     }
 }

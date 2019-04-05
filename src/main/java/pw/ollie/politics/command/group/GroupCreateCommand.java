@@ -92,7 +92,7 @@ public class GroupCreateCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getName() + " create <name> [-f founder] [-u universe] [-t tag]";
+        return "/" + groupLevel.getId() + " create <name> [-f founder] [-u universe] [-t tag]";
     }
 
     @Override

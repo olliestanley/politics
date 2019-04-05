@@ -88,7 +88,7 @@ public class GroupPromoteCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getName() + " promote <player> [-t track] [-g " + groupLevel.getName() + "] [-u universe]";
+        return "/" + groupLevel.getId() + " promote <player> [-t track] [-g " + groupLevel.getName() + "] [-u universe]";
     }
 
     @Override

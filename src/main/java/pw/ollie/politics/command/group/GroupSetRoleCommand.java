@@ -75,7 +75,7 @@ public class GroupSetRoleCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getName() + " setrole <player> <role> [-g group] [-u universe]";
+        return "/" + groupLevel.getId() + " setrole <player> <role> [-g group] [-u universe]";
     }
 
     @Override

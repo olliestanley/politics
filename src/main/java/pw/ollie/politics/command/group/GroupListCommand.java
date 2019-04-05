@@ -80,7 +80,7 @@ public class GroupListCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getName() + " list [page]";
+        return "/" + groupLevel.getId() + " list [page]";
     }
 
     @Override

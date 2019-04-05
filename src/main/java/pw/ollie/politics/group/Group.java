@@ -120,12 +120,20 @@ public final class Group implements Comparable<Group>, Storable {
 
     public int getIntProperty(int property, int def) {
         Object p = getProperty(property);
-        if (p != null) {
-            if (p instanceof Integer) {
-                return (Integer) p;
-            } else {
-                return def;
-            }
+        if (p instanceof Integer) {
+            return (Integer) p;
+        }
+        return def;
+    }
+
+    public boolean getBooleanProperty(int property) {
+        return getBooleanProperty(property, false);
+    }
+
+    public boolean getBooleanProperty(int property, boolean def) {
+        Object p = getProperty(property);
+        if (p instanceof Boolean) {
+            return (Boolean) p;
         }
         return def;
     }
@@ -169,7 +177,6 @@ public final class Group implements Comparable<Group>, Storable {
             return def;
         }
     }
-
 
     public void setProperty(int property, Position value) {
         setProperty(property, PropertySerializer.serializePosition(value));

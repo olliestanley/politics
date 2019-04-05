@@ -23,61 +23,52 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupProperty;
+import pw.ollie.politics.group.GroupToggleables;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
-import pw.ollie.politics.world.plot.Plot;
 
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-public class GroupUnclaimCommand extends GroupSubCommand {
-    GroupUnclaimCommand(GroupLevel groupLevel) {
-        super("spawn", groupLevel);
+public class GroupToggleCommand extends GroupSubCommand {
+    GroupToggleCommand(GroupLevel groupLevel) {
+        super("toggle", groupLevel);
     }
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
 
-        if (!group.can(sender, Privileges.Group.UNCLAIM) && !hasAdmin(sender)) {
-            throw new CommandException("You don't have permissions to unclaim land in this " + groupLevel.getName() + ".");
+        if (!group.can(sender, Privileges.Group.TOGGLES) && !hasAdmin(sender)) {
+            throw new CommandException("You aren't allowed to toggle that " + groupLevel.getName() + "'s settings.");
         }
 
-        // todo update for regionplots when added
-
-        // TODO add a way to get the world, x, y, z from the command line
-        // (should be in GroupCommand)
-        Location location = ((Player) sender).getLocation();
-
-        Plot plot = plugin.getPlotManager().getChunkPlotAt(location);
-        if (plot == null) {
-            throw new CommandException("There is no plot here!");
-        }
-        if (!plot.isOwner(group)) {
-            throw new CommandException("Sorry, this plot is not owned by " + group.getStringProperty(GroupProperty.NAME) + ".");
+        if (args.length(false) < 1) {
+            throw new CommandException("There wasn't a toggle name specified");
         }
 
-        if (!plot.removeOwner(group)) {
-            throw new CommandException("The plot could not be unclaimed.");
+        String toggleName = args.getString(0, false);
+        if (!GroupToggleables.isToggleableProperty(toggleName)) {
+            throw new CommandException("The provided toggle name was not a valid toggle!");
         }
 
-        sender.sendMessage("The plot was unclaimed successfully.");
+        int propertyId = GroupToggleables.getPropertyId(toggleName);
+        boolean curValue = group.getBooleanProperty(propertyId);
+        group.setProperty(propertyId, !curValue);
+        sender.sendMessage("State of " + toggleName + " switched to: " + !curValue + ".");
     }
 
     @Override
     public String getPermission() {
-        return getBasePermissionNode() + ".unclaim";
+        return getBasePermissionNode() + ".toggle";
     }
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " unclaim [-g " + groupLevel.getName() + "] [-u universe]";
+        return "/" + groupLevel.getId() + " toggle <toggle> [-g" + groupLevel.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "Unclaims land for a " + groupLevel.getName() + ".";
+        return "Toggle settings for the " + groupLevel.getName() + ".";
     }
 }

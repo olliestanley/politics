@@ -22,50 +22,32 @@ package pw.ollie.politics.command.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
-import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
-import pw.ollie.politics.group.privilege.Privileges;
 
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
-import java.util.List;
-
-public class GroupDestroyCommand extends GroupSubCommand {
-    GroupDestroyCommand(GroupLevel groupLevel) {
-        super("destroy", groupLevel);
+public class GroupInviteCommand extends GroupSubCommand {
+    GroupInviteCommand(GroupLevel groupLevel) {
+        super("invite", groupLevel);
     }
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        Group group = findGroup(sender, args);
-
-        if (!group.can(sender, Privileges.Group.DISBAND) && !hasAdmin(sender)) {
-            throw new CommandException("You aren't allowed to disband this group!");
-        }
-
-        group.getUniverse().destroyGroup(group);
-        sender.sendMessage("The group " + group.getStringProperty(GroupProperty.NAME) + " has been disbanded!");
+        // todo
     }
 
     @Override
     public String getPermission() {
-        return getBasePermissionNode() + ".destroy";
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return Arrays.asList("delete", "remove");
+        return getBasePermissionNode() + ".invite";
     }
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " destroy <group>";
+        return "/" + groupLevel.getId() + " invite <player> [-g " + groupLevel.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "Destroys a " + groupLevel.getName() + ".";
+        return "Invites a player to the " + groupLevel.getName() + ".";
     }
 }

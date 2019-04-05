@@ -88,7 +88,7 @@ public class GroupDemoteCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getName() + " demote <player> [-t track] [-g " + groupLevel.getName() + "] [-u universe]";
+        return "/" + groupLevel.getId() + " demote <player> [-t track] [-g " + groupLevel.getName() + "] [-u universe]";
     }
 
     @Override

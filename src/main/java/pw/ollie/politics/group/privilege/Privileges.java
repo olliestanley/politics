@@ -30,10 +30,11 @@ public final class Privileges {
         public static final Privilege KICK = new Privilege("KICK", PrivilegeType.GROUP);
         public static final Privilege SET_ROLE = new Privilege("SET_ROLE", PrivilegeType.GROUP);
         public static final Privilege SPAWN = new Privilege("SPAWN", PrivilegeType.GROUP);
-        public static final Privilege UNCLAIM = new Privilege("UNCLAIM", PrivilegeType.GROUP);
         public static final Privilege SET_SPAWN = new Privilege("SET_SPAWN", PrivilegeType.GROUP);
         public static final Privilege SPAWN_OTHER = new Privilege("SPAWN_OTHER", PrivilegeType.GROUP);
-        public static final Privilege[] ALL = {CLAIM, DISBAND, INFO, INVITE, KICK, LEAVE, ONLINE, SET_ROLE, SET_SPAWN, SPAWN, SPAWN_OTHER, UNCLAIM};
+        public static final Privilege TOGGLES = new Privilege("TOGGLES", PrivilegeType.GROUP);
+        public static final Privilege UNCLAIM = new Privilege("UNCLAIM", PrivilegeType.GROUP);
+        public static final Privilege[] ALL = {CLAIM, DISBAND, INFO, INVITE, KICK, LEAVE, ONLINE, SET_ROLE, SET_SPAWN, SPAWN, SPAWN_OTHER, TOGGLES, UNCLAIM};
     }
 
     public static final class Plot {

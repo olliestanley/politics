@@ -83,7 +83,7 @@ public class GroupClaimCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getName() + " claim [-g " + groupLevel.getName() + "] [-u universe]";
+        return "/" + groupLevel.getId() + " claim [-g " + groupLevel.getName() + "] [-u universe]";
     }
 
     @Override

@@ -90,7 +90,7 @@ public class GroupSpawnCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getName() + " spawn [-p player] [-g " + groupLevel.getName() + "] [-u universe]";
+        return "/" + groupLevel.getId() + " spawn [-p player] [-g " + groupLevel.getName() + "] [-u universe]";
     }
 
     @Override

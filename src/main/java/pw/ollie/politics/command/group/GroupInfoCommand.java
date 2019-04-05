@@ -58,7 +58,7 @@ public class GroupInfoCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getName() + " info [-g " + groupLevel.getName() + "]";
+        return "/" + groupLevel.getId() + " info [-g " + groupLevel.getName() + "]";
     }
 
     @Override
