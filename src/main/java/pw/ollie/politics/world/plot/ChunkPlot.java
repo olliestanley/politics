@@ -71,10 +71,10 @@ public class ChunkPlot extends Plot {
     }
 
     @Override
-    public boolean contains(Location point) {
+    public boolean contains(Location location) {
         // check this
-        return baseX <= point.getBlockX() && baseX + 16 <= point.getBlockX()
-                && baseZ <= point.getBlockZ() && baseZ + 16 <= point.getBlockZ();
+        return baseX <= location.getBlockX() && baseX + 16 <= location.getBlockX()
+                && baseZ <= location.getBlockZ() && baseZ + 16 <= location.getBlockZ();
     }
 
     @Override

@@ -20,10 +20,14 @@
 package pw.ollie.politics.command.group;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.group.level.Role;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class GroupSetRoleCommand extends GroupSubCommand {
     GroupSetRoleCommand(GroupLevel groupLevel) {
@@ -31,7 +35,37 @@ public class GroupSetRoleCommand extends GroupSubCommand {
     }
 
     @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        Group group = findGroup(sender, args);
+
+        if (args.length(false) < 2) {
+            throw new CommandException("There must be both a player and role specified");
+        }
+
+        Player player = plugin.getServer().getPlayer(args.getString(0));
+        if (player == null) {
+            // todo setting roles of offline players?
+            throw new CommandException("That player is not online!");
+        }
+        if (!group.isImmediateMember(player.getName())) {
+            throw new CommandException("That player is not a member of the group!");
+        }
+
+        String rn = args.getString(1);
+        Role role = group.getLevel().getRole(rn);
+        if (role == null) {
+            throw new CommandException("There isn't a role named `" + rn + "'!");
+        }
+
+        if (!hasAdmin(sender)) {
+            Role myRole = group.getRole(sender.getName());
+            if (myRole.getRank() - role.getRank() <= 1) {
+                throw new CommandException("You can't set someone to a role equal to or higher than your own!");
+            }
+        }
+
+        group.setRole(player.getName(), role);
+        sender.sendMessage(player.getName() + " is now part of the " + groupLevel.getName() + "!");
     }
 
     @Override

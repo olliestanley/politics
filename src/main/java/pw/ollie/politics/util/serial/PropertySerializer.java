@@ -20,7 +20,7 @@
 package pw.ollie.politics.util.serial;
 
 import pw.ollie.politics.util.Position;
-import pw.ollie.politics.util.math.Transform;
+import pw.ollie.politics.util.math.RotatedPosition;
 import pw.ollie.politics.util.math.Vector2f;
 
 import org.bukkit.Bukkit;
@@ -36,12 +36,12 @@ public class PropertySerializer {
             throw new PropertyDeserializationException("Not a serialized property!");
         }
         if (!parts1[0].equalsIgnoreCase("p")) {
-            throw new PropertyDeserializationException("Not a point!");
+            throw new PropertyDeserializationException("Not a position!");
         }
 
         String[] whatMatters = parts1[1].split(",");
         if (whatMatters.length < 4) {
-            throw new PropertyDeserializationException("Not enough point data!");
+            throw new PropertyDeserializationException("Not enough position data!");
         }
 
         String world = whatMatters[0];
@@ -71,11 +71,11 @@ public class PropertySerializer {
         return new Position(world, x, y, z);
     }
 
-    public static String serializeTransform(Transform transform) {
-        return "t/" + transform.getPoint().getWorld() + "," + transform.getPoint().getX() + "," + transform.getPoint().getY() + "," + transform.getPoint().getZ() + "," + transform.getRotation().getX() + "," + transform.getRotation().getY() + "," + transform.getRotation().getY();
+    public static String serializeRotatedPosition(RotatedPosition rotatedPosition) {
+        return "t/" + rotatedPosition.getPosition().getWorld() + "," + rotatedPosition.getPosition().getX() + "," + rotatedPosition.getPosition().getY() + "," + rotatedPosition.getPosition().getZ() + "," + rotatedPosition.getRotation().getX() + "," + rotatedPosition.getRotation().getY() + "," + rotatedPosition.getRotation().getY();
     }
 
-    public static Transform deserializeTransform(String serialized) throws PropertyDeserializationException {
+    public static RotatedPosition deserializeRotatedPosition(String serialized) throws PropertyDeserializationException {
         String[] parts1 = serialized.split("/");
         if (parts1.length != 2) {
             throw new PropertyDeserializationException("Not a serialized property!");
@@ -125,7 +125,7 @@ public class PropertySerializer {
             throw new PropertyDeserializationException("The qy is not a float!", ex);
         }
 
-        return new Transform(new Position(world, x, y, z), new Vector2f(qx, qy));
+        return new RotatedPosition(new Position(world, x, y, z), new Vector2f(qx, qy));
     }
 
     private PropertySerializer() {

@@ -26,19 +26,19 @@ import com.google.common.base.MoreObjects;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Transform implements Serializable {
+public class RotatedPosition implements Serializable {
     private static final long serialVersionUID = 2L;
 
-    private final Position point;
+    private final Position position;
     private final Vector2f rotation;
 
-    public Transform(Position point, Vector2f rotation) {
-        this.point = point;
+    public RotatedPosition(Position position, Vector2f rotation) {
+        this.position = position;
         this.rotation = rotation;
     }
 
-    public Position getPoint() {
-        return point;
+    public Position getPosition() {
+        return position;
     }
 
     public Vector2f getRotation() {
@@ -53,20 +53,20 @@ public class Transform implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Transform transform = (Transform) o;
-        return Objects.equals(point, transform.point) &&
-                Objects.equals(rotation, transform.rotation);
+        RotatedPosition rotatedPosition = (RotatedPosition) o;
+        return Objects.equals(position, rotatedPosition.position) &&
+                Objects.equals(rotation, rotatedPosition.rotation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(point, rotation);
+        return Objects.hash(position, rotation);
     }
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("point", point)
+                .add("position", position)
                 .add("rotation", rotation)
                 .toString();
     }

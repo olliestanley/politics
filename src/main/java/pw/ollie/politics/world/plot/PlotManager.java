@@ -152,11 +152,11 @@ public final class PlotManager {
     }
 
     public Plot getPlotAtPosition(String world, int x, int z) {
-        return getWorld(world).getPlotAtChunkPosition(x, z);
+        return getWorld(world).getPlotAt(x, z);
     }
 
     public Plot getPlotAtPosition(World world, int x, int z) {
-        return getWorld(world).getPlotAtChunkPosition(x, z);
+        return getPlotAtPosition(world.getName(), x, z);
     }
 
     public ChunkPlot getPlotAtChunk(Chunk chunk) {

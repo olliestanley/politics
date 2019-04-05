@@ -28,7 +28,6 @@ import pw.ollie.politics.util.math.IntPair;
 import pw.ollie.politics.world.plot.ChunkPlot;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.PlotType;
-import pw.ollie.politics.world.plot.RegionPlot;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
@@ -71,11 +70,6 @@ public final class PoliticsWorld implements Storable {
             switch (PlotType.valueOf(string)) {
                 case CHUNK: {
                     ChunkPlot p = new ChunkPlot(plotObj);
-                    plots.put(IntPair.of(p.getX(), p.getZ()), p);
-                    break;
-                }
-                case REGION: {
-                    RegionPlot p = new RegionPlot(plotObj);
                     plots.put(IntPair.of(p.getX(), p.getZ()), p);
                     break;
                 }

@@ -20,10 +20,15 @@
 package pw.ollie.politics.command.group;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.group.level.Role;
+import pw.ollie.politics.group.level.RoleTrack;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class GroupPromoteCommand extends GroupSubCommand {
     GroupPromoteCommand(GroupLevel groupLevel) {
@@ -31,7 +36,49 @@ public class GroupPromoteCommand extends GroupSubCommand {
     }
 
     @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        Group group = findGroup(sender, args);
+
+        if (args.length(false) < 1) {
+            throw new CommandException("There was no player specified to promote.");
+        }
+
+        Player player = plugin.getServer().getPlayer(args.getString(0, false));
+        if (player == null) {
+            // todo: promoting offline players? may be necessary for some servers
+            throw new CommandException("That player is not online!");
+        }
+        if (!group.isImmediateMember(player.getName())) {
+            throw new CommandException("That player is not a member of the group!");
+        }
+
+        RoleTrack track;
+        String trackName = null;
+        if (args.hasValueFlag("t")) {
+            trackName = args.getValueFlag("t").getStringValue();
+            track = group.getLevel().getTrack(args.getValueFlag("t").getStringValue().toLowerCase());
+        } else {
+            track = group.getLevel().getDefaultTrack();
+        }
+        if (track == null) {
+            throw new CommandException("There isn't a track named '" + trackName + "'!");
+        }
+
+        Role role = group.getRole(player.getName());
+        Role next = track.getNextRole(role);
+        if (next == null) {
+            throw new CommandException("There is no role to promote to!");
+        }
+
+        if (!hasAdmin(sender)) {
+            Role myRole = group.getRole(sender.getName());
+            if (myRole.getRank() - next.getRank() <= 1) {
+                throw new CommandException("You can't promote someone to a role equal to or higher than your own!");
+            }
+        }
+
+        group.setRole(player.getName(), next);
+        sender.sendMessage(player.getName() + " was promoted to " + next.getName() + " in the group.");
     }
 
     @Override

@@ -39,8 +39,13 @@ public class GroupDemoteCommand extends GroupSubCommand {
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
 
+        if (args.length(false) < 1) {
+            throw new CommandException("There was no player specified to promote.");
+        }
+
         Player player = plugin.getServer().getPlayer(args.getString(0, false));
         if (player == null) {
+            // todo demoting offline players?
             throw new CommandException("That player is not online.");
         }
         if (!group.isImmediateMember(player.getName())) {
@@ -55,7 +60,6 @@ public class GroupDemoteCommand extends GroupSubCommand {
         } else {
             track = group.getLevel().getDefaultTrack();
         }
-
         if (track == null) {
             throw new CommandException("There isn't a track named '" + trackName + "'!");
         }

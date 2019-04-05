@@ -93,7 +93,7 @@ public abstract class Plot implements Storable {
 
     public abstract Location getBasePoint();
 
-    public abstract boolean contains(Location point);
+    public abstract boolean contains(Location location);
 
     public TIntList getOwnerIds() {
         return owners;

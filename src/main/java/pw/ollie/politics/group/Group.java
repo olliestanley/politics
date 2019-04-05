@@ -31,7 +31,7 @@ import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.universe.UniverseRules;
 import pw.ollie.politics.util.Position;
-import pw.ollie.politics.util.math.Transform;
+import pw.ollie.politics.util.math.RotatedPosition;
 import pw.ollie.politics.util.serial.PropertyDeserializationException;
 import pw.ollie.politics.util.serial.PropertySerializer;
 
@@ -130,26 +130,26 @@ public final class Group implements Comparable<Group>, Storable {
         return def;
     }
 
-    public Transform getTransformProperty(int property) {
+    public RotatedPosition getTransformProperty(int property) {
         return getTransformProperty(property, null);
     }
 
-    public Transform getTransformProperty(int property, Transform def) {
+    public RotatedPosition getTransformProperty(int property, RotatedPosition def) {
         String s = getStringProperty(property);
         if (s == null) {
             return def;
         }
 
         try {
-            return PropertySerializer.deserializeTransform(s);
+            return PropertySerializer.deserializeRotatedPosition(s);
         } catch (PropertyDeserializationException ex) {
             Politics.getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a transform!", ex);
             return def;
         }
     }
 
-    public void setProperty(int property, Transform value) {
-        setProperty(property, PropertySerializer.serializeTransform(value));
+    public void setProperty(int property, RotatedPosition value) {
+        setProperty(property, PropertySerializer.serializeRotatedPosition(value));
     }
 
     public Position getPositionProperty(int property) {
@@ -165,7 +165,7 @@ public final class Group implements Comparable<Group>, Storable {
         try {
             return PropertySerializer.deserializePosition(s);
         } catch (PropertyDeserializationException ex) {
-            Politics.getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a point!", ex);
+            Politics.getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a position!", ex);
             return def;
         }
     }
