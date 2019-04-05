@@ -20,10 +20,20 @@
 package pw.ollie.politics.command.group;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.util.Position;
+import pw.ollie.politics.util.math.RotatedPosition;
+import pw.ollie.politics.util.math.Vector2f;
 
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class GroupSpawnCommand extends GroupSubCommand {
     GroupSpawnCommand(GroupLevel groupLevel) {
@@ -31,7 +41,46 @@ public class GroupSpawnCommand extends GroupSubCommand {
     }
 
     @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        Group group = findGroup(sender, args);
+
+        if (!group.can(sender, Privileges.Group.SPAWN) && !hasAdmin(sender)) {
+            throw new CommandException("You don't have permissions to spawn to that " + groupLevel.getName() + ".");
+        }
+
+        RotatedPosition spawn = group.getTransformProperty(GroupProperty.SPAWN);
+        if (spawn == null) {
+            throw new CommandException("The " + groupLevel.getName() + " doesn't have a spawn!");
+        }
+
+        Player player = null;
+        String playerName = null;
+        if (args.hasValueFlag("p")) {
+            if (!sender.hasPermission("politics.admin.group." + groupLevel.getId() + ".spawnother")) {
+                throw new CommandException("You aren't allowed to spawn other players!");
+            }
+
+            playerName = args.getValueFlag("p").getStringValue();
+            player = plugin.getServer().getPlayer(playerName);
+        } else {
+            if (sender instanceof Player) {
+                player = (Player) sender;
+            }
+        }
+
+        if (player == null) {
+            throw new CommandException("The player wasn't specified, or the specified player is offline!");
+        }
+
+        Position spawnPos = spawn.getPosition();
+        Vector2f spawnRot = spawn.getRotation();
+        World world = plugin.getServer().getWorld(spawnPos.getWorld());
+        player.teleport(new Location(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), spawnRot.getX(), spawnRot.getY()));
+
+        if (playerName != null) {
+            sender.sendMessage(playerName + " was teleported to the " + groupLevel.getName() + " spawn!");
+        }
+        player.sendMessage("You have been teleported to the spawn of " + group.getStringProperty(GroupProperty.NAME) + "!");
     }
 
     @Override
