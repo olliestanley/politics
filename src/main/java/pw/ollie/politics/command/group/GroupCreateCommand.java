@@ -26,6 +26,7 @@ import pw.ollie.politics.group.level.GroupLevel;
 
 import org.bukkit.command.CommandSender;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class GroupCreateCommand extends GroupSubCommand {
@@ -39,16 +40,21 @@ public class GroupCreateCommand extends GroupSubCommand {
 
     @Override
     public String getPermission() {
-        return null;
+        return getBasePermissionNode() + ".create";
     }
 
     @Override
     public List<String> getAliases() {
-        return null;
+        return Arrays.asList("new", "setup");
     }
 
     @Override
     public String getUsage() {
-        return null;
+        return "/" + groupLevel.getName() + " create <name> [-f founder] [-u universe] [-t tag]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Creates a new " + groupLevel.getName() + ".";
     }
 }

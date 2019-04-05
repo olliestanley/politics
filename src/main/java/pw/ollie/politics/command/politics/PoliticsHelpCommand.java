@@ -57,4 +57,9 @@ public class PoliticsHelpCommand extends PoliticsSubCommand {
     public String getUsage() {
         return "/politics help";
     }
+
+    @Override
+    public String getDescription() {
+        return "Provides general command help for Politics.";
+    }
 }

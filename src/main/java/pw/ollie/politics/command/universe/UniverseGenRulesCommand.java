@@ -79,4 +79,9 @@ public class UniverseGenRulesCommand extends PoliticsSubCommand {
     public String getUsage() {
         return "/universe genrules <template> <name> [--f]";
     }
+
+    @Override
+    public String getDescription() {
+        return "Generates a new set of rules from a template.";
+    }
 }

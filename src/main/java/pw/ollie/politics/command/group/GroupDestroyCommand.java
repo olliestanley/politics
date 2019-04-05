@@ -26,6 +26,7 @@ import pw.ollie.politics.group.level.GroupLevel;
 
 import org.bukkit.command.CommandSender;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class GroupDestroyCommand extends GroupSubCommand {
@@ -39,16 +40,21 @@ public class GroupDestroyCommand extends GroupSubCommand {
 
     @Override
     public String getPermission() {
-        return null;
+        return getBasePermissionNode() + ".destroy";
     }
 
     @Override
     public List<String> getAliases() {
-        return null;
+        return Arrays.asList("delete", "remove");
     }
 
     @Override
     public String getUsage() {
-        return null;
+        return "/" + groupLevel + " destroy <group>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Destroys a " + groupLevel.getName() + ".";
     }
 }

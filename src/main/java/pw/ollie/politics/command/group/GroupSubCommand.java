@@ -29,4 +29,8 @@ public abstract class GroupSubCommand extends PoliticsSubCommand {
         super(name);
         this.groupLevel = groupLevel;
     }
+
+    protected String getBasePermissionNode() {
+        return "politics.group." + groupLevel.getName();
+    }
 }

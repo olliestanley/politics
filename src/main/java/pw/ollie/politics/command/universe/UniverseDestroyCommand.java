@@ -61,4 +61,9 @@ public class UniverseDestroyCommand extends PoliticsSubCommand {
     public String getUsage() {
         return "/universe destroy <universe>";
     }
+
+    @Override
+    public String getDescription() {
+        return "Destroys a universe.";
+    }
 }

@@ -26,6 +26,7 @@ import pw.ollie.politics.group.level.GroupLevel;
 
 import org.bukkit.command.CommandSender;
 
+import java.util.Collections;
 import java.util.List;
 
 public class GroupInfoCommand extends GroupSubCommand {
@@ -39,16 +40,21 @@ public class GroupInfoCommand extends GroupSubCommand {
 
     @Override
     public String getPermission() {
-        return null;
+        return getBasePermissionNode() + ".info";
     }
 
     @Override
     public List<String> getAliases() {
-        return null;
+        return Collections.singletonList("about");
     }
 
     @Override
     public String getUsage() {
-        return null;
+        return "/" + groupLevel.getName() + " info <group>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Provides information about a " + groupLevel.getName() + ".";
     }
 }

@@ -39,16 +39,16 @@ public class GroupListCommand extends GroupSubCommand {
 
     @Override
     public String getPermission() {
-        return null;
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return null;
+        return getBasePermissionNode() + ".list";
     }
 
     @Override
     public String getUsage() {
-        return null;
+        return "/" + groupLevel.getName() + " list [page]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Provides a list of " + groupLevel.getPlural() + ".";
     }
 }

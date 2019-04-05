@@ -25,9 +25,6 @@ import pw.ollie.politics.group.level.GroupLevel;
 
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GroupClaimCommand extends GroupSubCommand {
     GroupClaimCommand(GroupLevel groupLevel) {
         super("claim", groupLevel);
@@ -39,16 +36,16 @@ public class GroupClaimCommand extends GroupSubCommand {
 
     @Override
     public String getPermission() {
-        return this.getName();
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return new ArrayList<>();
+        return getBasePermissionNode() + ".claim";
     }
 
     @Override
     public String getUsage() {
-        return null;
+        return "/" + groupLevel.getName() + " claim [-g " + groupLevel.getName() + "] [-u universe]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Claims land for a " + groupLevel.getName() + ".";
     }
 }

@@ -39,16 +39,16 @@ public class GroupSetRoleCommand extends GroupSubCommand {
 
     @Override
     public String getPermission() {
-        return null;
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return null;
+        return getBasePermissionNode() + ".setrole";
     }
 
     @Override
     public String getUsage() {
-        return null;
+        return "/" + groupLevel.getName() + " setrole <player> <role> [-g group] [-u universe]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Sets somebody's role in a " + groupLevel.getName() + ".";
     }
 }

@@ -39,16 +39,16 @@ public class GroupSpawnCommand extends GroupSubCommand {
 
     @Override
     public String getPermission() {
-        return null;
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return null;
+        return getBasePermissionNode() + ".spawn";
     }
 
     @Override
     public String getUsage() {
-        return null;
+        return "/" + groupLevel.getName() + " spawn [-p player] [-g " + groupLevel.getName() + "] [-u universe]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Travel to the spawn location of a " + groupLevel.getName() + ".";
     }
 }

@@ -39,16 +39,16 @@ public class GroupDemoteCommand extends GroupSubCommand {
 
     @Override
     public String getPermission() {
-        return null;
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return null;
+        return getBasePermissionNode() + "demote";
     }
 
     @Override
     public String getUsage() {
-        return null;
+        return "/" + groupLevel.getName() + " demote <player> [-t track] [-g " + groupLevel.getName() + "] [-u universe]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Demotes somebody in the " + groupLevel.getName() + ".";
     }
 }

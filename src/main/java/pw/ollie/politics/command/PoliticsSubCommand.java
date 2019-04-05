@@ -24,6 +24,7 @@ import pw.ollie.politics.command.args.Arguments;
 
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,9 +52,13 @@ public abstract class PoliticsSubCommand {
      *
      * @return string list of aliases
      */
-    public abstract List<String> getAliases();
+    public List<String> getAliases() {
+        return new ArrayList<>();
+    }
 
     public abstract String getUsage();
+
+    public abstract String getDescription();
 
     /**
      * Whether command is player-only. Should be overridden by subcommands which are.

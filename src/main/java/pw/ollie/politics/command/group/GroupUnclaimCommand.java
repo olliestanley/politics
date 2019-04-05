@@ -20,13 +20,10 @@
 package pw.ollie.politics.command.group;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.level.GroupLevel;
 
 import org.bukkit.command.CommandSender;
-
-import java.util.List;
 
 public class GroupUnclaimCommand extends GroupSubCommand {
     GroupUnclaimCommand(GroupLevel groupLevel) {
@@ -39,16 +36,16 @@ public class GroupUnclaimCommand extends GroupSubCommand {
 
     @Override
     public String getPermission() {
-        return null;
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return null;
+        return getBasePermissionNode() + ".unclaim";
     }
 
     @Override
     public String getUsage() {
-        return null;
+        return "/" + groupLevel.getName() + " unclaim [-g " + groupLevel.getName() + "] [-u universe]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Unclaims land for a " + groupLevel.getName() + ".";
     }
 }

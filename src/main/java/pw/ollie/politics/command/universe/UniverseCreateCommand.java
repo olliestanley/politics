@@ -111,4 +111,9 @@ public class UniverseCreateCommand extends PoliticsSubCommand {
     public String getUsage() {
         return "/universe create <universe> <ruleset> <world1,world2...>";
     }
+
+    @Override
+    public String getDescription() {
+        return "Creates a new universe.";
+    }
 }

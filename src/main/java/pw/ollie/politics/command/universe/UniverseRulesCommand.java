@@ -49,11 +49,16 @@ public class UniverseRulesCommand extends PoliticsSubCommand {
 
     @Override
     public List<String> getAliases() {
-        return Arrays.asList("r, rulesets");
+        return Arrays.asList("r", "rulesets");
     }
 
     @Override
     public String getUsage() {
         return "/universe rules";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Lists existing sets of rules.";
     }
 }
