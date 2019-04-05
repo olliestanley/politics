@@ -19,36 +19,14 @@
  */
 package pw.ollie.politics.command.group;
 
-import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.PoliticsSubCommand;
-import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.level.GroupLevel;
 
-import org.bukkit.command.CommandSender;
+public abstract class GroupSubCommand extends PoliticsSubCommand {
+    protected final GroupLevel groupLevel;
 
-import java.util.List;
-
-public class GroupDemoteCommand extends GroupSubCommand {
-    GroupDemoteCommand(GroupLevel groupLevel) {
-        super("demote", groupLevel);
-    }
-
-    @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
-    }
-
-    @Override
-    public String getPermission() {
-        return null;
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return null;
-    }
-
-    @Override
-    public String getUsage() {
-        return null;
+    protected GroupSubCommand(String name, GroupLevel groupLevel) {
+        super(name);
+        this.groupLevel = groupLevel;
     }
 }

@@ -20,16 +20,17 @@
 package pw.ollie.politics.command.group;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.level.GroupLevel;
 
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class GroupClaimCommand extends PoliticsSubCommand {
-    GroupClaimCommand() {
-        super("claim");
+public class GroupClaimCommand extends GroupSubCommand {
+    GroupClaimCommand(GroupLevel groupLevel) {
+        super("claim", groupLevel);
     }
 
     @Override
@@ -38,12 +39,12 @@ public class GroupClaimCommand extends PoliticsSubCommand {
 
     @Override
     public String getPermission() {
-        return null;
+        return this.getName();
     }
 
     @Override
     public List<String> getAliases() {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
