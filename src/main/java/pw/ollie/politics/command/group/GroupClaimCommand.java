@@ -47,6 +47,8 @@ public class GroupClaimCommand extends GroupSubCommand {
             throw new CommandException("You don't have permissions to claim land in this " + groupLevel.getName() + ".");
         }
 
+        // todo update for regionplots when added
+
         // TODO add a way to get the world, x, y, z from the command line
         // (should be in GroupCommand)
         Location location = ((Player) sender).getLocation();
@@ -68,6 +70,8 @@ public class GroupClaimCommand extends GroupSubCommand {
         if (!plot.addOwner(group)) {
             throw new CommandException("You cannot claim this plot!");
         }
+
+        // todo call plot owner change event here
 
         sender.sendMessage("The plot was claimed successfully.");
     }

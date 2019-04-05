@@ -151,20 +151,16 @@ public final class PlotManager {
         return getWorld(world.getName());
     }
 
-    public Plot getPlotAtPosition(String world, int x, int z) {
-        return getWorld(world).getPlotAt(x, z);
-    }
-
-    public Plot getPlotAtPosition(World world, int x, int z) {
-        return getPlotAtPosition(world.getName(), x, z);
+    public ChunkPlot getPlotAtChunkPosition(World world, int x, int z) {
+        return getWorld(world).getPlotAtChunkPosition(x, z);
     }
 
     public ChunkPlot getPlotAtChunk(Chunk chunk) {
         return getWorld(chunk.getWorld()).getPlotAtChunkPosition(chunk.getX(), chunk.getZ());
     }
 
-    public Plot getPlotAt(Location position) {
-        return getPlotAtPosition(position.getWorld(), position.getChunk().getX(), position.getChunk().getZ());
+    public ChunkPlot getChunkPlotAt(Location position) {
+        return getPlotAtChunkPosition(position.getWorld(), position.getChunk().getX(), position.getChunk().getZ());
     }
 
     private PoliticsWorld createWorld(String name) {

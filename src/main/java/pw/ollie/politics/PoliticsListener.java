@@ -44,8 +44,9 @@ public final class PoliticsListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        Plot from = plotManager.getPlotAt(event.getFrom());
-        Plot to = plotManager.getPlotAt(event.getTo());
+        // todo: update to take account of all plots not just chunk plots when region plots are added
+        Plot from = plotManager.getChunkPlotAt(event.getFrom());
+        Plot to = plotManager.getChunkPlotAt(event.getTo());
 
         if (!from.equals(to)) {
             PlayerChangePlotEvent pcpe = Politics.getEventFactory().callPlayerChangePlotEvent(player, from, to);

@@ -164,6 +164,10 @@ public final class UniverseManager {
         }
     }
 
+    public void saveRules() {
+        // todo implement this
+    }
+
     public void loadUniverses() {
         BSONDecoder decoder = new BasicBSONDecoder();
         universes = new THashMap<>();

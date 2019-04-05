@@ -96,7 +96,7 @@ public abstract class Plot implements Storable {
     public abstract boolean contains(Location location);
 
     public TIntList getOwnerIds() {
-        return owners;
+        return new TIntArrayList(owners);
     }
 
     public List<Group> getOwners() {
@@ -200,7 +200,7 @@ public abstract class Plot implements Storable {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         if (!(obj instanceof Plot)) {
             return false;
         }

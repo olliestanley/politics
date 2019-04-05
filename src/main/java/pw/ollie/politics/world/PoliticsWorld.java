@@ -21,13 +21,11 @@ package pw.ollie.politics.world;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
-import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.math.IntPair;
 import pw.ollie.politics.world.plot.ChunkPlot;
 import pw.ollie.politics.world.plot.Plot;
-import pw.ollie.politics.world.plot.PlotType;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
@@ -42,40 +40,34 @@ import java.util.Map;
 public final class PoliticsWorld implements Storable {
     private final String name;
     private final WorldConfig config;
-    private final Map<IntPair, Plot> plots;
+    private final Map<IntPair, ChunkPlot> chunkPlots;
 
     public PoliticsWorld(String name, WorldConfig config) {
         this(name, config, new HashMap<>());
     }
 
-    private PoliticsWorld(String name, WorldConfig config, Map<IntPair, Plot> plots) {
+    private PoliticsWorld(String name, WorldConfig config, Map<IntPair, ChunkPlot> chunkPlots) {
         this.name = name;
         this.config = config;
-        this.plots = plots;
+        this.chunkPlots = chunkPlots;
     }
 
     public PoliticsWorld(String name, WorldConfig config, BasicBSONObject object) {
         this.name = object.getString("name", null);
-        plots = new HashMap<>();
-        BasicBSONList list = (BasicBSONList) object.get("plots");
+        chunkPlots = new HashMap<>();
+        BasicBSONList list = (BasicBSONList) object.get("chunkplots");
         for (Object o : list) {
             if (!(o instanceof BasicBSONObject)) {
                 throw new IllegalArgumentException("List must only contain more objects!");
             }
             BasicBSONObject plotObj = (BasicBSONObject) o;
             String string = plotObj.getString("type", null);
-            if (string == null || PlotType.valueOf(string) == null) {
+            if (string == null) {
                 throw new IllegalArgumentException("Type is not a recognized string");
             }
-            switch (PlotType.valueOf(string)) {
-                case CHUNK: {
-                    ChunkPlot p = new ChunkPlot(plotObj);
-                    plots.put(IntPair.of(p.getX(), p.getZ()), p);
-                    break;
-                }
-                default:
-                    throw new IllegalStateException("Was unable to handle Type");
-            }
+
+            ChunkPlot p = new ChunkPlot(plotObj);
+            chunkPlots.put(IntPair.of(p.getX(), p.getZ()), p);
         }
         this.config = config;
     }
@@ -101,7 +93,7 @@ public final class PoliticsWorld implements Storable {
 //     * @return the internal list of owners for given location
 //     */
 //    TIntList getInternalOwnerList(int x, int z) {
-//        plots.get(x, z).geto
+//        chunkPlots.get(x, z).geto
 //        TIntList list = owners.get(x, z);
 //        if (list == null) {
 //            list = new TIntArrayList();
@@ -120,16 +112,8 @@ public final class PoliticsWorld implements Storable {
 //        return new TIntArrayList(getInternalOwnerList(x, z));
 //    }
 
-    public List<Group> getOwners(int x, int z) {
-        return plots.get(IntPair.of(x, z)).getOwners();
-    }
-
     public Universe getUniverse(GroupLevel level) {
         return Politics.getUniverseManager().getUniverse(this, level);
-    }
-
-    public Plot getPlotAt(int x, int z) {
-        return plots.get(IntPair.of(x, z));
     }
 
     public ChunkPlot getPlotAtChunkPosition(int x, int z) {
@@ -148,14 +132,14 @@ public final class PoliticsWorld implements Storable {
     public BSONObject toBSONObject() {
         BasicBSONObject bson = new BasicBSONObject();
         bson.put("name", name);
-        BasicBSONList plotList = new BasicBSONList();
-        for (Plot plot : plots.values()) {
+        BasicBSONList chunkPlotList = new BasicBSONList();
+        for (Plot plot : chunkPlots.values()) {
             if (!plot.canStore()) {
                 continue;
             }
-            plotList.add(plot.toBSONObject());
+            chunkPlotList.add(plot.toBSONObject());
         }
-        bson.put("plots", plots);
+        bson.put("chunkplots", chunkPlotList);
         return bson;
     }
 
