@@ -30,6 +30,11 @@ import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.universe.UniverseRules;
+import pw.ollie.politics.util.Position;
+import pw.ollie.politics.util.math.Transform;
+import pw.ollie.politics.util.serial.PropertyDeserializationException;
+import pw.ollie.politics.util.serial.PropertySerializationException;
+import pw.ollie.politics.util.serial.PropertySerializer;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
@@ -42,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 public final class Group implements Comparable<Group>, Storable {
     private final int uid;
@@ -125,56 +131,58 @@ public final class Group implements Comparable<Group>, Storable {
         return def;
     }
 
-    // TODO: Transform and Point are Spout engine concepts which need porting. Location is the Bukkit equivalent of Point
-//    public Transform getTransformProperty(int property) {
-//        return getTransformProperty(property, null);
-//    }
-//
-//    public Transform getTransformProperty(int property, Transform def) {
-//        final String s = getStringProperty(property);
-//        if (s == null) {
-//            return def;
-//        }
-//        try {
-//            return (Transform) PropertySerializer.deserialize(s);
-//        } catch (final PropertyDeserializationException ex) {
-//            PoliticsPlugin.instance().getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a transform!", ex);
-//            return def;
-//        }
-//    }
-//
-//    public Point getPointProperty(final int property) {
-//        return getPointProperty(property, null);
-//    }
-//
-//    public Point getPointProperty(final int property, final Point def) {
-//        final String s = getStringProperty(property);
-//        if (s == null) {
-//            return def;
-//        }
-//        try {
-//            return (Point) PropertySerializer.deserialize(s);
-//        } catch (final PropertyDeserializationException ex) {
-//            PoliticsPlugin.logger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a point!", ex);
-//            return def;
-//        }
-//    }
-//
-//    public void setProperty(final int property, final Transform value) {
-//        try {
-//            setProperty(property, PropertySerializer.serialize(value));
-//        } catch (final PropertySerializationException e) {
-//            PoliticsPlugin.getLogger().log(Level.SEVERE, "Error serializing property!", e);
-//        }
-//    }
-//
-//    public void setProperty(final int property, final Point value) {
-//        try {
-//            setProperty(property, PropertySerializer.serialize(value));
-//        } catch (final PropertySerializationException e) {
-//            PoliticsPlugin.getLogger().log(Level.SEVERE, "Error serializing property!", e);
-//        }
-//    }
+    public Transform getTransformProperty(int property) {
+        return getTransformProperty(property, null);
+    }
+
+    public Transform getTransformProperty(int property, Transform def) {
+        String s = getStringProperty(property);
+        if (s == null) {
+            return def;
+        }
+
+        try {
+            return (Transform) PropertySerializer.deserialize(s);
+        } catch (PropertyDeserializationException ex) {
+            Politics.getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a transform!", ex);
+            return def;
+        }
+    }
+
+    public void setProperty(int property, Transform value) {
+        try {
+            setProperty(property, PropertySerializer.serialize(value));
+        } catch (PropertySerializationException e) {
+            Politics.getLogger().log(Level.SEVERE, "Error serializing property!", e);
+        }
+    }
+
+    public Position getPositionProperty(int property) {
+        return getPositionProperty(property, null);
+    }
+
+    public Position getPositionProperty(int property, Position def) {
+        String s = getStringProperty(property);
+        if (s == null) {
+            return def;
+        }
+
+        try {
+            return (Position) PropertySerializer.deserialize(s);
+        } catch (PropertyDeserializationException ex) {
+            Politics.getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a point!", ex);
+            return def;
+        }
+    }
+
+
+    public void setProperty(int property, Position value) {
+        try {
+            setProperty(property, PropertySerializer.serialize(value));
+        } catch (PropertySerializationException e) {
+            Politics.getLogger().log(Level.SEVERE, "Error serializing property!", e);
+        }
+    }
 
     public void setProperty(int property, Object value) {
         Politics.getEventFactory().callGroupPropertySetEvent(this, property, value);
