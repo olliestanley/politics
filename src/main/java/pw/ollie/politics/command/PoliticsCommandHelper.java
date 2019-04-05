@@ -22,16 +22,25 @@ package pw.ollie.politics.command;
 import pw.ollie.politics.util.StringUtil;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 
 import java.util.Collection;
 import java.util.Optional;
 
 public final class PoliticsCommandHelper {
+    public static void sendCommandHelp(CommandSender sender, PoliticsBaseCommand baseCommand) {
+        PoliticsCommandHelper.sendCommandHelp(sender, baseCommand, 1);
+    }
+
+    // page counts from 1 (not an index)
+    public static void sendCommandHelp(CommandSender sender, PoliticsBaseCommand baseCommand, int page) {
+        // todo helpful message with subcommands
+    }
+
     public static Optional<PoliticsSubCommand> getClosestMatch(Collection<PoliticsSubCommand> subCommands, String label) {
         return fuzzyLookup(subCommands, label, 2);
     }
-
 
     private static Optional<PoliticsSubCommand> fuzzyLookup(Collection<PoliticsSubCommand> collection, String name, int tolerance) {
         String adjName = name.replaceAll("[ _]", "").toLowerCase();

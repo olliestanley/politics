@@ -46,7 +46,7 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         // if there is no valid subcommand provided then a hopefully helpful error message is shown
 
         if (args.length() < 1) {
-            // todo helpful error message
+            PoliticsCommandHelper.sendCommandHelp(sender, this);
             return;
         }
 
@@ -65,7 +65,7 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
                 return;
             }
 
-            // todo helpful error message
+            PoliticsCommandHelper.sendCommandHelp(sender, this);
         }
     }
 
@@ -84,6 +84,10 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
 
         subCommands.add(subCommand);
         return true;
+    }
+
+    protected Set<PoliticsSubCommand> getSubCommands() {
+        return new THashSet<>(subCommands);
     }
 
     private Optional<PoliticsSubCommand> findSubCommand(String arg) {
