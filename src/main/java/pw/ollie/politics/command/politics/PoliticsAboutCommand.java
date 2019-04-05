@@ -49,4 +49,9 @@ public class PoliticsAboutCommand extends PoliticsSubCommand {
     public List<String> getAliases() {
         return Arrays.asList("info", "information");
     }
+
+    @Override
+    public String getUsage() {
+        return "/politics about";
+    }
 }

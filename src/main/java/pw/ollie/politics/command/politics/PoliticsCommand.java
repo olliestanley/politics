@@ -26,6 +26,7 @@ public final class PoliticsCommand extends PoliticsBaseCommand {
     public PoliticsCommand(PoliticsPlugin plugin) {
         super(plugin, "politics", "Core politics plugin control command");
 
-        // todo register subcommands
+        this.registerSubCommand(new PoliticsAboutCommand());
+        this.registerSubCommand(new PoliticsHelpCommand());
     }
 }

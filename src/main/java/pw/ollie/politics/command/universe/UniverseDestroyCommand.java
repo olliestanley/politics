@@ -17,44 +17,48 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.command.politics;
+package pw.ollie.politics.command.universe;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
-import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.universe.Universe;
 
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class PoliticsHelpCommand extends PoliticsSubCommand {
-    PoliticsHelpCommand() {
-        super("help");
+public class UniverseDestroyCommand extends PoliticsSubCommand {
+    UniverseDestroyCommand() {
+        super("destroy");
     }
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
-        sender.sendMessage("Politics " + plugin.getDescription().getVersion() + " - Command Overview");
-        sender.sendMessage("Universe Commands: /universe help");
-        for (GroupLevel groupLevel : plugin.getUniverseManager().getGroupLevels()) {
-            sender.sendMessage(groupLevel.getName() + " Commands: /" + groupLevel.getName() + " help");
+        Universe universe = plugin.getUniverseManager().getUniverse(args.getString(0));
+        if (universe == null) {
+            sender.sendMessage("A universe with the name '" + args.getString(0) + "' doesn't exist.");
+            return;
         }
+
+        plugin.getUniverseManager().destroyUniverse(universe);
+        plugin.getEventFactory().callUniverseDestroyEvent(universe);
+        sender.sendMessage("Universe destroyed, sir.");
     }
 
     @Override
     public String getPermission() {
-        return "politics.help";
+        return "politics.universe.destroy";
     }
 
     @Override
     public List<String> getAliases() {
-        return Arrays.asList("commands", "cmds", "h");
+        return Arrays.asList("delete", "remove");
     }
 
     @Override
     public String getUsage() {
-        return "/politics help";
+        return "/universe destroy <universe>";
     }
 }

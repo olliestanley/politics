@@ -23,7 +23,10 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.event.group.GroupPropertySetEvent;
 import pw.ollie.politics.event.player.PlayerChangePlotEvent;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
+import pw.ollie.politics.event.universe.UniverseCreateEvent;
+import pw.ollie.politics.event.universe.UniverseDestroyEvent;
 import pw.ollie.politics.group.Group;
+import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.world.plot.Plot;
 
 import org.bukkit.entity.Player;
@@ -46,6 +49,14 @@ public final class PoliticsEventFactory {
 
     public PlayerChangePlotEvent callPlayerChangePlotEvent(Player player, Plot from, Plot to) {
         return callEvent(new PlayerChangePlotEvent(player, from, to));
+    }
+
+    public UniverseCreateEvent callUniverseCreateEvent(Universe universe) {
+        return callEvent(new UniverseCreateEvent(universe));
+    }
+
+    public UniverseDestroyEvent callUniverseDestroyEvent(Universe universe) {
+        return callEvent(new UniverseDestroyEvent(universe));
     }
 
     public <T extends Event> T callEvent(T event) {
