@@ -70,7 +70,7 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         }
     }
 
-    protected boolean registerSubCommand(PoliticsSubCommand subCommand) {
+    public boolean registerSubCommand(PoliticsSubCommand subCommand) {
         String subCommandName = subCommand.getName().toLowerCase();
         if (subCommands.stream()
                 .anyMatch(registered -> registered.getName().equals(subCommandName) || registered.getAliases().contains(subCommandName))) {
@@ -87,7 +87,7 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         return true;
     }
 
-    protected List<PoliticsSubCommand> getSubCommands() {
+    public List<PoliticsSubCommand> getSubCommands() {
         return new ArrayList<>(subCommands);
     }
 

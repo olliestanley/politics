@@ -52,6 +52,8 @@ public final class PoliticsCommandManager {
         for (GroupLevel groupLevel : plugin.getUniverseManager().getGroupLevels()) {
             this.registerCommand(new GroupCommand(plugin, groupLevel));
         }
+
+        PoliticsCommandHelper.registerPermission("politics.group.admin", "Allows performing functions, like land claiming, for groups you're not a member of");
     }
 
     private Object commandMap;
