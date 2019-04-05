@@ -17,20 +17,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.data;
+package pw.ollie.politics.util.serial;
 
-public class InvalidConfigurationException extends Exception {
-    private static final long serialVersionUID = -3792841272998195396L;
+public class PropertyDeserializationException extends Exception {
+    private static final long serialVersionUID = 2338368863788970401L;
 
-    public InvalidConfigurationException(String reason) {
-        super(reason);
+    public PropertyDeserializationException(final String string) {
+        super(string);
     }
 
-    public InvalidConfigurationException(Throwable cause) {
-        super(cause);
-    }
-
-    public InvalidConfigurationException(String reason, Throwable cause) {
-        super(reason, cause);
+    public PropertyDeserializationException(final String string, final Throwable thrwbl) {
+        super(string, thrwbl);
     }
 }

@@ -17,20 +17,41 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.data;
+package pw.ollie.politics.util.math;
 
-public class InvalidConfigurationException extends Exception {
-    private static final long serialVersionUID = -3792841272998195396L;
+import java.io.Serializable;
 
-    public InvalidConfigurationException(String reason) {
-        super(reason);
+public class Vector2f implements Serializable {
+    private static final long serialVersionUID = 4L;
+
+    private final float x, y;
+
+    public Vector2f(float x, float y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public InvalidConfigurationException(Throwable cause) {
-        super(cause);
+    public float lengthSquared() {
+        return x * x + y * y;
     }
 
-    public InvalidConfigurationException(String reason, Throwable cause) {
-        super(reason, cause);
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Vector2f)) {
+            return false;
+        }
+
+        Vector2f other = (Vector2f) obj;
+        return x == other.x && y == other.y;
     }
 }

@@ -21,7 +21,7 @@ package pw.ollie.politics.group.level;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.group.privilege.Privilege;
-import pw.ollie.politics.util.ConfigUtil;
+import pw.ollie.politics.util.serial.ConfigUtil;
 
 import org.bukkit.configuration.ConfigurationSection;
 

@@ -20,6 +20,7 @@
 package pw.ollie.politics.util.math;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Vector3f implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -48,6 +49,7 @@ public class Vector3f implements Serializable {
         return z;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -58,5 +60,10 @@ public class Vector3f implements Serializable {
 
         Vector3f other = (Vector3f) obj;
         return x == other.x && y == other.y && z == other.z;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
     }
 }
