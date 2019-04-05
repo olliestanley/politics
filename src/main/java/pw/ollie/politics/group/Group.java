@@ -33,7 +33,6 @@ import pw.ollie.politics.universe.UniverseRules;
 import pw.ollie.politics.util.Position;
 import pw.ollie.politics.util.math.Transform;
 import pw.ollie.politics.util.serial.PropertyDeserializationException;
-import pw.ollie.politics.util.serial.PropertySerializationException;
 import pw.ollie.politics.util.serial.PropertySerializer;
 
 import org.bson.BSONObject;
@@ -150,11 +149,7 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     public void setProperty(int property, Transform value) {
-        try {
-            setProperty(property, PropertySerializer.serializeTransform(value));
-        } catch (PropertySerializationException e) {
-            Politics.getLogger().log(Level.SEVERE, "Error serializing property!", e);
-        }
+        setProperty(property, PropertySerializer.serializeTransform(value));
     }
 
     public Position getPositionProperty(int property) {
@@ -177,11 +172,7 @@ public final class Group implements Comparable<Group>, Storable {
 
 
     public void setProperty(int property, Position value) {
-        try {
-            setProperty(property, PropertySerializer.serializePosition(value));
-        } catch (PropertySerializationException e) {
-            Politics.getLogger().log(Level.SEVERE, "Error serializing property!", e);
-        }
+        setProperty(property, PropertySerializer.serializePosition(value));
     }
 
     public void setProperty(int property, Object value) {
