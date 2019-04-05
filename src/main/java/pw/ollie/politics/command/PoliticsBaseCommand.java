@@ -19,8 +19,6 @@
  */
 package pw.ollie.politics.command;
 
-import gnu.trove.set.hash.THashSet;
-
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.command.args.Arguments;
 
@@ -29,12 +27,12 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.logging.Level;
 
 public abstract class PoliticsBaseCommand extends BukkitCommand {
-    private final Set<PoliticsSubCommand> subCommands = new THashSet<>();
+    private final List<PoliticsSubCommand> subCommands = new ArrayList<>();
 
     protected PoliticsBaseCommand(String name, String description) {
         super(name.toLowerCase(), description, "Type '/" + name + " help' for usage help!", new ArrayList<>());
@@ -86,8 +84,8 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         return true;
     }
 
-    protected Set<PoliticsSubCommand> getSubCommands() {
-        return new THashSet<>(subCommands);
+    protected List<PoliticsSubCommand> getSubCommands() {
+        return new ArrayList<>(subCommands);
     }
 
     private Optional<PoliticsSubCommand> findSubCommand(String arg) {

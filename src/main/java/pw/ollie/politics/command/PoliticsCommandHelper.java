@@ -19,27 +19,46 @@
  */
 package pw.ollie.politics.command;
 
+import gnu.trove.map.hash.THashMap;
+
 import pw.ollie.politics.util.StringUtil;
+import pw.ollie.politics.util.collect.PagedArrayList;
+import pw.ollie.politics.util.collect.PagedList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public final class PoliticsCommandHelper {
+    private static Map<PoliticsBaseCommand, PagedList<PoliticsSubCommand>> pagedSubCommands = new THashMap<>();
+
     public static void sendCommandHelp(CommandSender sender, PoliticsBaseCommand baseCommand) {
         PoliticsCommandHelper.sendCommandHelp(sender, baseCommand, 1);
     }
 
     // page counts from 1 (not an index)
-    public static void sendCommandHelp(CommandSender sender, PoliticsBaseCommand baseCommand, int page) {
-        // todo helpful message with subcommands
+    public static void sendCommandHelp(CommandSender sender, PoliticsBaseCommand baseCommand, int pageNumber) {
+        PagedList<PoliticsSubCommand> pages = pagedSubCommands.computeIfAbsent(baseCommand, f -> generatePagedSubCommands(baseCommand));
+        if (pageNumber > pages.pages()) {
+            sender.sendMessage("There are only " + pages.pages() + " pages.");
+            return;
+        }
+
+        List<PoliticsSubCommand> page = pages.getPage(pageNumber);
+        // todo provide helpful message with subcommands
     }
 
     public static Optional<PoliticsSubCommand> getClosestMatch(Collection<PoliticsSubCommand> subCommands, String label) {
         return fuzzyLookup(subCommands, label, 2);
+    }
+
+    private static PagedList<PoliticsSubCommand> generatePagedSubCommands(PoliticsBaseCommand baseCommand) {
+        return new PagedArrayList<>(baseCommand.getSubCommands());
     }
 
     private static Optional<PoliticsSubCommand> fuzzyLookup(Collection<PoliticsSubCommand> collection, String name, int tolerance) {

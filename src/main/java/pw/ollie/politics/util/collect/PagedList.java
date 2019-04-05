@@ -24,6 +24,8 @@ import java.util.List;
 public interface PagedList<E> extends List<E> {
     List<E> getPage(int page);
 
+    int pages();
+
     int getElementsPerPage();
 
     boolean isAutoRefresh();

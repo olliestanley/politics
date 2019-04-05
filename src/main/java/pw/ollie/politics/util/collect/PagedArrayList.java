@@ -42,6 +42,8 @@ public class PagedArrayList<E> implements PagedList<E> {
     public PagedArrayList(List<E> delegate) {
         this.delegate = delegate;
         this.pages = new HashMap<>();
+
+        calculatePages();
     }
 
     @Override
@@ -50,6 +52,14 @@ public class PagedArrayList<E> implements PagedList<E> {
             calculatePages();
         }
         return pages.get(page);
+    }
+
+    @Override
+    public int pages() {
+        if (refreshOnGet) {
+            calculatePages();
+        }
+        return pages.size();
     }
 
     @Override
