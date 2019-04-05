@@ -26,6 +26,9 @@ public final class UniverseCommand extends PoliticsBaseCommand {
     public UniverseCommand(PoliticsPlugin plugin) {
         super(plugin, "universe", "Base universe management command");
 
-        // todo register subcommands
+        this.registerSubCommand(new UniverseCreateCommand());
+        this.registerSubCommand(new UniverseDestroyCommand());
+        this.registerSubCommand(new UniverseGenRulesCommand());
+        this.registerSubCommand(new UniverseRulesCommand());
     }
 }
