@@ -21,6 +21,7 @@ package pw.ollie.politics.command;
 
 import gnu.trove.set.hash.THashSet;
 
+import pw.ollie.politics.Politics;
 import pw.ollie.politics.command.args.Arguments;
 
 import org.bukkit.command.CommandSender;
@@ -30,6 +31,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Level;
 
 public abstract class PoliticsBaseCommand extends BukkitCommand {
     private final Set<PoliticsSubCommand> subCommands = new THashSet<>();
@@ -51,9 +53,37 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         String arg1 = args.getString(0);
         Optional<PoliticsSubCommand> subCommand = findSubCommand(arg1);
 
-        if (subCommand.isPresent() && checkPerms(subCommand.get(), sender)) {
-            subCommand.get().runCommand(sender, args.subArgs(1, args.length() - 1));
+        if (subCommand.isPresent()) {
+            if (checkPerms(subCommand.get(), sender)) {
+                subCommand.get().runCommand(sender, args.subArgs(1, args.length() - 1));
+            }
+        } else {
+            Optional<PoliticsSubCommand> closestMatch = PoliticsCommandHelper.getClosestMatch(subCommands, arg1);
+
+            if (closestMatch.isPresent()) {
+                sender.sendMessage("Unrecognised subcommand - did you mean '" + closestMatch.get().getName() + "'?");
+                return;
+            }
+
+            // todo helpful error message
         }
+    }
+
+    protected boolean registerSubCommand(PoliticsSubCommand subCommand) {
+        String subCommandName = subCommand.getName().toLowerCase();
+        if (subCommands.stream()
+                .anyMatch(registered -> registered.getName().equals(subCommandName) || registered.getAliases().contains(subCommandName))) {
+            Politics.getLogger().log(Level.WARNING, "Duplicate command name or name used as alias for other command: " + subCommandName);
+            return false;
+        }
+
+        String subCommandPerm = subCommand.getPermission();
+        if (subCommandPerm != null) {
+            PoliticsCommandHelper.registerPermission(subCommandPerm);
+        }
+
+        subCommands.add(subCommand);
+        return true;
     }
 
     private Optional<PoliticsSubCommand> findSubCommand(String arg) {
