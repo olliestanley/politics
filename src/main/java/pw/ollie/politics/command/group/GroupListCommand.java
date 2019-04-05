@@ -20,18 +20,57 @@
 package pw.ollie.politics.command.group;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.args.Argument;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.universe.Universe;
 
 import org.bukkit.command.CommandSender;
 
+import java.util.List;
+
 public class GroupListCommand extends GroupSubCommand {
+    public static final int PAGE_HEIGHT = 6;
+
     GroupListCommand(GroupLevel groupLevel) {
         super("list", groupLevel);
     }
 
     @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        Universe universe = findUniverse(sender, args);
+
+        sender.sendMessage("========= " + groupLevel.getPlural().toUpperCase() + " =========");
+
+        List<Group> groups = universe.getGroups(groupLevel);
+        if (groups.isEmpty()) {
+            throw new CommandException("There are no " + groupLevel.getPlural() + "!");
+        }
+
+        int page = 1;
+        if (args.length() > 0) {
+            Argument arg1 = args.get(0);
+            if (!arg1.isInt()) {
+                throw new CommandException("Invalid page number supplied!");
+            }
+
+            page = arg1.asInt();
+        }
+
+        int min = (page - 1) * PAGE_HEIGHT - 1; // Screen height
+        int max = Math.min(groups.size(), page * PAGE_HEIGHT) - 2;
+        if (max <= min) {
+            throw new CommandException("There are no " + groupLevel.getPlural() + " on this page!");
+        }
+
+        List<Group> pageGroups = groups.subList(min, max);
+        for (Group group : pageGroups) {
+            sender.sendMessage((String) group.getProperty(GroupProperty.TAG));
+            // TODO prettify list
+        }
     }
 
     @Override
