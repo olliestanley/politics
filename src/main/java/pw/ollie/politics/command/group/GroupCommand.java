@@ -19,12 +19,13 @@
  */
 package pw.ollie.politics.command.group;
 
+import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.PoliticsBaseCommand;
 import pw.ollie.politics.group.level.GroupLevel;
 
 public final class GroupCommand extends PoliticsBaseCommand {
-    public GroupCommand(GroupLevel groupLevel) {
-        super(groupLevel.getName(), "Base command for " + groupLevel.getName() + "-related actions.");
+    public GroupCommand(PoliticsPlugin plugin, GroupLevel groupLevel) {
+        super(plugin, groupLevel.getName(), "Base command for " + groupLevel.getName() + "-related actions.");
 
         // todo register subcommands here
     }

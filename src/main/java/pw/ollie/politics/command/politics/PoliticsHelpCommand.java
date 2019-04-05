@@ -17,48 +17,39 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.command;
+package pw.ollie.politics.command.politics;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.level.GroupLevel;
 
 import org.bukkit.command.CommandSender;
 
+import java.util.Arrays;
 import java.util.List;
 
-/**
- * Generic subcommand of any command in Politics.
- */
-public abstract class PoliticsSubCommand {
-    private final String name;
-
-    protected PoliticsSubCommand(String name) {
-        this.name = name.toLowerCase();
+public class PoliticsHelpCommand extends PoliticsSubCommand {
+    PoliticsHelpCommand() {
+        super("help");
     }
 
-    public abstract void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args);
-
-    public String getName() {
-        return name;
+    @Override
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+        sender.sendMessage("Politics " + plugin.getDescription().getVersion() + " - Command Overview");
+        sender.sendMessage("Universe Commands: /universe help");
+        for (GroupLevel groupLevel : plugin.getUniverseManager().getGroupLevels()) {
+            sender.sendMessage(groupLevel.getName() + " Commands: /" + groupLevel.getName() + " help");
+        }
     }
 
-    public abstract String getPermission();
+    @Override
+    public String getPermission() {
+        return "politics.help";
+    }
 
-    /**
-     * Gets list of aliases. If there are none this should return an empty list, *not* {@code null}.
-     * <p>
-     * All entries in this list should be *lower case*.
-     *
-     * @return string list of aliases
-     */
-    public abstract List<String> getAliases();
-
-    /**
-     * Whether command is player-only. Should be overridden by subcommands which are.
-     *
-     * @return true if command is only for players, else false
-     */
-    public boolean isPlayerOnly() {
-        return false;
+    @Override
+    public List<String> getAliases() {
+        return Arrays.asList("commands", "cmds", "h");
     }
 }

@@ -19,11 +19,12 @@
  */
 package pw.ollie.politics.command.universe;
 
+import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.PoliticsBaseCommand;
 
 public final class UniverseCommand extends PoliticsBaseCommand {
-    public UniverseCommand() {
-        super("universe", "Base universe management command");
+    public UniverseCommand(PoliticsPlugin plugin) {
+        super(plugin, "universe", "Base universe management command");
 
         // todo register subcommands
     }

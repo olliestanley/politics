@@ -20,12 +20,33 @@
 package pw.ollie.politics.command.politics;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsBaseCommand;
+import pw.ollie.politics.command.PoliticsSubCommand;
+import pw.ollie.politics.command.args.Arguments;
 
-public final class PoliticsCommand extends PoliticsBaseCommand {
-    public PoliticsCommand(PoliticsPlugin plugin) {
-        super(plugin, "politics", "Core politics plugin control command");
+import org.bukkit.command.CommandSender;
 
-        // todo register subcommands
+import java.util.Arrays;
+import java.util.List;
+
+public class PoliticsAboutCommand extends PoliticsSubCommand {
+    PoliticsAboutCommand() {
+        super("about");
+    }
+
+    @Override
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+        sender.sendMessage("Politics " + plugin.getDescription().getVersion());
+        sender.sendMessage("Politics is a self-serve community management system.");
+        sender.sendMessage("Type /politics help for general command help.");
+    }
+
+    @Override
+    public String getPermission() {
+        return "politics.about";
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return Arrays.asList("info", "information");
     }
 }

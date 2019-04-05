@@ -46,11 +46,11 @@ public final class PoliticsCommandManager {
      * Must only be called once all internal plugin setup is complete.
      */
     public void registerCommands() {
-        this.registerCommand(new PoliticsCommand());
-        this.registerCommand(new UniverseCommand());
+        this.registerCommand(new PoliticsCommand(plugin));
+        this.registerCommand(new UniverseCommand(plugin));
 
         for (GroupLevel groupLevel : plugin.getUniverseManager().getGroupLevels()) {
-            this.registerCommand(new GroupCommand(groupLevel));
+            this.registerCommand(new GroupCommand(plugin, groupLevel));
         }
     }
 

@@ -20,6 +20,7 @@
 package pw.ollie.politics.command;
 
 import pw.ollie.politics.Politics;
+import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.args.Arguments;
 
 import org.bukkit.command.CommandSender;
@@ -32,10 +33,12 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 public abstract class PoliticsBaseCommand extends BukkitCommand {
+    private final PoliticsPlugin plugin;
     private final List<PoliticsSubCommand> subCommands = new ArrayList<>();
 
-    protected PoliticsBaseCommand(String name, String description) {
+    protected PoliticsBaseCommand(PoliticsPlugin plugin, String name, String description) {
         super(name.toLowerCase(), description, "Type '/" + name + " help' for usage help!", new ArrayList<>());
+        this.plugin = plugin;
     }
 
     public void runCommand(CommandSender sender, Arguments args) {
@@ -53,7 +56,7 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
 
         if (subCommand.isPresent()) {
             if (checkPerms(subCommand.get(), sender)) {
-                subCommand.get().runCommand(sender, args.subArgs(1, args.length() - 1));
+                subCommand.get().runCommand(plugin, sender, args.subArgs(1, args.length() - 1));
             }
         } else {
             Optional<PoliticsSubCommand> closestMatch = PoliticsCommandHelper.getClosestMatch(subCommands, arg1);
