@@ -52,7 +52,7 @@ public class GroupDemoteCommand extends GroupSubCommand {
         if (args.hasValueFlag("t")) {
             trackName = args.getValueFlag("t").getStringValue();
             track = group.getLevel().getTrack(args.getValueFlag("t").getStringValue().toLowerCase());
-        } else  {
+        } else {
             track = group.getLevel().getDefaultTrack();
         }
 

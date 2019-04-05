@@ -20,13 +20,10 @@
 package pw.ollie.politics.command.group;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.level.GroupLevel;
 
 import org.bukkit.command.CommandSender;
-
-import java.util.List;
 
 public class GroupSpawnCommand extends GroupSubCommand {
     GroupSpawnCommand(GroupLevel groupLevel) {

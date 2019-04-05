@@ -20,7 +20,6 @@
 package pw.ollie.politics.command.group;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.level.GroupLevel;
 
