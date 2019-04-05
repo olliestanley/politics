@@ -19,49 +19,24 @@
  */
 package pw.ollie.politics.util.serial;
 
-import pw.ollie.politics.util.Base64Coder;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import pw.ollie.politics.util.Position;
+import pw.ollie.politics.util.math.Transform;
 
 public class PropertySerializer {
-    public static String serialize(Serializable obj) throws PropertySerializationException {
-        try {
-            return PropertySerializer.toString(obj);
-        } catch (IOException e) {
-            throw new PropertySerializationException("IOException occurred while serializing an object of type " + obj.getClass().getName() + "!", e);
-        }
+    public static String serializePosition(Position position) throws PropertySerializationException {
+        return null;
     }
 
-    public static Object deserialize(String string) throws PropertyDeserializationException {
-        try {
-            return PropertySerializer.fromString(string);
-        } catch (ClassNotFoundException e) {
-            throw new PropertyDeserializationException("Could not find the object class for the given string while deserializing!", e);
-        } catch (IOException e) {
-            throw new PropertyDeserializationException("IOException occurred while deserializing a string!", e);
-        }
+    public static Position deserializePosition(String serialized) throws PropertyDeserializationException {
+        return null;
     }
 
-    private static String toString(Serializable o) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(o);
-        oos.close();
-        byte[] byteArray = baos.toByteArray();
-        return new String(Base64Coder.encode(byteArray, 0, byteArray.length));
+    public static String serializeTransform(Transform transform) throws PropertySerializationException {
+        return null;
     }
 
-    private static Object fromString(String s) throws IOException, ClassNotFoundException {
-        byte[] data = Base64Coder.decode(s.toCharArray(), 0, s.length());
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-        Object o = ois.readObject();
-        ois.close();
-        return o;
+    public static Transform deserializeTransform(String serialized) throws PropertyDeserializationException {
+        return null;
     }
 
     private PropertySerializer() {

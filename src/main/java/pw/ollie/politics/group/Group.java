@@ -142,7 +142,7 @@ public final class Group implements Comparable<Group>, Storable {
         }
 
         try {
-            return (Transform) PropertySerializer.deserialize(s);
+            return PropertySerializer.deserializeTransform(s);
         } catch (PropertyDeserializationException ex) {
             Politics.getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a transform!", ex);
             return def;
@@ -151,7 +151,7 @@ public final class Group implements Comparable<Group>, Storable {
 
     public void setProperty(int property, Transform value) {
         try {
-            setProperty(property, PropertySerializer.serialize(value));
+            setProperty(property, PropertySerializer.serializeTransform(value));
         } catch (PropertySerializationException e) {
             Politics.getLogger().log(Level.SEVERE, "Error serializing property!", e);
         }
@@ -168,7 +168,7 @@ public final class Group implements Comparable<Group>, Storable {
         }
 
         try {
-            return (Position) PropertySerializer.deserialize(s);
+            return PropertySerializer.deserializePosition(s);
         } catch (PropertyDeserializationException ex) {
             Politics.getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a point!", ex);
             return def;
@@ -178,7 +178,7 @@ public final class Group implements Comparable<Group>, Storable {
 
     public void setProperty(int property, Position value) {
         try {
-            setProperty(property, PropertySerializer.serialize(value));
+            setProperty(property, PropertySerializer.serializePosition(value));
         } catch (PropertySerializationException e) {
             Politics.getLogger().log(Level.SEVERE, "Error serializing property!", e);
         }
