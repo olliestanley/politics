@@ -37,7 +37,7 @@ public abstract class PoliticsSubCommand {
         this.name = name.toLowerCase();
     }
 
-    public abstract void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args);
+    public abstract void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException;
 
     public String getName() {
         return name;

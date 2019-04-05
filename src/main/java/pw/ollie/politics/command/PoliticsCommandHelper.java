@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public final class PoliticsCommandHelper {
+    public static final String GROUPS_ADMIN_PERMISSION = "politics.group.admin";
+
     private static Map<PoliticsBaseCommand, PagedList<PoliticsSubCommand>> pagedSubCommands = new THashMap<>();
 
     public static void sendCommandHelp(CommandSender sender, PoliticsBaseCommand baseCommand) {

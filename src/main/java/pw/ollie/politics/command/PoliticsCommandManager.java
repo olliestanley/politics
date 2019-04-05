@@ -53,7 +53,7 @@ public final class PoliticsCommandManager {
             this.registerCommand(new GroupCommand(plugin, groupLevel));
         }
 
-        PoliticsCommandHelper.registerPermission("politics.group.admin", "Allows performing functions, like land claiming, for groups you're not a member of");
+        PoliticsCommandHelper.registerPermission(PoliticsCommandHelper.GROUPS_ADMIN_PERMISSION, "Allows performing functions, like land claiming, for groups you're not a member of");
     }
 
     private Object commandMap;

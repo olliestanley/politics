@@ -19,11 +19,20 @@
  */
 package pw.ollie.politics.command.group;
 
+import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.util.Position;
+import pw.ollie.politics.world.plot.Plot;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class GroupClaimCommand extends GroupSubCommand {
     GroupClaimCommand(GroupLevel groupLevel) {
@@ -31,7 +40,36 @@ public class GroupClaimCommand extends GroupSubCommand {
     }
 
     @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        Group group = findGroup(sender, args);
+
+        if (!group.can(sender, Privileges.Group.CLAIM) && !hasAdmin(sender)) {
+            throw new CommandException("You don't have permissions to claim land in this " + groupLevel.getName() + ".");
+        }
+
+        // TODO add a way to get the world, x, y, z from the command line
+        // (should be in GroupCommand)
+        Location location = ((Player) sender).getLocation();
+        Position position = Position.fromLocation(location);
+        if (!group.getUniverse().getWorlds().contains(Politics.getWorld(position.getWorld()))) {
+            throw new CommandException("You can't create a plot for that group in this world.");
+        }
+
+        Plot plot = plugin.getPlotManager().getPlotAtChunk(location.getChunk());
+        if (plot.isOwner(group)) {
+            throw new CommandException(group.getStringProperty(GroupProperty.NAME) + " already owns this plot.");
+        }
+
+        Group owner = plot.getOwner(group.getUniverse());
+        if (owner != null) {
+            throw new CommandException("Sorry, this plot is already owned by " + owner.getStringProperty(GroupProperty.NAME) + ".");
+        }
+
+        if (!plot.addOwner(group)) {
+            throw new CommandException("You cannot claim this plot!");
+        }
+
+        sender.sendMessage("The plot was claimed successfully.");
     }
 
     @Override

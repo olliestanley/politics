@@ -20,6 +20,7 @@
 package pw.ollie.politics.command.universe;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.universe.Universe;
@@ -35,11 +36,10 @@ public class UniverseDestroyCommand extends PoliticsSubCommand {
     }
 
     @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Universe universe = plugin.getUniverseManager().getUniverse(args.getString(0));
         if (universe == null) {
-            sender.sendMessage("A universe with the name '" + args.getString(0) + "' doesn't exist.");
-            return;
+            throw new CommandException("A universe with the name '" + args.getString(0) + "' doesn't exist.");
         }
 
         plugin.getUniverseManager().destroyUniverse(universe);

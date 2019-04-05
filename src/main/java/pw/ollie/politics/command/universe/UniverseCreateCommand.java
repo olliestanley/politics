@@ -20,6 +20,7 @@
 package pw.ollie.politics.command.universe;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.universe.Universe;
@@ -39,31 +40,27 @@ public class UniverseCreateCommand extends PoliticsSubCommand {
     }
 
     @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         if (args.length() < 3) {
-            sender.sendMessage("Please specify name of new universe, name of ruleset to use, and names of worlds included (separated by ',' without spaces).");
-            return;
+            throw new CommandException("Please specify name of new universe, name of ruleset to use, and names of worlds included (separated by ',' without spaces).");
         }
 
         String name = args.getString(0).toLowerCase();
 
         if (name.contains("/") || name.contains("\\")) {
-            sender.sendMessage("Slashes are not allowed in universe names.");
-            return;
+            throw new CommandException("Slashes are not allowed in universe names.");
         }
 
         Universe existing = plugin.getUniverseManager().getUniverse(name);
         if (existing != null) {
-            sender.sendMessage("A universe named '" + name
+            throw new CommandException("A universe named '" + name
                     + "' already exists. Please destroy it via 'universe destroy' if you wish to overwrite it.");
-            return;
         }
 
         String rules = args.getString(1).toLowerCase();
         UniverseRules theRules = plugin.getUniverseManager().getRules(rules);
         if (theRules == null) {
-            sender.sendMessage("Invalid ruleset. To see the available rulesets, use /universe rules.");
-            return;
+            throw new CommandException("Invalid ruleset. To see the available rulesets, use /universe rules.");
         }
 
         String worldsStr = args.getString(2);
@@ -88,8 +85,7 @@ public class UniverseCreateCommand extends PoliticsSubCommand {
         }
 
         if (worlds.size() <= 0) {
-            sender.sendMessage("There were no valid worlds specified.");
-            return;
+            throw new CommandException("There were no valid worlds specified.");
         }
 
         Universe universe = plugin.getUniverseManager().createUniverse(name, theRules);

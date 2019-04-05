@@ -17,33 +17,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.command.args;
+package pw.ollie.politics.command;
 
-/**
- * A flag which simply has a name and (sometimes) a value.
- */
-public final class Flag {
-    private final String name;
-    private final Argument valArg;
+public class CommandException extends Exception {
+    private static final long serialVersionUID = -5692868272498195396L;
 
-    public Flag(String name, Argument value) {
-        this.name = name;
-        this.valArg = value;
-    }
-
-    public Flag(String name, String value) {
-        this(name, new Argument(value));
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Argument getValue() {
-        return valArg;
-    }
-
-    public String getStringValue() {
-        return getValue().get();
+    public CommandException(String s) {
+        super(s);
     }
 }

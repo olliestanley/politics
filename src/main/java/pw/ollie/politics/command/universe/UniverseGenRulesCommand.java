@@ -20,6 +20,7 @@
 package pw.ollie.politics.command.universe;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.universe.RuleTemplates;
@@ -37,17 +38,15 @@ public class UniverseGenRulesCommand extends PoliticsSubCommand {
     }
 
     @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         if (args.length() < 2) {
-            sender.sendMessage("Please specify the template name and the name of the new rules.");
-            return;
+            throw new CommandException("Please specify the template name and the name of the new rules.");
         }
 
         String templateName = args.getString(0).toLowerCase();
         Set<String> templateNames = RuleTemplates.listTemplateNames();
         if (!templateNames.contains(templateName)) {
-            sender.sendMessage("A template with the name of '" + templateName + "' does not exist.");
-            return;
+            throw new CommandException("A template with the name of '" + templateName + "' does not exist.");
         }
 
         String name = args.getString(1).toLowerCase();
@@ -55,9 +54,8 @@ public class UniverseGenRulesCommand extends PoliticsSubCommand {
 
         boolean force = args.hasNonValueFlag("f");
         if (existing != null && !force) {
-            sender.sendMessage("A set of rules with the name of '" + name
+            throw new CommandException("A set of rules with the name of '" + name
                     + "' already exists. Use the '--f' option to overwrite an existing rule set.");
-            return;
         }
 
         RuleTemplates.copyTemplate(templateName, name);
