@@ -24,10 +24,6 @@ import org.bukkit.configuration.ConfigurationSection;
 public final class WorldConfig {
     private final String name;
 
-    private int plotSizeX = 1;
-    private int plotSizeY = 1;
-    private int plotSizeZ = 1;
-
     public WorldConfig(String name) {
         this.name = name;
     }
@@ -36,39 +32,11 @@ public final class WorldConfig {
         return name;
     }
 
-    public int getPlotSizeX() {
-        return plotSizeX;
-    }
-
-    public void setPlotSizeX(int plotSizeX) {
-        this.plotSizeX = plotSizeX;
-    }
-
-    public int getPlotSizeY() {
-        return plotSizeY;
-    }
-
-    public void setPlotSizeY(int plotSizeY) {
-        this.plotSizeY = plotSizeY;
-    }
-
-    public int getPlotSizeZ() {
-        return plotSizeZ;
-    }
-
-    public void setPlotSizeZ(int plotSizeZ) {
-        this.plotSizeZ = plotSizeZ;
-    }
-
     public void save(ConfigurationSection config) {
-        config.set("plotsize.x", plotSizeX);
-        config.set("plotsize.z", plotSizeZ);
     }
 
     public static WorldConfig load(String name, ConfigurationSection config) {
         WorldConfig wc = new WorldConfig(name);
-        wc.plotSizeX = config.getInt("plotsize.x", 1);
-        wc.plotSizeZ = config.getInt("plotsize.z", 1);
         return wc;
     }
 }
