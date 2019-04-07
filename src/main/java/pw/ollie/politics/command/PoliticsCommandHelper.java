@@ -19,8 +19,6 @@
  */
 package pw.ollie.politics.command;
 
-import gnu.trove.map.hash.THashMap;
-
 import pw.ollie.politics.util.StringUtil;
 import pw.ollie.politics.util.collect.PagedArrayList;
 import pw.ollie.politics.util.collect.PagedList;
@@ -31,12 +29,10 @@ import org.bukkit.permissions.Permission;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 public final class PoliticsCommandHelper {
     public static final String GROUPS_ADMIN_PERMISSION = "politics.group.admin";
-
-    private static Map<PoliticsBaseCommand, PagedList<PoliticsSubCommand>> pagedSubCommands = new THashMap<>();
 
     public static void sendCommandHelp(CommandSender sender, PoliticsBaseCommand baseCommand) {
         PoliticsCommandHelper.sendCommandHelp(sender, baseCommand, 1);
@@ -44,22 +40,22 @@ public final class PoliticsCommandHelper {
 
     // page counts from 1 (not an index)
     public static void sendCommandHelp(CommandSender sender, PoliticsBaseCommand baseCommand, int pageNumber) {
-        PagedList<PoliticsSubCommand> pages = pagedSubCommands.computeIfAbsent(baseCommand, f -> generatePagedSubCommands(baseCommand));
+        PagedList<PoliticsSubCommand> pages = new PagedArrayList<>(baseCommand.getSubCommands().stream()
+                .filter(cmd -> cmd.getPermission() == null || sender.hasPermission(cmd.getPermission()))
+                .collect(Collectors.toList()));
         if (pageNumber > pages.pages()) {
             sender.sendMessage("There are only " + pages.pages() + " pages.");
             return;
         }
 
         List<PoliticsSubCommand> page = pages.getPage(pageNumber);
-        // todo provide helpful message with subcommands
+        for (PoliticsSubCommand subCommand : page) {
+            sender.sendMessage("/" + subCommand.getName() + " - " + subCommand.getDescription());
+        }
     }
 
     public static PoliticsSubCommand getClosestMatch(Collection<PoliticsSubCommand> subCommands, String label) {
         return fuzzyLookup(subCommands, label, 2);
-    }
-
-    private static PagedList<PoliticsSubCommand> generatePagedSubCommands(PoliticsBaseCommand baseCommand) {
-        return new PagedArrayList<>(baseCommand.getSubCommands());
     }
 
     private static PoliticsSubCommand fuzzyLookup(Collection<PoliticsSubCommand> collection, String name, int tolerance) {
