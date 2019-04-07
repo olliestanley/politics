@@ -10,7 +10,7 @@ levels:
     roles:
       Owner:
         name: Owner
-        privileges: [*]
+        privileges: [ALL]
       Member:
         name: Member
         privileges: [BUILD]
@@ -27,7 +27,7 @@ levels:
       Mayor:
         name: Mayor
         plural: Mayors
-        privileges: [*]
+        privileges: [ALL]
       Resident:
         name: Resident
         plural: Residents

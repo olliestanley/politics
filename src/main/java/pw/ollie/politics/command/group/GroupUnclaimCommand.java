@@ -34,7 +34,7 @@ import org.bukkit.entity.Player;
 
 public class GroupUnclaimCommand extends GroupSubCommand {
     GroupUnclaimCommand(GroupLevel groupLevel) {
-        super("spawn", groupLevel);
+        super("unclaim", groupLevel);
     }
 
     @Override

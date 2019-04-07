@@ -50,7 +50,6 @@ public final class PoliticsCommandManager {
         this.registerCommand(new UniverseCommand(plugin));
 
         for (GroupLevel groupLevel : plugin.getUniverseManager().getGroupLevels()) {
-            System.out.println("registering group command: " + groupLevel.getName());
             this.registerCommand(new GroupCommand(plugin, groupLevel));
         }
 

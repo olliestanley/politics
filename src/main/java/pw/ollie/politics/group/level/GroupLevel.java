@@ -205,7 +205,7 @@ public final class GroupLevel {
             // initial = starting role
             String initialName = node.getString("initial");
             if (initialName != null) {
-                initial = rolesMap.get(initialName.toLowerCase());
+                initial = rolesMap.get(initialName);
             }
             if (initial == null) {
                 int lowest = Integer.MAX_VALUE;
@@ -223,7 +223,7 @@ public final class GroupLevel {
             // founder role
             String founderName = node.getString("founder");
             if (founderName != null) {
-                founder = rolesMap.get(founderName.toLowerCase());
+                founder = rolesMap.get(founderName);
             }
             if (founderName == null) {
                 int highest = 0;

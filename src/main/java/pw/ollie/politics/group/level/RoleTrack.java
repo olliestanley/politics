@@ -65,7 +65,7 @@ public class RoleTrack implements Iterable<Role> {
     public static RoleTrack load(String id, List<String> rolesNames, Map<String, Role> roles) {
         List<Role> rolesList = new LinkedList<>();
         for (String roleName : rolesNames) {
-            Role role = roles.get(roleName.toLowerCase());
+            Role role = roles.get(roleName);
             if (role == null) {
                 throw new IllegalStateException("The role '" + roleName + "' does not exist.");
             }
