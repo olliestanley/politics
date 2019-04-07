@@ -107,10 +107,10 @@ public class PagedArrayList<E> implements PagedList<E> {
             return;
         }
 
-        int amtPages = (int) Math.ceil(size() / elementsPerPage);
+        int amtPages = (int) Math.ceil((float) size() / elementsPerPage);
         for (int page = 1; page <= amtPages; page++) {
             int pageStart = (page - 1) * elementsPerPage;
-            pages.put(page, subList(pageStart, pageStart + elementsPerPage));
+            pages.put(page, subList(pageStart, Math.min(pageStart + elementsPerPage, size())));
         }
     }
 

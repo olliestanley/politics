@@ -50,7 +50,7 @@ public final class PoliticsCommandHelper {
 
         List<PoliticsSubCommand> page = pages.getPage(pageNumber);
         for (PoliticsSubCommand subCommand : page) {
-            sender.sendMessage("/" + subCommand.getName() + " - " + subCommand.getDescription());
+            sender.sendMessage("/" + baseCommand.getName() + " " + subCommand.getName() + " - " + subCommand.getDescription());
         }
     }
 
