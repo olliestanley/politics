@@ -30,7 +30,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 
 public abstract class PoliticsBaseCommand extends BukkitCommand {
@@ -53,22 +52,22 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         }
 
         String arg1 = args.getString(0);
-        Optional<PoliticsSubCommand> subCommand = findSubCommand(arg1);
+        PoliticsSubCommand subCommand = findSubCommand(arg1);
 
-        if (subCommand.isPresent()) {
-            if (checkPerms(subCommand.get(), sender)) {
+        if (subCommand != null) {
+            if (checkPerms(subCommand, sender)) {
                 try {
-                    subCommand.get().runCommand(plugin, sender, args.subArgs(1, args.length() - 1));
+                    subCommand.runCommand(plugin, sender, args.subArgs(1, args.length() - 1));
                 } catch (CommandException e) {
                     // todo might want to change this?
                     sender.sendMessage(ChatColor.RED + e.getMessage());
                 }
             }
         } else {
-            Optional<PoliticsSubCommand> closestMatch = PoliticsCommandHelper.getClosestMatch(subCommands, arg1);
+            PoliticsSubCommand closestMatch = PoliticsCommandHelper.getClosestMatch(subCommands, arg1);
 
-            if (closestMatch.isPresent()) {
-                sender.sendMessage("Unrecognised subcommand - did you mean '" + closestMatch.get().getName() + "'?");
+            if (closestMatch != null) {
+                sender.sendMessage("Unrecognised subcommand - did you mean '" + closestMatch.getName() + "'?");
                 return;
             }
 
@@ -97,12 +96,12 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         return new ArrayList<>(subCommands);
     }
 
-    private Optional<PoliticsSubCommand> findSubCommand(String arg) {
+    private PoliticsSubCommand findSubCommand(String arg) {
         String lcArg = arg.toLowerCase();
 
         return subCommands.stream()
                 .filter(cmd -> cmd.getName().equals(lcArg) || cmd.getAliases().contains(lcArg))
-                .findFirst();
+                .findFirst().orElse(null);
     }
 
     @Override

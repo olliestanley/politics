@@ -32,7 +32,6 @@ import org.bukkit.permissions.Permission;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public final class PoliticsCommandHelper {
     public static final String GROUPS_ADMIN_PERMISSION = "politics.group.admin";
@@ -55,7 +54,7 @@ public final class PoliticsCommandHelper {
         // todo provide helpful message with subcommands
     }
 
-    public static Optional<PoliticsSubCommand> getClosestMatch(Collection<PoliticsSubCommand> subCommands, String label) {
+    public static PoliticsSubCommand getClosestMatch(Collection<PoliticsSubCommand> subCommands, String label) {
         return fuzzyLookup(subCommands, label, 2);
     }
 
@@ -63,13 +62,13 @@ public final class PoliticsCommandHelper {
         return new PagedArrayList<>(baseCommand.getSubCommands());
     }
 
-    private static Optional<PoliticsSubCommand> fuzzyLookup(Collection<PoliticsSubCommand> collection, String name, int tolerance) {
+    private static PoliticsSubCommand fuzzyLookup(Collection<PoliticsSubCommand> collection, String name, int tolerance) {
         String adjName = name.replaceAll("[ _]", "").toLowerCase();
 
-        Optional<PoliticsSubCommand> result = collection.stream()
+        PoliticsSubCommand result = collection.stream()
                 .filter(cmd -> cmd.getName().toLowerCase().equals(adjName) || cmd.getAliases().contains(name))
-                .findAny();
-        if (result.isPresent()) {
+                .findAny().orElse(null);
+        if (result != null) {
             return result;
         }
 
@@ -96,11 +95,7 @@ public final class PoliticsCommandHelper {
             }
         }
 
-        if (best == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(best);
-        }
+        return best;
     }
 
     public static void registerPermission(String node) {
