@@ -43,7 +43,6 @@ public final class GroupLevel {
     private final int rank;
     private final Map<String, Role> roles;
     private final String plural;
-    private final Map<String, List<String>> commands;
     private final Map<String, RoleTrack> tracks;
     private final Role initial;
     private final Role founder;
@@ -51,13 +50,12 @@ public final class GroupLevel {
     private Set<GroupLevel> allowedChildren;
 
     public GroupLevel(String id, String name, int rank, Map<String, Role> roles, String plural,
-                      Map<String, List<String>> commands, Map<String, RoleTrack> tracks, Role initial, Role founder) {
+                      Map<String, RoleTrack> tracks, Role initial, Role founder) {
         this.id = id;
         this.name = name;
         this.rank = rank;
         this.roles = roles;
         this.plural = plural;
-        this.commands = commands;
         this.tracks = tracks;
         this.initial = initial;
         this.founder = founder;
@@ -93,10 +91,6 @@ public final class GroupLevel {
 
     public Map<String, Role> getRoles() {
         return new HashMap<>(roles);
-    }
-
-    public List<String> getAliases(String command) {
-        return new ArrayList<>(commands.get(command.toLowerCase()));
     }
 
     public Role getRole(String roleId) {
@@ -183,31 +177,6 @@ public final class GroupLevel {
 
         String plural = node.getString("plural", levelName + "s");
 
-        Map<String, List<String>> commands = new HashMap<>();
-        // Set for checking for alias overlaps.
-        Set<String> alreadyLoadedCommands = new HashSet<>();
-        ConfigurationSection commandsNode = node.getConfigurationSection("commands");
-        for (String commandId : commandsNode.getKeys(false)) {
-            String commandName = commandId.toLowerCase();
-
-            // Get the list we're putting aliases in
-            List<String> theAliases = commands.computeIfAbsent(commandName, k -> new ArrayList<>());
-            List<String> commandAliases = commandsNode.getStringList(commandId);
-            if (commandAliases.size() > 0) {
-                for (String alias : commandAliases) {
-                    alias = alias.toLowerCase();
-                    if (alreadyLoadedCommands.contains(alias)) {
-                        Politics.getLogger().log(Level.WARNING,
-                                "Duplicate entry for command `" + alias + "'; not adding it to aliases for " + commandName + ".");
-                        continue;
-                    }
-
-                    theAliases.add(alias);
-                    alreadyLoadedCommands.add(alias);
-                }
-            }
-        }
-
         Map<String, RoleTrack> tracks = new HashMap<>();
         Role initial = null;
         Role founder = null;
@@ -270,7 +239,7 @@ public final class GroupLevel {
             }
         }
 
-        GroupLevel theLevel = new GroupLevel(id, levelName, rank, rolesMap, plural, commands, tracks, initial, founder);
+        GroupLevel theLevel = new GroupLevel(id, levelName, rank, rolesMap, plural, tracks, initial, founder);
         // Children so we can get our allowed children in the future
         levels.put(theLevel, children);
         return theLevel;

@@ -1,2 +1,38 @@
 # a politics configuration used for plugin testing and as an example
+description: Testing configuration for Politics
 
+levels:
+  household:
+    name: Household
+    plural: Households
+    rank: 1
+    children: []
+    roles:
+      Owner:
+        name: Owner
+        privileges: [*]
+      Member:
+        name: Member
+        privileges: [BUILD]
+    tracks:
+      Default: [Member, Owner]
+    initial: Member
+    founder: Owner
+  town:
+    name: Town
+    plural: Towns
+    rank: 2
+    children: [household]
+    roles:
+      Mayor:
+        name: Mayor
+        plural: Mayors
+        privileges: [*]
+      Resident:
+        name: Resident
+        plural: Residents
+        privileges: [BUILD]
+    tracks:
+      Default: [Resident, Mayor]
+    initial: Resident
+    founder: Mayor
