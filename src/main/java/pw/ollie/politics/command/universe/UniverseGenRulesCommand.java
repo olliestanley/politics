@@ -44,10 +44,6 @@ public class UniverseGenRulesCommand extends PoliticsSubCommand {
         }
 
         String templateName = args.getString(0).toLowerCase();
-        Set<String> templateNames = RuleTemplates.listTemplateNames();
-        if (!templateNames.contains(templateName)) {
-            throw new CommandException("A template with the name of '" + templateName + "' does not exist.");
-        }
 
         String name = args.getString(1).toLowerCase();
         UniverseRules existing = plugin.getUniverseManager().getRules(name);
@@ -58,9 +54,12 @@ public class UniverseGenRulesCommand extends PoliticsSubCommand {
                     + "' already exists. Use the '--f' option to overwrite an existing rule set.");
         }
 
-        RuleTemplates.copyTemplate(templateName, name);
-        sender.sendMessage("A new set of rules named '" + name + "' based on the template '" + templateName
-                + "' has been generated. Please restart the server to see your changes.");
+        if (RuleTemplates.copyTemplate(templateName, name)) {
+            sender.sendMessage("A new set of rules named '" + name + "' based on the template '" + templateName
+                    + "' has been generated. Please restart the server to see your changes.");
+        } else {
+            sender.sendMessage("The set of rules could not be created based on that template. Does the template exist?");
+        }
     }
 
     @Override

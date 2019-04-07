@@ -156,7 +156,7 @@ public class Arguments {
             return new Arguments();
         }
 
-        if (startIndex < 0 || endIndex >= raw.length) {
+        if (startIndex < 0 || endIndex > raw.length) {
             throw new IllegalArgumentException("Array index out of bounds for Arguments#subArgs call");
         }
 

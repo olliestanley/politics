@@ -57,7 +57,7 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         if (subCommand != null) {
             if (checkPerms(subCommand, sender)) {
                 try {
-                    subCommand.runCommand(plugin, sender, args.subArgs(1, args.length() - 1));
+                    subCommand.runCommand(plugin, sender, args.subArgs(1, args.length()));
                 } catch (CommandException e) {
                     // todo might want to change this?
                     sender.sendMessage(ChatColor.RED + e.getMessage());

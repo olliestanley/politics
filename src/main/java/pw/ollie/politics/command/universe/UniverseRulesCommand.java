@@ -37,6 +37,9 @@ public class UniverseRulesCommand extends PoliticsSubCommand {
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
         List<UniverseRules> ruleList = plugin.getUniverseManager().listRules();
+        if (ruleList.size() == 0) {
+            sender.sendMessage("There are no rulesets.");
+        }
         for (UniverseRules rules : ruleList) {
             sender.sendMessage(rules.getName() + " - " + rules.getDescription());
         }
