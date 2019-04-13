@@ -48,7 +48,7 @@ public abstract class GroupSubCommand extends PoliticsSubCommand {
     protected Citizen getCitizen(Player player) {
         Universe universe = getUniverse(player);
         if (universe != null) {
-            return universe.getCitizen(player.getName());
+            return universe.getCitizen(player.getUniqueId(), player.getName());
         }
         return null;
     }

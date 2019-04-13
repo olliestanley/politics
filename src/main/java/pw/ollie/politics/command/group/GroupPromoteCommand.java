@@ -48,7 +48,7 @@ public class GroupPromoteCommand extends GroupSubCommand {
             // todo: promoting offline players? may be necessary for some servers
             throw new CommandException("That player is not online!");
         }
-        if (!group.isImmediateMember(player.getName())) {
+        if (!group.isImmediateMember(player.getUniqueId())) {
             throw new CommandException("That player is not a member of the group!");
         }
 
@@ -64,20 +64,21 @@ public class GroupPromoteCommand extends GroupSubCommand {
             throw new CommandException("There isn't a track named '" + trackName + "'!");
         }
 
-        Role role = group.getRole(player.getName());
+        Role role = group.getRole(player.getUniqueId());
         Role next = track.getNextRole(role);
         if (next == null) {
             throw new CommandException("There is no role to promote to!");
         }
 
         if (!hasAdmin(sender)) {
-            Role myRole = group.getRole(sender.getName());
+            // cast is safe as a console sender is filtered out by the hasAdmin check
+            Role myRole = group.getRole(((Player) sender).getUniqueId());
             if (myRole.getRank() - next.getRank() <= 1) {
                 throw new CommandException("You can't promote someone to a role equal to or higher than your own!");
             }
         }
 
-        group.setRole(player.getName(), next);
+        group.setRole(player.getUniqueId(), next);
         sender.sendMessage(player.getName() + " was promoted to " + next.getName() + " in the group.");
     }
 

@@ -21,7 +21,9 @@ package pw.ollie.politics.group;
 
 import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.THashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
+import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
@@ -37,34 +39,37 @@ import pw.ollie.politics.util.serial.PropertySerializer;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
+import org.bson.types.BasicBSONList;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public final class Group implements Comparable<Group>, Storable {
     private final int uid;
     private final GroupLevel level;
     private final TIntObjectMap<Object> properties;
-    private final Map<String, Role> players;
+    private final Map<UUID, Role> players;
+    private final Set<UUID> invitedPlayers;
 
     private Universe universe;
 
     public Group(int uid, GroupLevel level) {
-        this(uid, level, new TIntObjectHashMap<>(), new HashMap<>());
+        this(uid, level, new TIntObjectHashMap<>(), new THashMap<>(), new THashSet<>());
     }
 
-    private Group(int uid, GroupLevel level, TIntObjectMap<Object> properties, Map<String, Role> players) {
+    private Group(int uid, GroupLevel level, TIntObjectMap<Object> properties, Map<UUID, Role> players, Set<UUID> invitedPlayers) {
         this.uid = uid;
         this.level = level;
         this.properties = properties;
         this.players = players;
+        this.invitedPlayers = invitedPlayers;
     }
 
     public void initialize(Universe universe) {
@@ -187,13 +192,13 @@ public final class Group implements Comparable<Group>, Storable {
         properties.put(property, value);
     }
 
-    public List<String> getImmediatePlayers() {
+    public List<UUID> getImmediatePlayers() {
         return new ArrayList<>(players.keySet());
     }
 
     public List<Player> getImmediateOnlinePlayers() {
         List<Player> players = new ArrayList<>();
-        for (String pn : getImmediatePlayers()) {
+        for (UUID pn : getImmediatePlayers()) {
             Player player = Politics.getServer().getPlayer(pn);
             if (player != null) {
                 players.add(player);
@@ -202,8 +207,8 @@ public final class Group implements Comparable<Group>, Storable {
         return players;
     }
 
-    public List<String> getPlayers() {
-        List<String> players = new ArrayList<>();
+    public List<UUID> getPlayers() {
+        List<UUID> players = new ArrayList<>();
         for (Group group : getGroups()) {
             players.addAll(group.getPlayers());
         }
@@ -211,11 +216,11 @@ public final class Group implements Comparable<Group>, Storable {
         return players;
     }
 
-    public boolean isImmediateMember(String player) {
+    public boolean isImmediateMember(UUID player) {
         return players.containsKey(player);
     }
 
-    public boolean isMember(String player) {
+    public boolean isMember(UUID player) {
         if (isImmediateMember(player)) {
             return true;
         }
@@ -228,21 +233,33 @@ public final class Group implements Comparable<Group>, Storable {
         return false;
     }
 
-    public Role getRole(String player) {
+    public void addInvitation(UUID player) {
+        invitedPlayers.add(player);
+    }
+
+    public void removeInvitation(UUID player) {
+        invitedPlayers.remove(player);
+    }
+
+    public boolean isInvited(UUID player) {
+        return invitedPlayers.contains(player);
+    }
+
+    public Role getRole(UUID player) {
         return players.get(player);
     }
 
-    public void setRole(String player, Role role) {
+    public void setRole(UUID player, Role role) {
         players.put(player, role);
     }
 
-    public void removeRole(String player) {
+    public void removeRole(UUID player) {
         players.remove(player);
     }
 
     public boolean can(CommandSender source, Privilege privilege) {
         if (source instanceof Player) {
-            Role role = getRole(source.getName());
+            Role role = getRole(((Player) source).getUniqueId());
             return role != null && role.hasPrivilege(privilege);
         }
         return true;
@@ -278,10 +295,17 @@ public final class Group implements Comparable<Group>, Storable {
         object.put("properties", propertiesBson);
 
         BasicBSONObject playersBson = new BasicBSONObject();
-        for (Map.Entry<String, Role> roleEntry : players.entrySet()) {
-            playersBson.put(roleEntry.getKey(), roleEntry.getValue().getId());
+        for (Map.Entry<UUID, Role> roleEntry : players.entrySet()) {
+            playersBson.put(roleEntry.getKey().toString(), roleEntry.getValue().getId());
         }
         object.put("players", playersBson);
+
+        BasicBSONList invitedBson = new BasicBSONList();
+        for (UUID invitedId : invitedPlayers) {
+            invitedBson.add(invitedId.toString());
+        }
+        object.put("invited", invitedBson);
+
         return object;
     }
 
@@ -321,14 +345,26 @@ public final class Group implements Comparable<Group>, Storable {
         }
 
         BasicBSONObject playersBson = (BasicBSONObject) playersObj;
-        Map<String, Role> players = new HashMap<>();
+        Map<UUID, Role> players = new THashMap<>();
         for (Map.Entry<String, Object> entry : playersBson.entrySet()) {
             String roleId = entry.getValue().toString();
             Role role = level.getRole(roleId);
-            players.put(entry.getKey(), role);
+            players.put(UUID.fromString(entry.getKey()), role);
         }
 
-        return new Group(uid, level, properties, players);
+        Object invitedObj = bobject.get("invited");
+        if (!(invitedObj instanceof BasicBSONList)) {
+            throw new IllegalStateException("Stupid server admin... don't mess with the data!");
+        }
+
+        BasicBSONList invitedBson = (BasicBSONList) invitedObj;
+        Set<UUID> invitedSet = new THashSet<>();
+        for (Object invited : invitedBson) {
+            UUID invitedId = UUID.fromString(invited.toString());
+            invitedSet.add(invitedId);
+        }
+
+        return new Group(uid, level, properties, players, invitedSet);
     }
 
     @Override

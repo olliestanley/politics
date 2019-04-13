@@ -48,7 +48,7 @@ public class GroupDemoteCommand extends GroupSubCommand {
             // todo demoting offline players?
             throw new CommandException("That player is not online.");
         }
-        if (!group.isImmediateMember(player.getName())) {
+        if (!group.isImmediateMember(player.getUniqueId())) {
             throw new CommandException("That player is not a member of the group!");
         }
 
@@ -64,20 +64,20 @@ public class GroupDemoteCommand extends GroupSubCommand {
             throw new CommandException("There isn't a track named '" + trackName + "'!");
         }
 
-        Role role = group.getRole(player.getName());
+        Role role = group.getRole(player.getUniqueId());
         Role next = track.getPreviousRole(role);
         if (next == null) {
             throw new CommandException("There is no role to demote to!");
         }
 
         if (!hasAdmin(sender)) {
-            Role myRole = group.getRole(sender.getName());
+            Role myRole = group.getRole(((Player) sender).getUniqueId());
             if (myRole.getRank() - role.getRank() <= 0) {
                 throw new CommandException("You can't demote someone with a rank higher than yours!");
             }
         }
 
-        group.setRole(player.getName(), next);
+        group.setRole(player.getUniqueId(), next);
         sender.sendMessage(player.getName() + " was demoted to " + next.getName() + " in the group!");
     }
 

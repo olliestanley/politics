@@ -54,6 +54,11 @@ public class GroupCreateCommand extends GroupSubCommand {
                     + " is unknown. A founder can be specified with the `-f' option.");
         }
 
+        Player founder = plugin.getServer().getPlayer(founderName);
+        if (founder == null) {
+            throw new CommandException("The specified founder is not online.");
+        }
+
         Universe universe = findUniverse(sender, args);
 
         StringBuilder nameBuilder = new StringBuilder();
@@ -68,7 +73,7 @@ public class GroupCreateCommand extends GroupSubCommand {
         }
 
         Group group = universe.createGroup(groupLevel);
-        group.setRole(founderName, groupLevel.getFounder());
+        group.setRole(founder.getUniqueId(), groupLevel.getFounder());
         group.setProperty(GroupProperty.NAME, name);
         group.setProperty(GroupProperty.TAG, tag);
 

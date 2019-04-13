@@ -47,7 +47,7 @@ public class GroupSetRoleCommand extends GroupSubCommand {
             // todo setting roles of offline players?
             throw new CommandException("That player is not online!");
         }
-        if (!group.isImmediateMember(player.getName())) {
+        if (!group.isImmediateMember(player.getUniqueId())) {
             throw new CommandException("That player is not a member of the group!");
         }
 
@@ -58,13 +58,13 @@ public class GroupSetRoleCommand extends GroupSubCommand {
         }
 
         if (!hasAdmin(sender)) {
-            Role myRole = group.getRole(sender.getName());
+            Role myRole = group.getRole(((Player) sender).getUniqueId());
             if (myRole.getRank() - role.getRank() <= 1) {
                 throw new CommandException("You can't set someone to a role equal to or higher than your own!");
             }
         }
 
-        group.setRole(player.getName(), role);
+        group.setRole(player.getUniqueId(), role);
         sender.sendMessage(player.getName() + " is now part of the " + groupLevel.getName() + "!");
     }
 

@@ -23,14 +23,22 @@ import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
 
 import java.util.Set;
+import java.util.UUID;
 
 public final class Citizen {
-    private final String name;
+    private final UUID id;
     private final Universe universe;
 
-    public Citizen(String name, Universe universe) {
+    private String name;
+
+    public Citizen(UUID id, String name, Universe universe) {
+        this.id = id;
         this.name = name;
         this.universe = universe;
+    }
+
+    public UUID getUniqueId() {
+        return id;
     }
 
     public String getName() {
@@ -38,7 +46,7 @@ public final class Citizen {
     }
 
     public Set<Group> getGroups() {
-        return universe.getCitizenGroups(name);
+        return universe.getCitizenGroups(id);
     }
 
     public Group getGroup(GroupLevel level) {
@@ -55,6 +63,6 @@ public final class Citizen {
     }
 
     public void invalidateGroups() {
-        universe.invalidateCitizenGroups(name);
+        universe.invalidateCitizenGroups(id);
     }
 }

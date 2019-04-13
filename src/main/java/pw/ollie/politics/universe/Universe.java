@@ -43,6 +43,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -55,7 +56,7 @@ public final class Universe implements Storable {
     private final Map<Group, Set<Group>> children;
     private final Map<GroupLevel, List<Group>> levels;
 
-    private LoadingCache<String, Set<Group>> citizenGroupCache;
+    private LoadingCache<UUID, Set<Group>> citizenGroupCache;
 
     public Universe(String name, UniverseRules properties) {
         this(name, properties, new ArrayList<>(), new ArrayList<>(), new HashMap<>());
@@ -82,12 +83,12 @@ public final class Universe implements Storable {
         builder.maximumSize(Politics.getServer().getMaxPlayers());
         builder.expireAfterAccess(10L, TimeUnit.MINUTES);
 
-        citizenGroupCache = builder.build(new CacheLoader<String, Set<Group>>() {
+        citizenGroupCache = builder.build(new CacheLoader<UUID, Set<Group>>() {
             @Override
-            public Set<Group> load(String name) {
+            public Set<Group> load(UUID id) {
                 Set<Group> myGroups = new HashSet<>();
                 for (Group group : groups) {
-                    if (group.isImmediateMember(name)) {
+                    if (group.isImmediateMember(id)) {
                         myGroups.add(group);
                     }
                 }
@@ -221,7 +222,7 @@ public final class Universe implements Storable {
     public void destroyGroup(Group group, boolean deep) {
         groups.remove(group);
         getInternalGroups(group.getLevel()).remove(group);
-        for (String member : group.getPlayers()) {
+        for (UUID member : group.getPlayers()) {
             invalidateCitizenGroups(member);
         }
         if (deep) {
@@ -238,11 +239,11 @@ public final class Universe implements Storable {
         }
     }
 
-    public Citizen getCitizen(String player) {
-        return new Citizen(player, this);
+    public Citizen getCitizen(UUID playerId, String name) {
+        return new Citizen(playerId, name, this);
     }
 
-    public Set<Group> getCitizenGroups(String player) {
+    public Set<Group> getCitizenGroups(UUID player) {
         try {
             return new HashSet<>(citizenGroupCache.get(player));
         } catch (final ExecutionException e) {
@@ -251,7 +252,7 @@ public final class Universe implements Storable {
         }
     }
 
-    public void invalidateCitizenGroups(String citizen) {
+    public void invalidateCitizenGroups(UUID citizen) {
         citizenGroupCache.invalidate(citizen);
     }
 
