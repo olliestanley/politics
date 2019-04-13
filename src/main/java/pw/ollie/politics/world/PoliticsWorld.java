@@ -24,7 +24,6 @@ import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.math.IntPair;
-import pw.ollie.politics.world.plot.ChunkPlot;
 import pw.ollie.politics.world.plot.Plot;
 
 import org.bson.BSONObject;
@@ -40,22 +39,22 @@ import java.util.Map;
 public final class PoliticsWorld implements Storable {
     private final String name;
     private final WorldConfig config;
-    private final Map<IntPair, ChunkPlot> chunkPlots;
+    private final Map<IntPair, Plot> chunkPlots;
 
     public PoliticsWorld(String name, WorldConfig config) {
         this(name, config, new HashMap<>());
     }
 
-    private PoliticsWorld(String name, WorldConfig config, Map<IntPair, ChunkPlot> chunkPlots) {
+    private PoliticsWorld(String name, WorldConfig config, Map<IntPair, Plot> chunkPlots) {
         this.name = name;
         this.config = config;
         this.chunkPlots = chunkPlots;
     }
 
     public PoliticsWorld(String name, WorldConfig config, BasicBSONObject object) {
-        this.name = object.getString("name", null);
+        this.name = object.getString("name", name);
         chunkPlots = new HashMap<>();
-        BasicBSONList list = (BasicBSONList) object.get("chunkplots");
+        BasicBSONList list = (BasicBSONList) object.get("plots");
         for (Object o : list) {
             if (!(o instanceof BasicBSONObject)) {
                 throw new IllegalArgumentException("List must only contain more objects!");
@@ -66,7 +65,7 @@ public final class PoliticsWorld implements Storable {
                 throw new IllegalArgumentException("Type is not a recognized string");
             }
 
-            ChunkPlot p = new ChunkPlot(plotObj);
+            Plot p = new Plot(plotObj);
             chunkPlots.put(IntPair.of(p.getX(), p.getZ()), p);
         }
         this.config = config;
@@ -84,40 +83,12 @@ public final class PoliticsWorld implements Storable {
         return Politics.getServer().getWorld(name);
     }
 
-//    /**
-//     * Gets the internal list of owners of a given location. Creates this list
-//     * if it doesn't exist.
-//     *
-//     * @param x
-//     * @param z
-//     * @return the internal list of owners for given location
-//     */
-//    TIntList getInternalOwnerList(int x, int z) {
-//        chunkPlots.get(x, z).geto
-//        TIntList list = owners.get(x, z);
-//        if (list == null) {
-//            list = new TIntArrayList();
-//            owners.put(x, y, z, list);
-//        }
-//        return list;
-//    }
-//    /**
-//     * Gets the list of owners at the given location.
-//     *
-//     * @param x
-//     * @param z
-//     * @return
-//     */
-//    public TIntList getOwnerIds(int x, int z) {
-//        return new TIntArrayList(getInternalOwnerList(x, z));
-//    }
-
     public Universe getUniverse(GroupLevel level) {
         return Politics.getUniverseManager().getUniverse(this, level);
     }
 
-    public ChunkPlot getPlotAtChunkPosition(int x, int z) {
-        return new ChunkPlot(this, x, z);
+    public Plot getPlotAtChunkPosition(int x, int z) {
+        return new Plot(this, x, z);
     }
 
     public List<GroupLevel> getLevels() {
@@ -139,7 +110,7 @@ public final class PoliticsWorld implements Storable {
             }
             chunkPlotList.add(plot.toBSONObject());
         }
-        bson.put("chunkplots", chunkPlotList);
+        bson.put("plots", chunkPlotList);
         return bson;
     }
 

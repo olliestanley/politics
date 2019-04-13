@@ -35,7 +35,9 @@ import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -44,17 +46,29 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public abstract class Plot implements Storable {
+/**
+ * A plot in Politics is made up of exactly one chunk, and may have sub-plots.
+ */
+public final class Plot implements Storable {
     private final PoliticsWorld world;
     private final TIntList owners;
+    private final Chunk chunk;
+    private final int baseX;
+    private final int baseZ;
 
-    public Plot(PoliticsWorld world) {
-        this(world, new TIntArrayList());
+    public Plot(PoliticsWorld world, int x, int z) {
+        this(world, new TIntArrayList(), x, z);
     }
 
-    public Plot(PoliticsWorld world, TIntList owners) {
+    public Plot(PoliticsWorld world, TIntList owners, int x, int z) {
         this.world = world;
         this.owners = owners;
+
+        World bukkitWorld = world.getWorld();
+        chunk = bukkitWorld.getChunkAt(x, z);
+
+        baseX = x * 16;
+        baseZ = z * 16;
     }
 
     public Plot(BasicBSONObject object) {
@@ -73,6 +87,19 @@ public abstract class Plot implements Storable {
         } else {
             owners = new TIntArrayList();
         }
+
+        Object x = object.get("x");
+        Object z = object.get("z");
+        if (!(x instanceof Integer)) {
+            throw new IllegalArgumentException("X was not available.");
+        }
+        if (!(z instanceof Integer)) {
+            throw new IllegalArgumentException("Z was not available.");
+        }
+        World bukkitWorld = getPoliticsWorld().getWorld();
+        chunk = bukkitWorld.getChunkAt((Integer) x, (Integer) z);
+        baseX = chunk.getX() * 16;
+        baseZ = chunk.getZ() * 16;
     }
 
     public PoliticsWorld getPoliticsWorld() {
@@ -91,9 +118,20 @@ public abstract class Plot implements Storable {
         return getBasePoint().getBlockZ();
     }
 
-    public abstract Location getBasePoint();
+    public Chunk getChunk() {
+        return chunk;
+    }
 
-    public abstract boolean contains(Location location);
+    public Location getBasePoint() {
+        // I think 0 is good here for y?
+        return new Location(chunk.getWorld(), baseX, 0, baseZ);
+    }
+
+    public boolean contains(Location location) {
+        // check this
+        return baseX <= location.getBlockX() && baseX + 16 <= location.getBlockX()
+                && baseZ <= location.getBlockZ() && baseZ + 16 <= location.getBlockZ();
+    }
 
     public TIntList getOwnerIds() {
         return new TIntArrayList(owners);
@@ -150,7 +188,7 @@ public abstract class Plot implements Storable {
 
             if (g.getUniverse().equals(group.getUniverse()) && g.equals(group.getParent())) {
                 removeOwner(g);
-                break; // We are a sub-plot
+                break; // ownership transfers to the group from its parent
             }
         }
 
@@ -191,6 +229,9 @@ public abstract class Plot implements Storable {
         BasicBSONObject obj = new BasicBSONObject();
         obj.put("world", world.getName());
         obj.put("owners", owners);
+        obj.put("x", getX());
+        obj.put("z", getZ());
+        obj.put("type", PlotType.CHUNK.name());
         return obj;
     }
 
@@ -205,13 +246,16 @@ public abstract class Plot implements Storable {
             return false;
         }
         Plot other = (Plot) obj;
-        return Objects.equals(world, other.world) && Objects.equals(owners, other.owners);
+        if (!Objects.equals(chunk, other.chunk)) {
+            return false;
+        }
+        return super.equals(obj);
     }
 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash *= 73 + (world != null ? world.hashCode() : 0) + (owners != null ? owners.hashCode() : 0);
+        hash = 79 * hash + (chunk != null ? chunk.hashCode() : 0);
         return hash;
     }
 }
