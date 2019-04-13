@@ -81,7 +81,7 @@ public class GroupKickCommand extends GroupSubCommand {
                     sender.sendMessage(ChatColor.RED + "That player does not exist.");
                 } else {
                     if (group.isImmediateMember(offlinePlayerId)) {
-                        GroupMemberLeaveEvent leaveEvent = plugin.getEventFactory().callGroupMemberLeaveEvent(group, player, true);
+                        GroupMemberLeaveEvent leaveEvent = plugin.getEventFactory().callGroupMemberLeaveEvent(group, offlinePlayer, true);
                         if (leaveEvent.isCancelled()) {
                             sender.sendMessage(ChatColor.RED + "You cannot kick the player.");
                             return;

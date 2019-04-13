@@ -25,6 +25,7 @@ import pw.ollie.politics.event.group.GroupCreateEvent;
 import pw.ollie.politics.event.group.GroupMemberJoinEvent;
 import pw.ollie.politics.event.group.GroupMemberLeaveEvent;
 import pw.ollie.politics.event.group.GroupMemberRoleChangeEvent;
+import pw.ollie.politics.event.group.GroupMemberSpawnEvent;
 import pw.ollie.politics.event.group.GroupPropertySetEvent;
 import pw.ollie.politics.event.group.GroupUnclaimPlotEvent;
 import pw.ollie.politics.event.player.PlayerChangePlotEvent;
@@ -36,6 +37,7 @@ import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.world.plot.Plot;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -63,16 +65,20 @@ public final class PoliticsEventFactory {
         return callEvent(new GroupUnclaimPlotEvent(group, plot, unclaimer));
     }
 
-    public GroupMemberJoinEvent callGroupMemberJoinEvent(Group group, Player member, Role role) {
+    public GroupMemberJoinEvent callGroupMemberJoinEvent(Group group, OfflinePlayer member, Role role) {
         return callEvent(new GroupMemberJoinEvent(group, member, role));
     }
 
-    public GroupMemberLeaveEvent callGroupMemberLeaveEvent(Group group, Player member, boolean kick) {
+    public GroupMemberLeaveEvent callGroupMemberLeaveEvent(Group group, OfflinePlayer member, boolean kick) {
         return callEvent(new GroupMemberLeaveEvent(group, member, kick));
     }
 
-    public GroupMemberRoleChangeEvent callGroupMemberRoleChangeEvent(Group group, Player member, Role oldRole, Role newRole) {
+    public GroupMemberRoleChangeEvent callGroupMemberRoleChangeEvent(Group group, OfflinePlayer member, Role oldRole, Role newRole) {
         return callEvent(new GroupMemberRoleChangeEvent(group, member, oldRole, newRole));
+    }
+
+    public GroupMemberSpawnEvent callGroupMemberSpawnEvent(Group group, OfflinePlayer player) {
+        return callEvent(new GroupMemberSpawnEvent(group, player));
     }
 
     public PlotOwnerChangeEvent callPlotOwnerChangeEvent(Plot plot, int groupId, boolean add) {
