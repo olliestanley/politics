@@ -22,9 +22,17 @@ package pw.ollie.politics.command.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.util.TaskUtil;
 
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class GroupKickCommand extends GroupSubCommand {
     GroupKickCommand(GroupLevel groupLevel) {
@@ -33,7 +41,48 @@ public class GroupKickCommand extends GroupSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        // todo
+        Group group = findGroup(sender, args);
+
+        if (!hasAdmin(sender) && !group.can(sender, Privileges.Group.KICK)) {
+            throw new CommandException("You don't have permission to kick members.");
+        }
+
+        if (args.length(false) < 1) {
+            throw new CommandException("There was not a player specified to kick.");
+        }
+
+        String playerName = args.getString(0, false);
+        Player player = plugin.getServer().getPlayer(playerName);
+        if (player != null) {
+            UUID playerId = player.getUniqueId();
+            if (group.isImmediateMember(playerId)) {
+                group.removeRole(playerId);
+                sender.sendMessage("Successfully removed the player.");
+            } else {
+                throw new CommandException("That player is not a member of the " + groupLevel.getName() + ".");
+            }
+
+            return;
+        }
+
+        TaskUtil.async(plugin, () -> {
+            final OfflinePlayer offlinePlayer = plugin.getServer().getOfflinePlayer(playerName);
+            final UUID offlinePlayerId = offlinePlayer.hasPlayedBefore() ? offlinePlayer.getUniqueId() : null;
+
+            TaskUtil.sync(plugin, () -> {
+                if (offlinePlayerId == null) {
+                    // todo might want to change formatting at some point
+                    sender.sendMessage(ChatColor.RED + "That player does not exist.");
+                } else {
+                    if (group.isImmediateMember(offlinePlayerId)) {
+                        group.removeRole(offlinePlayerId);
+                        sender.sendMessage("Successfully removed the player.");
+                    } else {
+                        sender.sendMessage(ChatColor.RED + "That player is not a member of the " + groupLevel.getName() + ".");
+                    }
+                }
+            });
+        });
     }
 
     @Override

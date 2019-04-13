@@ -31,6 +31,7 @@ import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public abstract class GroupSubCommand extends PoliticsSubCommand {
@@ -118,6 +119,6 @@ public abstract class GroupSubCommand extends PoliticsSubCommand {
     }
 
     public boolean hasAdmin(CommandSender source) {
-        return source.hasPermission(PoliticsCommandHelper.GROUPS_ADMIN_PERMISSION);
+        return source instanceof ConsoleCommandSender || source.hasPermission(PoliticsCommandHelper.GROUPS_ADMIN_PERMISSION);
     }
 }

@@ -64,7 +64,7 @@ public class GroupAddCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getName() + " add <player> [-g " + groupLevel.getName() + "]";
+        return "/" + groupLevel.getId() + " add <player> [-g " + groupLevel.getName() + "]";
     }
 
     @Override
