@@ -22,6 +22,9 @@ package pw.ollie.politics.command.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.event.PoliticsEventFactory;
+import pw.ollie.politics.event.group.GroupUnclaimPlotEvent;
+import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
@@ -52,15 +55,24 @@ public class GroupUnclaimCommand extends GroupSubCommand {
         Location location = ((Player) sender).getLocation();
 
         Plot plot = plugin.getPlotManager().getChunkPlotAt(location);
-        if (plot == null) {
-            throw new CommandException("There is no plot here!");
-        }
         if (!plot.isOwner(group)) {
             throw new CommandException("Sorry, this plot is not owned by " + group.getStringProperty(GroupProperty.NAME) + ".");
         }
 
         if (!plot.removeOwner(group)) {
             throw new CommandException("The plot could not be unclaimed.");
+        }
+
+        PoliticsEventFactory eventFactory = plugin.getEventFactory();
+
+        GroupUnclaimPlotEvent claimEvent = eventFactory.callGroupUnclaimPlotEvent(group, plot, sender);
+        if (claimEvent.isCancelled()) {
+            throw new CommandException("You cannot unclaim this plot!");
+        }
+
+        PlotOwnerChangeEvent ownerChangeEvent = eventFactory.callPlotOwnerChangeEvent(plot, group.getUid(), false);
+        if (ownerChangeEvent.isCancelled()) {
+            throw new CommandException("Your group cannot relinquish ownership of this plot!");
         }
 
         sender.sendMessage("The plot was unclaimed successfully.");

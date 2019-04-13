@@ -20,8 +20,10 @@
 package pw.ollie.politics.event;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.event.group.GroupClaimPlotEvent;
 import pw.ollie.politics.event.group.GroupCreateEvent;
 import pw.ollie.politics.event.group.GroupPropertySetEvent;
+import pw.ollie.politics.event.group.GroupUnclaimPlotEvent;
 import pw.ollie.politics.event.player.PlayerChangePlotEvent;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.event.universe.UniverseCreateEvent;
@@ -47,6 +49,14 @@ public final class PoliticsEventFactory {
 
     public GroupPropertySetEvent callGroupPropertySetEvent(Group group, int property, Object value) {
         return callEvent(new GroupPropertySetEvent(group, property, value));
+    }
+
+    public GroupClaimPlotEvent callGroupClaimPlotEvent(Group group, Plot plot, CommandSender claimer) {
+        return callEvent(new GroupClaimPlotEvent(group, plot, claimer));
+    }
+
+    public GroupUnclaimPlotEvent callGroupUnclaimPlotEvent(Group group, Plot plot, CommandSender unclaimer) {
+        return callEvent(new GroupUnclaimPlotEvent(group, plot, unclaimer));
     }
 
     public PlotOwnerChangeEvent callPlotOwnerChangeEvent(Plot plot, int groupId, boolean add) {
