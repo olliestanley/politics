@@ -50,8 +50,6 @@ public class GroupClaimCommand extends GroupSubCommand {
             throw new CommandException("You don't have permissions to claim land in this " + groupLevel.getName() + ".");
         }
 
-        // todo update for regionplots when added
-
         // TODO add a way to get the world, x, y, z from the command line
         // (should be in GroupCommand)
         Location location = ((Player) sender).getLocation();
