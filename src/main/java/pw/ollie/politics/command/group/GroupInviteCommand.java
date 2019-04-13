@@ -23,6 +23,7 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
 
@@ -46,6 +47,10 @@ public class GroupInviteCommand extends GroupSubCommand {
 
         if (args.length(false) < 1) {
             throw new CommandException("There was no player specified to invite.");
+        }
+
+        if (group.getBooleanProperty(GroupProperty.OPEN, false)) {
+            throw new CommandException("The " + groupLevel.getName() + " is open to join without invitation.");
         }
 
         Player player = plugin.getServer().getPlayer(args.getString(0, false));
