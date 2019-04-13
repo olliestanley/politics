@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 
 public final class PoliticsCommandHelper {
     public static final String GROUPS_ADMIN_PERMISSION = "politics.group.admin";
+    public static final String PLOTS_ADMIN_PERMISSION = "politics.plot.admin";
 
     public static void sendCommandHelp(CommandSender sender, PoliticsBaseCommand baseCommand) {
         PoliticsCommandHelper.sendCommandHelp(sender, baseCommand, 1);
