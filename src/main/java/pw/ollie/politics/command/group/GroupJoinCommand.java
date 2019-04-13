@@ -22,9 +22,14 @@ package pw.ollie.politics.command.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class GroupJoinCommand extends GroupSubCommand {
     GroupJoinCommand(GroupLevel groupLevel) {
@@ -33,7 +38,24 @@ public class GroupJoinCommand extends GroupSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        // todo
+        if (args.length(false) < 1) {
+            throw new CommandException("There was no " + groupLevel.getName() + " specified to join.");
+        }
+
+        Group group = plugin.getGroupManager().getGroupByTag(args.getString(0, false));
+        if (group == null) {
+            throw new CommandException("That " + groupLevel.getName() + " does not exist.");
+        }
+
+        // safe cast as isPlayerOnly() returns true
+        Player player = (Player) sender;
+        if (!group.getBooleanProperty(GroupProperty.OPEN, false) && !group.isInvited(player)) {
+            throw new CommandException("That " + groupLevel.getName() + " is closed and you don't have an invitation.");
+        }
+
+        UUID playerId = player.getUniqueId();
+        group.setRole(playerId, groupLevel.getInitial());
+        sender.sendMessage("Successfully joined " + group.getStringProperty(GroupProperty.NAME) + ".");
     }
 
     @Override
@@ -49,5 +71,10 @@ public class GroupJoinCommand extends GroupSubCommand {
     @Override
     public String getDescription() {
         return "Joins the " + groupLevel.getName() + ".";
+    }
+
+    @Override
+    public boolean isPlayerOnly() {
+        return true;
     }
 }

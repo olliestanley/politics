@@ -245,6 +245,10 @@ public final class Group implements Comparable<Group>, Storable {
         return invitedPlayers.contains(player);
     }
 
+    public boolean isInvited(Player player) {
+        return isInvited(player.getUniqueId());
+    }
+
     public Role getRole(UUID player) {
         return players.get(player);
     }
