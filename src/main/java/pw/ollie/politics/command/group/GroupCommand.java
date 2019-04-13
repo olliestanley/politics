@@ -27,6 +27,7 @@ public final class GroupCommand extends PoliticsBaseCommand {
     public GroupCommand(PoliticsPlugin plugin, GroupLevel groupLevel) {
         super(plugin, groupLevel.getName(), "Base command for " + groupLevel.getName() + "-related actions.");
 
+        this.registerSubCommand(new GroupAddCommand(groupLevel));
         this.registerSubCommand(new GroupClaimCommand(groupLevel));
         this.registerSubCommand(new GroupCreateCommand(groupLevel));
         this.registerSubCommand(new GroupDemoteCommand(groupLevel));

@@ -21,33 +21,54 @@ package pw.ollie.politics.command.group;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.PoliticsCommandHelper;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public class GroupJoinCommand extends GroupSubCommand {
-    GroupJoinCommand(GroupLevel groupLevel) {
-        super("join", groupLevel);
+// note: admin command for force adding a player to a group
+public class GroupAddCommand extends GroupSubCommand {
+    GroupAddCommand(GroupLevel groupLevel) {
+        super("add", groupLevel);
     }
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        // todo
+        Group group = findGroup(sender, args);
+
+        if (!hasAdmin(sender)) {
+            throw new CommandException("You can't do that.");
+        }
+
+        if (args.length(false) < 1) {
+            throw new CommandException("There must be a player specified to add.");
+        }
+
+        String playerName = args.getString(0, false);
+        Player player = plugin.getServer().getPlayer(playerName);
+        if (player == null) {
+            throw new CommandException("That player is not online.");
+        }
+
+        group.setRole(player.getUniqueId(), groupLevel.getInitial());
+        sender.sendMessage("Added the player to the " + groupLevel.getName() + " with role " + groupLevel.getInitial().getName());
     }
 
     @Override
     public String getPermission() {
-        return getBasePermissionNode() + ".join";
+        return PoliticsCommandHelper.GROUPS_ADMIN_PERMISSION;
     }
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " join <" + groupLevel.getName() + ">";
+        return "/" + groupLevel.getName() + " add <player> [-g " + groupLevel.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "Joins the " + groupLevel.getName() + ".";
+        return "Force adds a player to a group";
     }
 }
