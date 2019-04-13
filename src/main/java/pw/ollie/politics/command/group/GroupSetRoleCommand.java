@@ -25,6 +25,7 @@ import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.level.Role;
+import pw.ollie.politics.group.privilege.Privileges;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,6 +38,10 @@ public class GroupSetRoleCommand extends GroupSubCommand {
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
+
+        if (!group.can(sender, Privileges.Group.SET_ROLE)) {
+            throw new CommandException("You don't have permission to set player roles.");
+        }
 
         if (args.length(false) < 2) {
             throw new CommandException("There must be both a player and role specified");

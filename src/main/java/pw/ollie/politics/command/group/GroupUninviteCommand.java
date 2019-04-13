@@ -21,62 +21,59 @@ package pw.ollie.politics.command.group;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
-import pw.ollie.politics.command.args.Argument;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
-import pw.ollie.politics.util.collect.PagedArrayList;
-import pw.ollie.politics.util.collect.PagedList;
+import pw.ollie.politics.group.privilege.Privileges;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
+import java.util.UUID;
 
-public class GroupOnlineCommand extends GroupSubCommand {
-    GroupOnlineCommand(GroupLevel groupLevel) {
-        super("online", groupLevel);
+public class GroupUninviteCommand extends GroupSubCommand {
+    GroupUninviteCommand(GroupLevel groupLevel) {
+        super("uninvite", groupLevel);
     }
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
 
-        int pageNo = 1;
-        if (args.length(false) > 0) {
-            Argument arg = args.get(0, false);
-            if (arg.isInt()) {
-                pageNo = arg.asInt();
-            }
+        if (!group.can(sender, Privileges.Group.INVITE)) {
+            throw new CommandException("You don't have permission to invite to the " + groupLevel.getName() + ".");
         }
 
-        List<Player> online = group.getImmediateOnlinePlayers();
-        PagedList<Player> paged = new PagedArrayList<>(online);
-        if (pageNo > paged.pages()) {
-            throw new CommandException("There are only " + paged.pages() + " pages!");
+        if (args.length(false) < 1) {
+            throw new CommandException("There was no player specified to uninvite.");
         }
 
-        List<Player> page = paged.getPage(pageNo);
-        sender.sendMessage("========= " + group.getProperty(GroupProperty.NAME) + " - Online Players =========");
-        for (Player onlinePlayer : page) {
-            // todo prettify list
-            sender.sendMessage(onlinePlayer.getName());
+        Player player = plugin.getServer().getPlayer(args.getString(0, false));
+        if (player == null) {
+            throw new CommandException("That player is not online.");
         }
+
+        UUID playerId = player.getUniqueId();
+        if (!group.isInvited(playerId)) {
+            throw new CommandException("That player is not invited.");
+        }
+
+        group.removeInvitation(playerId);
+        sender.sendMessage("Successfully uninvited " + player.getName() + " to the " + groupLevel.getName() + ".");
     }
 
     @Override
     public String getPermission() {
-        return getBasePermissionNode() + ".online";
+        return getBasePermissionNode() + ".uninvite";
     }
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " online [-g " + groupLevel.getName() + "]";
+        return "/" + groupLevel.getId() + " uninvite <player> [-g " + groupLevel.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "Lists online players in the " + groupLevel.getName() + ".";
+        return "Uninvites a player to the " + groupLevel.getName() + ".";
     }
 }

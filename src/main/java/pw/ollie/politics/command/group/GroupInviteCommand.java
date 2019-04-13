@@ -22,9 +22,14 @@ package pw.ollie.politics.command.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.group.privilege.Privileges;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class GroupInviteCommand extends GroupSubCommand {
     GroupInviteCommand(GroupLevel groupLevel) {
@@ -33,7 +38,28 @@ public class GroupInviteCommand extends GroupSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        // todo
+        Group group = findGroup(sender, args);
+
+        if (!group.can(sender, Privileges.Group.INVITE)) {
+            throw new CommandException("You don't have permission to invite to the " + groupLevel.getName() + ".");
+        }
+
+        if (args.length(false) < 1) {
+            throw new CommandException("There was no player specified to invite.");
+        }
+
+        Player player = plugin.getServer().getPlayer(args.getString(0, false));
+        if (player == null) {
+            throw new CommandException("That player is not online.");
+        }
+
+        UUID playerId = player.getUniqueId();
+        if (group.isInvited(playerId)) {
+            throw new CommandException("That player is already invited.");
+        }
+
+        group.addInvitation(playerId);
+        sender.sendMessage("Successfully invited " + player.getName() + " to the " + groupLevel.getName() + ".");
     }
 
     @Override
