@@ -58,7 +58,7 @@ public class GroupClaimCommand extends GroupSubCommand {
             throw new CommandException("You can't create a plot for that group in this world.");
         }
 
-        Plot plot = plugin.getPlotManager().getPlotAtChunk(location.getChunk());
+        Plot plot = plugin.getWorldManager().getPlotAtChunk(location.getChunk());
         if (plot.isOwner(group)) {
             throw new CommandException(group.getStringProperty(GroupProperty.NAME) + " already owns this plot.");
         }

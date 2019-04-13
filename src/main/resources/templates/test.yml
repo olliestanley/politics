@@ -18,6 +18,7 @@ levels:
       Default: [Member, Owner]
     initial: Member
     founder: Owner
+    friendly-fire: false
   town:
     name: Town
     plural: Towns
@@ -36,3 +37,4 @@ levels:
       Default: [Resident, Mayor]
     initial: Resident
     founder: Mayor
+    friendly-fire: false

@@ -17,12 +17,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.world.plot;
+package pw.ollie.politics.world;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldConfig;
+import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.protection.PlotProtectionListener;
 
 import org.apache.commons.io.FileUtils;
@@ -44,13 +45,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-public final class PlotManager {
+public final class WorldManager {
     private final PoliticsPlugin plugin;
 
     private Map<String, WorldConfig> configs;
     private Map<String, PoliticsWorld> worlds;
 
-    public PlotManager(PoliticsPlugin plugin) {
+    public WorldManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
 
         plugin.getServer().getPluginManager().registerEvents(new PlotProtectionListener(plugin), plugin);

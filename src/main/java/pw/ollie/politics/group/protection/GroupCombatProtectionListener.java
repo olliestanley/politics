@@ -20,8 +20,25 @@
 package pw.ollie.politics.group.protection;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupManager;
+import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.universe.UniverseManager;
+import pw.ollie.politics.world.PoliticsWorld;
+import pw.ollie.politics.world.WorldManager;
 
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class GroupCombatProtectionListener implements Listener {
     private final PoliticsPlugin plugin;
@@ -30,5 +47,48 @@ public class GroupCombatProtectionListener implements Listener {
         this.plugin = plugin;
     }
 
-    // todo prevent friendly fire if configured to do so and group properties enable it
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        Entity damagedEntity = event.getEntity();
+        if (!(damagedEntity instanceof Player)) {
+            return;
+        }
+        Entity damagerEntity = event.getDamager();
+        if (!(damagerEntity instanceof Player)) {
+            return;
+        }
+
+        Player damaged = (Player) damagedEntity;
+
+        GroupManager groupManager = plugin.getGroupManager();
+        WorldManager worldManager = plugin.getWorldManager();
+
+        List<GroupLevel> groupLevels = groupManager.getGroupLevels();
+        World bukkitWorld = damaged.getWorld();
+        PoliticsWorld world = worldManager.getWorld(bukkitWorld);
+
+        UniverseManager universeManager = plugin.getUniverseManager();
+        UUID damagedId = damaged.getUniqueId();
+        Player damager = (Player) damagerEntity;
+        UUID damagerId = damager.getUniqueId();
+
+        for (GroupLevel groupLevel : groupLevels) {
+            if (groupLevel.isFriendlyFire()) {
+                continue;
+            }
+
+            Universe universe = universeManager.getUniverse(world, groupLevel);
+            if (universe == null) {
+                continue;
+            }
+
+            Set<Group> damagedGroups = universe.getCitizenGroups(damagedId);
+            for (Group damagedGroup : damagedGroups) {
+                if (damagedGroup.isImmediateMember(damagerId)) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+        }
+    }
 }

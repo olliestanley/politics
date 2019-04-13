@@ -21,7 +21,7 @@ package pw.ollie.politics;
 
 import pw.ollie.politics.event.player.PlayerChangePlotEvent;
 import pw.ollie.politics.world.plot.Plot;
-import pw.ollie.politics.world.plot.PlotManager;
+import pw.ollie.politics.world.WorldManager;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,18 +34,18 @@ import org.bukkit.event.player.PlayerMoveEvent;
  */
 public final class PoliticsListener implements Listener {
     private final PoliticsPlugin plugin;
-    private final PlotManager plotManager;
+    private final WorldManager worldManager;
 
     PoliticsListener(PoliticsPlugin plugin) {
         this.plugin = plugin;
-        plotManager = plugin.getPlotManager();
+        worldManager = plugin.getWorldManager();
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        Plot from = plotManager.getChunkPlotAt(event.getFrom());
-        Plot to = plotManager.getChunkPlotAt(event.getTo());
+        Plot from = worldManager.getChunkPlotAt(event.getFrom());
+        Plot to = worldManager.getChunkPlotAt(event.getTo());
 
         if (!from.equals(to)) {
             PlayerChangePlotEvent pcpe = Politics.getEventFactory().callPlayerChangePlotEvent(player, from, to);

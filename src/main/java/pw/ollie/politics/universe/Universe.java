@@ -37,6 +37,8 @@ import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
 
+import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -243,12 +245,16 @@ public final class Universe implements Storable {
         return new Citizen(playerId, name, this);
     }
 
+    public Citizen getCitizen(Player player) {
+        return getCitizen(player.getUniqueId(), player.getName());
+    }
+
     public Set<Group> getCitizenGroups(UUID player) {
         try {
             return new HashSet<>(citizenGroupCache.get(player));
         } catch (final ExecutionException e) {
             Politics.getLogger().log(Level.SEVERE, "Could not load a set of citizen groups! This is a PROBLEM!", e);
-            return null;
+            return new HashSet<>();
         }
     }
 

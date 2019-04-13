@@ -67,7 +67,7 @@ public class UniverseCreateCommand extends PoliticsSubCommand {
         List<PoliticsWorld> worlds = new ArrayList<>();
         if (worldsStr == null) {
             for (World world : plugin.getServer().getWorlds()) {
-                worlds.add(plugin.getPlotManager().getWorld(world));
+                worlds.add(plugin.getWorldManager().getWorld(world));
             }
         } else {
             String[] worldNames = worldsStr.split(",");
@@ -79,7 +79,7 @@ public class UniverseCreateCommand extends PoliticsSubCommand {
                     continue;
                 }
 
-                PoliticsWorld pw = plugin.getPlotManager().getWorld(world);
+                PoliticsWorld pw = plugin.getWorldManager().getWorld(world);
                 worlds.add(pw);
             }
         }

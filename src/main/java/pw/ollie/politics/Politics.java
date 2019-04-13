@@ -25,7 +25,7 @@ import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.world.PoliticsWorld;
-import pw.ollie.politics.world.plot.PlotManager;
+import pw.ollie.politics.world.WorldManager;
 
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -49,8 +49,8 @@ public final class Politics {
         return Politics.getPlugin().getPrivilegeManager();
     }
 
-    public static PlotManager getPlotManager() {
-        return Politics.getPlugin().getPlotManager();
+    public static WorldManager getPlotManager() {
+        return Politics.getPlugin().getWorldManager();
     }
 
     public static UniverseManager getUniverseManager() {
@@ -66,11 +66,11 @@ public final class Politics {
     }
 
     public static PoliticsWorld getWorld(World world) {
-        return Politics.getPlugin().getPlotManager().getWorld(world);
+        return Politics.getPlugin().getWorldManager().getWorld(world);
     }
 
     public static PoliticsWorld getWorld(String world) {
-        return Politics.getPlugin().getPlotManager().getWorld(world);
+        return Politics.getPlugin().getWorldManager().getWorld(world);
     }
 
     public static Logger getLogger() {

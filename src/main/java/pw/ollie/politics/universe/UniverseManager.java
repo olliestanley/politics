@@ -83,7 +83,7 @@ public final class UniverseManager {
     }
 
     public Universe getUniverse(World world, GroupLevel level) {
-        PoliticsWorld cw = plugin.getPlotManager().getWorld(world);
+        PoliticsWorld cw = plugin.getWorldManager().getWorld(world);
         if (cw == null) {
             return null;
         }

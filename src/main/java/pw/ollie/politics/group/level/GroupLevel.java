@@ -46,11 +46,12 @@ public final class GroupLevel {
     private final Map<String, RoleTrack> tracks;
     private final Role initial;
     private final Role founder;
+    private final boolean friendlyFire;
 
     private Set<GroupLevel> allowedChildren;
 
     public GroupLevel(String id, String name, int rank, Map<String, Role> roles, String plural,
-                      Map<String, RoleTrack> tracks, Role initial, Role founder) {
+                      Map<String, RoleTrack> tracks, Role initial, Role founder, boolean friendlyFire) {
         this.id = id;
         this.name = name;
         this.rank = rank;
@@ -59,6 +60,7 @@ public final class GroupLevel {
         this.tracks = tracks;
         this.initial = initial;
         this.founder = founder;
+        this.friendlyFire = friendlyFire;
     }
 
     public void setAllowedChildren(Set<GroupLevel> allowedChildren) {
@@ -113,6 +115,10 @@ public final class GroupLevel {
         return founder;
     }
 
+    public boolean isFriendlyFire() {
+        return friendlyFire;
+    }
+
     public boolean canFound() {
         return founder != null;
     }
@@ -152,6 +158,7 @@ public final class GroupLevel {
 
         node.set("initial", initial.getId());
         node.set("founder", founder.getId());
+        node.set("friendly-fire", Boolean.toString(friendlyFire));
     }
 
     public static GroupLevel load(String id, ConfigurationSection node, Map<GroupLevel, List<String>> levels) {
@@ -239,7 +246,9 @@ public final class GroupLevel {
             }
         }
 
-        GroupLevel theLevel = new GroupLevel(id, levelName, rank, rolesMap, plural, tracks, initial, founder);
+        boolean friendlyFire = node.getBoolean("friendly-fire", false);
+
+        GroupLevel theLevel = new GroupLevel(id, levelName, rank, rolesMap, plural, tracks, initial, founder, friendlyFire);
         // Children so we can get our allowed children in the future
         levels.put(theLevel, children);
         return theLevel;

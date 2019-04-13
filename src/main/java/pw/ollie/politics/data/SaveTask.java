@@ -32,7 +32,7 @@ public final class SaveTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        plugin.getPlotManager().saveWorlds();
+        plugin.getWorldManager().saveWorlds();
         plugin.getUniverseManager().saveUniverses();
     }
 }

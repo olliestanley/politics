@@ -26,7 +26,7 @@ import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
-import pw.ollie.politics.world.plot.PlotManager;
+import pw.ollie.politics.world.WorldManager;
 
 import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
@@ -37,7 +37,7 @@ public final class PoliticsPlugin extends JavaPlugin {
 
     private PoliticsFileSystem fileSystem;
     private PrivilegeManager privilegeManager;
-    private PlotManager plotManager;
+    private WorldManager worldManager;
     private UniverseManager universeManager;
     private GroupManager groupManager;
 
@@ -54,9 +54,9 @@ public final class PoliticsPlugin extends JavaPlugin {
 
         this.privilegeManager = new PrivilegeManager(this);
 
-        this.plotManager = new PlotManager(this);
-        this.plotManager.loadWorldConfigs();
-        this.plotManager.loadWorlds();
+        this.worldManager = new WorldManager(this);
+        this.worldManager.loadWorldConfigs();
+        this.worldManager.loadWorlds();
 
         this.groupManager = new GroupManager(this);
 
@@ -81,7 +81,7 @@ public final class PoliticsPlugin extends JavaPlugin {
     public void onDisable() {
         this.saveTask.cancel();
 
-        this.plotManager.saveWorlds();
+        this.worldManager.saveWorlds();
         this.universeManager.saveRules();
         this.universeManager.saveUniverses();
 
@@ -96,8 +96,8 @@ public final class PoliticsPlugin extends JavaPlugin {
         return this.privilegeManager;
     }
 
-    public PlotManager getPlotManager() {
-        return this.plotManager;
+    public WorldManager getWorldManager() {
+        return this.worldManager;
     }
 
     public UniverseManager getUniverseManager() {
