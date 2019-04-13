@@ -27,6 +27,7 @@ import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
+import pw.ollie.politics.event.group.GroupPropertySetEvent;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.group.privilege.Privilege;
@@ -188,8 +189,8 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     public void setProperty(int property, Object value) {
-        Politics.getEventFactory().callGroupPropertySetEvent(this, property, value);
-        properties.put(property, value);
+        GroupPropertySetEvent event = Politics.getEventFactory().callGroupPropertySetEvent(this, property, value);
+        properties.put(property, event.getValue());
     }
 
     public List<UUID> getImmediatePlayers() {

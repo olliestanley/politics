@@ -21,31 +21,34 @@ package pw.ollie.politics.event.group;
 
 import pw.ollie.politics.group.Group;
 
+import org.bukkit.OfflinePlayer;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-public class GroupPropertySetEvent extends GroupEvent {
+public class GroupMemberLeaveEvent extends GroupMemberEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
-    private final int property;
+    private final boolean kicked;
 
-    private Object value;
+    private boolean cancelled;
 
-    public GroupPropertySetEvent(Group group, int property, Object value) {
-        super(group);
-        this.property = property;
-        this.value = value;
+    public GroupMemberLeaveEvent(Group group, OfflinePlayer member, boolean kicked) {
+        super(group, member);
+        this.kicked = kicked;
     }
 
-    public int getProperty() {
-        return property;
+    public boolean isKick() {
+        return kicked;
     }
 
-    public Object getValue() {
-        return value;
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
     }
 
-    public void setValue(Object value) {
-        this.value = value;
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
     @Override

@@ -22,6 +22,7 @@ package pw.ollie.politics.command.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.event.group.GroupMemberRoleChangeEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.level.Role;
@@ -81,6 +82,11 @@ public class GroupPromoteCommand extends GroupSubCommand {
             if (myRole.getRank() - next.getRank() <= 1) {
                 throw new CommandException("You can't promote someone to a role equal to or higher than your own!");
             }
+        }
+
+        GroupMemberRoleChangeEvent roleChangeEvent = plugin.getEventFactory().callGroupMemberRoleChangeEvent(group, player, role, next);
+        if (roleChangeEvent.isCancelled()) {
+            throw new CommandException("You can't promote that player,");
         }
 
         group.setRole(player.getUniqueId(), next);

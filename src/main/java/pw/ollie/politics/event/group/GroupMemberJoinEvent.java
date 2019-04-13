@@ -20,32 +20,40 @@
 package pw.ollie.politics.event.group;
 
 import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.level.Role;
 
+import org.bukkit.OfflinePlayer;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-public class GroupPropertySetEvent extends GroupEvent {
+public class GroupMemberJoinEvent extends GroupMemberEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
-    private final int property;
+    private Role role;
 
-    private Object value;
+    private boolean cancelled;
 
-    public GroupPropertySetEvent(Group group, int property, Object value) {
-        super(group);
-        this.property = property;
-        this.value = value;
+    public GroupMemberJoinEvent(Group group, OfflinePlayer member, Role role) {
+        super(group, member);
+        this.role = role;
     }
 
-    public int getProperty() {
-        return property;
+    public Role getRole() {
+        return role;
     }
 
-    public Object getValue() {
-        return value;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
-    public void setValue(Object value) {
-        this.value = value;
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
     @Override

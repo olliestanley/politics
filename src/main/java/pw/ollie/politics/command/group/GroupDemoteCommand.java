@@ -22,6 +22,7 @@ package pw.ollie.politics.command.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.event.group.GroupMemberRoleChangeEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.level.Role;
@@ -80,6 +81,11 @@ public class GroupDemoteCommand extends GroupSubCommand {
             if (myRole.getRank() - role.getRank() <= 0) {
                 throw new CommandException("You can't demote someone with a rank higher than yours!");
             }
+        }
+
+        GroupMemberRoleChangeEvent roleChangeEvent = plugin.getEventFactory().callGroupMemberRoleChangeEvent(group, player, role, next);
+        if (roleChangeEvent.isCancelled()) {
+            throw new CommandException("You can't demote that player,");
         }
 
         group.setRole(player.getUniqueId(), next);

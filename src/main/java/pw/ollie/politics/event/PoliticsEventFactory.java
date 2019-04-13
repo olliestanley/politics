@@ -22,6 +22,9 @@ package pw.ollie.politics.event;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.event.group.GroupClaimPlotEvent;
 import pw.ollie.politics.event.group.GroupCreateEvent;
+import pw.ollie.politics.event.group.GroupMemberJoinEvent;
+import pw.ollie.politics.event.group.GroupMemberLeaveEvent;
+import pw.ollie.politics.event.group.GroupMemberRoleChangeEvent;
 import pw.ollie.politics.event.group.GroupPropertySetEvent;
 import pw.ollie.politics.event.group.GroupUnclaimPlotEvent;
 import pw.ollie.politics.event.player.PlayerChangePlotEvent;
@@ -29,6 +32,7 @@ import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.event.universe.UniverseCreateEvent;
 import pw.ollie.politics.event.universe.UniverseDestroyEvent;
 import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.world.plot.Plot;
 
@@ -57,6 +61,18 @@ public final class PoliticsEventFactory {
 
     public GroupUnclaimPlotEvent callGroupUnclaimPlotEvent(Group group, Plot plot, CommandSender unclaimer) {
         return callEvent(new GroupUnclaimPlotEvent(group, plot, unclaimer));
+    }
+
+    public GroupMemberJoinEvent callGroupMemberJoinEvent(Group group, Player member, Role role) {
+        return callEvent(new GroupMemberJoinEvent(group, member, role));
+    }
+
+    public GroupMemberLeaveEvent callGroupMemberLeaveEvent(Group group, Player member, boolean kick) {
+        return callEvent(new GroupMemberLeaveEvent(group, member, kick));
+    }
+
+    public GroupMemberRoleChangeEvent callGroupMemberRoleChangeEvent(Group group, Player member, Role oldRole, Role newRole) {
+        return callEvent(new GroupMemberRoleChangeEvent(group, member, oldRole, newRole));
     }
 
     public PlotOwnerChangeEvent callPlotOwnerChangeEvent(Plot plot, int groupId, boolean add) {

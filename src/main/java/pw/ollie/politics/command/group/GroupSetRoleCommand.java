@@ -22,6 +22,7 @@ package pw.ollie.politics.command.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.event.group.GroupMemberRoleChangeEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.level.Role;
@@ -67,6 +68,12 @@ public class GroupSetRoleCommand extends GroupSubCommand {
             if (myRole.getRank() - role.getRank() <= 1) {
                 throw new CommandException("You can't set someone to a role equal to or higher than your own!");
             }
+        }
+
+        Role oldRole = group.getRole(player.getUniqueId());
+        GroupMemberRoleChangeEvent roleChangeEvent = plugin.getEventFactory().callGroupMemberRoleChangeEvent(group, player, oldRole, role);
+        if (roleChangeEvent.isCancelled()) {
+            throw new CommandException("You can't set that player's role,");
         }
 
         group.setRole(player.getUniqueId(), role);

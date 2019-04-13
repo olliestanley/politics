@@ -21,39 +21,17 @@ package pw.ollie.politics.event.group;
 
 import pw.ollie.politics.group.Group;
 
-import org.bukkit.event.HandlerList;
+import org.bukkit.OfflinePlayer;
 
-public class GroupPropertySetEvent extends GroupEvent {
-    private static final HandlerList handlers = new HandlerList();
+public abstract class GroupMemberEvent extends GroupEvent {
+    private final OfflinePlayer member;
 
-    private final int property;
-
-    private Object value;
-
-    public GroupPropertySetEvent(Group group, int property, Object value) {
+    protected GroupMemberEvent(Group group, OfflinePlayer member) {
         super(group);
-        this.property = property;
-        this.value = value;
+        this.member = member;
     }
 
-    public int getProperty() {
-        return property;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
+    public OfflinePlayer getMember() {
+        return member;
     }
 }

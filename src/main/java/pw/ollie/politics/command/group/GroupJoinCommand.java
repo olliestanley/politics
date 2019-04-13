@@ -22,6 +22,7 @@ package pw.ollie.politics.command.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.event.group.GroupMemberJoinEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
@@ -53,8 +54,13 @@ public class GroupJoinCommand extends GroupSubCommand {
             throw new CommandException("That " + groupLevel.getName() + " is closed and you don't have an invitation.");
         }
 
+        GroupMemberJoinEvent joinEvent = plugin.getEventFactory().callGroupMemberJoinEvent(group, player, groupLevel.getInitial());
+        if (joinEvent.isCancelled()) {
+            throw new CommandException("You may not join that " + groupLevel.getName() + ".");
+        }
+
         UUID playerId = player.getUniqueId();
-        group.setRole(playerId, groupLevel.getInitial());
+        group.setRole(playerId, joinEvent.getRole());
         sender.sendMessage("Successfully joined " + group.getStringProperty(GroupProperty.NAME) + ".");
     }
 
