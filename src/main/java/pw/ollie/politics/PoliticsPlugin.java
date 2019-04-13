@@ -82,6 +82,7 @@ public final class PoliticsPlugin extends JavaPlugin {
         this.saveTask.cancel();
 
         this.plotManager.saveWorlds();
+        this.universeManager.saveRules();
         this.universeManager.saveUniverses();
 
         instance = null;

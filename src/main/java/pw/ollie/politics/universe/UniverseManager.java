@@ -44,6 +44,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -165,7 +166,33 @@ public final class UniverseManager {
     }
 
     public void saveRules() {
-        // todo implement this
+        File rulesDir = plugin.getFileSystem().getRulesDir();
+
+        for (UniverseRules rules : rules.values()) {
+            File rulesFile = new File(rulesDir, rules.getName() + ".yml");
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(rulesFile);
+            rules.save(config);
+            File backup = new File(rulesDir, rules.getName() + ".yml.bck");
+
+            try {
+                Files.copy(rulesFile.toPath(), backup.toPath());
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, "Could not backup universe rules, any changes will not be stored...", e);
+                continue;
+            }
+
+            try {
+                config.save(rulesFile);
+                backup.delete();
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, "Could not save universe rules, restoring backup...", e);
+                try {
+                    Files.copy(backup.toPath(), rulesFile.toPath());
+                } catch (IOException e1) {
+                    plugin.getLogger().log(Level.SEVERE, "Could not restore backup, restore manually...", e);
+                }
+            }
+        }
     }
 
     public void loadUniverses() {
