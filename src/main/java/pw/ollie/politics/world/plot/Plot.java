@@ -27,6 +27,7 @@ import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.world.PoliticsWorld;
@@ -45,6 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * A plot in Politics is made up of exactly one chunk, and may have sub-plots.
@@ -218,9 +220,32 @@ public final class Plot implements Storable {
         return isOwner(group.getUid());
     }
 
+    // this works so that if the plot has one owner group, the player has whatever privileges afforded to their role in
+    // the owner group, but if the plot has multiple owner groups the player must have a privilege in all of those owner
+    // groups in order to be have it for the plot - seems reasonable but may want to consider if it's best at some point
     public Set<Privilege> getPrivileges(Player player) {
         Set<Privilege> privileges = new HashSet<>();
-        // TODO implement this
+        UUID playerId = player.getUniqueId();
+        TIntIterator groupIdIt = owners.iterator();
+        boolean first = true;
+        while (groupIdIt.hasNext()) {
+            int groupId = groupIdIt.next();
+            Group group = Politics.getGroupManager().getGroupById(groupId);
+            Role playerRole = group.getRole(playerId);
+
+            if (playerRole == null) {
+                privileges.clear();
+                break;
+            }
+
+            if (first) {
+                privileges.addAll(playerRole.getPrivileges());
+                first = false;
+                continue;
+            }
+
+            privileges.retainAll(playerRole.getPrivileges());
+        }
         return privileges;
     }
 
