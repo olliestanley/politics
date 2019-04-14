@@ -59,7 +59,7 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
                 try {
                     subCommand.runCommand(plugin, sender, args.subArgs(1, args.length()));
                 } catch (CommandException e) {
-                    MessageBuilder.beginError().append(e.getMessage()).build().send(sender);
+                    MessageBuilder.beginError().append(e.getMessage()).send(sender);
                 }
             }
         } else {
@@ -67,7 +67,7 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
 
             if (closestMatch != null) {
                 MessageBuilder.beginError().append("Unrecognised subcommand - did you mean '")
-                        .append(closestMatch.getName()).append("'?").build().send(sender);
+                        .append(closestMatch.getName()).append("'?").send(sender);
                 return;
             }
 
@@ -115,12 +115,12 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
 
     private boolean checkPerms(PoliticsSubCommand subCommand, CommandSender sender) {
         if (subCommand.getPermission() != null && !(sender.hasPermission(subCommand.getPermission()))) {
-            MessageBuilder.beginError().append("You don't have permission for that.").build().send(sender);
+            MessageBuilder.beginError().append("You don't have permission for that.").send(sender);
             return false;
         }
 
         if (subCommand.isPlayerOnly() && !(sender instanceof Player)) {
-            MessageBuilder.beginError().append("You must be a player to do that.").build().send(sender);
+            MessageBuilder.beginError().append("You must be a player to do that.").send(sender);
             return false;
         }
 
@@ -129,12 +129,12 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
 
     private boolean checkPerms(CommandSender sender) {
         if (getPermission() != null && !(sender.hasPermission(getPermission()))) {
-            MessageBuilder.beginError().append("You don't have permission for that.").build().send(sender);
+            MessageBuilder.beginError().append("You don't have permission for that.").send(sender);
             return false;
         }
 
         if (isPlayerOnly() && !(sender instanceof Player)) {
-            MessageBuilder.beginError().append("You must be a player to do that.").build().send(sender);
+            MessageBuilder.beginError().append("You must be a player to do that.").send(sender);
             return false;
         }
 
