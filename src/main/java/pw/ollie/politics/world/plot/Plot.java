@@ -256,7 +256,6 @@ public final class Plot implements Storable {
         obj.put("owners", owners);
         obj.put("x", getX());
         obj.put("z", getZ());
-        obj.put("type", PlotType.CHUNK.name());
         return obj;
     }
 
