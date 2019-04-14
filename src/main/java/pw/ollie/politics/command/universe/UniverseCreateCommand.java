@@ -25,6 +25,7 @@ import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.universe.UniverseRules;
+import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bukkit.World;
@@ -90,7 +91,8 @@ public class UniverseCreateCommand extends PoliticsSubCommand {
 
         Universe universe = plugin.getUniverseManager().createUniverse(name, theRules);
         plugin.getEventFactory().callUniverseCreateEvent(universe);
-        sender.sendMessage("You have created the universe '" + name + "' with the rules '" + rules + "'.");
+        MessageBuilder.begin("You have created the universe '").highlight().append(name).newLine()
+                .append("' with the rules '").highlight().append(rules).normal().append("'.").build().send(sender);
     }
 
     @Override

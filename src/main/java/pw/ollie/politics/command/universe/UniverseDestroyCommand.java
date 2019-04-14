@@ -24,6 +24,7 @@ import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 
@@ -44,7 +45,7 @@ public class UniverseDestroyCommand extends PoliticsSubCommand {
 
         plugin.getUniverseManager().destroyUniverse(universe);
         plugin.getEventFactory().callUniverseDestroyEvent(universe);
-        sender.sendMessage("Universe destroyed, sir.");
+        MessageBuilder.begin("Universe destroyed, sir.").build().send(sender);
     }
 
     @Override

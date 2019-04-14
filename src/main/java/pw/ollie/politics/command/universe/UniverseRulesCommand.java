@@ -20,9 +20,12 @@
 package pw.ollie.politics.command.universe;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.universe.UniverseRules;
+import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.util.message.MessageUtil;
 
 import org.bukkit.command.CommandSender;
 
@@ -35,14 +38,17 @@ public class UniverseRulesCommand extends PoliticsSubCommand {
     }
 
     @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         List<UniverseRules> ruleList = plugin.getUniverseManager().listRules();
         if (ruleList.size() == 0) {
-            sender.sendMessage("There are no rulesets.");
+            throw new CommandException("There are no rule sets.");
         }
+
+        MessageBuilder message = MessageUtil.startBlockMessage("Universe Rule Sets");
         for (UniverseRules rules : ruleList) {
-            sender.sendMessage(rules.getName() + " - " + rules.getDescription());
+            message.newLine().highlight().append(rules.getName()).normal().append(" - ").append(rules.getDescription());
         }
+        message.build().send(sender);
     }
 
     @Override

@@ -25,12 +25,12 @@ import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.universe.RuleTemplates;
 import pw.ollie.politics.universe.UniverseRules;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class UniverseGenRulesCommand extends PoliticsSubCommand {
     UniverseGenRulesCommand() {
@@ -55,10 +55,12 @@ public class UniverseGenRulesCommand extends PoliticsSubCommand {
         }
 
         if (RuleTemplates.copyTemplate(templateName, name)) {
-            sender.sendMessage("A new set of rules named '" + name + "' based on the template '" + templateName
-                    + "' has been generated. Please restart the server to see your changes.");
+            MessageBuilder.begin("A new set of rules named '").highlight().append(name).normal()
+                    .append("' based on the template '").highlight().append(templateName).normal()
+                    .append("' has been generated. Please restart the server to see your changes.")
+                    .build().send(sender);
         } else {
-            sender.sendMessage("The set of rules could not be created based on that template. Does the template exist?");
+            throw new CommandException("The set of rules could not be created based on that template. Does the template exist?");
         }
     }
 
