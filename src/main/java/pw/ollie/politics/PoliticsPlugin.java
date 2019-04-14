@@ -36,6 +36,9 @@ public final class PoliticsPlugin extends JavaPlugin {
     private static PoliticsPlugin instance;
 
     private PoliticsFileSystem fileSystem;
+
+    private PoliticsConfig config;
+
     private PrivilegeManager privilegeManager;
     private WorldManager worldManager;
     private UniverseManager universeManager;
@@ -51,6 +54,9 @@ public final class PoliticsPlugin extends JavaPlugin {
         instance = this;
 
         this.fileSystem = new PoliticsFileSystem(this.getDataFolder());
+
+        this.config = new PoliticsConfig(this);
+        this.config.loadConfig();
 
         this.privilegeManager = new PrivilegeManager(this);
 
@@ -89,27 +95,31 @@ public final class PoliticsPlugin extends JavaPlugin {
     }
 
     public PoliticsFileSystem getFileSystem() {
-        return this.fileSystem;
+        return fileSystem;
+    }
+
+    public PoliticsConfig getPoliticsConfig() {
+        return config;
     }
 
     public PrivilegeManager getPrivilegeManager() {
-        return this.privilegeManager;
+        return privilegeManager;
     }
 
     public WorldManager getWorldManager() {
-        return this.worldManager;
+        return worldManager;
     }
 
     public UniverseManager getUniverseManager() {
-        return this.universeManager;
+        return universeManager;
     }
 
     public GroupManager getGroupManager() {
-        return this.groupManager;
+        return groupManager;
     }
 
     public PoliticsEventFactory getEventFactory() {
-        return this.eventFactory;
+        return eventFactory;
     }
 
     public static PoliticsPlugin instance() {

@@ -1,0 +1,8 @@
+# general plugin configuration
+
+# colour scheme for messages sent to players
+colour-scheme:
+  normal: gray
+  error: red
+  highlight: yellow
+  prefix: dark_green
