@@ -28,6 +28,8 @@ import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.util.collect.PagedArrayList;
 import pw.ollie.politics.util.collect.PagedList;
+import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.util.message.MessageUtil;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -53,15 +55,20 @@ public class GroupOnlineCommand extends GroupSubCommand {
 
         List<Player> online = group.getImmediateOnlinePlayers();
         PagedList<Player> paged = new PagedArrayList<>(online);
+        paged.setElementsPerPage(25); // todo make configurable?
         if (pageNo > paged.pages()) {
             throw new CommandException("There are only " + paged.pages() + " pages!");
         }
 
         List<Player> page = paged.getPage(pageNo);
-        sender.sendMessage("========= " + group.getProperty(GroupProperty.NAME) + " - Online Players =========");
-        for (Player onlinePlayer : page) {
-            // todo prettify list
-            sender.sendMessage(onlinePlayer.getName());
+        MessageBuilder message = MessageUtil.startBlockMessage(group.getStringProperty(GroupProperty.NAME) + " - Online Players (" + pageNo + " of " + paged.pages() + ")")
+                .newLine();
+        for (int i = 0; i < page.size(); i++) {
+            message.append(page.get(i).getName());
+
+            if (i < page.size() - 1) {
+                message.append(", ");
+            }
         }
     }
 

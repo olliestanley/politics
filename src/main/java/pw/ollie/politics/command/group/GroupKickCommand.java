@@ -27,8 +27,9 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.TaskUtil;
+import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.util.message.MessageUtil;
 
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -63,7 +64,7 @@ public class GroupKickCommand extends GroupSubCommand {
                 }
 
                 group.removeRole(playerId);
-                sender.sendMessage("Successfully removed the player.");
+                MessageUtil.message(sender, "Successfully removed the player.");
             } else {
                 throw new CommandException("That player is not a member of the " + groupLevel.getName() + ".");
             }
@@ -77,20 +78,19 @@ public class GroupKickCommand extends GroupSubCommand {
 
             TaskUtil.sync(plugin, () -> {
                 if (offlinePlayerId == null) {
-                    // todo might want to change formatting at some point
-                    sender.sendMessage(ChatColor.RED + "That player does not exist.");
+                    MessageBuilder.beginError().append("That player does not exist.").send(sender);
                 } else {
                     if (group.isImmediateMember(offlinePlayerId)) {
                         GroupMemberLeaveEvent leaveEvent = plugin.getEventFactory().callGroupMemberLeaveEvent(group, offlinePlayer, true);
                         if (leaveEvent.isCancelled()) {
-                            sender.sendMessage(ChatColor.RED + "You cannot kick the player.");
+                            MessageBuilder.beginError().append("You cannot kick the player.").send(sender);
                             return;
                         }
 
                         group.removeRole(offlinePlayerId);
-                        sender.sendMessage("Successfully removed the player.");
+                        MessageUtil.message(sender, "Successfully removed the player.");
                     } else {
-                        sender.sendMessage(ChatColor.RED + "That player is not a member of the " + groupLevel.getName() + ".");
+                        MessageBuilder.beginError().append("That player is not a member of the " + groupLevel.getName() + ".").send(sender);
                     }
                 }
             });

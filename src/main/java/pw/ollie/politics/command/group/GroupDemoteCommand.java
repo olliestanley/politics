@@ -28,6 +28,7 @@ import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.group.level.RoleTrack;
 import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -89,7 +90,8 @@ public class GroupDemoteCommand extends GroupSubCommand {
         }
 
         group.setRole(player.getUniqueId(), next);
-        sender.sendMessage(player.getName() + " was demoted to " + next.getName() + " in the group!");
+        MessageBuilder.begin().highlight(player.getName()).normal(" was demoted to ").highlight(next.getName())
+                .normal(" in the ").append(groupLevel.getName()).append("!").send(sender);
     }
 
     @Override

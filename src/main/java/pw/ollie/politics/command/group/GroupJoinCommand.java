@@ -26,6 +26,7 @@ import pw.ollie.politics.event.group.GroupMemberJoinEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -61,7 +62,8 @@ public class GroupJoinCommand extends GroupSubCommand {
 
         UUID playerId = player.getUniqueId();
         group.setRole(playerId, joinEvent.getRole());
-        sender.sendMessage("Successfully joined " + group.getStringProperty(GroupProperty.NAME) + ".");
+        MessageBuilder.begin("Successfully joined ").highlight(group.getStringProperty(GroupProperty.NAME))
+                .normal(".").send(sender);
     }
 
     @Override

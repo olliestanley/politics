@@ -36,10 +36,10 @@ public class PoliticsAboutCommand extends PoliticsSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
-        MessageBuilder.begin().highlight().append("Politics ").normal().append(plugin.getDescription().getVersion())
-                .newLine().normal().append("Politics is a self-serve community management system.")
-                .newLine().normal().append("Type ").highlight().append("/politics help").normal().append(" for general command help.")
-                .build().send(sender);
+        MessageBuilder.begin().highlight("Politics ").normal(plugin.getDescription().getVersion())
+                .newLine().normal("Politics is a self-serve community management system.")
+                .newLine().normal("Type ").highlight("/politics help").normal(" for general command help.")
+                .send(sender);
     }
 
     @Override

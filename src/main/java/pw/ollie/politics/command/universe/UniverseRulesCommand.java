@@ -46,9 +46,9 @@ public class UniverseRulesCommand extends PoliticsSubCommand {
 
         MessageBuilder message = MessageUtil.startBlockMessage("Universe Rule Sets");
         for (UniverseRules rules : ruleList) {
-            message.newLine().highlight().append(rules.getName()).normal().append(" - ").append(rules.getDescription());
+            message.newLine().highlight(rules.getName()).normal(" - ").append(rules.getDescription());
         }
-        message.build().send(sender);
+        message.send(sender);
     }
 
     @Override

@@ -26,6 +26,7 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -64,7 +65,8 @@ public class GroupInviteCommand extends GroupSubCommand {
         }
 
         group.addInvitation(playerId);
-        sender.sendMessage("Successfully invited " + player.getName() + " to the " + groupLevel.getName() + ".");
+        MessageBuilder.begin("Successfully invited ").highlight(player.getName()).normal(" to the ")
+                .highlight(groupLevel.getName()).normal(".").send(sender);
     }
 
     @Override

@@ -29,6 +29,7 @@ import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.Position;
 import pw.ollie.politics.util.math.RotatedPosition;
 import pw.ollie.politics.util.math.Vector2f;
+import pw.ollie.politics.util.message.MessageUtil;
 import pw.ollie.politics.world.plot.Plot;
 
 import org.bukkit.Location;
@@ -75,7 +76,7 @@ public class GroupSetSpawnCommand extends GroupSubCommand {
         }
 
         group.setProperty(GroupProperty.SPAWN, rotatedPosition);
-        sender.sendMessage("The spawn of your " + groupLevel.getName() + " was set successfully!");
+        MessageUtil.message(sender, "The spawn of your " + groupLevel.getName() + " was set successfully!");
     }
 
     @Override

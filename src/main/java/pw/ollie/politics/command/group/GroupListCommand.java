@@ -67,12 +67,10 @@ public class GroupListCommand extends GroupSubCommand {
         }
 
         MessageBuilder message = MessageUtil.startBlockMessage(groupLevel.getPlural().toUpperCase());
-
         List<Group> pageGroups = groups.subList(min, max);
         for (Group group : pageGroups) {
             message.newLine().highlight().append((String) group.getProperty(GroupProperty.TAG));
         }
-
         message.build().send(sender);
     }
 

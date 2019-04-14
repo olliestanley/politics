@@ -25,6 +25,8 @@ import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.util.message.MessageUtil;
 
 import org.bukkit.command.CommandSender;
 
@@ -41,9 +43,9 @@ public class GroupInfoCommand extends GroupSubCommand {
         Group group = findGroup(sender, args);
 
         // todo more info than just the name
-        sender.sendMessage("============= INFO =============");
-        sender.sendMessage("Current Group: " + group.getStringProperty(GroupProperty.NAME));
-        sender.sendMessage("================================");
+        MessageBuilder message = MessageUtil.startBlockMessage(groupLevel.getName() + " Info");
+        message.newLine().normal("Name: ").highlight(group.getStringProperty(GroupProperty.NAME));
+        message.send(sender);
     }
 
     @Override

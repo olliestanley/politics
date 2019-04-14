@@ -25,6 +25,7 @@ import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -59,7 +60,7 @@ public class GroupUninviteCommand extends GroupSubCommand {
         }
 
         group.removeInvitation(playerId);
-        sender.sendMessage("Successfully uninvited " + player.getName() + " to the " + groupLevel.getName() + ".");
+        MessageBuilder.begin("Successfully uninvited ").highlight(player.getName()).normal(" to the " + groupLevel.getName() + ".").send(sender);
     }
 
     @Override

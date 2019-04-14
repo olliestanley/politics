@@ -23,8 +23,10 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsCommandHelper;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.event.group.GroupMemberJoinEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -53,8 +55,14 @@ public class GroupAddCommand extends GroupSubCommand {
             throw new CommandException("That player is not online.");
         }
 
+        GroupMemberJoinEvent joinEvent = plugin.getEventFactory().callGroupMemberJoinEvent(group, player, groupLevel.getInitial());
+        if (joinEvent.isCancelled()) {
+            throw new CommandException("You may not add that player to that " + groupLevel.getName() + ".");
+        }
+
         group.setRole(player.getUniqueId(), groupLevel.getInitial());
-        sender.sendMessage("Added the player to the " + groupLevel.getName() + " with role " + groupLevel.getInitial().getName());
+        MessageBuilder.begin("Added the player to the ").append(groupLevel.getName()).append(" with role ")
+                .highlight(groupLevel.getInitial().getName()).normal(".").send(sender);
     }
 
     @Override

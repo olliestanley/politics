@@ -31,6 +31,7 @@ import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.Position;
+import pw.ollie.politics.util.message.MessageUtil;
 import pw.ollie.politics.world.plot.Plot;
 
 import org.bukkit.Location;
@@ -84,7 +85,7 @@ public class GroupClaimCommand extends GroupSubCommand {
             throw new CommandException("Your group cannot own this plot!");
         }
 
-        sender.sendMessage("The plot was claimed successfully.");
+        MessageUtil.message(sender, "The plot was claimed successfully");
     }
 
     @Override

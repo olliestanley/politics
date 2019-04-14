@@ -26,6 +26,7 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -82,7 +83,7 @@ public class GroupCreateCommand extends GroupSubCommand {
             throw new CommandException(groupLevel.getName() + " creation denied!");
         }
 
-        sender.sendMessage("Your " + groupLevel.getName() + " was created successfully.");
+        MessageBuilder.begin("Your ").highlight(groupLevel.getName()).normal(" was successfully created.").send(sender);
     }
 
     @Override

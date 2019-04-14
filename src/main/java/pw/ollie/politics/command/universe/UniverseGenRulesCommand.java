@@ -55,10 +55,9 @@ public class UniverseGenRulesCommand extends PoliticsSubCommand {
         }
 
         if (RuleTemplates.copyTemplate(templateName, name)) {
-            MessageBuilder.begin("A new set of rules named '").highlight().append(name).normal()
-                    .append("' based on the template '").highlight().append(templateName).normal()
-                    .append("' has been generated. Please restart the server to see your changes.")
-                    .build().send(sender);
+            MessageBuilder.begin("A new set of rules named '").highlight(name).normal("' based on the template '")
+                    .highlight(templateName).normal("' has been generated. Please restart the server to see your changes.")
+                    .send(sender);
         } else {
             throw new CommandException("The set of rules could not be created based on that template. Does the template exist?");
         }

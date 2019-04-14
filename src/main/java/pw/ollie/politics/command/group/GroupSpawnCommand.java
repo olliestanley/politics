@@ -30,6 +30,8 @@ import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.Position;
 import pw.ollie.politics.util.math.RotatedPosition;
 import pw.ollie.politics.util.math.Vector2f;
+import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.util.message.MessageUtil;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -84,9 +86,11 @@ public class GroupSpawnCommand extends GroupSubCommand {
         player.teleport(new Location(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), spawnRot.getX(), spawnRot.getY()));
 
         if (playerName != null) {
-            sender.sendMessage(playerName + " was teleported to the " + groupLevel.getName() + " spawn!");
+            MessageBuilder.begin().highlight(playerName).normal(" was teleported to the " + groupLevel.getName() + " spawn.")
+                    .send(sender);
         }
-        player.sendMessage("You have been teleported to the spawn of " + group.getStringProperty(GroupProperty.NAME) + "!");
+
+        MessageUtil.message(sender, "You have been teleported to the " + groupLevel.getName() + " spawn.");
     }
 
     @Override

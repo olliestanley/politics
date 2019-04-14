@@ -91,8 +91,8 @@ public class UniverseCreateCommand extends PoliticsSubCommand {
 
         Universe universe = plugin.getUniverseManager().createUniverse(name, theRules);
         plugin.getEventFactory().callUniverseCreateEvent(universe);
-        MessageBuilder.begin("You have created the universe '").highlight().append(name).newLine()
-                .append("' with the rules '").highlight().append(rules).normal().append("'.").build().send(sender);
+        MessageBuilder.begin("You have created the universe '").highlight(name).newLine()
+                .normal("' with the rules '").highlight(rules).normal("'.").send(sender);
     }
 
     @Override

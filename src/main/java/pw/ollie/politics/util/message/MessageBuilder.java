@@ -21,6 +21,8 @@ package pw.ollie.politics.util.message;
 
 import pw.ollie.politics.Politics;
 
+import org.bukkit.command.CommandSender;
+
 public final class MessageBuilder {
     private final StringBuilder delegate;
     private final ColourScheme colourScheme;
@@ -42,9 +44,17 @@ public final class MessageBuilder {
         return this;
     }
 
+    public MessageBuilder normal(String content) {
+        return normal().append(content);
+    }
+
     public MessageBuilder error() {
         delegate.append(colourScheme.getError());
         return this;
+    }
+
+    public MessageBuilder error(String content) {
+        return error().append(content);
     }
 
     public MessageBuilder highlight() {
@@ -52,9 +62,17 @@ public final class MessageBuilder {
         return this;
     }
 
+    public MessageBuilder highlight(String content) {
+        return highlight().append(content);
+    }
+
     public MessageBuilder prefix() {
         delegate.append(colourScheme.getPrefix());
         return this;
+    }
+
+    public MessageBuilder prefix(String content) {
+        return prefix().append(content);
     }
 
     public MessageBuilder newLine() {
@@ -64,6 +82,10 @@ public final class MessageBuilder {
 
     public FormattedMessage build() {
         return new FormattedMessage(delegate.toString());
+    }
+
+    public void send(CommandSender sender) {
+        build().send(sender);
     }
 
     public static MessageBuilder begin(ColourScheme colourScheme) {

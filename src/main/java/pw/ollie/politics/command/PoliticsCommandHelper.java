@@ -22,6 +22,8 @@ package pw.ollie.politics.command;
 import pw.ollie.politics.util.StringUtil;
 import pw.ollie.politics.util.collect.PagedArrayList;
 import pw.ollie.politics.util.collect.PagedList;
+import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.util.message.MessageUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -45,14 +47,16 @@ public final class PoliticsCommandHelper {
                 .filter(cmd -> cmd.getPermission() == null || sender.hasPermission(cmd.getPermission()))
                 .collect(Collectors.toList()));
         if (pageNumber > pages.pages()) {
-            sender.sendMessage("There are only " + pages.pages() + " pages.");
+            MessageBuilder.beginError().append("There are only " + pages.pages() + " pages.").send(sender);
             return;
         }
 
+        MessageBuilder message = MessageUtil.startBlockMessage(baseCommand.getName() + " Help (" + pageNumber + " of " + pages.pages() + ")");
         List<PoliticsSubCommand> page = pages.getPage(pageNumber);
         for (PoliticsSubCommand subCommand : page) {
-            sender.sendMessage("/" + baseCommand.getName() + " " + subCommand.getName() + " - " + subCommand.getDescription());
+            message.newLine().highlight("/" + baseCommand.getName() + " " + subCommand.getName()).normal(" - " + subCommand.getDescription());
         }
+        message.send(sender);
     }
 
     public static PoliticsSubCommand getClosestMatch(Collection<PoliticsSubCommand> subCommands, String label) {

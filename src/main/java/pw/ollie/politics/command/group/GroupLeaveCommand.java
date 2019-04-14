@@ -26,6 +26,7 @@ import pw.ollie.politics.event.group.GroupMemberLeaveEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -54,7 +55,7 @@ public class GroupLeaveCommand extends GroupSubCommand {
         }
 
         group.removeRole(playerId);
-        sender.sendMessage("Successfully left " + group.getStringProperty(GroupProperty.NAME) + ".");
+        MessageBuilder.begin("Successfully left ").highlight(group.getStringProperty(GroupProperty.NAME)).normal(".").send(sender);
     }
 
     @Override

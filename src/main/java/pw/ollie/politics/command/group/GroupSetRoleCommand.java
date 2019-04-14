@@ -27,6 +27,7 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -77,7 +78,8 @@ public class GroupSetRoleCommand extends GroupSubCommand {
         }
 
         group.setRole(player.getUniqueId(), role);
-        sender.sendMessage(player.getName() + " is now part of the " + groupLevel.getName() + "!");
+        MessageBuilder.begin().highlight(player.getName()).normal(" had their role set to ").highlight(role.getName())
+                .normal(" in the ").append(groupLevel.getName()).append("!").send(sender);
     }
 
     @Override

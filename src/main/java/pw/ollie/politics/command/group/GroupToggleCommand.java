@@ -26,6 +26,7 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupToggleables;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 
@@ -54,7 +55,8 @@ public class GroupToggleCommand extends GroupSubCommand {
         int propertyId = GroupToggleables.getPropertyId(toggleName);
         boolean curValue = group.getBooleanProperty(propertyId);
         group.setProperty(propertyId, !curValue);
-        sender.sendMessage("State of " + toggleName + " switched to: " + !curValue + ".");
+        MessageBuilder.begin("State of ").highlight(toggleName).normal(" switched to: ")
+                .highlight(Boolean.toString(!curValue)).normal(".").send(sender);
     }
 
     @Override

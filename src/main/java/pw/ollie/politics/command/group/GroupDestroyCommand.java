@@ -26,6 +26,7 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 
@@ -46,7 +47,8 @@ public class GroupDestroyCommand extends GroupSubCommand {
         }
 
         group.getUniverse().destroyGroup(group);
-        sender.sendMessage("The group " + group.getStringProperty(GroupProperty.NAME) + " has been disbanded!");
+        MessageBuilder.begin("The " + groupLevel.getName() + " ").highlight(group.getStringProperty(GroupProperty.NAME))
+                .normal(" has been disbanded.").send(sender);
     }
 
     @Override

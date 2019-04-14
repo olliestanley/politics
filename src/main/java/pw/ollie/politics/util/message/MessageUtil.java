@@ -19,9 +19,21 @@
  */
 package pw.ollie.politics.util.message;
 
+import org.bukkit.command.CommandSender;
+
 public final class MessageUtil {
     public static MessageBuilder startBlockMessage(String heading) {
         return MessageBuilder.begin().prefix().append("========= ").highlight().append(heading).prefix().append(" =========").normal();
+    }
+
+    /**
+     * Sends a formatted message with the plugin colour scheme and in normal colour.
+     *
+     * @param recipient the recipient of the message
+     * @param message   the message to send
+     */
+    public static void message(CommandSender recipient, String message) {
+        MessageBuilder.begin(message).build().send(recipient);
     }
 
     private MessageUtil() {
