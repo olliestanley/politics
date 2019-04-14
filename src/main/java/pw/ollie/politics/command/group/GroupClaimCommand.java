@@ -45,6 +45,10 @@ public class GroupClaimCommand extends GroupSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        if (!groupLevel.canOwnLand()) {
+            throw new CommandException(groupLevel.getPlural() + " cannot claim land other than through sub-organisations.");
+        }
+
         Group group = findGroup(sender, args);
 
         if (!group.can(sender, Privileges.Group.CLAIM) && !hasAdmin(sender)) {

@@ -37,6 +37,7 @@ import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -256,6 +257,10 @@ public final class Universe implements Storable {
             Politics.getLogger().log(Level.SEVERE, "Could not load a set of citizen groups! This is a PROBLEM!", e);
             return new HashSet<>();
         }
+    }
+
+    public Set<Group> getCitizenGroups(OfflinePlayer player) {
+        return getCitizenGroups(player.getUniqueId());
     }
 
     public void invalidateCitizenGroups(UUID citizen) {

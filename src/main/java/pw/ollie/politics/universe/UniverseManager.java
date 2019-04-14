@@ -160,7 +160,7 @@ public final class UniverseManager {
             String name = fileName.substring(0, fileName.length() - 4);
             YamlConfiguration configFile = YamlConfiguration.loadConfiguration(file);
             UniverseRules thisRules = UniverseRules.load(name, configFile);
-            String ruleName = thisRules.getName(); // todo may need null check depending on future implementation of UniverseRules#load
+            String ruleName = thisRules.getName();
             rules.put(ruleName.toLowerCase(), thisRules);
         }
     }

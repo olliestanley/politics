@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -47,11 +48,15 @@ public final class GroupLevel {
     private final Role initial;
     private final Role founder;
     private final boolean friendlyFire;
+    private final boolean immediateMembers;
+    private final boolean ownsLand;
+    private final boolean allowedMultiple;
 
     private Set<GroupLevel> allowedChildren;
 
     public GroupLevel(String id, String name, int rank, Map<String, Role> roles, String plural,
-                      Map<String, RoleTrack> tracks, Role initial, Role founder, boolean friendlyFire) {
+                      Map<String, RoleTrack> tracks, Role initial, Role founder, boolean friendlyFire,
+                      boolean immediateMembers, boolean ownsLand, boolean allowedMultiple) {
         this.id = id;
         this.name = name;
         this.rank = rank;
@@ -61,6 +66,9 @@ public final class GroupLevel {
         this.initial = initial;
         this.founder = founder;
         this.friendlyFire = friendlyFire;
+        this.immediateMembers = immediateMembers;
+        this.ownsLand = ownsLand;
+        this.allowedMultiple = allowedMultiple;
     }
 
     public void setAllowedChildren(Set<GroupLevel> allowedChildren) {
@@ -119,6 +127,18 @@ public final class GroupLevel {
         return friendlyFire;
     }
 
+    public boolean hasImmediateMembers() {
+        return immediateMembers;
+    }
+
+    public boolean canOwnLand() {
+        return ownsLand;
+    }
+
+    public boolean allowedMultiple() {
+        return allowedMultiple;
+    }
+
     public boolean canFound() {
         return founder != null;
     }
@@ -159,6 +179,9 @@ public final class GroupLevel {
         node.set("initial", initial.getId());
         node.set("founder", founder.getId());
         node.set("friendly-fire", Boolean.toString(friendlyFire));
+        node.set("has-immediate-members", Boolean.toString(immediateMembers));
+        node.set("can-own-land", Boolean.toString(ownsLand));
+        node.set("allowed-multiple", Boolean.toString(allowedMultiple));
     }
 
     public static GroupLevel load(String id, ConfigurationSection node, Map<GroupLevel, List<String>> levels) {
@@ -232,6 +255,7 @@ public final class GroupLevel {
             if (founderName != null) {
                 founder = rolesMap.get(founderName);
             }
+
             if (founderName == null) {
                 int highest = 0;
                 Role highestRole = null;
@@ -241,16 +265,35 @@ public final class GroupLevel {
                         highestRole = role;
                     }
                 }
+
                 founder = highestRole;
                 Politics.getLogger().log(Level.WARNING, "No initial role specified in configuration, defaulting to lowest rank...");
             }
         }
 
         boolean friendlyFire = node.getBoolean("friendly-fire", false);
+        boolean immediateMembers = node.getBoolean("has-immediate-members", true);
+        boolean ownsLand = node.getBoolean("can-own-land", true);
+        boolean allowedMultiple = node.getBoolean("allowed-multiple", false);
 
-        GroupLevel theLevel = new GroupLevel(id, levelName, rank, rolesMap, plural, tracks, initial, founder, friendlyFire);
+        GroupLevel theLevel = new GroupLevel(id, levelName, rank, rolesMap, plural, tracks, initial, founder,
+                friendlyFire, immediateMembers, ownsLand, allowedMultiple);
         // Children so we can get our allowed children in the future
         levels.put(theLevel, children);
         return theLevel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GroupLevel that = (GroupLevel) o;
+        return id.equals(that.id) &&
+                name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

@@ -40,18 +40,22 @@ public class GroupInviteCommand extends GroupSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        if (!groupLevel.hasImmediateMembers()) {
+            throw new CommandException("You cannot invite to a " + groupLevel.getName() + " other than through a sub-organisation.");
+        }
+
         Group group = findGroup(sender, args);
 
         if (!group.can(sender, Privileges.Group.INVITE)) {
             throw new CommandException("You don't have permission to invite to the " + groupLevel.getName() + ".");
         }
 
-        if (args.length(false) < 1) {
-            throw new CommandException("There was no player specified to invite.");
-        }
-
         if (group.getBooleanProperty(GroupProperty.OPEN, false)) {
             throw new CommandException("The " + groupLevel.getName() + " is open to join without invitation.");
+        }
+
+        if (args.length(false) < 1) {
+            throw new CommandException("There was no player specified to invite.");
         }
 
         Player player = plugin.getServer().getPlayer(args.getString(0, false));

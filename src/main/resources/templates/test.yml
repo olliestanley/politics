@@ -19,6 +19,9 @@ levels:
     initial: Member
     founder: Owner
     friendly-fire: false
+    has-immediate-members: true
+    can-own-land: true
+    allowed-multiple: false
   town:
     name: Town
     plural: Towns
@@ -32,9 +35,12 @@ levels:
       Resident:
         name: Resident
         plural: Residents
-        privileges: [BUILD]
+        privileges: []
     tracks:
       Default: [Resident, Mayor]
     initial: Resident
     founder: Mayor
     friendly-fire: false
+    has-immediate-members: false
+    can-own-land: true
+    allowed-multiple: false

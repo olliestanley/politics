@@ -95,6 +95,11 @@ public final class UniverseRules {
             }
 
             GroupLevel level = GroupLevel.load(levelKey, levelSection, levels);
+            if (levelMap.containsKey(level.getId())) {
+                Politics.getLogger().log(Level.SEVERE, "Duplicate ids for universe rules: " + level.getId());
+                Politics.getLogger().log(Level.SEVERE, "Only the first universe rules will be loaded...");
+                continue;
+            }
             levelMap.put(level.getId(), level);
         }
 

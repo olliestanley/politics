@@ -31,6 +31,7 @@ import pw.ollie.politics.util.message.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Set;
 import java.util.UUID;
 
 public class GroupJoinCommand extends GroupSubCommand {
@@ -40,6 +41,10 @@ public class GroupJoinCommand extends GroupSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        if (!groupLevel.hasImmediateMembers()) {
+            throw new CommandException("You cannot join a " + groupLevel.getName() + " other than through a sub-organisation.");
+        }
+
         if (args.length(false) < 1) {
             throw new CommandException("There was no " + groupLevel.getName() + " specified to join.");
         }
@@ -51,6 +56,15 @@ public class GroupJoinCommand extends GroupSubCommand {
 
         // safe cast as isPlayerOnly() returns true
         Player player = (Player) sender;
+        if (!groupLevel.allowedMultiple()) {
+            Set<Group> playerGroups = plugin.getUniverseManager().getUniverse(player.getWorld(), groupLevel).getCitizenGroups(player);
+            for (Group playerGroup : playerGroups) {
+                if (playerGroup.getLevel().equals(groupLevel)) {
+                    throw new CommandException("You are already part of a " + groupLevel.getName() + ".");
+                }
+            }
+        }
+
         if (!group.getBooleanProperty(GroupProperty.OPEN, false) && !group.isInvited(player)) {
             throw new CommandException("That " + groupLevel.getName() + " is closed and you don't have an invitation.");
         }

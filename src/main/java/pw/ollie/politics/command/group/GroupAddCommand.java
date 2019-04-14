@@ -31,6 +31,8 @@ import pw.ollie.politics.util.message.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Set;
+
 // note: admin command for force adding a player to a group
 public class GroupAddCommand extends GroupSubCommand {
     GroupAddCommand(GroupLevel groupLevel) {
@@ -39,6 +41,10 @@ public class GroupAddCommand extends GroupSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        if (!groupLevel.hasImmediateMembers()) {
+            throw new CommandException("You cannot add to a " + groupLevel.getName() + " other than through a sub-organisation.");
+        }
+
         Group group = findGroup(sender, args);
 
         if (!hasAdmin(sender)) {
@@ -53,6 +59,15 @@ public class GroupAddCommand extends GroupSubCommand {
         Player player = plugin.getServer().getPlayer(playerName);
         if (player == null) {
             throw new CommandException("That player is not online.");
+        }
+
+        if (!groupLevel.allowedMultiple()) {
+            Set<Group> playerGroups = plugin.getUniverseManager().getUniverse(player.getWorld(), groupLevel).getCitizenGroups(player);
+            for (Group playerGroup : playerGroups) {
+                if (playerGroup.getLevel().equals(groupLevel)) {
+                    throw new CommandException("The player is already part of a " + groupLevel.getName() + ".");
+                }
+            }
         }
 
         GroupMemberJoinEvent joinEvent = plugin.getEventFactory().callGroupMemberJoinEvent(group, player, groupLevel.getInitial());
