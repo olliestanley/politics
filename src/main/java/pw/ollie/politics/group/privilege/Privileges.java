@@ -19,6 +19,9 @@
  */
 package pw.ollie.politics.group.privilege;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class Privileges {
     public static final class Group {
         public static final Privilege CLAIM = new Privilege("CLAIM", PrivilegeType.GROUP);
@@ -35,16 +38,44 @@ public final class Privileges {
         public static final Privilege TOGGLES = new Privilege("TOGGLES", PrivilegeType.GROUP);
         public static final Privilege UNCLAIM = new Privilege("UNCLAIM", PrivilegeType.GROUP);
         public static final Privilege[] ALL = {CLAIM, DISBAND, INFO, INVITE, KICK, LEAVE, ONLINE, SET_ROLE, SET_SPAWN, SPAWN, SPAWN_OTHER, TOGGLES, UNCLAIM};
+
+        public static List<Privilege> all() {
+            return Arrays.asList(ALL);
+        }
     }
 
     public static final class Plot {
         // todo
+        public static final Privilege[] ALL = {};
+
+        public static List<Privilege> all() {
+            return Arrays.asList(ALL);
+        }
     }
 
     public static final class GroupPlot {
         public static final Privilege BUILD = new Privilege("BUILD", PrivilegeType.GROUP, PrivilegeType.PLOT);
         public static final Privilege INTERACT = new Privilege("INTERACT", PrivilegeType.GROUP, PrivilegeType.PLOT);
         public static final Privilege[] ALL = {BUILD, INTERACT};
+
+        public static List<Privilege> all() {
+            return Arrays.asList(ALL);
+        }
+    }
+
+    public static final Privilege[] ALL = {
+            Group.CLAIM, Group.DISBAND, Group.INFO, Group.LEAVE, Group.ONLINE, Group.INVITE, Group.KICK, Group.SET_ROLE,
+            Group.SPAWN, Group.SET_SPAWN, Group.SPAWN_OTHER, Group.TOGGLES, Group.UNCLAIM,
+            // todo: plot privs
+            GroupPlot.BUILD, GroupPlot.INTERACT
+    };
+
+    public static List<Privilege> all() {
+        return Arrays.asList(ALL);
+    }
+
+    public static Privilege get(String name, PrivilegeType... types) {
+        return new Privilege(name, types);
     }
 
     private Privileges() {

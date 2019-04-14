@@ -22,6 +22,7 @@ package pw.ollie.politics.world.plot;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
@@ -57,14 +58,16 @@ public final class Plot implements Storable {
     private final Chunk chunk;
     private final int baseX;
     private final int baseZ;
+    private final Set<Subplot> subplots; // todo add access / modification methods
 
     public Plot(PoliticsWorld world, int x, int z) {
-        this(world, new TIntArrayList(), x, z);
+        this(world, new TIntArrayList(), x, z, new HashSet<>());
     }
 
-    public Plot(PoliticsWorld world, TIntList owners, int x, int z) {
+    public Plot(PoliticsWorld world, TIntList owners, int x, int z, Set<Subplot> subplots) {
         this.world = world;
         this.owners = owners;
+        this.subplots = new THashSet<>(subplots);
 
         World bukkitWorld = world.getWorld();
         chunk = bukkitWorld.getChunkAt(x, z);
@@ -88,6 +91,11 @@ public final class Plot implements Storable {
             owners = ownersList;
         } else {
             owners = new TIntArrayList();
+        }
+
+        subplots = new THashSet<>();
+        if (object.containsField("subplots")) {
+            // todo load subplots
         }
 
         Object x = object.get("x");
@@ -253,9 +261,10 @@ public final class Plot implements Storable {
     public BSONObject toBSONObject() {
         BasicBSONObject obj = new BasicBSONObject();
         obj.put("world", world.getName());
-        obj.put("owners", owners);
+        obj.put("owners", owners); // todo I don't think we should be storing the TIntList directly? need to check this
         obj.put("x", getX());
         obj.put("z", getZ());
+        // todo store subplots
         return obj;
     }
 

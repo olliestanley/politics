@@ -19,8 +19,11 @@
  */
 package pw.ollie.politics.group.privilege;
 
+import pw.ollie.politics.util.collect.CollectionUtil;
+
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public final class Privilege {
@@ -28,7 +31,7 @@ public final class Privilege {
     private final Set<PrivilegeType> types;
 
     public Privilege(String name, PrivilegeType... types) {
-        name.replaceAll(" ", "_");
+        name = name.replaceAll(" ", "_");
 
         if (name.matches(":")) {
             throw new IllegalStateException("Colons not allowed in privilege names!");
@@ -44,6 +47,23 @@ public final class Privilege {
 
     public Set<PrivilegeType> getTypes() {
         return EnumSet.copyOf(types);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Privilege privilege = (Privilege) o;
+        return name.equals(privilege.name) && CollectionUtil.contentsEqual(types, privilege.types);
+    }
+
+    @Override
+    public int hashCode() {
+        int h = Objects.hash(name);
+        for (PrivilegeType type : types) {
+            h *= Objects.hash(type);
+        }
+        return h;
     }
 
     public static Set<Privilege> all(Set<Privilege>... sets) {
