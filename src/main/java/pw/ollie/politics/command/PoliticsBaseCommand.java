@@ -22,8 +22,8 @@ package pw.ollie.politics.command;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.util.message.MessageBuilder;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
@@ -59,15 +59,15 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
                 try {
                     subCommand.runCommand(plugin, sender, args.subArgs(1, args.length()));
                 } catch (CommandException e) {
-                    // todo might want to change this?
-                    sender.sendMessage(ChatColor.RED + e.getMessage());
+                    MessageBuilder.beginError().append(e.getMessage()).build().send(sender);
                 }
             }
         } else {
             PoliticsSubCommand closestMatch = PoliticsCommandHelper.getClosestMatch(subCommands, arg1);
 
             if (closestMatch != null) {
-                sender.sendMessage("Unrecognised subcommand - did you mean '" + closestMatch.getName() + "'?");
+                MessageBuilder.beginError().append("Unrecognised subcommand - did you mean '")
+                        .append(closestMatch.getName()).append("'?").build().send(sender);
                 return;
             }
 
@@ -115,12 +115,12 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
 
     private boolean checkPerms(PoliticsSubCommand subCommand, CommandSender sender) {
         if (subCommand.getPermission() != null && !(sender.hasPermission(subCommand.getPermission()))) {
-            sender.sendMessage("You don't have permission for that.");
+            MessageBuilder.beginError().append("You don't have permission for that.").build().send(sender);
             return false;
         }
 
         if (subCommand.isPlayerOnly() && !(sender instanceof Player)) {
-            sender.sendMessage("You must be a player to do that.");
+            MessageBuilder.beginError().append("You must be a player to do that.").build().send(sender);
             return false;
         }
 
@@ -129,12 +129,12 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
 
     private boolean checkPerms(CommandSender sender) {
         if (getPermission() != null && !(sender.hasPermission(getPermission()))) {
-            sender.sendMessage("You don't have permission for that.");
+            MessageBuilder.beginError().append("You don't have permission for that.").build().send(sender);
             return false;
         }
 
         if (isPlayerOnly() && !(sender instanceof Player)) {
-            sender.sendMessage("You must be a player to do that.");
+            MessageBuilder.beginError().append("You must be a player to do that.").build().send(sender);
             return false;
         }
 

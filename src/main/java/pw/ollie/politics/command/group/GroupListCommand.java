@@ -27,6 +27,8 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.util.message.MessageUtil;
 
 import org.bukkit.command.CommandSender;
 
@@ -42,8 +44,6 @@ public class GroupListCommand extends GroupSubCommand {
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Universe universe = findUniverse(sender, args);
-
-        sender.sendMessage("========= " + groupLevel.getPlural().toUpperCase() + " =========");
 
         List<Group> groups = universe.getGroups(groupLevel);
         if (groups.isEmpty()) {
@@ -66,11 +66,14 @@ public class GroupListCommand extends GroupSubCommand {
             throw new CommandException("There are no " + groupLevel.getPlural() + " on this page!");
         }
 
+        MessageBuilder message = MessageUtil.startBlockMessage(groupLevel.getPlural().toUpperCase());
+
         List<Group> pageGroups = groups.subList(min, max);
         for (Group group : pageGroups) {
-            sender.sendMessage((String) group.getProperty(GroupProperty.TAG));
-            // TODO prettify list
+            message.newLine().highlight().append((String) group.getProperty(GroupProperty.TAG));
         }
+
+        message.build().send(sender);
     }
 
     @Override

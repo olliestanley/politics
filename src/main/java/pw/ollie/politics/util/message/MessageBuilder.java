@@ -57,6 +57,11 @@ public final class MessageBuilder {
         return this;
     }
 
+    public MessageBuilder newLine() {
+        delegate.append("\n");
+        return this;
+    }
+
     public FormattedMessage build() {
         return new FormattedMessage(delegate.toString());
     }
@@ -65,7 +70,19 @@ public final class MessageBuilder {
         return new MessageBuilder(colourScheme);
     }
 
+    public static MessageBuilder begin(ColourScheme colourScheme, String initial) {
+        return begin(colourScheme).append(initial);
+    }
+
     public static MessageBuilder begin() {
         return begin(Politics.getColourScheme());
+    }
+
+    public static MessageBuilder begin(String initial) {
+        return begin().append(initial);
+    }
+
+    public static MessageBuilder beginError() {
+        return begin().error();
     }
 }
