@@ -27,17 +27,18 @@ public final class Privileges {
         public static final Privilege CLAIM = new Privilege("CLAIM", PrivilegeType.GROUP);
         public static final Privilege DISBAND = new Privilege("DISBAND", PrivilegeType.GROUP);
         public static final Privilege INFO = new Privilege("INFO", PrivilegeType.GROUP);
-        public static final Privilege LEAVE = new Privilege("LEAVE", PrivilegeType.GROUP);
-        public static final Privilege ONLINE = new Privilege("ONLINE", PrivilegeType.GROUP);
         public static final Privilege INVITE = new Privilege("INVITE", PrivilegeType.GROUP);
         public static final Privilege KICK = new Privilege("KICK", PrivilegeType.GROUP);
+        public static final Privilege LEAVE = new Privilege("LEAVE", PrivilegeType.GROUP);
+        public static final Privilege MANAGE = new Privilege("MANAGE", PrivilegeType.GROUP);
+        public static final Privilege ONLINE = new Privilege("ONLINE", PrivilegeType.GROUP);
         public static final Privilege SET_ROLE = new Privilege("SET_ROLE", PrivilegeType.GROUP);
         public static final Privilege SPAWN = new Privilege("SPAWN", PrivilegeType.GROUP);
         public static final Privilege SET_SPAWN = new Privilege("SET_SPAWN", PrivilegeType.GROUP);
         public static final Privilege SPAWN_OTHER = new Privilege("SPAWN_OTHER", PrivilegeType.GROUP);
         public static final Privilege TOGGLES = new Privilege("TOGGLES", PrivilegeType.GROUP);
         public static final Privilege UNCLAIM = new Privilege("UNCLAIM", PrivilegeType.GROUP);
-        public static final Privilege[] ALL = {CLAIM, DISBAND, INFO, INVITE, KICK, LEAVE, ONLINE, SET_ROLE, SET_SPAWN, SPAWN, SPAWN_OTHER, TOGGLES, UNCLAIM};
+        public static final Privilege[] ALL = {CLAIM, DISBAND, INFO, INVITE, KICK, LEAVE, MANAGE, ONLINE, SET_ROLE, SET_SPAWN, SPAWN, SPAWN_OTHER, TOGGLES, UNCLAIM};
 
         public static List<Privilege> all() {
             return Arrays.asList(ALL);
