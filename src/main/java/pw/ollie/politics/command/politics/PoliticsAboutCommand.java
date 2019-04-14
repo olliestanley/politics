@@ -22,6 +22,7 @@ package pw.ollie.politics.command.politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 
@@ -35,9 +36,10 @@ public class PoliticsAboutCommand extends PoliticsSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
-        sender.sendMessage("Politics " + plugin.getDescription().getVersion());
-        sender.sendMessage("Politics is a self-serve community management system.");
-        sender.sendMessage("Type /politics help for general command help.");
+        MessageBuilder.begin().highlight().append("Politics ").normal().append(plugin.getDescription().getVersion())
+                .newLine().normal().append("Politics is a self-serve community management system.")
+                .newLine().normal().append("Type ").highlight().append("/politics help").normal().append(" for general command help.")
+                .build().send(sender);
     }
 
     @Override

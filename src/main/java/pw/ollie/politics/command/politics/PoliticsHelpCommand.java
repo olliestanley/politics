@@ -23,6 +23,8 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.util.message.MessageUtil;
 
 import org.bukkit.command.CommandSender;
 
@@ -36,11 +38,13 @@ public class PoliticsHelpCommand extends PoliticsSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
-        sender.sendMessage("Politics " + plugin.getDescription().getVersion() + " - Command Overview");
-        sender.sendMessage("Universe Commands: /universe help");
+        MessageBuilder message = MessageUtil.startBlockMessage("Politics - Command Overview");
+        message.newLine().append("Universe Commands: ").highlight().append("/universe help");
         for (GroupLevel groupLevel : plugin.getUniverseManager().getGroupLevels()) {
-            sender.sendMessage(groupLevel.getName() + " Commands: /" + groupLevel.getName() + " help");
+            message.newLine().normal().append(groupLevel.getId()).append(" Commands: ")
+                    .highlight().append("/").append(groupLevel.getName()).append(" help");
         }
+        message.build().send(sender);
     }
 
     @Override
