@@ -31,6 +31,7 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.Position;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bson.BSONObject;
@@ -120,10 +121,6 @@ public final class Plot implements Storable {
         return getBasePoint().getBlockX();
     }
 
-    public final int getY() {
-        return getBasePoint().getBlockY();
-    }
-
     public final int getZ() {
         return getBasePoint().getBlockZ();
     }
@@ -138,9 +135,37 @@ public final class Plot implements Storable {
     }
 
     public boolean contains(Location location) {
-        // check this
         return baseX <= location.getBlockX() && baseX + 16 <= location.getBlockX()
                 && baseZ <= location.getBlockZ() && baseZ + 16 <= location.getBlockZ();
+    }
+
+    public boolean contains(Position position) {
+        return contains(position.toLocation());
+    }
+
+    public Set<Subplot> getSubplots() {
+        return new THashSet<>(subplots);
+    }
+
+    public void addSubplot(Subplot subplot) {
+        subplots.add(subplot);
+    }
+
+    public void removeSubplot(Subplot subplot) {
+        subplots.remove(subplot);
+    }
+
+    public Subplot getSubplotAt(Location location) {
+        for (Subplot subplot : subplots) {
+            if (subplot.contains(location)) {
+                return subplot;
+            }
+        }
+        return null;
+    }
+
+    public Subplot getSubplotAt(Position position) {
+        return getSubplotAt(position.toLocation());
     }
 
     public TIntList getOwnerIds() {

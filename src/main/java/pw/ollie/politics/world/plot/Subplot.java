@@ -37,6 +37,7 @@ import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
 
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -171,6 +172,10 @@ public final class Subplot implements Storable {
 
     public Cuboid getCuboid() {
         return new Cuboid(getBasePosition().toLocation(), getSize());
+    }
+
+    public boolean contains(Location location) {
+        return getCuboid().contains(location);
     }
 
     public boolean can(UUID playerId, Privilege privilege) {
