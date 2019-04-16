@@ -71,6 +71,10 @@ public final class Cuboid {
     }
 
     public boolean contains(Location location) {
+        if (!Objects.equals(location.getWorld(), base.getWorld())) {
+            return false;
+        }
+
         Vector3f max = MathUtil.add(base, size);
         return base.getX() <= location.getBlockX() && location.getBlockX() < max.getX()
                 && base.getY() <= location.getBlockY() && location.getBlockY() < max.getY()
