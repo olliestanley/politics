@@ -20,8 +20,8 @@
 package pw.ollie.politics;
 
 import pw.ollie.politics.command.PoliticsCommandManager;
-import pw.ollie.politics.data.PoliticsFileSystem;
 import pw.ollie.politics.data.PoliticsDataSaveTask;
+import pw.ollie.politics.data.PoliticsFileSystem;
 import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;

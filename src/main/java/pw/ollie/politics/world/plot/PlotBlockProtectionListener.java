@@ -23,8 +23,6 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
 import pw.ollie.politics.group.privilege.Privileges;
-import pw.ollie.politics.world.plot.Plot;
-import pw.ollie.politics.world.plot.Subplot;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

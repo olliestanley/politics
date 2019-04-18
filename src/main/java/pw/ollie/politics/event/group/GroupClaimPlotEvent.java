@@ -28,7 +28,7 @@ import org.bukkit.event.HandlerList;
 
 /**
  * Called when a group attempts to claim a plot.
- *
+ * <p>
  * Note: this event being called and not being cancelled does <b>not</b> confirm that the group has taken ownership of
  * the plot. It is always followed by a {@link pw.ollie.politics.event.plot.PlotOwnerChangeEvent}.
  */

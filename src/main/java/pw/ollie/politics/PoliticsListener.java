@@ -20,8 +20,8 @@
 package pw.ollie.politics;
 
 import pw.ollie.politics.event.player.PlayerChangePlotEvent;
-import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.WorldManager;
+import pw.ollie.politics.world.plot.Plot;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
