@@ -59,7 +59,7 @@ public final class Plot implements Storable {
     private final Chunk chunk;
     private final int baseX;
     private final int baseZ;
-    private final Set<Subplot> subplots; // todo add access / modification methods
+    private final Set<Subplot> subplots;
 
     public Plot(PoliticsWorld world, int x, int z) {
         this(world, new TIntArrayList(), x, z, new HashSet<>());
@@ -134,7 +134,6 @@ public final class Plot implements Storable {
     }
 
     public Location getBasePoint() {
-        // I think 0 is good here for y?
         return new Location(chunk.getWorld(), baseX, 0, baseZ);
     }
 
@@ -290,7 +289,7 @@ public final class Plot implements Storable {
     public BSONObject toBSONObject() {
         BasicBSONObject obj = new BasicBSONObject();
         obj.put("world", world.getName());
-        obj.put("owners", owners); // todo I don't think we should be storing the TIntList directly? need to check this
+        obj.put("owners", owners);
         obj.put("x", getX());
         obj.put("z", getZ());
         if (!subplots.isEmpty()) {
