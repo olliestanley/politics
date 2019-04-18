@@ -21,7 +21,9 @@ package pw.ollie.politics.command;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.group.GroupCommand;
+import pw.ollie.politics.command.plot.PlotCommand;
 import pw.ollie.politics.command.politics.PoliticsCommand;
+import pw.ollie.politics.command.subplot.SubplotCommand;
 import pw.ollie.politics.command.universe.UniverseCommand;
 import pw.ollie.politics.group.level.GroupLevel;
 
@@ -46,7 +48,9 @@ public final class PoliticsCommandManager {
      * Must only be called once all internal plugin setup is complete.
      */
     public void registerCommands() {
+        this.registerCommand(new PlotCommand(plugin));
         this.registerCommand(new PoliticsCommand(plugin));
+        this.registerCommand(new SubplotCommand(plugin));
         this.registerCommand(new UniverseCommand(plugin));
 
         for (GroupLevel groupLevel : plugin.getUniverseManager().getGroupLevels()) {
@@ -54,6 +58,7 @@ public final class PoliticsCommandManager {
         }
 
         PoliticsCommandHelper.registerPermission(PoliticsCommandHelper.GROUPS_ADMIN_PERMISSION, "Allows performing functions, like land claiming, for groups you're not a member of");
+        PoliticsCommandHelper.registerPermission(PoliticsCommandHelper.PLOTS_ADMIN_PERMISSION, "Allows performing functions for plots you don't own");
     }
 
     private Object commandMap;

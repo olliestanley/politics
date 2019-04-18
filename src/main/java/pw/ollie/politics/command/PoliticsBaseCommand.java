@@ -24,13 +24,17 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.util.message.MessageBuilder;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public abstract class PoliticsBaseCommand extends BukkitCommand {
     private final PoliticsPlugin plugin;
@@ -111,6 +115,20 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         }
 
         return true;
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, String name, String[] args, Location location) {
+        // todo check if this is the right check - only tab complete if they haven't typed beyond the first argument
+        if (args.length < 2) {
+            List<String> names = subCommands.stream().map(PoliticsSubCommand::getName).collect(Collectors.toList());
+            List<String> completions = new ArrayList<>();
+            StringUtil.copyPartialMatches(args[0], names, completions);
+            Collections.sort(completions);
+            return completions;
+        }
+
+        return new ArrayList<>();
     }
 
     private boolean checkPerms(PoliticsSubCommand subCommand, CommandSender sender) {
