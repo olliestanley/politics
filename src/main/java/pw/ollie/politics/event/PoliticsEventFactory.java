@@ -20,6 +20,8 @@
 package pw.ollie.politics.event;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.event.group.GroupChildAddEvent;
+import pw.ollie.politics.event.group.GroupChildRemoveEvent;
 import pw.ollie.politics.event.group.GroupClaimPlotEvent;
 import pw.ollie.politics.event.group.GroupCreateEvent;
 import pw.ollie.politics.event.group.GroupMemberJoinEvent;
@@ -54,6 +56,14 @@ public final class PoliticsEventFactory {
 
     public PoliticsEventFactory(PoliticsPlugin plugin) {
         this.plugin = plugin;
+    }
+
+    public GroupChildAddEvent callGroupChildAddEvent(Group group, Group child) {
+        return callEvent(new GroupChildAddEvent(group, child));
+    }
+
+    public GroupChildRemoveEvent callGroupChildRemoveEvent(Group group, Group child) {
+        return callEvent(new GroupChildRemoveEvent(group, child));
     }
 
     public GroupCreateEvent callGroupCreateEvent(Group group, CommandSender creator) {
