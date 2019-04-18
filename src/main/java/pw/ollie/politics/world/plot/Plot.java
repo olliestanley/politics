@@ -136,6 +136,10 @@ public final class Plot implements Storable {
         return new THashSet<>(subplots);
     }
 
+    public int getSubplotQuantity() {
+        return subplots.size();
+    }
+
     public boolean addSubplot(Subplot subplot) {
         SubplotCreateEvent event = Politics.getEventFactory().callSubplotCreateEvent(this, subplot);
         if (event.isCancelled()) {

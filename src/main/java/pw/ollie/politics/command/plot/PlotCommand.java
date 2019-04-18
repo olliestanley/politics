@@ -26,6 +26,6 @@ public final class PlotCommand extends PoliticsBaseCommand {
     public PlotCommand(PoliticsPlugin plugin) {
         super(plugin, "plot", "Base command for plot management");
 
-        // todo register subcommands
+        this.registerSubCommand(new PlotInfoCommand());
     }
 }

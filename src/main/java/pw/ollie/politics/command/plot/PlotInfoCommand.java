@@ -22,7 +22,13 @@ package pw.ollie.politics.command.plot;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupProperty;
+import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.util.message.MessageUtil;
+import pw.ollie.politics.world.plot.Plot;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
@@ -35,7 +41,18 @@ public class PlotInfoCommand extends PlotSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        // todo
+        Plot plot = findPlot(sender, args);
+
+        Group owner = plot.getOwner();
+        int numSubplots = plot.getSubplotQuantity();
+        Location base = plot.getBasePoint();
+        String coordinates = base.getBlockX() + ", " + base.getBlockY() + ", " + base.getBlockZ();
+
+        MessageBuilder message = MessageUtil.startBlockMessage("Plot Info");
+        message.newLine().normal("Owner: ").highlight(owner == null ? "None" : owner.getStringProperty(GroupProperty.NAME));
+        message.newLine().normal("Subplots: ").highlight(Integer.toString(numSubplots));
+        message.newLine().normal("Base Coordinates: ").highlight(coordinates);
+        message.send(sender);
     }
 
     @Override

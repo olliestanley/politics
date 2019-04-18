@@ -19,15 +19,66 @@
  */
 package pw.ollie.politics.command.plot;
 
+import pw.ollie.politics.Politics;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsCommandHelper;
 import pw.ollie.politics.command.PoliticsSubCommand;
+import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.world.plot.Plot;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 
 public abstract class PlotSubCommand extends PoliticsSubCommand {
     protected PlotSubCommand(String name) {
         super(name);
+    }
+
+    protected Plot findPlot(CommandSender sender, Arguments args) throws CommandException {
+        if (args.hasValueFlag("p")) {
+            String plotCoords = args.getValueFlag("p").getStringValue();
+            String[] split = plotCoords.split(",");
+            if (split.length < 2 || split.length > 3) {
+                throw new CommandException("Please specify plot coordinates in the format <-p x,z> or <-p world,x,z>");
+            }
+            if (split.length == 2 && !(sender instanceof Player)) {
+                throw new CommandException("Please specify plot coordinates in the format <world,x,z>");
+            }
+
+            World world;
+            String xArg, zArg;
+            if (split.length == 2) {
+                world = ((Player) sender).getWorld();
+                xArg = split[0];
+                zArg = split[1];
+            } else {
+                world = Bukkit.getWorld(split[0]);
+                if (world == null) {
+                    throw new CommandException("The provided world is not a world.");
+                }
+                xArg = split[1];
+                zArg = split[2];
+            }
+
+            int x, z;
+            try {
+                x = Integer.parseInt(xArg);
+                z = Integer.parseInt(zArg);
+            } catch (NumberFormatException e) {
+                throw new CommandException("The provided x or z coordinate was not an integer.");
+            }
+
+            return Politics.getPlotManager().getPlotAtChunkPosition(world, (int) Math.floor((double) x / 16), (int) Math.floor((double) z / 16));
+        }
+
+        if (!(sender instanceof Player)) {
+            throw new CommandException("You must specify plot coordinates in the format <-p world,x,z>.");
+        }
+
+        return Politics.getPlotManager().getPlotAt(((Player) sender).getLocation());
     }
 
     public boolean hasAdmin(CommandSender source) {
