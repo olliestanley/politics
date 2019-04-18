@@ -121,61 +121,6 @@ public abstract class GroupSubCommand extends PoliticsSubCommand {
         return group;
     }
 
-    /**
-     * Finds a location from the given context, first checking to see if one was specified by flag, then falling back on
-     * the location of the command sender if they are a player.
-     *
-     * @param sender  the source of the command
-     * @param context the arguments provided
-     * @return the location relevant to the context
-     */
-    protected Location findLocation(CommandSender sender, Arguments context) throws CommandException {
-        if (context.hasValueFlag("l")) {
-            String locationArg = context.getValueFlag("l").getStringValue();
-            String[] split = locationArg.split(",");
-            if (split.length < 3 || split.length > 4) {
-                throw new CommandException("Please specify coordinates in the format <-p x,y,z> or <-p world,x,y,z>");
-            }
-            if (split.length == 3 && !(sender instanceof Player)) {
-                throw new CommandException("Please specify coordinates in the format <world,x,y,z>");
-            }
-
-            World world;
-            String xArg, yArg, zArg;
-            if (split.length == 3) {
-                world = ((Player) sender).getWorld();
-                xArg = split[0];
-                yArg = split[1];
-                zArg = split[2];
-            } else {
-                world = Bukkit.getWorld(split[0]);
-                if (world == null) {
-                    throw new CommandException("The provided world is not a world.");
-                }
-                xArg = split[1];
-                yArg = split[2];
-                zArg = split[3];
-            }
-
-            int x, y, z;
-            try {
-                x = Integer.parseInt(xArg);
-                y = Integer.parseInt(yArg);
-                z = Integer.parseInt(zArg);
-            } catch (NumberFormatException e) {
-                throw new CommandException("The provided x or z coordinate was not an integer.");
-            }
-
-            return new Location(world, x, y, z);
-        }
-
-        if (sender instanceof Player) {
-            return ((Player) sender).getLocation();
-        }
-
-        throw new CommandException("You must specify a location using the flag -l.");
-    }
-
     public boolean hasAdmin(CommandSender source) {
         return source instanceof ConsoleCommandSender || source.hasPermission(PoliticsCommandHelper.GROUPS_ADMIN_PERMISSION);
     }
