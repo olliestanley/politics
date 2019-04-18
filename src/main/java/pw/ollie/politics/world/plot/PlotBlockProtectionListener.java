@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.world.plot.protection;
+package pw.ollie.politics.world.plot;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.privilege.Privilege;
@@ -50,10 +50,10 @@ import org.bukkit.event.world.StructureGrowEvent;
 
 import java.util.List;
 
-public final class PlotProtectionListener implements Listener {
+public final class PlotBlockProtectionListener implements Listener {
     private final PoliticsPlugin plugin;
 
-    public PlotProtectionListener(PoliticsPlugin plugin) {
+    public PlotBlockProtectionListener(PoliticsPlugin plugin) {
         this.plugin = plugin;
     }
 

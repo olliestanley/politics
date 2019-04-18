@@ -30,17 +30,24 @@ import pw.ollie.politics.event.group.GroupPropertySetEvent;
 import pw.ollie.politics.event.group.GroupUnclaimPlotEvent;
 import pw.ollie.politics.event.player.PlayerChangePlotEvent;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
+import pw.ollie.politics.event.plot.subplot.SubplotCreateEvent;
+import pw.ollie.politics.event.plot.subplot.SubplotDestroyEvent;
+import pw.ollie.politics.event.plot.subplot.SubplotPrivilegeChangeEvent;
 import pw.ollie.politics.event.universe.UniverseCreateEvent;
 import pw.ollie.politics.event.universe.UniverseDestroyEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.Role;
+import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.world.plot.Plot;
+import pw.ollie.politics.world.plot.Subplot;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+
+import java.util.UUID;
 
 public final class PoliticsEventFactory {
     private final PoliticsPlugin plugin;
@@ -83,6 +90,18 @@ public final class PoliticsEventFactory {
 
     public PlotOwnerChangeEvent callPlotOwnerChangeEvent(Plot plot, int groupId, boolean add) {
         return callEvent(new PlotOwnerChangeEvent(plot, groupId, add));
+    }
+
+    public SubplotCreateEvent callSubplotCreateEvent(Plot plot, Subplot subplot) {
+        return callEvent(new SubplotCreateEvent(plot, subplot));
+    }
+
+    public SubplotDestroyEvent callSubplotDestroyEvent(Plot plot, Subplot subplot) {
+        return callEvent(new SubplotDestroyEvent(plot, subplot));
+    }
+
+    public SubplotPrivilegeChangeEvent callSubplotPrivilegeChangeEvent(Plot plot, Subplot subplot, UUID subject, Privilege privilege, boolean granted) {
+        return callEvent(new SubplotPrivilegeChangeEvent(plot, subplot, subject, privilege, granted));
     }
 
     public PlayerChangePlotEvent callPlayerChangePlotEvent(Player player, Plot from, Plot to) {

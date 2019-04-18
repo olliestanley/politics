@@ -17,35 +17,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.group;
+package pw.ollie.politics.event.plot.subplot;
 
-import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.event.plot.PlotEvent;
+import pw.ollie.politics.world.plot.Plot;
+import pw.ollie.politics.world.plot.Subplot;
 
-import java.util.List;
+public abstract class SubplotEvent extends PlotEvent {
+    private final Subplot subplot;
 
-public final class GroupManager {
-    private final PoliticsPlugin plugin;
-
-    public GroupManager(PoliticsPlugin plugin) {
-        this.plugin = plugin;
-
-        plugin.getServer().getPluginManager().registerEvents(new GroupCombatProtectionListener(plugin), plugin);
+    protected SubplotEvent(Plot plot, Subplot subplot) {
+        super(plot);
+        this.subplot = subplot;
     }
 
-    public List<GroupLevel> getGroupLevels() {
-        return plugin.getUniverseManager().getGroupLevels();
-    }
-
-    public Group getGroupById(int id) {
-        return plugin.getUniverseManager().getGroupById(id);
-    }
-
-    public Group getGroupByTag(String tag) {
-        return plugin.getUniverseManager().getGroupByTag(tag);
-    }
-
-    public PoliticsPlugin getPlugin() {
-        return plugin;
+    public Subplot getSubplot() {
+        return subplot;
     }
 }

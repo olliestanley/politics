@@ -24,6 +24,7 @@ import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
+import pw.ollie.politics.event.plot.subplot.SubplotPrivilegeChangeEvent;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
 import pw.ollie.politics.group.privilege.Privileges;
@@ -200,6 +201,11 @@ public final class Subplot implements Storable {
             return false;
         }
 
+        SubplotPrivilegeChangeEvent event = Politics.getEventFactory().callSubplotPrivilegeChangeEvent(getParent(), this, playerId, privilege, true);
+        if (event.isCancelled()) {
+            return false;
+        }
+
         individualPrivileges.putIfAbsent(playerId, new THashSet<>());
         individualPrivileges.get(playerId).add(privilege);
         return true;
@@ -210,10 +216,20 @@ public final class Subplot implements Storable {
     }
 
     public boolean revokePrivilege(UUID playerId, Privilege privilege) {
+        if (!privilege.getTypes().contains(PrivilegeType.PLOT)) {
+            return false;
+        }
+
+        SubplotPrivilegeChangeEvent event = Politics.getEventFactory().callSubplotPrivilegeChangeEvent(getParent(), this, playerId, privilege, false);
+        if (event.isCancelled()) {
+            return false;
+        }
+
         Set<Privilege> currentPrivileges = individualPrivileges.get(playerId);
         if (currentPrivileges == null) {
             return false;
         }
+
         return currentPrivileges.remove(privilege);
     }
 

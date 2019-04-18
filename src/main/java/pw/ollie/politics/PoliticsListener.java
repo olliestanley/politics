@@ -32,7 +32,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 /**
  * Listener for general/simple purposes.
  */
-// for block-based plot protection, see PlotProtectionListener
+// for block-based plot protection, see PlotBlockProtectionListener
 // for combat protection, see GroupCombatProtectionListener
 public final class PoliticsListener implements Listener {
     private final PoliticsPlugin plugin;

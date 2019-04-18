@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.group.protection;
+package pw.ollie.politics.group;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.level.GroupLevel;

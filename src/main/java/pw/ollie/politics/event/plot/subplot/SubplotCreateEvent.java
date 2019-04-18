@@ -17,35 +17,39 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.group;
+package pw.ollie.politics.event.plot.subplot;
 
-import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.world.plot.Plot;
+import pw.ollie.politics.world.plot.Subplot;
 
-import java.util.List;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 
-public final class GroupManager {
-    private final PoliticsPlugin plugin;
+public class SubplotCreateEvent extends SubplotEvent implements Cancellable {
+    private static HandlerList handlers = new HandlerList();
 
-    public GroupManager(PoliticsPlugin plugin) {
-        this.plugin = plugin;
+    private boolean cancelled;
 
-        plugin.getServer().getPluginManager().registerEvents(new GroupCombatProtectionListener(plugin), plugin);
+    public SubplotCreateEvent(Plot plot, Subplot subplot) {
+        super(plot, subplot);
     }
 
-    public List<GroupLevel> getGroupLevels() {
-        return plugin.getUniverseManager().getGroupLevels();
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
     }
 
-    public Group getGroupById(int id) {
-        return plugin.getUniverseManager().getGroupById(id);
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
-    public Group getGroupByTag(String tag) {
-        return plugin.getUniverseManager().getGroupByTag(tag);
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
-    public PoliticsPlugin getPlugin() {
-        return plugin;
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 }

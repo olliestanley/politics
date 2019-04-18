@@ -24,6 +24,8 @@ import gnu.trove.set.hash.THashSet;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
+import pw.ollie.politics.event.plot.subplot.SubplotCreateEvent;
+import pw.ollie.politics.event.plot.subplot.SubplotDestroyEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
@@ -134,12 +136,24 @@ public final class Plot implements Storable {
         return new THashSet<>(subplots);
     }
 
-    public void addSubplot(Subplot subplot) {
+    public boolean addSubplot(Subplot subplot) {
+        SubplotCreateEvent event = Politics.getEventFactory().callSubplotCreateEvent(this, subplot);
+        if (event.isCancelled()) {
+            return false;
+        }
+
         subplots.add(subplot);
+        return true;
     }
 
-    public void removeSubplot(Subplot subplot) {
+    public boolean removeSubplot(Subplot subplot) {
+        SubplotDestroyEvent event = Politics.getEventFactory().callSubplotDestroyEvent(this, subplot);
+        if (event.isCancelled()) {
+            return false;
+        }
+
         subplots.remove(subplot);
+        return true;
     }
 
     public Subplot getSubplotAt(Location location) {

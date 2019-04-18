@@ -21,10 +21,8 @@ package pw.ollie.politics.world;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.world.PoliticsWorld;
-import pw.ollie.politics.world.WorldConfig;
 import pw.ollie.politics.world.plot.Plot;
-import pw.ollie.politics.world.plot.protection.PlotProtectionListener;
+import pw.ollie.politics.world.plot.PlotBlockProtectionListener;
 
 import org.apache.commons.io.FileUtils;
 
@@ -54,7 +52,7 @@ public final class WorldManager {
     public WorldManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
 
-        plugin.getServer().getPluginManager().registerEvents(new PlotProtectionListener(plugin), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PlotBlockProtectionListener(plugin), plugin);
     }
 
     public void loadWorldConfigs() {
