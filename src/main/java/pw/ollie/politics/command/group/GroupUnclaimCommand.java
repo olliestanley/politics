@@ -34,7 +34,6 @@ import pw.ollie.politics.world.plot.Plot;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class GroupUnclaimCommand extends GroupSubCommand {
     GroupUnclaimCommand(GroupLevel groupLevel) {
@@ -49,9 +48,7 @@ public class GroupUnclaimCommand extends GroupSubCommand {
             throw new CommandException("You don't have permissions to unclaim land in this " + groupLevel.getName() + ".");
         }
 
-        // TODO add a way to get the world, x, y, z from the command line
-        // (should be in GroupCommand)
-        Location location = ((Player) sender).getLocation();
+        Location location = findLocation(sender, args);
 
         Plot plot = plugin.getWorldManager().getPlotAt(location);
         if (!plot.isOwner(group)) {

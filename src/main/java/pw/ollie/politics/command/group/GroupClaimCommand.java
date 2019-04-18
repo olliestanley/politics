@@ -36,7 +36,6 @@ import pw.ollie.politics.world.plot.Plot;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class GroupClaimCommand extends GroupSubCommand {
     GroupClaimCommand(GroupLevel groupLevel) {
@@ -55,9 +54,7 @@ public class GroupClaimCommand extends GroupSubCommand {
             throw new CommandException("You don't have permissions to claim land in this " + groupLevel.getName() + ".");
         }
 
-        // TODO add a way to get the world, x, y, z from the command line
-        // (should be in GroupCommand)
-        Location location = ((Player) sender).getLocation();
+        Location location = findLocation(sender, args);
         Position position = Position.fromLocation(location);
         if (!group.getUniverse().getWorlds().contains(Politics.getWorld(position.getWorld()))) {
             throw new CommandException("You can't create a plot for that group in this world.");
