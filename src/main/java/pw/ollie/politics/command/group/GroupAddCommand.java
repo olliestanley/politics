@@ -92,6 +92,6 @@ public class GroupAddCommand extends GroupSubCommand {
 
     @Override
     public String getDescription() {
-        return "Force adds a player to a group";
+        return "Force adds a player to a " + groupLevel.getName() + ".";
     }
 }
