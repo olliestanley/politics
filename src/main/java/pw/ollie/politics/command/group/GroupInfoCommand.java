@@ -42,9 +42,10 @@ public class GroupInfoCommand extends GroupSubCommand {
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
 
-        // todo more info than just the name
         MessageBuilder message = MessageUtil.startBlockMessage(groupLevel.getName() + " Info");
         message.newLine().normal("Name: ").highlight(group.getStringProperty(GroupProperty.NAME));
+        message.newLine().normal("Members: ").highlight(Integer.toString(group.getPlayers().size()));
+        message.newLine().normal("Open: ").highlight(group.getBooleanProperty(GroupProperty.OPEN, false) ? "Yes" : "No");
         message.send(sender);
     }
 
