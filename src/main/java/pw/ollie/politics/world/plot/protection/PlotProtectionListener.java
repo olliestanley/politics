@@ -22,9 +22,11 @@ package pw.ollie.politics.world.plot.protection;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
+import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.Subplot;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -57,18 +59,28 @@ public final class PlotProtectionListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
-        // todo: check player is allowed to build
+        if (!can(event.getPlayer(), event.getBlock().getLocation(), Privileges.GroupPlot.BUILD)) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.RED + "You can't build in this group's territory.");
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
-        // todo check if player can build here
+        if (!can(event.getPlayer(), event.getBlock().getLocation(), Privileges.GroupPlot.BUILD)) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.RED + "You can't build in this group's territory.");
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onBlockMultiPlace(BlockMultiPlaceEvent event) {
         for (BlockState block : event.getReplacedBlockStates()) {
-            // todo if any block is in an illegal building location, cancel
+            if (!can(event.getPlayer(), block.getLocation(), Privileges.GroupPlot.BUILD)) {
+                event.setCancelled(true);
+                event.getPlayer().sendMessage(ChatColor.RED + "You can't build in this group's territory.");
+                break;
+            }
         }
     }
 

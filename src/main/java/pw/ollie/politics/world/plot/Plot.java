@@ -156,6 +156,9 @@ public final class Plot implements Storable {
     }
 
     public Group getOwner() {
+        if (owner == -1) {
+            return null;
+        }
         return Politics.getUniverseManager().getGroupById(owner);
     }
 
