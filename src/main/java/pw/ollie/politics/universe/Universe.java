@@ -209,6 +209,14 @@ public final class Universe implements Storable {
         return childs.remove(child);
     }
 
+    /**
+     * Creates a new group of the given group level.
+     * <p>
+     * This method does not call an event.
+     *
+     * @param level the level for the group to create
+     * @return a newly created group
+     */
     public Group createGroup(GroupLevel level) {
         Group group = new Group(Politics.getUniverseManager().nextId(), level);
 
@@ -218,10 +226,25 @@ public final class Universe implements Storable {
         return group;
     }
 
+    /**
+     * Destroys the given group, but not any of its children.
+     * <p>
+     * This method does not call an event.
+     *
+     * @param group the group to destroy
+     */
     public void destroyGroup(Group group) {
         destroyGroup(group, false);
     }
 
+    /**
+     * Destroys the given group.
+     * <p>
+     * This method does not call an event.
+     *
+     * @param group the group to destroy
+     * @param deep  whether to destroy the children of the group as well
+     */
     public void destroyGroup(Group group, boolean deep) {
         groups.remove(group);
         getInternalGroups(group.getLevel()).remove(group);
