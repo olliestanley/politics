@@ -66,7 +66,7 @@ public class GroupSetSpawnCommand extends GroupSubCommand {
         Position position = Position.fromLocation(location);
         RotatedPosition rotatedPosition = new RotatedPosition(position, new Vector2f(location.getPitch(), location.getYaw()));
 
-        Plot plot = plugin.getWorldManager().getChunkPlotAt(rotatedPosition.getPosition().toLocation());
+        Plot plot = plugin.getWorldManager().getPlotAt(rotatedPosition.getPosition().toLocation());
         if (plot == null) {
             throw new CommandException("There is no plot here!");
         }

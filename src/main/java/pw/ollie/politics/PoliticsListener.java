@@ -32,6 +32,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 /**
  * Listener for general/simple purposes.
  */
+// for block-based plot protection, see PlotProtectionListener
+// for combat protection, see GroupCombatProtectionListener
 public final class PoliticsListener implements Listener {
     private final PoliticsPlugin plugin;
     private final WorldManager worldManager;
@@ -44,8 +46,8 @@ public final class PoliticsListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        Plot from = worldManager.getChunkPlotAt(event.getFrom());
-        Plot to = worldManager.getChunkPlotAt(event.getTo());
+        Plot from = worldManager.getPlotAt(event.getFrom());
+        Plot to = worldManager.getPlotAt(event.getTo());
 
         if (!from.equals(to)) {
             PlayerChangePlotEvent pcpe = Politics.getEventFactory().callPlayerChangePlotEvent(player, from, to);

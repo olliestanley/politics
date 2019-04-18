@@ -19,18 +19,14 @@
  */
 package pw.ollie.politics.world.plot;
 
-import gnu.trove.iterator.TIntIterator;
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.group.privilege.Privilege;
-import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.group.privilege.PrivilegeType;
 import pw.ollie.politics.util.Position;
 import pw.ollie.politics.world.PoliticsWorld;
 
@@ -48,26 +44,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * A plot in Politics is made up of exactly one chunk, and may have sub-plots.
  */
 public final class Plot implements Storable {
     private final PoliticsWorld world;
-    private final TIntList owners;
     private final Chunk chunk;
     private final int baseX;
     private final int baseZ;
     private final Set<Subplot> subplots;
 
+    private int owner;
+
     public Plot(PoliticsWorld world, int x, int z) {
-        this(world, new TIntArrayList(), x, z, new HashSet<>());
+        this(world, -1, x, z, new HashSet<>());
     }
 
-    public Plot(PoliticsWorld world, TIntList owners, int x, int z, Set<Subplot> subplots) {
+    public Plot(PoliticsWorld world, int owner, int x, int z, Set<Subplot> subplots) {
         this.world = world;
-        this.owners = owners;
+        this.owner = owner;
         this.subplots = new THashSet<>(subplots);
 
         World bukkitWorld = world.getWorld();
@@ -79,20 +76,7 @@ public final class Plot implements Storable {
 
     public Plot(BasicBSONObject bObj) {
         world = Politics.getWorld(bObj.getString("world", null));
-        if (bObj.containsField("owners")) {
-            TIntList ownersList = new TIntArrayList();
-            BasicBSONList ownersBSON = (BasicBSONList) bObj.get("owners");
-            for (Object obj : ownersBSON) {
-                if (!(obj instanceof Integer)) {
-                    throw new IllegalArgumentException("obj is not an Integer!");
-                }
-                int val = (Integer) obj;
-                ownersList.add(val);
-            }
-            owners = ownersList;
-        } else {
-            owners = new TIntArrayList();
-        }
+        owner = bObj.getInt("owner", -1);
 
         subplots = new THashSet<>();
         if (bObj.containsField("subplots")) {
@@ -171,37 +155,17 @@ public final class Plot implements Storable {
         return getSubplotAt(position.toLocation());
     }
 
-    public TIntList getOwnerIds() {
-        return new TIntArrayList(owners);
+    public Group getOwner() {
+        return Politics.getUniverseManager().getGroupById(owner);
+    }
+
+    public int getOwnerId() {
+        return owner;
     }
 
     public List<Group> getOwners() {
-        List<Group> ret = new ArrayList<>();
-        TIntIterator it = owners.iterator();
-        while (it.hasNext()) {
-            int id = it.next();
-            Group group = Politics.getUniverseManager().getGroupById(id);
-            if (group == null) {
-                owners.remove(id); // Group no longer exists
-            } else {
-                ret.add(group);
-            }
-        }
-        return ret;
-    }
-
-    public Group getOwner(Universe universe) {
-        for (Group owner : getOwners()) {
-            if (owner.getUniverse().equals(universe)) {
-                return owner;
-            }
-        }
-        return null;
-    }
-
-    public List<Group> getOwners(Universe universe) {
         List<Group> owners = new ArrayList<>();
-        Group group = getOwner(universe);
+        Group group = getOwner();
         while (group != null) {
             owners.add(group);
             group = group.getParent();
@@ -209,39 +173,30 @@ public final class Plot implements Storable {
         return owners;
     }
 
-    public boolean addOwner(int id) {
-        return addOwner(Politics.getUniverseManager().getGroupById(id));
-    }
-
-    public boolean addOwner(Group group) {
-        PlotOwnerChangeEvent event = Politics.getEventFactory().callPlotOwnerChangeEvent(this, group.getUid(), true);
-        if (event.isCancelled()) {
-            return false;
-        }
-
-        for (Group g : getOwners()) {
-            if (g.equals(group)) {
-                return false; // Already owns the plot
-            }
-
-            if (g.getUniverse().equals(group.getUniverse()) && g.equals(group.getParent())) {
-                removeOwner(g);
-                break; // ownership transfers to the group from its parent
-            }
-        }
-
-        return owners.add(group.getUid());
-    }
-
-    public boolean removeOwner(int id) {
-        if (!owners.contains(id)) {
-            return true; // Not in there
-        }
+    public boolean setOwner(int id) {
         PlotOwnerChangeEvent event = Politics.getEventFactory().callPlotOwnerChangeEvent(this, id, true);
         if (event.isCancelled()) {
             return false;
         }
-        return owners.remove(id);
+
+        owner = id;
+        return true;
+    }
+
+    public boolean setOwner(Group group) {
+        return setOwner(group.getUid());
+    }
+
+    public boolean removeOwner(int id) {
+        if (id != owner) {
+            return false;
+        }
+        PlotOwnerChangeEvent event = Politics.getEventFactory().callPlotOwnerChangeEvent(this, id, false);
+        if (event.isCancelled()) {
+            return false;
+        }
+        owner = -1;
+        return true;
     }
 
     public boolean removeOwner(Group group) {
@@ -249,47 +204,28 @@ public final class Plot implements Storable {
     }
 
     public boolean isOwner(int id) {
-        return owners.contains(id);
+        return id == owner;
     }
 
     public boolean isOwner(Group group) {
         return isOwner(group.getUid());
     }
 
-    // this works so that if the plot has one owner group, the player has whatever privileges afforded to their role in
-    // the owner group, but if the plot has multiple owner groups the player must have a privilege in all of those owner
-    // groups in order to be have it for the plot - seems reasonable but may want to consider if it's best at some point
     public Set<Privilege> getPrivileges(Player player) {
-        Set<Privilege> privileges = new HashSet<>();
-        UUID playerId = player.getUniqueId();
-        TIntIterator groupIdIt = owners.iterator();
-        boolean first = true;
-        while (groupIdIt.hasNext()) {
-            int groupId = groupIdIt.next();
-            Group group = Politics.getGroupManager().getGroupById(groupId);
-            Role playerRole = group.getRole(playerId);
+        return getOwner().getPrivileges(player).stream()
+                .filter(privilege -> privilege.getTypes().contains(PrivilegeType.PLOT))
+                .collect(Collectors.toSet());
+    }
 
-            if (playerRole == null) {
-                privileges.clear();
-                break;
-            }
-
-            if (first) {
-                privileges.addAll(playerRole.getPrivileges());
-                first = false;
-                continue;
-            }
-
-            privileges.retainAll(playerRole.getPrivileges());
-        }
-        return privileges;
+    public boolean can(Player player, Privilege privilege) {
+        return getOwner().getPrivileges(player).contains(privilege);
     }
 
     @Override
     public BSONObject toBSONObject() {
         BasicBSONObject obj = new BasicBSONObject();
         obj.put("world", world.getName());
-        obj.put("owners", owners);
+        obj.put("owner", owner);
         obj.put("x", getX());
         obj.put("z", getZ());
         if (!subplots.isEmpty()) {

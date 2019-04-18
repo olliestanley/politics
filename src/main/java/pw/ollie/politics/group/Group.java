@@ -46,6 +46,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -260,6 +261,18 @@ public final class Group implements Comparable<Group>, Storable {
 
     public void removeRole(UUID player) {
         players.remove(player);
+    }
+
+    public Set<Privilege> getPrivileges(UUID playerId) {
+        Role role = getRole(playerId);
+        if (role == null) {
+            return new HashSet<>();
+        }
+        return role.getPrivileges();
+    }
+
+    public Set<Privilege> getPrivileges(Player player) {
+        return getPrivileges(player.getUniqueId());
     }
 
     public boolean can(CommandSender source, Privilege privilege) {

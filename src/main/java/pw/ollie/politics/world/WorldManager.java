@@ -160,7 +160,7 @@ public final class WorldManager {
         return getWorld(chunk.getWorld()).getPlotAtChunkPosition(chunk.getX(), chunk.getZ());
     }
 
-    public Plot getChunkPlotAt(Location position) {
+    public Plot getPlotAt(Location position) {
         return getPlotAtChunkPosition(position.getWorld(), position.getChunk().getX(), position.getChunk().getZ());
     }
 

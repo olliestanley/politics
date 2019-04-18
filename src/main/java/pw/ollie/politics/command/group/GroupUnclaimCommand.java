@@ -53,7 +53,7 @@ public class GroupUnclaimCommand extends GroupSubCommand {
         // (should be in GroupCommand)
         Location location = ((Player) sender).getLocation();
 
-        Plot plot = plugin.getWorldManager().getChunkPlotAt(location);
+        Plot plot = plugin.getWorldManager().getPlotAt(location);
         if (!plot.isOwner(group)) {
             throw new CommandException("Sorry, this plot is not owned by " + group.getStringProperty(GroupProperty.NAME) + ".");
         }
