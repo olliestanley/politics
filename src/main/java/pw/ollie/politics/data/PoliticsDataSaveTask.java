@@ -23,16 +23,17 @@ import pw.ollie.politics.PoliticsPlugin;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-public final class SaveTask extends BukkitRunnable {
+public final class PoliticsDataSaveTask extends BukkitRunnable {
     private final PoliticsPlugin plugin;
 
-    public SaveTask(PoliticsPlugin plugin) {
+    public PoliticsDataSaveTask(PoliticsPlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public void run() {
         plugin.getWorldManager().saveWorlds();
+        plugin.getUniverseManager().saveRules();
         plugin.getUniverseManager().saveUniverses();
     }
 }

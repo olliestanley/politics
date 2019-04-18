@@ -21,7 +21,7 @@ package pw.ollie.politics;
 
 import pw.ollie.politics.command.PoliticsCommandManager;
 import pw.ollie.politics.data.PoliticsFileSystem;
-import pw.ollie.politics.data.SaveTask;
+import pw.ollie.politics.data.PoliticsDataSaveTask;
 import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
@@ -47,7 +47,7 @@ public final class PoliticsPlugin extends JavaPlugin {
     private PoliticsEventFactory eventFactory;
     private PoliticsCommandManager commandManager;
 
-    private SaveTask saveTask;
+    private PoliticsDataSaveTask saveTask;
 
     @Override
     public void onEnable() {
@@ -75,7 +75,7 @@ public final class PoliticsPlugin extends JavaPlugin {
         this.commandManager = new PoliticsCommandManager(this);
         this.commandManager.registerCommands();
 
-        this.saveTask = new SaveTask(this);
+        this.saveTask = new PoliticsDataSaveTask(this);
         this.saveTask.runTaskTimer(this, 5 * 60 * 20, 5 * 60 * 20);
 
         Server server = this.getServer();
