@@ -77,11 +77,11 @@ public final class Plot implements Storable {
         baseZ = z * 16;
     }
 
-    public Plot(BasicBSONObject object) {
-        world = Politics.getWorld(object.getString("world", null));
-        if (object.containsField("owners")) {
+    public Plot(BasicBSONObject bObj) {
+        world = Politics.getWorld(bObj.getString("world", null));
+        if (bObj.containsField("owners")) {
             TIntList ownersList = new TIntArrayList();
-            BasicBSONList ownersBSON = (BasicBSONList) object.get("owners");
+            BasicBSONList ownersBSON = (BasicBSONList) bObj.get("owners");
             for (Object obj : ownersBSON) {
                 if (!(obj instanceof Integer)) {
                     throw new IllegalArgumentException("obj is not an Integer!");
@@ -95,12 +95,16 @@ public final class Plot implements Storable {
         }
 
         subplots = new THashSet<>();
-        if (object.containsField("subplots")) {
-            // todo load subplots
+        if (bObj.containsField("subplots")) {
+            BasicBSONList subplotsList = (BasicBSONList) bObj.get("subplots");
+            for (Object element : subplotsList) {
+                BasicBSONObject subplotBson = (BasicBSONObject) element;
+                subplots.add(new Subplot(subplotBson));
+            }
         }
 
-        Object x = object.get("x");
-        Object z = object.get("z");
+        Object x = bObj.get("x");
+        Object z = bObj.get("z");
         if (!(x instanceof Integer)) {
             throw new IllegalArgumentException("X was not available.");
         }
@@ -289,7 +293,16 @@ public final class Plot implements Storable {
         obj.put("owners", owners); // todo I don't think we should be storing the TIntList directly? need to check this
         obj.put("x", getX());
         obj.put("z", getZ());
-        // todo store subplots
+        if (!subplots.isEmpty()) {
+            BasicBSONList subplotList = new BasicBSONList();
+            for (Subplot subplot : subplots) {
+                if (!subplot.canStore()) {
+                    continue;
+                }
+                subplotList.add(subplot.toBSONObject());
+            }
+            obj.put("subplots", subplotList);
+        }
         return obj;
     }
 
