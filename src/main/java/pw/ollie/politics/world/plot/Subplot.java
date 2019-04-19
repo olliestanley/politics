@@ -57,6 +57,7 @@ import java.util.stream.Collectors;
  */
 public final class Subplot implements Storable {
     private final PoliticsWorld world;
+    private final int id;
     private final int parentX;
     private final int parentZ;
 
@@ -70,8 +71,9 @@ public final class Subplot implements Storable {
     private UUID owner;
     private Map<UUID, Set<Privilege>> individualPrivileges;
 
-    public Subplot(PoliticsWorld world, int parentX, int parentZ, int baseX, int baseY, int baseZ, int xSize, int ySize, int zSize, UUID owner, Map<UUID, Set<Privilege>> individualPrivileges) {
+    public Subplot(PoliticsWorld world, int id, int parentX, int parentZ, int baseX, int baseY, int baseZ, int xSize, int ySize, int zSize, UUID owner, Map<UUID, Set<Privilege>> individualPrivileges) {
         this.world = world;
+        this.id = id;
         this.parentX = parentX;
         this.parentZ = parentZ;
         this.baseX = baseX;
@@ -86,6 +88,7 @@ public final class Subplot implements Storable {
 
     public Subplot(BasicBSONObject bObj) {
         world = Politics.getWorld(bObj.getString("world"));
+        id = bObj.getInt("id");
         parentX = bObj.getInt("parent-x");
         parentZ = bObj.getInt("parent-z");
         baseX = bObj.getInt("base-x");
@@ -113,6 +116,10 @@ public final class Subplot implements Storable {
 
     public PoliticsWorld getWorld() {
         return world;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getParentX() {
@@ -241,6 +248,7 @@ public final class Subplot implements Storable {
     public BSONObject toBSONObject() {
         BSONObject result = new BasicBSONObject();
         result.put("world", world.getName());
+        result.put("id", id);
         result.put("parent-x", parentX);
         result.put("parent-z", parentZ);
         result.put("base-x", baseX);

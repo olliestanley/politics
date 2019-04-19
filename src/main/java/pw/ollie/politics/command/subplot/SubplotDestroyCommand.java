@@ -20,14 +20,41 @@
 package pw.ollie.politics.command.subplot;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsBaseCommand;
+import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.args.Arguments;
 
-public final class SubplotCommand extends PoliticsBaseCommand {
-    public SubplotCommand(PoliticsPlugin plugin) {
-        super(plugin, "subplot", "Base command for subplot management");
+import org.bukkit.command.CommandSender;
 
-        this.registerSubCommand(new SubplotCreateCommand());
-        this.registerSubCommand(new SubplotDestroyCommand());
-        this.registerSubCommand(new SubplotListCommand());
+import java.util.Arrays;
+import java.util.List;
+
+public class SubplotDestroyCommand extends SubplotSubCommand {
+    SubplotDestroyCommand() {
+        super("create");
+    }
+
+    @Override
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        // todo
+    }
+
+    @Override
+    public String getPermission() {
+        return "politics.plot.subplot.destroy";
+    }
+
+    @Override
+    public String getUsage() {
+        return "/subplot destroy <here> OR <id> OR <x,y,z>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Removes a subplot from a plot.";
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return Arrays.asList("delete", "remove");
     }
 }

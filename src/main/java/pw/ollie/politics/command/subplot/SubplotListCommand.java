@@ -17,17 +17,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.command.politics;
+package pw.ollie.politics.command.subplot;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsBaseCommand;
+import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.args.Arguments;
 
-public final class PoliticsCommand extends PoliticsBaseCommand {
-    public PoliticsCommand(PoliticsPlugin plugin) {
-        super(plugin, "politics", "Core politics plugin control command");
+import org.bukkit.command.CommandSender;
 
-        this.registerSubCommand(new PoliticsAboutCommand());
-        this.registerSubCommand(new PoliticsCancelCommand());
-        this.registerSubCommand(new PoliticsHelpCommand());
+public class SubplotListCommand extends SubplotSubCommand {
+    SubplotListCommand() {
+        super("list");
+    }
+
+    @Override
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        // todo
+    }
+
+    @Override
+    public String getPermission() {
+        return "politics.plot.subplot.list";
+    }
+
+    @Override
+    public String getUsage() {
+        return "/subplot list [-l x,y,z]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Lists subplots in your current plot.";
     }
 }

@@ -20,14 +20,34 @@
 package pw.ollie.politics.command.politics;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsBaseCommand;
+import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.PoliticsSubCommand;
+import pw.ollie.politics.command.args.Arguments;
 
-public final class PoliticsCommand extends PoliticsBaseCommand {
-    public PoliticsCommand(PoliticsPlugin plugin) {
-        super(plugin, "politics", "Core politics plugin control command");
+import org.bukkit.command.CommandSender;
 
-        this.registerSubCommand(new PoliticsAboutCommand());
-        this.registerSubCommand(new PoliticsCancelCommand());
-        this.registerSubCommand(new PoliticsHelpCommand());
+public class PoliticsCancelCommand extends PoliticsSubCommand {
+    PoliticsCancelCommand() {
+        super("cancel");
+    }
+
+    @Override
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        // todo
+    }
+
+    @Override
+    public String getPermission() {
+        return null;
+    }
+
+    @Override
+    public String getUsage() {
+        return "/politics cancel";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Cancels an ongoing action.";
     }
 }

@@ -19,6 +19,7 @@
  */
 package pw.ollie.politics.world.plot;
 
+import gnu.trove.map.hash.THashMap;
 import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
@@ -42,8 +43,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -56,18 +58,18 @@ public final class Plot implements Storable {
     private final Chunk chunk;
     private final int baseX;
     private final int baseZ;
-    private final Set<Subplot> subplots;
+    private final Map<Integer, Subplot> subplots;
 
     private int owner;
 
     public Plot(PoliticsWorld world, int x, int z) {
-        this(world, -1, x, z, new HashSet<>());
+        this(world, -1, x, z, new HashMap<>());
     }
 
-    public Plot(PoliticsWorld world, int owner, int x, int z, Set<Subplot> subplots) {
+    public Plot(PoliticsWorld world, int owner, int x, int z, Map<Integer, Subplot> subplots) {
         this.world = world;
         this.owner = owner;
-        this.subplots = new THashSet<>(subplots);
+        this.subplots = new THashMap<>(subplots);
 
         World bukkitWorld = world.getWorld();
         chunk = bukkitWorld.getChunkAt(x, z);
@@ -80,12 +82,13 @@ public final class Plot implements Storable {
         world = Politics.getWorld(bObj.getString("world", null));
         owner = bObj.getInt("owner", -1);
 
-        subplots = new THashSet<>();
+        subplots = new THashMap<>();
         if (bObj.containsField("subplots")) {
             BasicBSONList subplotsList = (BasicBSONList) bObj.get("subplots");
             for (Object element : subplotsList) {
                 BasicBSONObject subplotBson = (BasicBSONObject) element;
-                subplots.add(new Subplot(subplotBson));
+                Subplot subplot = new Subplot(subplotBson);
+                subplots.put(subplot.getId(), subplot);
             }
         }
 
@@ -133,7 +136,7 @@ public final class Plot implements Storable {
     }
 
     public Set<Subplot> getSubplots() {
-        return new THashSet<>(subplots);
+        return new THashSet<>(subplots.values());
     }
 
     public int getSubplotQuantity() {
@@ -141,27 +144,35 @@ public final class Plot implements Storable {
     }
 
     public boolean addSubplot(Subplot subplot) {
+        if (subplots.containsKey(subplot.getId())) {
+            return false;
+        }
+
         SubplotCreateEvent event = Politics.getEventFactory().callSubplotCreateEvent(this, subplot);
         if (event.isCancelled()) {
             return false;
         }
 
-        subplots.add(subplot);
+        subplots.put(subplot.getId(), subplot);
         return true;
     }
 
     public boolean removeSubplot(Subplot subplot) {
+        if (!subplots.containsKey(subplot.getId())) {
+            return false;
+        }
+
         SubplotDestroyEvent event = Politics.getEventFactory().callSubplotDestroyEvent(this, subplot);
         if (event.isCancelled()) {
             return false;
         }
 
-        subplots.remove(subplot);
+        subplots.remove(subplot.getId());
         return true;
     }
 
     public Subplot getSubplotAt(Location location) {
-        for (Subplot subplot : subplots) {
+        for (Subplot subplot : subplots.values()) {
             if (subplot.contains(location)) {
                 return subplot;
             }
@@ -251,7 +262,7 @@ public final class Plot implements Storable {
         obj.put("z", getZ());
         if (!subplots.isEmpty()) {
             BasicBSONList subplotList = new BasicBSONList();
-            for (Subplot subplot : subplots) {
+            for (Subplot subplot : subplots.values()) {
                 if (!subplot.canStore()) {
                     continue;
                 }
