@@ -22,6 +22,8 @@ package pw.ollie.politics.activity;
 import gnu.trove.map.hash.THashMap;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.event.PoliticsEventFactory;
+import pw.ollie.politics.event.activity.ActivityBeginEvent;
 
 import org.bukkit.entity.Player;
 
@@ -68,20 +70,26 @@ public final class ActivityManager {
         return getActivity(player.getUniqueId());
     }
 
-    public boolean beginActivity(UUID playerId, PoliticsActivity activity) {
-        if (isActive(playerId)) {
+    public boolean beginActivity(PoliticsActivity activity) {
+        if (isActive(activity.getPlayerId())) {
             return false;
         }
-        activities.put(playerId, activity);
+        ActivityBeginEvent event = PoliticsEventFactory.callActivityBeginEvent(activity);
+        if (event.isCancelled()) {
+            return false;
+        }
+        activities.put(activity.getPlayerId(), activity);
         return true;
     }
 
-    public boolean beginActivity(Player player, PoliticsActivity activity) {
-        return beginActivity(player.getUniqueId(), activity);
-    }
-
     public boolean endActivity(UUID playerId) {
-        return activities.remove(playerId) != null;
+        PoliticsActivity activity = activities.get(playerId);
+        if (activity == null) {
+            return false;
+        }
+        PoliticsEventFactory.callActivityEndEvent(activity);
+        activities.remove(playerId);
+        return true;
     }
 
     public boolean endActivity(Player player) {

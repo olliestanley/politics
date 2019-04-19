@@ -42,10 +42,6 @@ public final class CuboidSelectionActivity implements PoliticsActivity {
         this.callback = callback;
     }
 
-    public UUID getPlayerId() {
-        return playerId;
-    }
-
     public Position getFirstPoint() {
         return firstPoint;
     }
@@ -68,6 +64,11 @@ public final class CuboidSelectionActivity implements PoliticsActivity {
 
     public boolean isSecondPointSet() {
         return secondPoint != null;
+    }
+
+    @Override
+    public UUID getPlayerId() {
+        return playerId;
     }
 
     @Override

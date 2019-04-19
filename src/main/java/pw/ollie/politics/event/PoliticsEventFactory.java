@@ -20,6 +20,9 @@
 package pw.ollie.politics.event;
 
 import pw.ollie.politics.Politics;
+import pw.ollie.politics.activity.PoliticsActivity;
+import pw.ollie.politics.event.activity.ActivityBeginEvent;
+import pw.ollie.politics.event.activity.ActivityEndEvent;
 import pw.ollie.politics.event.group.GroupChildAddEvent;
 import pw.ollie.politics.event.group.GroupChildRemoveEvent;
 import pw.ollie.politics.event.group.GroupClaimPlotEvent;
@@ -52,6 +55,14 @@ import org.bukkit.event.Event;
 import java.util.UUID;
 
 public final class PoliticsEventFactory {
+    public static ActivityBeginEvent callActivityBeginEvent(PoliticsActivity activity) {
+        return callEvent(new ActivityBeginEvent(activity));
+    }
+
+    public static ActivityEndEvent callActivityEndEvent(PoliticsActivity activity) {
+        return callEvent(new ActivityEndEvent(activity));
+    }
+
     public static GroupChildAddEvent callGroupChildAddEvent(Group group, Group child) {
         return callEvent(new GroupChildAddEvent(group, child));
     }

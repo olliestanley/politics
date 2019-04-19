@@ -17,39 +17,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.activity;
+package pw.ollie.politics.event.activity;
+
+import pw.ollie.politics.activity.PoliticsActivity;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 
 import java.util.UUID;
 
-/**
- * Represents and holds state data for an activity being performed by a player.
- */
-public interface PoliticsActivity {
-    /**
-     * Gets the unique id of the player engaging in the activity.
-     *
-     * @return the relevant player's unique id
-     */
-    UUID getPlayerId();
+public abstract class ActivityEvent extends Event {
+    private final PoliticsActivity activity;
 
-    /**
-     * Attempts to complete the activity.
-     *
-     * @return whether the activity successfully completed
-     */
-    boolean complete();
+    protected ActivityEvent(PoliticsActivity activity) {
+        this.activity = activity;
+    }
 
-    /**
-     * Checks whether the activity has already been completed.
-     *
-     * @return whether the activity is complete
-     */
-    boolean hasCompleted();
+    public UUID getPlayerId() {
+        return getActivity().getPlayerId();
+    }
 
-    /**
-     * Gets the name of the activity. This should be the same for all instances of the activity.
-     *
-     * @return this activity's name
-     */
-    String getName();
+    public Player getPlayer() {
+        return Bukkit.getPlayer(getPlayerId());
+    }
+
+    public PoliticsActivity getActivity() {
+        return activity;
+    }
 }
