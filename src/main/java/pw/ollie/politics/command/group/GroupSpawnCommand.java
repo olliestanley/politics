@@ -22,6 +22,7 @@ package pw.ollie.politics.command.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.group.GroupMemberSpawnEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
@@ -75,7 +76,7 @@ public class GroupSpawnCommand extends GroupSubCommand {
             throw new CommandException("The player wasn't specified, or the specified player is offline!");
         }
 
-        GroupMemberSpawnEvent spawnEvent = plugin.getEventFactory().callGroupMemberSpawnEvent(group, player);
+        GroupMemberSpawnEvent spawnEvent = PoliticsEventFactory.callGroupMemberSpawnEvent(group, player);
         if (spawnEvent.isCancelled()) {
             throw new CommandException(spawnEvent.getCancelMessage());
         }

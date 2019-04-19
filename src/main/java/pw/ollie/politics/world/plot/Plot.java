@@ -24,6 +24,7 @@ import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
+import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotCreateEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotDestroyEvent;
@@ -148,7 +149,7 @@ public final class Plot implements Storable {
             return false;
         }
 
-        SubplotCreateEvent event = Politics.getEventFactory().callSubplotCreateEvent(this, subplot);
+        SubplotCreateEvent event = PoliticsEventFactory.callSubplotCreateEvent(this, subplot);
         if (event.isCancelled()) {
             return false;
         }
@@ -162,7 +163,7 @@ public final class Plot implements Storable {
             return false;
         }
 
-        SubplotDestroyEvent event = Politics.getEventFactory().callSubplotDestroyEvent(this, subplot);
+        SubplotDestroyEvent event = PoliticsEventFactory.callSubplotDestroyEvent(this, subplot);
         if (event.isCancelled()) {
             return false;
         }
@@ -206,7 +207,7 @@ public final class Plot implements Storable {
     }
 
     public boolean setOwner(int id) {
-        PlotOwnerChangeEvent event = Politics.getEventFactory().callPlotOwnerChangeEvent(this, id, true);
+        PlotOwnerChangeEvent event = PoliticsEventFactory.callPlotOwnerChangeEvent(this, id, true);
         if (event.isCancelled()) {
             return false;
         }
@@ -223,7 +224,7 @@ public final class Plot implements Storable {
         if (id != owner) {
             return false;
         }
-        PlotOwnerChangeEvent event = Politics.getEventFactory().callPlotOwnerChangeEvent(this, id, false);
+        PlotOwnerChangeEvent event = PoliticsEventFactory.callPlotOwnerChangeEvent(this, id, false);
         if (event.isCancelled()) {
             return false;
         }

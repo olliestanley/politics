@@ -19,7 +19,7 @@
  */
 package pw.ollie.politics.event;
 
-import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.Politics;
 import pw.ollie.politics.event.group.GroupChildAddEvent;
 import pw.ollie.politics.event.group.GroupChildRemoveEvent;
 import pw.ollie.politics.event.group.GroupClaimPlotEvent;
@@ -52,86 +52,80 @@ import org.bukkit.event.Event;
 import java.util.UUID;
 
 public final class PoliticsEventFactory {
-    private final PoliticsPlugin plugin;
-
-    public PoliticsEventFactory(PoliticsPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    public GroupChildAddEvent callGroupChildAddEvent(Group group, Group child) {
+    public static GroupChildAddEvent callGroupChildAddEvent(Group group, Group child) {
         return callEvent(new GroupChildAddEvent(group, child));
     }
 
-    public GroupChildRemoveEvent callGroupChildRemoveEvent(Group group, Group child) {
+    public static GroupChildRemoveEvent callGroupChildRemoveEvent(Group group, Group child) {
         return callEvent(new GroupChildRemoveEvent(group, child));
     }
 
-    public GroupCreateEvent callGroupCreateEvent(Group group, CommandSender creator) {
+    public static GroupCreateEvent callGroupCreateEvent(Group group, CommandSender creator) {
         return callEvent(new GroupCreateEvent(group, creator));
     }
 
-    public GroupPropertySetEvent callGroupPropertySetEvent(Group group, int property, Object value) {
+    public static GroupPropertySetEvent callGroupPropertySetEvent(Group group, int property, Object value) {
         return callEvent(new GroupPropertySetEvent(group, property, value));
     }
 
-    public GroupClaimPlotEvent callGroupClaimPlotEvent(Group group, Plot plot, CommandSender claimer) {
+    public static GroupClaimPlotEvent callGroupClaimPlotEvent(Group group, Plot plot, CommandSender claimer) {
         return callEvent(new GroupClaimPlotEvent(group, plot, claimer));
     }
 
-    public GroupUnclaimPlotEvent callGroupUnclaimPlotEvent(Group group, Plot plot, CommandSender unclaimer) {
+    public static GroupUnclaimPlotEvent callGroupUnclaimPlotEvent(Group group, Plot plot, CommandSender unclaimer) {
         return callEvent(new GroupUnclaimPlotEvent(group, plot, unclaimer));
     }
 
-    public GroupMemberJoinEvent callGroupMemberJoinEvent(Group group, OfflinePlayer member, Role role) {
+    public static GroupMemberJoinEvent callGroupMemberJoinEvent(Group group, OfflinePlayer member, Role role) {
         return callEvent(new GroupMemberJoinEvent(group, member, role));
     }
 
-    public GroupMemberLeaveEvent callGroupMemberLeaveEvent(Group group, OfflinePlayer member, boolean kick) {
+    public static GroupMemberLeaveEvent callGroupMemberLeaveEvent(Group group, OfflinePlayer member, boolean kick) {
         return callEvent(new GroupMemberLeaveEvent(group, member, kick));
     }
 
-    public GroupMemberRoleChangeEvent callGroupMemberRoleChangeEvent(Group group, OfflinePlayer member, Role oldRole, Role newRole) {
+    public static GroupMemberRoleChangeEvent callGroupMemberRoleChangeEvent(Group group, OfflinePlayer member, Role oldRole, Role newRole) {
         return callEvent(new GroupMemberRoleChangeEvent(group, member, oldRole, newRole));
     }
 
-    public GroupMemberSpawnEvent callGroupMemberSpawnEvent(Group group, OfflinePlayer player) {
+    public static GroupMemberSpawnEvent callGroupMemberSpawnEvent(Group group, OfflinePlayer player) {
         return callEvent(new GroupMemberSpawnEvent(group, player));
     }
 
-    public PlotOwnerChangeEvent callPlotOwnerChangeEvent(Plot plot, int groupId, boolean add) {
+    public static PlotOwnerChangeEvent callPlotOwnerChangeEvent(Plot plot, int groupId, boolean add) {
         return callEvent(new PlotOwnerChangeEvent(plot, groupId, add));
     }
 
-    public SubplotCreateEvent callSubplotCreateEvent(Plot plot, Subplot subplot) {
+    public static SubplotCreateEvent callSubplotCreateEvent(Plot plot, Subplot subplot) {
         return callEvent(new SubplotCreateEvent(plot, subplot));
     }
 
-    public SubplotDestroyEvent callSubplotDestroyEvent(Plot plot, Subplot subplot) {
+    public static SubplotDestroyEvent callSubplotDestroyEvent(Plot plot, Subplot subplot) {
         return callEvent(new SubplotDestroyEvent(plot, subplot));
     }
 
-    public SubplotPrivilegeChangeEvent callSubplotPrivilegeChangeEvent(Plot plot, Subplot subplot, UUID subject, Privilege privilege, boolean granted) {
+    public static SubplotPrivilegeChangeEvent callSubplotPrivilegeChangeEvent(Plot plot, Subplot subplot, UUID subject, Privilege privilege, boolean granted) {
         return callEvent(new SubplotPrivilegeChangeEvent(plot, subplot, subject, privilege, granted));
     }
 
-    public PlayerChangePlotEvent callPlayerChangePlotEvent(Player player, Plot from, Plot to) {
+    public static PlayerChangePlotEvent callPlayerChangePlotEvent(Player player, Plot from, Plot to) {
         return callEvent(new PlayerChangePlotEvent(player, from, to));
     }
 
-    public UniverseCreateEvent callUniverseCreateEvent(Universe universe) {
+    public static UniverseCreateEvent callUniverseCreateEvent(Universe universe) {
         return callEvent(new UniverseCreateEvent(universe));
     }
 
-    public UniverseDestroyEvent callUniverseDestroyEvent(Universe universe) {
+    public static UniverseDestroyEvent callUniverseDestroyEvent(Universe universe) {
         return callEvent(new UniverseDestroyEvent(universe));
     }
 
-    public <T extends Event> T callEvent(T event) {
-        plugin.getServer().getPluginManager().callEvent(event);
+    public static <T extends Event> T callEvent(T event) {
+        Politics.getServer().getPluginManager().callEvent(event);
         return event;
     }
 
-    public PoliticsPlugin getPlugin() {
-        return this.plugin;
+    private PoliticsEventFactory() {
+        throw new UnsupportedOperationException();
     }
 }

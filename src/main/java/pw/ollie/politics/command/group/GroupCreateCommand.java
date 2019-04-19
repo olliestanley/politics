@@ -22,6 +22,7 @@ package pw.ollie.politics.command.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
@@ -89,7 +90,7 @@ public class GroupCreateCommand extends GroupSubCommand {
         group.setProperty(GroupProperty.NAME, name);
         group.setProperty(GroupProperty.TAG, tag);
 
-        if (plugin.getEventFactory().callGroupCreateEvent(group, sender).isCancelled()) {
+        if (PoliticsEventFactory.callGroupCreateEvent(group, sender).isCancelled()) {
             universe.destroyGroup(group);
             throw new CommandException(groupLevel.getName() + " creation denied!");
         }

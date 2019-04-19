@@ -59,14 +59,12 @@ public class GroupUnclaimCommand extends GroupSubCommand {
             throw new CommandException("The plot could not be unclaimed.");
         }
 
-        PoliticsEventFactory eventFactory = plugin.getEventFactory();
-
-        GroupUnclaimPlotEvent claimEvent = eventFactory.callGroupUnclaimPlotEvent(group, plot, sender);
+        GroupUnclaimPlotEvent claimEvent = PoliticsEventFactory.callGroupUnclaimPlotEvent(group, plot, sender);
         if (claimEvent.isCancelled()) {
             throw new CommandException("You cannot unclaim this plot!");
         }
 
-        PlotOwnerChangeEvent ownerChangeEvent = eventFactory.callPlotOwnerChangeEvent(plot, group.getUid(), false);
+        PlotOwnerChangeEvent ownerChangeEvent = PoliticsEventFactory.callPlotOwnerChangeEvent(plot, group.getUid(), false);
         if (ownerChangeEvent.isCancelled()) {
             throw new CommandException("Your group cannot relinquish ownership of this plot!");
         }

@@ -23,6 +23,7 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.message.MessageBuilder;
 
@@ -44,7 +45,7 @@ public class UniverseDestroyCommand extends PoliticsSubCommand {
         }
 
         plugin.getUniverseManager().destroyUniverse(universe);
-        plugin.getEventFactory().callUniverseDestroyEvent(universe);
+        PoliticsEventFactory.callUniverseDestroyEvent(universe);
         MessageBuilder.begin("Universe destroyed, sir.").send(sender);
     }
 

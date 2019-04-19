@@ -23,6 +23,7 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.universe.UniverseRules;
 import pw.ollie.politics.util.message.MessageBuilder;
@@ -90,7 +91,7 @@ public class UniverseCreateCommand extends PoliticsSubCommand {
         }
 
         Universe universe = plugin.getUniverseManager().createUniverse(name, theRules);
-        plugin.getEventFactory().callUniverseCreateEvent(universe);
+        PoliticsEventFactory.callUniverseCreateEvent(universe);
         MessageBuilder.begin("You have created the universe '").highlight(name).newLine()
                 .normal("' with the rules '").highlight(rules).normal("'.").send(sender);
     }

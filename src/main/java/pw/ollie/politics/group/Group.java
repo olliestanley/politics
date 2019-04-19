@@ -27,6 +27,7 @@ import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
+import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.group.GroupChildAddEvent;
 import pw.ollie.politics.event.group.GroupChildRemoveEvent;
 import pw.ollie.politics.event.group.GroupPropertySetEvent;
@@ -96,7 +97,7 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     public boolean addChildGroup(Group group) {
-        GroupChildAddEvent event = Politics.getEventFactory().callGroupChildAddEvent(this, group);
+        GroupChildAddEvent event = PoliticsEventFactory.callGroupChildAddEvent(this, group);
         if (event.isCancelled()) {
             return false;
         }
@@ -105,7 +106,7 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     public boolean removeChildGroup(Group group) {
-        GroupChildRemoveEvent event = Politics.getEventFactory().callGroupChildRemoveEvent(this, group);
+        GroupChildRemoveEvent event = PoliticsEventFactory.callGroupChildRemoveEvent(this, group);
         if (event.isCancelled()) {
             return false;
         }
@@ -202,7 +203,7 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     public void setProperty(int property, Object value) {
-        GroupPropertySetEvent event = Politics.getEventFactory().callGroupPropertySetEvent(this, property, value);
+        GroupPropertySetEvent event = PoliticsEventFactory.callGroupPropertySetEvent(this, property, value);
         properties.put(property, event.getValue());
     }
 

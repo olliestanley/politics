@@ -74,14 +74,12 @@ public class GroupClaimCommand extends GroupSubCommand {
             throw new CommandException("You cannot claim this plot!");
         }
 
-        PoliticsEventFactory eventFactory = plugin.getEventFactory();
-
-        GroupClaimPlotEvent claimEvent = eventFactory.callGroupClaimPlotEvent(group, plot, sender);
+        GroupClaimPlotEvent claimEvent = PoliticsEventFactory.callGroupClaimPlotEvent(group, plot, sender);
         if (claimEvent.isCancelled()) {
             throw new CommandException("You cannot claim this plot!");
         }
 
-        PlotOwnerChangeEvent ownerChangeEvent = eventFactory.callPlotOwnerChangeEvent(plot, group.getUid(), true);
+        PlotOwnerChangeEvent ownerChangeEvent = PoliticsEventFactory.callPlotOwnerChangeEvent(plot, group.getUid(), true);
         if (ownerChangeEvent.isCancelled()) {
             throw new CommandException("Your group cannot own this plot!");
         }

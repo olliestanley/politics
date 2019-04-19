@@ -23,6 +23,7 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsCommandHelper;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.group.GroupMemberJoinEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
@@ -70,7 +71,7 @@ public class GroupAddCommand extends GroupSubCommand {
             }
         }
 
-        GroupMemberJoinEvent joinEvent = plugin.getEventFactory().callGroupMemberJoinEvent(group, player, groupLevel.getInitial());
+        GroupMemberJoinEvent joinEvent = PoliticsEventFactory.callGroupMemberJoinEvent(group, player, groupLevel.getInitial());
         if (joinEvent.isCancelled()) {
             throw new CommandException("You may not add that player to that " + groupLevel.getName() + ".");
         }

@@ -21,7 +21,6 @@ package pw.ollie.politics;
 
 import pw.ollie.politics.activity.ActivityManager;
 import pw.ollie.politics.data.PoliticsFileSystem;
-import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
@@ -73,10 +72,6 @@ public final class Politics {
 
     public static ActivityManager getActivityManager() {
         return Politics.getPlugin().getActivityManager();
-    }
-
-    public static PoliticsEventFactory getEventFactory() {
-        return Politics.getPlugin().getEventFactory();
     }
 
     public static PoliticsWorld getWorld(World world) {

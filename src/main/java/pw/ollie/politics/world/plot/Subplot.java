@@ -24,6 +24,7 @@ import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
+import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.plot.subplot.SubplotPrivilegeChangeEvent;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
@@ -208,7 +209,7 @@ public final class Subplot implements Storable {
             return false;
         }
 
-        SubplotPrivilegeChangeEvent event = Politics.getEventFactory().callSubplotPrivilegeChangeEvent(getParent(), this, playerId, privilege, true);
+        SubplotPrivilegeChangeEvent event = PoliticsEventFactory.callSubplotPrivilegeChangeEvent(getParent(), this, playerId, privilege, true);
         if (event.isCancelled()) {
             return false;
         }
@@ -227,7 +228,7 @@ public final class Subplot implements Storable {
             return false;
         }
 
-        SubplotPrivilegeChangeEvent event = Politics.getEventFactory().callSubplotPrivilegeChangeEvent(getParent(), this, playerId, privilege, false);
+        SubplotPrivilegeChangeEvent event = PoliticsEventFactory.callSubplotPrivilegeChangeEvent(getParent(), this, playerId, privilege, false);
         if (event.isCancelled()) {
             return false;
         }

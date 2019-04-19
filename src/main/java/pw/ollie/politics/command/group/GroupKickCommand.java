@@ -22,6 +22,7 @@ package pw.ollie.politics.command.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.group.GroupMemberLeaveEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
@@ -58,7 +59,7 @@ public class GroupKickCommand extends GroupSubCommand {
         if (player != null) {
             UUID playerId = player.getUniqueId();
             if (group.isImmediateMember(playerId)) {
-                GroupMemberLeaveEvent leaveEvent = plugin.getEventFactory().callGroupMemberLeaveEvent(group, player, true);
+                GroupMemberLeaveEvent leaveEvent = PoliticsEventFactory.callGroupMemberLeaveEvent(group, player, true);
                 if (leaveEvent.isCancelled()) {
                     throw new CommandException("You cannot kick the player.");
                 }
@@ -81,7 +82,7 @@ public class GroupKickCommand extends GroupSubCommand {
                     MessageBuilder.beginError().append("That player does not exist.").send(sender);
                 } else {
                     if (group.isImmediateMember(offlinePlayerId)) {
-                        GroupMemberLeaveEvent leaveEvent = plugin.getEventFactory().callGroupMemberLeaveEvent(group, offlinePlayer, true);
+                        GroupMemberLeaveEvent leaveEvent = PoliticsEventFactory.callGroupMemberLeaveEvent(group, offlinePlayer, true);
                         if (leaveEvent.isCancelled()) {
                             MessageBuilder.beginError().append("You cannot kick the player.").send(sender);
                             return;

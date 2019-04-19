@@ -22,6 +22,7 @@ package pw.ollie.politics.command.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.group.GroupMemberLeaveEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
@@ -49,7 +50,7 @@ public class GroupLeaveCommand extends GroupSubCommand {
             throw new CommandException("You are not a member of that " + groupLevel.getName() + ".");
         }
 
-        GroupMemberLeaveEvent leaveEvent = plugin.getEventFactory().callGroupMemberLeaveEvent(group, player, false);
+        GroupMemberLeaveEvent leaveEvent = PoliticsEventFactory.callGroupMemberLeaveEvent(group, player, false);
         if (leaveEvent.isCancelled()) {
             throw new CommandException("You cannot leave the " + groupLevel.getName() + ".");
         }

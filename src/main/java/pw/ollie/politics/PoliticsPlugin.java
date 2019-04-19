@@ -23,7 +23,6 @@ import pw.ollie.politics.activity.ActivityManager;
 import pw.ollie.politics.command.PoliticsCommandManager;
 import pw.ollie.politics.data.PoliticsDataSaveTask;
 import pw.ollie.politics.data.PoliticsFileSystem;
-import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
@@ -46,7 +45,6 @@ public final class PoliticsPlugin extends JavaPlugin {
     private GroupManager groupManager;
     private ActivityManager activityManager;
 
-    private PoliticsEventFactory eventFactory;
     private PoliticsCommandManager commandManager;
 
     private PoliticsDataSaveTask saveTask;
@@ -73,8 +71,6 @@ public final class PoliticsPlugin extends JavaPlugin {
         this.universeManager.loadUniverses();
 
         this.activityManager = new ActivityManager(this);
-
-        this.eventFactory = new PoliticsEventFactory(this);
 
         this.commandManager = new PoliticsCommandManager(this);
         this.commandManager.registerCommands();
@@ -124,10 +120,6 @@ public final class PoliticsPlugin extends JavaPlugin {
 
     public ActivityManager getActivityManager() {
         return activityManager;
-    }
-
-    public PoliticsEventFactory getEventFactory() {
-        return eventFactory;
     }
 
     public static PoliticsPlugin instance() {
