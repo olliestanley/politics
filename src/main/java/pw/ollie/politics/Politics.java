@@ -19,6 +19,7 @@
  */
 package pw.ollie.politics;
 
+import pw.ollie.politics.activity.ActivityManager;
 import pw.ollie.politics.data.PoliticsFileSystem;
 import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.GroupManager;
@@ -68,6 +69,10 @@ public final class Politics {
 
     public static GroupManager getGroupManager() {
         return Politics.getPlugin().getGroupManager();
+    }
+
+    public static ActivityManager getActivityManager() {
+        return Politics.getPlugin().getActivityManager();
     }
 
     public static PoliticsEventFactory getEventFactory() {
