@@ -29,5 +29,6 @@ public final class SubplotCommand extends PoliticsBaseCommand {
         this.registerSubCommand(new SubplotCreateCommand());
         this.registerSubCommand(new SubplotDestroyCommand());
         this.registerSubCommand(new SubplotListCommand());
+        this.registerSubCommand(new SubplotPrivilegeCommand());
     }
 }

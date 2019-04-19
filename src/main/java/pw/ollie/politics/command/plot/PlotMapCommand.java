@@ -20,13 +20,39 @@
 package pw.ollie.politics.command.plot;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsBaseCommand;
+import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.args.Arguments;
 
-public final class PlotCommand extends PoliticsBaseCommand {
-    public PlotCommand(PoliticsPlugin plugin) {
-        super(plugin, "plot", "Base command for plot management");
+import org.bukkit.command.CommandSender;
 
-        this.registerSubCommand(new PlotInfoCommand());
-        this.registerSubCommand(new PlotMapCommand());
+public class PlotMapCommand extends PlotSubCommand {
+    PlotMapCommand() {
+        super("map");
+    }
+
+    @Override
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        // todo
+        // factions style nearby plot map
+    }
+
+    @Override
+    public String getPermission() {
+        return "politics.plot.map";
+    }
+
+    @Override
+    public String getUsage() {
+        return "/plot map";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Gives a map of nearby plots";
+    }
+
+    @Override
+    public boolean isPlayerOnly() {
+        return true;
     }
 }

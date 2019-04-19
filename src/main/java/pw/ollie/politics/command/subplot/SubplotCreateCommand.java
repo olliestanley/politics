@@ -52,7 +52,7 @@ public class SubplotCreateCommand extends SubplotSubCommand {
 
     @Override
     public String getDescription() {
-        return "Adds a subplot to your current plot.";
+        return "Adds a subplot to your current plot";
     }
 
     @Override

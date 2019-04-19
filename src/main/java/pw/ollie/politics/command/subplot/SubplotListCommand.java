@@ -47,6 +47,6 @@ public class SubplotListCommand extends SubplotSubCommand {
 
     @Override
     public String getDescription() {
-        return "Lists subplots in your current plot.";
+        return "Lists subplots in your current plot";
     }
 }

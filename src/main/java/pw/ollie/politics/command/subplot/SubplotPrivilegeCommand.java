@@ -48,6 +48,6 @@ public class SubplotPrivilegeCommand extends SubplotSubCommand {
 
     @Override
     public String getDescription() {
-        return "Manage privileges for a subplot you own.";
+        return "Manage privileges for a subplot you own";
     }
 }

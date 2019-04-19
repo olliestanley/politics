@@ -50,7 +50,7 @@ public class SubplotDestroyCommand extends SubplotSubCommand {
 
     @Override
     public String getDescription() {
-        return "Removes a subplot from a plot.";
+        return "Removes a subplot from a plot";
     }
 
     @Override
