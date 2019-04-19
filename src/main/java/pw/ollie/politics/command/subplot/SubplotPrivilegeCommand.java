@@ -25,36 +25,29 @@ import pw.ollie.politics.command.args.Arguments;
 
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
-import java.util.List;
-
-public class SubplotDestroyCommand extends SubplotSubCommand {
-    SubplotDestroyCommand() {
-        super("destroy");
+public class SubplotPrivilegeCommand extends SubplotSubCommand {
+    SubplotPrivilegeCommand() {
+        super("privilege");
     }
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         // todo
+        // should also have admin functionality - using both -p and -sp to give a plot location and subplot id
     }
 
     @Override
     public String getPermission() {
-        return "politics.plot.subplot.destroy";
+        return "politics.plot.subplot.privilege";
     }
 
     @Override
     public String getUsage() {
-        return "/subplot destroy <here> OR <id> OR <x,y,z>";
+        return "/subplot privilege <add/remove> <player> <privilege>";
     }
 
     @Override
     public String getDescription() {
-        return "Removes a subplot from a plot.";
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return Arrays.asList("delete", "remove");
+        return "Manage privileges for a subplot you own.";
     }
 }
