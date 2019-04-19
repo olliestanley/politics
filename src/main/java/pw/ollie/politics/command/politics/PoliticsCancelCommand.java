@@ -20,11 +20,15 @@
 package pw.ollie.politics.command.politics;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.activity.ActivityManager;
+import pw.ollie.politics.activity.PoliticsActivity;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class PoliticsCancelCommand extends PoliticsSubCommand {
     PoliticsCancelCommand() {
@@ -33,7 +37,14 @@ public class PoliticsCancelCommand extends PoliticsSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        // todo
+        Player player = (Player) sender;
+        ActivityManager activityManager = plugin.getActivityManager();
+        PoliticsActivity activity = activityManager.getActivity(player);
+        if (activity == null) {
+            throw new CommandException("You do not have an ongoing activity to cancel.");
+        }
+        plugin.getActivityManager().endActivity(player);
+        MessageBuilder.begin("Your ").highlight(activity.getName()).normal(" was cancelled.").send(sender);
     }
 
     @Override
@@ -48,6 +59,11 @@ public class PoliticsCancelCommand extends PoliticsSubCommand {
 
     @Override
     public String getDescription() {
-        return "Cancels an ongoing action.";
+        return "Cancels an ongoing activity";
+    }
+
+    @Override
+    public boolean isPlayerOnly() {
+        return true;
     }
 }

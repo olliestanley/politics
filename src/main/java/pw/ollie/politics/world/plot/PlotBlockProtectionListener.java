@@ -55,6 +55,8 @@ public final class PlotBlockProtectionListener implements Listener {
         this.plugin = plugin;
     }
 
+    // todo update this class to use the new messaging system
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
         if (!can(event.getPlayer(), event.getBlock().getLocation(), Privileges.GroupPlot.BUILD)) {
