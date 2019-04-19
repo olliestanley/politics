@@ -25,7 +25,10 @@ import pw.ollie.politics.util.Position;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class CuboidSelectionActivity implements PoliticsActivity {
+/**
+ * Represents an activity in which a player is selecting a cuboid area by picking two points.
+ */
+public final class CuboidSelectionActivity implements PoliticsActivity {
     private final UUID playerId;
     private final Consumer<CuboidSelectionActivity> callback;
 
@@ -67,10 +70,12 @@ public class CuboidSelectionActivity implements PoliticsActivity {
         return secondPoint != null;
     }
 
+    @Override
     public boolean hasCompleted() {
         return completed;
     }
 
+    @Override
     public boolean complete() {
         if (completed || !isFirstPointSet() || !isSecondPointSet()) {
             return false;

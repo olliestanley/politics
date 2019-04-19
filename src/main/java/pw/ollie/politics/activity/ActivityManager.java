@@ -28,6 +28,9 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Manages players' ongoing activities.
+ */
 public final class ActivityManager {
     private final PoliticsPlugin plugin;
     private final Map<UUID, PoliticsActivity> activities;
@@ -35,18 +38,42 @@ public final class ActivityManager {
     public ActivityManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
         this.activities = new THashMap<>();
+
+        plugin.getServer().getPluginManager().registerEvents(new ActivityUpdateListener(plugin), plugin);
     }
 
     public boolean isActive(UUID playerId) {
-        return activities.containsKey(playerId);
+        PoliticsActivity activity = getActivity(playerId);
+        if (activity != null && activity.hasCompleted()) {
+            activities.remove(playerId);
+            activity = null;
+        }
+        return activity == null;
     }
 
     public boolean isActive(Player player) {
         return isActive(player.getUniqueId());
     }
 
+    public PoliticsActivity getActivity(UUID playerId) {
+        PoliticsActivity activity = getActivity(playerId);
+        if (activity != null && activity.hasCompleted()) {
+            activities.remove(playerId);
+            activity = null;
+        }
+        return activity;
+    }
+
+    public PoliticsActivity getActivity(Player player) {
+        return getActivity(player.getUniqueId());
+    }
+
     public boolean beginActivity(UUID playerId, PoliticsActivity activity) {
-        return activities.putIfAbsent(playerId, activity) == null;
+        if (isActive(playerId)) {
+            return false;
+        }
+        activities.put(playerId, activity);
+        return true;
     }
 
     public boolean beginActivity(Player player, PoliticsActivity activity) {

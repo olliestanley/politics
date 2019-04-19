@@ -24,6 +24,20 @@ package pw.ollie.politics.activity;
  */
 public interface PoliticsActivity {
     /**
+     * Attempts to complete the activity.
+     *
+     * @return whether the activity successfully completed
+     */
+    boolean complete();
+
+    /**
+     * Checks whether the activity has already been completed.
+     *
+     * @return whether the activity is complete
+     */
+    boolean hasCompleted();
+
+    /**
      * Gets the name of the activity. This should be the same for all instances of the activity.
      *
      * @return this activity's name
