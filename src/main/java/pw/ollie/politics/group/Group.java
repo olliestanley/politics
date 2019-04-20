@@ -43,7 +43,6 @@ import pw.ollie.politics.util.serial.PropertySerializer;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
-import org.bson.types.BasicBSONList;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -66,15 +65,15 @@ public final class Group implements Comparable<Group>, Storable {
     private Universe universe;
 
     public Group(int uid, GroupLevel level) {
-        this(uid, level, new TIntObjectHashMap<>(), new THashMap<>(), new THashSet<>());
+        this(uid, level, new TIntObjectHashMap<>(), new THashMap<>());
     }
 
-    private Group(int uid, GroupLevel level, TIntObjectMap<Object> properties, Map<UUID, Role> players, Set<UUID> invitedPlayers) {
+    private Group(int uid, GroupLevel level, TIntObjectMap<Object> properties, Map<UUID, Role> players) {
         this.uid = uid;
         this.level = level;
         this.properties = properties;
         this.players = players;
-        this.invitedPlayers = invitedPlayers;
+        this.invitedPlayers = new THashSet<>();
     }
 
     public void initialize(Universe universe) {
@@ -343,12 +342,6 @@ public final class Group implements Comparable<Group>, Storable {
         }
         object.put("players", playersBson);
 
-        BasicBSONList invitedBson = new BasicBSONList();
-        for (UUID invitedId : invitedPlayers) {
-            invitedBson.add(invitedId.toString());
-        }
-        object.put("invited", invitedBson);
-
         return object;
     }
 
@@ -395,19 +388,7 @@ public final class Group implements Comparable<Group>, Storable {
             players.put(UUID.fromString(entry.getKey()), role);
         }
 
-        Object invitedObj = bobject.get("invited");
-        if (!(invitedObj instanceof BasicBSONList)) {
-            throw new IllegalStateException("Stupid server admin... don't mess with the data!");
-        }
-
-        BasicBSONList invitedBson = (BasicBSONList) invitedObj;
-        Set<UUID> invitedSet = new THashSet<>();
-        for (Object invited : invitedBson) {
-            UUID invitedId = UUID.fromString(invited.toString());
-            invitedSet.add(invitedId);
-        }
-
-        return new Group(uid, level, properties, players, invitedSet);
+        return new Group(uid, level, properties, players);
     }
 
     @Override
