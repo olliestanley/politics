@@ -43,6 +43,7 @@ public class PoliticsCancelCommand extends PoliticsSubCommand {
         if (activity == null) {
             throw new CommandException("You do not have an ongoing activity to cancel.");
         }
+        activity.complete();
         plugin.getActivityManager().endActivity(player);
         MessageBuilder.begin("Your ").highlight(activity.getName()).normal(" was cancelled.").send(sender);
     }
