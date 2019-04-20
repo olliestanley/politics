@@ -172,8 +172,40 @@ public class GroupManageCommand extends GroupSubCommand {
 
         @Override
         public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args, Group group) throws CommandException {
-            // todo: disaffiliate from another group - either parent or child
-            // usage: /*g* manage disaffiliate <othergroup> [-g group]
+            if (args.length() < 1) {
+                throw new CommandException("There was no " + groupLevel.getName() + " specified to join.");
+            }
+
+            String otherTag = args.getString(0, false);
+            Group other = plugin.getGroupManager().getGroupByTag(otherTag);
+            if (other == null) {
+                throw new CommandException("No " + groupLevel.getName() + " with that tag exists.");
+            }
+
+            if (group.equals(other.getParent())) {
+                if (group.removeChildGroup(other)) {
+                    MessageBuilder.begin().highlight(group.getStringProperty(GroupProperty.NAME) + " is no longer the parent organisation of ")
+                            .highlight(other.getStringProperty(GroupProperty.NAME)).normal(".").send(sender);
+                } else {
+                    throw new CommandException(group.getStringProperty(GroupProperty.NAME) + " cannot disaffiliate from "
+                            + other.getStringProperty(GroupProperty.NAME) + ".");
+                }
+                return;
+            }
+
+            if (other.equals(group.getParent())) {
+                if (other.removeChildGroup(group)) {
+                    MessageBuilder.begin().highlight(group.getStringProperty(GroupProperty.NAME) + " is no longer the child organisation of ")
+                            .highlight(other.getStringProperty(GroupProperty.NAME)).normal(".").send(sender);
+                } else {
+                    throw new CommandException(group.getStringProperty(GroupProperty.NAME) + " cannot disaffiliate from "
+                            + other.getStringProperty(GroupProperty.NAME) + ".");
+                }
+                return;
+            }
+
+            throw new CommandException(group.getStringProperty(GroupProperty.NAME) + " is not affiliated with "
+                    + other.getStringProperty(GroupProperty.NAME) + ".");
         }
     }
 
