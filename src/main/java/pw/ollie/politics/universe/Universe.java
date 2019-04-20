@@ -61,8 +61,8 @@ public final class Universe implements Storable {
 
     private LoadingCache<UUID, Set<Group>> citizenGroupCache;
 
-    public Universe(String name, UniverseRules properties) {
-        this(name, properties, new ArrayList<>(), new ArrayList<>(), new HashMap<>());
+    public Universe(String name, UniverseRules properties, List<PoliticsWorld> worlds) {
+        this(name, properties, worlds, new ArrayList<>(), new HashMap<>());
     }
 
     public Universe(String name, UniverseRules rules, List<PoliticsWorld> worlds, List<Group> groups, Map<Group, Set<Group>> children) {
@@ -222,6 +222,7 @@ public final class Universe implements Storable {
 
         groups.add(group);
         getInternalGroups(level).add(group);
+        group.initialize(this);
 
         return group;
     }

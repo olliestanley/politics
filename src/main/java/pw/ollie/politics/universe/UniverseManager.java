@@ -132,11 +132,11 @@ public final class UniverseManager {
         return new ArrayList<>(levelUniverses.keySet());
     }
 
-    public Universe createUniverse(String name, UniverseRules theRules) {
-        Universe universe = new Universe(name, theRules);
+    public Universe createUniverse(String name, UniverseRules theRules, List<PoliticsWorld> worlds) {
+        Universe universe = new Universe(name, theRules, worlds);
         universes.put(name, universe);
-        for (PoliticsWorld world : universe.getWorlds()) {
-            worldLevels.putIfAbsent(world, new THashMap<>());
+        for (PoliticsWorld world : worlds) {
+            worldLevels.putIfAbsent(world, new HashMap<>());
             Map<GroupLevel, Universe> map = worldLevels.get(world);
             for (GroupLevel level : theRules.getGroupLevels()) {
                 map.put(level, universe);

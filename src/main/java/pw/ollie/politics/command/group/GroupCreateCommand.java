@@ -58,6 +58,10 @@ public class GroupCreateCommand extends GroupSubCommand {
                     + " is unknown. A founder can be specified with the `-f' option.");
         }
 
+        if (args.length(false) < 1) {
+            throw new CommandException("You must specify a name for the " + groupLevel.getName() + ".");
+        }
+
         Player founder = plugin.getServer().getPlayer(founderName);
         if (founder == null) {
             throw new CommandException("The specified founder is not online.");

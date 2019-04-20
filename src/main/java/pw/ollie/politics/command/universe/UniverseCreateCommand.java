@@ -90,7 +90,7 @@ public class UniverseCreateCommand extends PoliticsSubCommand {
             throw new CommandException("There were no valid worlds specified.");
         }
 
-        Universe universe = plugin.getUniverseManager().createUniverse(name, theRules);
+        Universe universe = plugin.getUniverseManager().createUniverse(name, theRules, worlds);
         PoliticsEventFactory.callUniverseCreateEvent(universe);
         MessageBuilder.begin("You have created the universe '").highlight(name)
                 .normal("' with the rules '").highlight(rules).normal("'.").send(sender);
