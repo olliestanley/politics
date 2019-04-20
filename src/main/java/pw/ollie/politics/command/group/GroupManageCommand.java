@@ -38,6 +38,7 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class GroupManageCommand extends GroupSubCommand {
     private final Map<String, GroupManageSubCommand> subCommands;
@@ -69,7 +70,7 @@ public class GroupManageCommand extends GroupSubCommand {
             throw new CommandException("The specified subcommand is invalid (invite/join/disaffiliate).");
         }
 
-        subCommandExecutor.runCommand(plugin, sender, args.subArgs(1, args.length()));
+        subCommandExecutor.runCommand(plugin, sender, args.subArgs(1, args.length()), group);
     }
 
     private void registerSubCommand(GroupManageSubCommand subCommand) {
@@ -83,7 +84,7 @@ public class GroupManageCommand extends GroupSubCommand {
             this.name = name;
         }
 
-        public abstract void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException;
+        public abstract void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args, Group group) throws CommandException;
 
         public String getName() {
             return name;
@@ -96,7 +97,7 @@ public class GroupManageCommand extends GroupSubCommand {
         }
 
         @Override
-        public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args, Group group) throws CommandException {
             if (args.length() < 1) {
                 throw new CommandException("There was no " + groupLevel.getName() + " specified to invite.");
             }
@@ -108,7 +109,6 @@ public class GroupManageCommand extends GroupSubCommand {
             }
 
             Player player = (Player) sender;
-            Group group = findGroup(sender, args);
             Universe universe = plugin.getUniverseManager().getUniverse(player.getWorld(), groupLevel);
             if (!universe.getGroups().contains(invited)) {
                 throw new CommandException(invited.getStringProperty(GroupProperty.NAME) + " does not exist in the same universe as " + groupLevel.getPlural() + ".");
@@ -132,9 +132,36 @@ public class GroupManageCommand extends GroupSubCommand {
         }
 
         @Override
-        public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-            // todo: accept an invitation to become a child of another group
-            // usage: /*g* manage join <newparent> [-g group]
+        public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args, Group group) throws CommandException {
+            if (args.length() < 1) {
+                throw new CommandException("There was no " + groupLevel.getName() + " specified to join.");
+            }
+
+            if (group.getParent() != null) {
+                throw new CommandException(group.getStringProperty(GroupProperty.NAME) + " already has a parent organisation.");
+            }
+
+            String parentTag = args.getString(0, false);
+            Group parent = plugin.getGroupManager().getGroupByTag(parentTag);
+            if (parent == null) {
+                throw new CommandException("No " + groupLevel.getName() + " with that tag exists.");
+            }
+
+            Set<GroupAffiliationRequest> affiliationRequests = plugin.getGroupManager().getAffiliationRequests(group.getUid());
+            GroupAffiliationRequest request = affiliationRequests.stream()
+                    .filter(req -> req.getSender() == parent.getUid()).findAny().orElse(null);
+            if (request == null) {
+                throw new CommandException(parent.getStringProperty(GroupProperty.NAME) + " has not invited "
+                        + group.getStringProperty(GroupProperty.NAME) + " to be a sub-organisation.");
+            }
+
+            if (parent.addChildGroup(group)) {
+                plugin.getGroupManager().removeAffiliationRequest(request);
+                MessageBuilder.begin().highlight(parent.getStringProperty(GroupProperty.NAME)).normal(" has successfully joined ")
+                        .highlight(group.getStringProperty(GroupProperty.NAME)).normal(" as a sub-organisation.").send(sender);
+            } else {
+                throw new CommandException("Your " + groupLevel.getName() + " cannot be a child of that " + parent.getLevel().getName());
+            }
         }
     }
 
@@ -144,7 +171,7 @@ public class GroupManageCommand extends GroupSubCommand {
         }
 
         @Override
-        public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args, Group group) throws CommandException {
             // todo: disaffiliate from another group - either parent or child
             // usage: /*g* manage disaffiliate <othergroup> [-g group]
         }
