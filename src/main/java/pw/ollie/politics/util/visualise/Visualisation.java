@@ -40,7 +40,11 @@ public class Visualisation {
         this.blocks = blocks;
     }
 
-    public void apply(Visualiser visualiser, Player player) {
+    public boolean apply(Visualiser visualiser, Player player) {
+        if (Politics.getActivityManager().isActive(player)) {
+            return false;
+        }
+
         for (VisualisedBlock block : blocks) {
             if (!block.getLocation().getChunk().isLoaded()) {
                 continue;
@@ -52,6 +56,7 @@ public class Visualisation {
         Politics.getActivityManager().beginActivity(new VisualisationActivity(player.getUniqueId(), () -> revert(visualiser, player)));
         visualiser.setCurrentVisualisation(player, this);
         MessageBuilder.begin("Type ").highlight("/politics cancel").normal(" at any time to exit the visualisation.").send(player);
+        return true;
     }
 
     public void revert(Visualiser visualiser, Player player) {
