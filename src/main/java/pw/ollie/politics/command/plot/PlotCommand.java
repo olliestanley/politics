@@ -26,6 +26,7 @@ public final class PlotCommand extends PoliticsBaseCommand {
     public PlotCommand(PoliticsPlugin plugin) {
         super(plugin, "plot", "Base command for plot management");
 
+        this.registerSubCommand(new PlotHelpCommand());
         this.registerSubCommand(new PlotInfoCommand());
         this.registerSubCommand(new PlotMapCommand());
         this.registerSubCommand(new PlotViewCommand());

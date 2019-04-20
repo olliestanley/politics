@@ -29,6 +29,7 @@ public final class UniverseCommand extends PoliticsBaseCommand {
         this.registerSubCommand(new UniverseCreateCommand());
         this.registerSubCommand(new UniverseDestroyCommand());
         this.registerSubCommand(new UniverseGenRulesCommand());
+        this.registerSubCommand(new UniverseHelpCommand());
         this.registerSubCommand(new UniverseRulesCommand());
     }
 }

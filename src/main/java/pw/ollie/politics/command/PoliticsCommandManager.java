@@ -19,6 +19,8 @@
  */
 package pw.ollie.politics.command;
 
+import gnu.trove.map.hash.THashMap;
+
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.group.GroupCommand;
 import pw.ollie.politics.command.plot.PlotCommand;
@@ -31,6 +33,7 @@ import org.bukkit.command.Command;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -39,9 +42,15 @@ import java.util.logging.Level;
  */
 public final class PoliticsCommandManager {
     private final PoliticsPlugin plugin;
+    private final Map<String, PoliticsBaseCommand> registered;
 
     public PoliticsCommandManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
+        this.registered = new THashMap<>();
+    }
+
+    public PoliticsBaseCommand getRegisteredCommand(String name) {
+        return registered.get(name.toLowerCase());
     }
 
     /**
@@ -91,6 +100,12 @@ public final class PoliticsCommandManager {
             registerMethod.invoke(commandMap, command.getName(), command);
         } catch (IllegalAccessException | InvocationTargetException e) {
             plugin.getLogger().log(Level.SEVERE, "Politics failed to register command '" + command.getName() + "'. Command will not function.", e);
+            return;
+        }
+
+        if (command instanceof PoliticsBaseCommand) {
+            PoliticsBaseCommand politicsCmd = (PoliticsBaseCommand) command;
+            registered.put(politicsCmd.getName().toLowerCase(), politicsCmd);
         }
     }
 }

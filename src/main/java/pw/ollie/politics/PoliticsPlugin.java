@@ -122,6 +122,10 @@ public final class PoliticsPlugin extends JavaPlugin {
         return activityManager;
     }
 
+    public PoliticsCommandManager getCommandManager() {
+        return commandManager;
+    }
+
     public static PoliticsPlugin instance() {
         return instance;
     }
