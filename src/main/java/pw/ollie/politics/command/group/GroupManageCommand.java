@@ -25,10 +25,15 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupAffiliationRequest;
+import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
@@ -54,11 +59,11 @@ public class GroupManageCommand extends GroupSubCommand {
             throw new CommandException("You don't have permission to do that in your " + groupLevel.getName() + ".");
         }
 
-        if (args.length() < 1) {
+        if (args.length(false) < 1) {
             throw new CommandException("There was no subcommand specified (invite/join/disaffiliate).");
         }
 
-        String subCommand = args.getString(0);
+        String subCommand = args.getString(0, false);
         GroupManageSubCommand subCommandExecutor = subCommands.get(subCommand);
         if (subCommandExecutor == null) {
             throw new CommandException("The specified subcommand is invalid (invite/join/disaffiliate).");
@@ -92,8 +97,32 @@ public class GroupManageCommand extends GroupSubCommand {
 
         @Override
         public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-            // todo: invite a group to become a child of another group
-            // usage: /*g* manage invite <invited> [-g group]
+            if (args.length() < 1) {
+                throw new CommandException("There was no " + groupLevel.getName() + " specified to invite.");
+            }
+
+            String invitedGroupTag = args.getString(0, false);
+            Group invited = plugin.getGroupManager().getGroupByTag(invitedGroupTag);
+            if (invited == null) {
+                throw new CommandException("No " + groupLevel.getName() + " with that tag exists.");
+            }
+
+            Player player = (Player) sender;
+            Group group = findGroup(sender, args);
+            Universe universe = plugin.getUniverseManager().getUniverse(player.getWorld(), groupLevel);
+            if (!universe.getGroups().contains(invited)) {
+                throw new CommandException(invited.getStringProperty(GroupProperty.NAME) + " does not exist in the same universe as " + groupLevel.getPlural() + ".");
+            }
+            if (!(group.getLevel().getRank() > invited.getLevel().getRank())) {
+                throw new CommandException("A " + group.getLevel().getName() + " cannot have " + invited.getLevel().getPlural() + " as sub-organisations.");
+            }
+
+            GroupAffiliationRequest affiliationRequest = new GroupAffiliationRequest(group.getUid(), invited.getUid());
+            if (plugin.getGroupManager().addAffiliationRequest(affiliationRequest)) {
+                MessageBuilder.begin("The ").highlight(groupLevel.getName()).normal(" was successfully invited.").send(sender);
+            } else {
+                throw new CommandException("That " + groupLevel.getName() + " cannot be invited as a child of yours.");
+            }
         }
     }
 
