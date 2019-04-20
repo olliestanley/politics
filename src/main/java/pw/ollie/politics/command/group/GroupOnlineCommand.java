@@ -70,6 +70,7 @@ public class GroupOnlineCommand extends GroupSubCommand {
                 message.append(", ");
             }
         }
+        message.send(sender);
     }
 
     @Override
