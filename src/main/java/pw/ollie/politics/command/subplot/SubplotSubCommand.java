@@ -46,7 +46,7 @@ public abstract class SubplotSubCommand extends PoliticsSubCommand {
             }
 
             Location location = ((Player) sender).getLocation();
-            return Politics.getPlotManager().getPlotAt(location).getSubplotAt(location);
+            return Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
         }
 
         if (!relevantArg.contains(",")) {
@@ -99,11 +99,87 @@ public abstract class SubplotSubCommand extends PoliticsSubCommand {
         }
 
         Location location = new Location(world, x, y, z);
-        Subplot result = Politics.getPlotManager().getPlotAt(location).getSubplotAt(location);
+        Subplot result = Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
         if (result == null) {
             throw new CommandException("There is no subplot at that location.");
         }
         return result;
+    }
+
+    protected Subplot findSubplot(CommandSender sender, Arguments args) throws CommandException {
+        if (args.hasValueFlag("sp")) {
+            String spArg = args.getValueFlag("sp").getStringValue();
+            if (spArg.contains(",")) {
+                String[] split = spArg.split(",");
+                if (split.length < 3 || split.length > 4) {
+                    throw new CommandException("Please specify subplot coordinates in the format <-sp x,y,z> or <-sp world,x,y,z>");
+                }
+                if (split.length == 3 && !(sender instanceof Player)) {
+                    throw new CommandException("Please specify subplot coordinates in the format <-sp world,x,y,z>");
+                }
+
+                World world;
+                String xArg, yArg, zArg;
+                if (split.length == 3) {
+                    world = ((Player) sender).getWorld();
+                    xArg = split[0];
+                    yArg = split[1];
+                    zArg = split[2];
+                } else {
+                    world = Bukkit.getWorld(split[0]);
+                    if (world == null) {
+                        throw new CommandException("The provided world is not a world.");
+                    }
+                    xArg = split[1];
+                    yArg = split[2];
+                    zArg = split[3];
+                }
+
+                int x, y, z;
+                try {
+                    x = Integer.parseInt(xArg);
+                    y = Integer.parseInt(yArg);
+                    z = Integer.parseInt(zArg);
+                } catch (NumberFormatException e) {
+                    throw new CommandException("A provided x, y or z coordinate was not an integer.");
+                }
+
+                Location location = new Location(world, x, y, z);
+                Subplot subplot = Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
+                if (subplot == null) {
+                    throw new CommandException("You are not situated inside a subplot and did not specify one.");
+                }
+
+                return subplot;
+            }
+
+            Plot plot = findPlot(sender, args);
+            int subplotId;
+            try {
+                subplotId = Integer.parseInt(spArg);
+            } catch (NumberFormatException e) {
+                throw new CommandException(spArg + " is not a valid subplot id.");
+            }
+
+            Subplot subplot = plot.getSubplot(subplotId);
+            if (subplot == null) {
+                throw new CommandException(spArg + " is not a valid subplot id.");
+            }
+
+            return subplot;
+        } else {
+            if (!(sender instanceof Player)) {
+                throw new CommandException("Please specify subplot coordinates in the format <-sp world,x,y,z>");
+            }
+
+            Location location = ((Player) sender).getLocation();
+            Subplot subplot = Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
+            if (subplot == null) {
+                throw new CommandException("You are not situated inside a subplot and did not specify one.");
+            }
+
+            return subplot;
+        }
     }
 
     protected Plot findPlot(CommandSender sender, Arguments args) throws CommandException {
@@ -140,14 +216,14 @@ public abstract class SubplotSubCommand extends PoliticsSubCommand {
                 throw new CommandException("The provided x or z coordinate was not an integer.");
             }
 
-            return Politics.getPlotManager().getPlotAtChunkPosition(world, (int) Math.floor((double) x / 16), (int) Math.floor((double) z / 16));
+            return Politics.getWorldManager().getPlotAtChunkPosition(world, (int) Math.floor((double) x / 16), (int) Math.floor((double) z / 16));
         }
 
         if (!(sender instanceof Player)) {
             throw new CommandException("You must specify plot coordinates in the format <-p world,x,z>.");
         }
 
-        return Politics.getPlotManager().getPlotAt(((Player) sender).getLocation());
+        return Politics.getWorldManager().getPlotAt(((Player) sender).getLocation());
     }
 
     public boolean hasAdmin(CommandSender source) {

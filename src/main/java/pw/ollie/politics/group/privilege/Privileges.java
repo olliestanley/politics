@@ -46,8 +46,8 @@ public final class Privileges {
     }
 
     public static final class Plot {
-        // todo
-        public static final Privilege[] ALL = {};
+        public static final Privilege SUBPLOT_PRIVILEGES = new Privilege("SUBPLOT_PRIVILEGES", PrivilegeType.PLOT);
+        public static final Privilege[] ALL = {SUBPLOT_PRIVILEGES};
 
         public static List<Privilege> all() {
             return Arrays.asList(ALL);
@@ -58,7 +58,7 @@ public final class Privileges {
         public static final Privilege BUILD = new Privilege("BUILD", PrivilegeType.GROUP, PrivilegeType.PLOT);
         public static final Privilege INTERACT = new Privilege("INTERACT", PrivilegeType.GROUP, PrivilegeType.PLOT);
         public static final Privilege MANAGE_SUBPLOTS = new Privilege("MANAGE_SUBPLOTS", PrivilegeType.GROUP, PrivilegeType.PLOT);
-        public static final Privilege[] ALL = {BUILD, INTERACT};
+        public static final Privilege[] ALL = {BUILD, INTERACT, MANAGE_SUBPLOTS};
 
         public static List<Privilege> all() {
             return Arrays.asList(ALL);
@@ -66,18 +66,14 @@ public final class Privileges {
     }
 
     public static final Privilege[] ALL = {
-            Group.CLAIM, Group.DISBAND, Group.INFO, Group.LEAVE, Group.ONLINE, Group.INVITE, Group.KICK, Group.SET_ROLE,
-            Group.SPAWN, Group.SET_SPAWN, Group.SPAWN_OTHER, Group.TOGGLES, Group.UNCLAIM,
-            // todo: plot privs
-            GroupPlot.BUILD, GroupPlot.INTERACT
+            Group.CLAIM, Group.DISBAND, Group.INFO, Group.LEAVE, Group.MANAGE, Group.ONLINE, Group.INVITE, Group.KICK,
+            Group.SET_ROLE, Group.SPAWN, Group.SET_SPAWN, Group.SPAWN_OTHER, Group.TOGGLES, Group.UNCLAIM,
+            Plot.SUBPLOT_PRIVILEGES,
+            GroupPlot.BUILD, GroupPlot.INTERACT, GroupPlot.MANAGE_SUBPLOTS
     };
 
     public static List<Privilege> all() {
         return Arrays.asList(ALL);
-    }
-
-    public static Privilege get(String name, PrivilegeType... types) {
-        return new Privilege(name, types);
     }
 
     private Privileges() {

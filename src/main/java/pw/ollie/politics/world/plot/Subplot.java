@@ -114,7 +114,7 @@ public final class Subplot implements Storable {
                 individualPrivileges.put(UUID.fromString(privilegesKey), privileges);
 
                 for (Object object : (BasicBSONList) privilegesObj.get(privilegesKey)) {
-                    privileges.add(Privileges.get(object.toString(), PrivilegeType.PLOT));
+                    privileges.add(Politics.getPrivilegeManager().getPrivilege(object.toString()));
                 }
             }
         }

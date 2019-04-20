@@ -58,7 +58,7 @@ public final class Politics {
         return Politics.getPlugin().getPrivilegeManager();
     }
 
-    public static WorldManager getPlotManager() {
+    public static WorldManager getWorldManager() {
         return Politics.getPlugin().getWorldManager();
     }
 

@@ -71,14 +71,14 @@ public abstract class PlotSubCommand extends PoliticsSubCommand {
                 throw new CommandException("The provided x or z coordinate was not an integer.");
             }
 
-            return Politics.getPlotManager().getPlotAtChunkPosition(world, (int) Math.floor((double) x / 16), (int) Math.floor((double) z / 16));
+            return Politics.getWorldManager().getPlotAtChunkPosition(world, (int) Math.floor((double) x / 16), (int) Math.floor((double) z / 16));
         }
 
         if (!(sender instanceof Player)) {
             throw new CommandException("You must specify plot coordinates in the format <-p world,x,z>.");
         }
 
-        return Politics.getPlotManager().getPlotAt(((Player) sender).getLocation());
+        return Politics.getWorldManager().getPlotAt(((Player) sender).getLocation());
     }
 
     public boolean hasAdmin(CommandSender source) {

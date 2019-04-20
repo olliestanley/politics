@@ -345,7 +345,7 @@ public final class Universe implements Storable {
         BasicBSONList worldsBson = (BasicBSONList) worldsObj;
         for (Object worldName : worldsBson) {
             String name = worldName.toString();
-            PoliticsWorld world = Politics.getPlotManager().getWorld(name);
+            PoliticsWorld world = Politics.getWorldManager().getWorld(name);
             if (world == null) {
                 Politics.getLogger().log(Level.WARNING, "GroupWorld `" + name + "' could not be found! (Did you delete it?)");
             } else {

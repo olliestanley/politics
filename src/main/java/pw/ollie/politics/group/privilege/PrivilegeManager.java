@@ -36,6 +36,7 @@ public final class PrivilegeManager {
 
     private void loadDefaultPrivileges() {
         registerPrivileges(Privileges.Group.ALL);
+        registerPrivileges(Privileges.Plot.ALL);
         registerPrivileges(Privileges.GroupPlot.ALL);
     }
 
