@@ -43,7 +43,7 @@ public class SubplotPrivilegeCommand extends SubplotSubCommand {
 
     @Override
     public String getUsage() {
-        return "/subplot privilege <add/remove> <player> <privilege>";
+        return "/subplot privilege <add/remove> <player> <privilege> [-p location] [-sp subplot-id]";
     }
 
     @Override
