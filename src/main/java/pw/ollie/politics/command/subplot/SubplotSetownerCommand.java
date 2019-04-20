@@ -20,17 +20,34 @@
 package pw.ollie.politics.command.subplot;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsBaseCommand;
+import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.args.Arguments;
 
-public final class SubplotCommand extends PoliticsBaseCommand {
-    public SubplotCommand(PoliticsPlugin plugin) {
-        super(plugin, "subplot", "Base command for subplot management");
+import org.bukkit.command.CommandSender;
 
-        this.registerSubCommand(new SubplotCreateCommand());
-        this.registerSubCommand(new SubplotDestroyCommand());
-        this.registerSubCommand(new SubplotListCommand());
-        this.registerSubCommand(new SubplotPrivilegeCommand());
-        this.registerSubCommand(new SubplotSetownerCommand());
-        this.registerSubCommand(new SubplotViewCommand());
+public class SubplotSetownerCommand extends SubplotSubCommand {
+    SubplotSetownerCommand() {
+        super("setowner");
+    }
+
+    @Override
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        // todo
+        // should also have admin functionality - using both -p and -sp to give a plot location and subplot id
+    }
+
+    @Override
+    public String getPermission() {
+        return "politics.plot.subplot.setowner";
+    }
+
+    @Override
+    public String getUsage() {
+        return "/subplot setowner <player> <privilege> [-p location] [-sp subplot-id]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Set the owner of a subplot";
     }
 }

@@ -41,8 +41,8 @@ public final class GroupCommand extends PoliticsBaseCommand {
         this.registerSubCommand(new GroupManageCommand(groupLevel));
         this.registerSubCommand(new GroupOnlineCommand(groupLevel));
         this.registerSubCommand(new GroupPromoteCommand(groupLevel));
-        this.registerSubCommand(new GroupSetRoleCommand(groupLevel));
-        this.registerSubCommand(new GroupSetSpawnCommand(groupLevel));
+        this.registerSubCommand(new GroupSetroleCommand(groupLevel));
+        this.registerSubCommand(new GroupSetspawnCommand(groupLevel));
         this.registerSubCommand(new GroupSpawnCommand(groupLevel));
         this.registerSubCommand(new GroupToggleCommand(groupLevel));
         this.registerSubCommand(new GroupUnclaimCommand(groupLevel));

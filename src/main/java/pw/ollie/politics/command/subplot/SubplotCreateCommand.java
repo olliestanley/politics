@@ -25,6 +25,8 @@ import pw.ollie.politics.activity.PoliticsActivity;
 import pw.ollie.politics.activity.activities.CuboidSelectionActivity;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.world.WorldManager;
@@ -45,18 +47,29 @@ public class SubplotCreateCommand extends SubplotSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        ActivityManager activityManager = plugin.getActivityManager();
+        WorldManager worldManager = plugin.getWorldManager();
         Player player = (Player) sender;
+        Plot currentPlot = worldManager.getPlotAt(player.getLocation());
+        Group ownerGroup = currentPlot.getOwner();
+        if (ownerGroup == null || !ownerGroup.can(player, Privileges.GroupPlot.MANAGE_SUBPLOTS)) {
+            throw new CommandException("You aren't in the plot of an organisation you're permitted to do that for.");
+        }
+
+        ActivityManager activityManager = plugin.getActivityManager();
         if (activityManager.isActive(player)) {
             throw new CommandException("You already have an ongoing task you must finish before starting a new one.");
         }
 
         PoliticsActivity activity = new CuboidSelectionActivity(player.getUniqueId(), selection -> {
-            WorldManager worldManager = plugin.getWorldManager();
             Plot plot = worldManager.getPlotAt(selection.getFirstPoint());
             if (!plot.equals(worldManager.getPlotAt(selection.getSecondPoint()))) {
                 MessageBuilder.beginError().append("Both corners of the subplot must be inside the same plot.").send(sender);
                 return;
+            }
+
+            Group group = plot.getOwner();
+            if (group == null || !group.can(player, Privileges.GroupPlot.MANAGE_SUBPLOTS)) {
+                MessageBuilder.beginError().append("You aren't in the plot of an organisation you're permitted to do that for.").send(sender);
             }
 
             Cuboid cuboid = selection.getCuboid();

@@ -22,6 +22,11 @@ package pw.ollie.politics.command.subplot;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.world.plot.Plot;
+import pw.ollie.politics.world.plot.Subplot;
 
 import org.bukkit.command.CommandSender;
 
@@ -35,7 +40,22 @@ public class SubplotDestroyCommand extends SubplotSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        // todo
+        if (args.length(false) < 1) {
+            throw new CommandException("There was no specified subplot to destroy.");
+        }
+
+        Subplot subplot = findSubplot(sender, args.getString(0, false), args);
+        Plot parentPlot = subplot.getParent();
+        Group plotOwner = parentPlot.getOwner();
+        if (plotOwner == null || !plotOwner.can(sender, Privileges.GroupPlot.MANAGE_SUBPLOTS)) {
+            throw new CommandException("You can't do that.");
+        }
+
+        if (parentPlot.removeSubplot(subplot)) {
+            MessageBuilder.begin("Successfully removed subplot.").send(sender);
+        } else {
+            throw new CommandException("You can't remove that subplot.");
+        }
     }
 
     @Override
@@ -45,7 +65,7 @@ public class SubplotDestroyCommand extends SubplotSubCommand {
 
     @Override
     public String getUsage() {
-        return "/subplot destroy <here> OR <id> OR <x,y,z>";
+        return "/subplot destroy <here> OR <id> OR <x,y,z> [-p plot-location]";
     }
 
     @Override

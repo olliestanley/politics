@@ -36,8 +36,8 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class GroupSetSpawnCommand extends GroupSubCommand {
-    GroupSetSpawnCommand(GroupLevel groupLevel) {
+public class GroupSetspawnCommand extends GroupSubCommand {
+    GroupSetspawnCommand(GroupLevel groupLevel) {
         super("setspawn", groupLevel);
     }
 

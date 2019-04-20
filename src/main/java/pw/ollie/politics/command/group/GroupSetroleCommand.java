@@ -33,8 +33,8 @@ import pw.ollie.politics.util.message.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class GroupSetRoleCommand extends GroupSubCommand {
-    GroupSetRoleCommand(GroupLevel groupLevel) {
+public class GroupSetroleCommand extends GroupSubCommand {
+    GroupSetroleCommand(GroupLevel groupLevel) {
         super("setrole", groupLevel);
     }
 
