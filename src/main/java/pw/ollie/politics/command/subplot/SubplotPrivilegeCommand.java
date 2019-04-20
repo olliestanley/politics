@@ -21,6 +21,7 @@ package pw.ollie.politics.command.subplot;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.PoliticsCommandHelper;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.Privileges;
@@ -40,7 +41,8 @@ public class SubplotPrivilegeCommand extends SubplotSubCommand {
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Subplot subplot = findSubplot(sender, args);
-        if (sender instanceof Player && !subplot.can((Player) sender, Privileges.Plot.SUBPLOT_PRIVILEGES)) {
+        if (sender instanceof Player && !sender.hasPermission(PoliticsCommandHelper.PLOTS_ADMIN_PERMISSION)
+                && !subplot.can((Player) sender, Privileges.Plot.SUBPLOT_PRIVILEGES)) {
             throw new CommandException("You cannot set privileges for that subplot.");
         }
 
