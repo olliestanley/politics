@@ -61,7 +61,7 @@ public final class UniverseManager {
     private TIntObjectMap<Group> groups;
     private Map<PoliticsWorld, Map<GroupLevel, Universe>> worldLevels;
 
-    private int nextId = 0xffffffff;
+    private int nextId = 0;
 
     public UniverseManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
