@@ -20,14 +20,39 @@
 package pw.ollie.politics.command.plot;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsBaseCommand;
+import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.args.Arguments;
 
-public final class PlotCommand extends PoliticsBaseCommand {
-    public PlotCommand(PoliticsPlugin plugin) {
-        super(plugin, "plot", "Base command for plot management");
+import org.bukkit.command.CommandSender;
 
-        this.registerSubCommand(new PlotInfoCommand());
-        this.registerSubCommand(new PlotMapCommand());
-        this.registerSubCommand(new PlotViewCommand());
+public class PlotViewCommand extends PlotSubCommand {
+    PlotViewCommand() {
+        super("view");
+    }
+
+    @Override
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        // todo
+        // use fake blocks to show the outline of the plot the player is in
+    }
+
+    @Override
+    public String getPermission() {
+        return "politics.plot.view";
+    }
+
+    @Override
+    public String getUsage() {
+        return "/plot view";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Visualise the outline of your current plot";
+    }
+
+    @Override
+    public boolean isPlayerOnly() {
+        return true;
     }
 }

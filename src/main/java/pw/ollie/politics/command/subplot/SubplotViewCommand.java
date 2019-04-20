@@ -20,16 +20,34 @@
 package pw.ollie.politics.command.subplot;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsBaseCommand;
+import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.args.Arguments;
 
-public final class SubplotCommand extends PoliticsBaseCommand {
-    public SubplotCommand(PoliticsPlugin plugin) {
-        super(plugin, "subplot", "Base command for subplot management");
+import org.bukkit.command.CommandSender;
 
-        this.registerSubCommand(new SubplotCreateCommand());
-        this.registerSubCommand(new SubplotDestroyCommand());
-        this.registerSubCommand(new SubplotListCommand());
-        this.registerSubCommand(new SubplotPrivilegeCommand());
-        this.registerSubCommand(new SubplotViewCommand());
+public class SubplotViewCommand extends SubplotSubCommand {
+    SubplotViewCommand() {
+        super("view");
+    }
+
+    @Override
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        // todo
+        // use fake blocks to show the outline of the subplot the player is in
+    }
+
+    @Override
+    public String getPermission() {
+        return "politics.plot.subplot.view";
+    }
+
+    @Override
+    public String getUsage() {
+        return "/subplot view";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Visualise the outline of your current subplot";
     }
 }
