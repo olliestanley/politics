@@ -259,7 +259,7 @@ public final class UniverseManager {
                 continue;
             }
 
-            String fileName = universe.getName() + ".cou";
+            String fileName = universe.getName() + ".ptu";
             File universeFile = new File(universesDir, fileName);
 
             byte[] data = encoder.encode(universe.toBSONObject());
