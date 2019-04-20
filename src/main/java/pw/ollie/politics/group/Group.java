@@ -282,6 +282,10 @@ public final class Group implements Comparable<Group>, Storable {
 
     public void removeRole(UUID player) {
         players.remove(player);
+
+        if (level.hasImmediateMembers() && players.isEmpty()) {
+            universe.destroyGroup(this);
+        }
     }
 
     public Set<Privilege> getPrivileges(UUID playerId) {
