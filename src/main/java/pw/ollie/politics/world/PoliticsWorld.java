@@ -35,6 +35,7 @@ import org.bukkit.World;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public final class PoliticsWorld implements Storable {
     private final String name;
@@ -93,6 +94,19 @@ public final class PoliticsWorld implements Storable {
 
     public List<GroupLevel> getLevels() {
         return Politics.getUniverseManager().getLevelsOfWorld(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PoliticsWorld that = (PoliticsWorld) o;
+        return name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
     /*
