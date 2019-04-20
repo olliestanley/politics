@@ -25,10 +25,10 @@ import gnu.trove.set.hash.THashSet;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.event.PoliticsEventFactory;
+import pw.ollie.politics.event.plot.subplot.SubplotOwnerChangeEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotPrivilegeChangeEvent;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
-import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.Position;
 import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.util.math.Vector3i;
@@ -180,8 +180,14 @@ public final class Subplot implements Storable {
         return owner;
     }
 
-    public void setOwner(UUID ownerId) {
+    public boolean setOwner(UUID ownerId) {
+        SubplotOwnerChangeEvent event = PoliticsEventFactory.callSubplotOwnerChangeEvent(getParent(), this, owner, ownerId);
+        if (event.isCancelled()) {
+            return false;
+        }
+
         this.owner = ownerId;
+        return true;
     }
 
     public Cuboid getCuboid() {

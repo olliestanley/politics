@@ -38,6 +38,7 @@ import pw.ollie.politics.event.player.PlayerChangePlotEvent;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotCreateEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotDestroyEvent;
+import pw.ollie.politics.event.plot.subplot.SubplotOwnerChangeEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotPrivilegeChangeEvent;
 import pw.ollie.politics.event.universe.UniverseCreateEvent;
 import pw.ollie.politics.event.universe.UniverseDestroyEvent;
@@ -118,6 +119,10 @@ public final class PoliticsEventFactory {
 
     public static SubplotDestroyEvent callSubplotDestroyEvent(Plot plot, Subplot subplot) {
         return callEvent(new SubplotDestroyEvent(plot, subplot));
+    }
+
+    public static SubplotOwnerChangeEvent callSubplotOwnerChangeEvent(Plot plot, Subplot subplot, UUID oldOwner, UUID newOwner) {
+        return callEvent(new SubplotOwnerChangeEvent(plot, subplot, oldOwner, newOwner));
     }
 
     public static SubplotPrivilegeChangeEvent callSubplotPrivilegeChangeEvent(Plot plot, Subplot subplot, UUID subject, Privilege privilege, boolean granted) {

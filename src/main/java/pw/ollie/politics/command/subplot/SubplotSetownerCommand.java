@@ -21,9 +21,17 @@ package pw.ollie.politics.command.subplot;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.PoliticsCommandHelper;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.util.PlayerUtil;
+import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.world.plot.Subplot;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class SubplotSetownerCommand extends SubplotSubCommand {
     SubplotSetownerCommand() {
@@ -32,8 +40,28 @@ public class SubplotSetownerCommand extends SubplotSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        // todo
-        // should also have admin functionality - using both -p and -sp to give a plot location and subplot id
+        Subplot subplot = findSubplot(sender, args);
+        Group group = subplot.getParent().getOwner();
+        if (sender instanceof Player && !sender.hasPermission(PoliticsCommandHelper.PLOTS_ADMIN_PERMISSION)
+                && !group.can(sender, Privileges.GroupPlot.MANAGE_SUBPLOTS)) {
+            throw new CommandException("You cannot set the owner for that subplot.");
+        }
+
+        if (args.length(false) < 1) {
+            throw new CommandException("Please specify he name of the player to designate as owner.");
+        }
+
+        String playerName = args.getString(1, false);
+        OfflinePlayer player = PlayerUtil.getOfflinePlayer(playerName);
+        if (player == null) {
+            throw new CommandException("That player does not exist.");
+        }
+
+        if (subplot.setOwner(player.getUniqueId())) {
+            MessageBuilder.begin("Successfully set owner.").send(sender);
+        } else {
+            throw new CommandException("Cannot set owner of subplot.");
+        }
     }
 
     @Override
@@ -43,7 +71,7 @@ public class SubplotSetownerCommand extends SubplotSubCommand {
 
     @Override
     public String getUsage() {
-        return "/subplot setowner <player> <privilege> [-p location] [-sp subplot-id]";
+        return "/subplot setowner <player> [-p location] [-sp subplot-id]";
     }
 
     @Override
