@@ -56,7 +56,7 @@ public class GroupLeaveCommand extends GroupSubCommand {
         }
 
         group.removeRole(playerId);
-        MessageBuilder.begin("Successfully left ").highlight(group.getStringProperty(GroupProperty.NAME)).normal(".").send(sender);
+        MessageBuilder.begin("Successfully left ").highlight(group.getName()).normal(".").send(sender);
     }
 
     @Override

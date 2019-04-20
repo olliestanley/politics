@@ -61,7 +61,7 @@ public class GroupOnlineCommand extends GroupSubCommand {
         }
 
         List<Player> page = paged.getPage(pageNo);
-        MessageBuilder message = MessageUtil.startBlockMessage(group.getStringProperty(GroupProperty.NAME) + " - Online Players (" + pageNo + " of " + paged.pages() + ")")
+        MessageBuilder message = MessageUtil.startBlockMessage(group.getName() + " - Online Players (" + pageNo + " of " + paged.pages() + ")")
                 .newLine();
         for (int i = 0; i < page.size(); i++) {
             message.append(page.get(i).getName());

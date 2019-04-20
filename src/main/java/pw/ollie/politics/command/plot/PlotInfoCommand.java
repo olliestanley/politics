@@ -49,7 +49,7 @@ public class PlotInfoCommand extends PlotSubCommand {
         String coordinates = base.getBlockX() + ", " + base.getBlockY() + ", " + base.getBlockZ();
 
         MessageBuilder message = MessageUtil.startBlockMessage("Plot Info");
-        message.newLine().normal("Owner: ").highlight(owner == null ? "None" : owner.getStringProperty(GroupProperty.NAME));
+        message.newLine().normal("Owner: ").highlight(owner == null ? "None" : owner.getName());
         message.newLine().normal("Subplots: ").highlight(Integer.toString(numSubplots));
         message.newLine().normal("Base Coordinates: ").highlight(coordinates);
         message.send(sender);

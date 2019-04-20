@@ -71,8 +71,7 @@ public class GroupSetSpawnCommand extends GroupSubCommand {
             throw new CommandException("There is no plot here!");
         }
         if (!plot.isOwner(group)) {
-            throw new CommandException("Sorry, the plot you are in must be owned by " + group.getStringProperty(GroupProperty.NAME)
-                    + " to set your spawn in it!");
+            throw new CommandException("Sorry, the plot you are in must be owned by " + group.getName() + " to set your spawn in it!");
         }
 
         group.setProperty(GroupProperty.SPAWN, rotatedPosition);

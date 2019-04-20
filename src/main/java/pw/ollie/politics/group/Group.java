@@ -122,6 +122,14 @@ public final class Group implements Comparable<Group>, Storable {
         return properties.get(property);
     }
 
+    public String getName() {
+        return getStringProperty(GroupProperty.NAME);
+    }
+
+    public String getTag() {
+        return getStringProperty(GroupProperty.TAG);
+    }
+
     public String getStringProperty(int property) {
         return getStringProperty(property, null);
     }

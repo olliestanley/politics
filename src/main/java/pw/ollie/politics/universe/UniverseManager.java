@@ -104,7 +104,7 @@ public final class UniverseManager {
 
     public Group getGroupByTag(String tag) {
         for (Group g : groups.valueCollection()) {
-            if (g.getStringProperty(GroupProperty.TAG).equalsIgnoreCase(tag)) {
+            if (g.getTag().equalsIgnoreCase(tag)) {
                 return g;
             }
         }

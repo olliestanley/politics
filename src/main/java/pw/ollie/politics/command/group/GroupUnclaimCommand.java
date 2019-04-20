@@ -52,7 +52,7 @@ public class GroupUnclaimCommand extends GroupSubCommand {
 
         Plot plot = plugin.getWorldManager().getPlotAt(location);
         if (!plot.isOwner(group)) {
-            throw new CommandException("Sorry, this plot is not owned by " + group.getStringProperty(GroupProperty.NAME) + ".");
+            throw new CommandException("Sorry, this plot is not owned by " + group.getName() + ".");
         }
 
         if (!plot.removeOwner(group)) {

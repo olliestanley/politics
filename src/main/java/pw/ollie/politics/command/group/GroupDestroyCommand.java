@@ -47,7 +47,7 @@ public class GroupDestroyCommand extends GroupSubCommand {
         }
 
         group.getUniverse().destroyGroup(group);
-        MessageBuilder.begin("The " + groupLevel.getName() + " ").highlight(group.getStringProperty(GroupProperty.NAME))
+        MessageBuilder.begin("The " + groupLevel.getName() + " ").highlight(group.getName())
                 .normal(" has been disbanded.").send(sender);
     }
 

@@ -111,7 +111,7 @@ public class GroupManageCommand extends GroupSubCommand {
             Player player = (Player) sender;
             Universe universe = plugin.getUniverseManager().getUniverse(player.getWorld(), groupLevel);
             if (!universe.getGroups().contains(invited)) {
-                throw new CommandException(invited.getStringProperty(GroupProperty.NAME) + " does not exist in the same universe as " + groupLevel.getPlural() + ".");
+                throw new CommandException(invited.getName() + " does not exist in the same universe as " + groupLevel.getPlural() + ".");
             }
             if (!(group.getLevel().getRank() > invited.getLevel().getRank())) {
                 throw new CommandException("A " + group.getLevel().getName() + " cannot have " + invited.getLevel().getPlural() + " as sub-organisations.");
@@ -138,7 +138,7 @@ public class GroupManageCommand extends GroupSubCommand {
             }
 
             if (group.getParent() != null) {
-                throw new CommandException(group.getStringProperty(GroupProperty.NAME) + " already has a parent organisation.");
+                throw new CommandException(group.getName() + " already has a parent organisation.");
             }
 
             String parentTag = args.getString(0, false);
@@ -151,14 +151,13 @@ public class GroupManageCommand extends GroupSubCommand {
             GroupAffiliationRequest request = affiliationRequests.stream()
                     .filter(req -> req.getSender() == parent.getUid()).findAny().orElse(null);
             if (request == null) {
-                throw new CommandException(parent.getStringProperty(GroupProperty.NAME) + " has not invited "
-                        + group.getStringProperty(GroupProperty.NAME) + " to be a sub-organisation.");
+                throw new CommandException(parent.getName() + " has not invited " + group.getName() + " to be a sub-organisation.");
             }
 
             if (parent.addChildGroup(group)) {
                 plugin.getGroupManager().removeAffiliationRequest(request);
-                MessageBuilder.begin().highlight(parent.getStringProperty(GroupProperty.NAME)).normal(" has successfully joined ")
-                        .highlight(group.getStringProperty(GroupProperty.NAME)).normal(" as a sub-organisation.").send(sender);
+                MessageBuilder.begin().highlight(parent.getName()).normal(" has successfully joined ")
+                        .highlight(group.getName()).normal(" as a sub-organisation.").send(sender);
             } else {
                 throw new CommandException("Your " + groupLevel.getName() + " cannot be a child of that " + parent.getLevel().getName());
             }
@@ -184,28 +183,25 @@ public class GroupManageCommand extends GroupSubCommand {
 
             if (group.equals(other.getParent())) {
                 if (group.removeChildGroup(other)) {
-                    MessageBuilder.begin().highlight(group.getStringProperty(GroupProperty.NAME) + " is no longer the parent organisation of ")
-                            .highlight(other.getStringProperty(GroupProperty.NAME)).normal(".").send(sender);
+                    MessageBuilder.begin().highlight(group.getName() + " is no longer the parent organisation of ")
+                            .highlight(other.getName()).normal(".").send(sender);
                 } else {
-                    throw new CommandException(group.getStringProperty(GroupProperty.NAME) + " cannot disaffiliate from "
-                            + other.getStringProperty(GroupProperty.NAME) + ".");
+                    throw new CommandException(group.getName() + " cannot disaffiliate from " + other.getName() + ".");
                 }
                 return;
             }
 
             if (other.equals(group.getParent())) {
                 if (other.removeChildGroup(group)) {
-                    MessageBuilder.begin().highlight(group.getStringProperty(GroupProperty.NAME) + " is no longer the child organisation of ")
-                            .highlight(other.getStringProperty(GroupProperty.NAME)).normal(".").send(sender);
+                    MessageBuilder.begin().highlight(group.getName() + " is no longer the child organisation of ")
+                            .highlight(other.getName()).normal(".").send(sender);
                 } else {
-                    throw new CommandException(group.getStringProperty(GroupProperty.NAME) + " cannot disaffiliate from "
-                            + other.getStringProperty(GroupProperty.NAME) + ".");
+                    throw new CommandException(group.getName() + " cannot disaffiliate from " + other.getName() + ".");
                 }
                 return;
             }
 
-            throw new CommandException(group.getStringProperty(GroupProperty.NAME) + " is not affiliated with "
-                    + other.getStringProperty(GroupProperty.NAME) + ".");
+            throw new CommandException(group.getName() + " is not affiliated with " + other.getName() + ".");
         }
     }
 

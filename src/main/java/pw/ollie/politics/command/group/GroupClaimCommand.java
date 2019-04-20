@@ -62,12 +62,12 @@ public class GroupClaimCommand extends GroupSubCommand {
 
         Plot plot = plugin.getWorldManager().getPlotAtChunk(location.getChunk());
         if (plot.isOwner(group)) {
-            throw new CommandException(group.getStringProperty(GroupProperty.NAME) + " already owns this plot.");
+            throw new CommandException(group.getName() + " already owns this plot.");
         }
 
         Group owner = plot.getOwner();
         if (owner != null) {
-            throw new CommandException("Sorry, this plot is already owned by " + owner.getStringProperty(GroupProperty.NAME) + ".");
+            throw new CommandException("Sorry, this plot is already owned by " + owner.getName() + ".");
         }
 
         if (!plot.setOwner(group)) {

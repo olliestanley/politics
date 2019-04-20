@@ -77,7 +77,7 @@ public class GroupJoinCommand extends GroupSubCommand {
 
         UUID playerId = player.getUniqueId();
         group.setRole(playerId, joinEvent.getRole());
-        MessageBuilder.begin("Successfully joined ").highlight(group.getStringProperty(GroupProperty.NAME))
+        MessageBuilder.begin("Successfully joined ").highlight(group.getName())
                 .normal(".").send(sender);
     }
 
