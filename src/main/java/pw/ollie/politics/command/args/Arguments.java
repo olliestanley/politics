@@ -21,9 +21,7 @@ package pw.ollie.politics.command.args;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A simple and easy to use method of parsing arguments into different primitive
@@ -32,8 +30,8 @@ import java.util.Set;
 public class Arguments {
     private final List<Argument> all;
     private final List<Argument> arguments;
-    private final Set<Flag> flags;
-    private final Set<Argument> doubleFlags;
+    private final List<Flag> flags;
+    private final List<Argument> doubleFlags;
     private final String[] raw;
 
     /**
@@ -45,8 +43,8 @@ public class Arguments {
     public Arguments(String... parse) {
         this.all = new ArrayList<>(parse.length);
         this.arguments = new ArrayList<>(parse.length);
-        this.flags = new HashSet<>();
-        this.doubleFlags = new HashSet<>();
+        this.flags = new ArrayList<>();
+        this.doubleFlags = new ArrayList<>();
         this.raw = parse;
 
         for (int i = 0; i < raw.length; i++) {
@@ -75,8 +73,7 @@ public class Arguments {
             // flag argument handling
             if (doubleFlag) {
                 // double flag (--, no value)
-                doubleFlags.add(new Argument(
-                        arg.substring(2)));
+                doubleFlags.add(new Argument(arg.substring(2)));
                 continue;
             }
 
@@ -87,8 +84,7 @@ public class Arguments {
             }
 
             // single flag (-, value)
-            flags.add(new Flag(arg.substring(1),
-                    new Argument(raw[++i])));
+            flags.add(new Flag(arg.substring(1), new Argument(raw[++i])));
         }
     }
 
@@ -152,15 +148,42 @@ public class Arguments {
     }
 
     public Arguments subArgs(int startIndex, int endIndex) {
-        if (startIndex == length()) {
+        return subArgs(startIndex, endIndex, false);
+    }
+
+    public Arguments subArgs(int startIndex, int endIndex, boolean includeFlagArgs) {
+        if (startIndex == length() && includeFlagArgs) {
             return new Arguments();
         }
 
-        if (startIndex < 0 || endIndex > raw.length) {
-            throw new IllegalArgumentException("Array index out of bounds for Arguments#subArgs call");
+        if (includeFlagArgs) {
+            if (startIndex < 0 || endIndex > raw.length) {
+                throw new IllegalArgumentException("Array index out of bounds for Arguments#subArgs call");
+            }
+
+            String[] newRaw = Arrays.copyOfRange(raw, startIndex, endIndex, String[].class);
+            return new Arguments(newRaw);
         }
 
-        String[] newRaw = Arrays.copyOfRange(raw, startIndex, endIndex, String[].class);
+        if (startIndex < 0 || endIndex > arguments.size()) {
+            throw new IllegalArgumentException("Array index out of bounds for Arguments#subArgs call");
+        }
+        List<Argument> newArgs = arguments.subList(startIndex, endIndex);
+        String[] newRaw = new String[newArgs.size() + doubleFlags.size() + (flags.size() * 2)];
+        for (int i = 0; i < newArgs.size() || i < doubleFlags.size() || i < flags.size(); i++) {
+            if (i < newArgs.size()) {
+                newRaw[i] = newArgs.get(i).get();
+            }
+            if (i < doubleFlags.size()) {
+                newRaw[i + newArgs.size()] = "--" + doubleFlags.get(i).get();
+            }
+            if (i < flags.size()) {
+                Flag flag = flags.get(i);
+                int index = (2 * i) + newArgs.size() + doubleFlags.size();
+                newRaw[index] = "-" + flag.getName();
+                newRaw[index + 1] = flag.getStringValue();
+            }
+        }
         return new Arguments(newRaw);
     }
 

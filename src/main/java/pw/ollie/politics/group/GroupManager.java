@@ -32,6 +32,7 @@ import java.util.Set;
 
 public final class GroupManager {
     private final PoliticsPlugin plugin;
+    // note: affiliation requests are non-persistent
     private final TIntObjectMap<Set<GroupAffiliationRequest>> affiliationInvites;
 
     public GroupManager(PoliticsPlugin plugin) {
