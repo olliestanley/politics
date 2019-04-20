@@ -31,7 +31,7 @@ import pw.ollie.politics.group.privilege.PrivilegeType;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.Position;
 import pw.ollie.politics.util.math.Cuboid;
-import pw.ollie.politics.util.math.Vector3f;
+import pw.ollie.politics.util.math.Vector3i;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bson.BSONObject;
@@ -69,10 +69,11 @@ public final class Subplot implements Storable {
     private final int ySize;
     private final int zSize;
 
-    private UUID owner;
-    private Map<UUID, Set<Privilege>> individualPrivileges;
+    private final Map<UUID, Set<Privilege>> individualPrivileges;
 
-    public Subplot(PoliticsWorld world, int id, int parentX, int parentZ, int baseX, int baseY, int baseZ, int xSize, int ySize, int zSize, UUID owner, Map<UUID, Set<Privilege>> individualPrivileges) {
+    private UUID owner;
+
+    public Subplot(PoliticsWorld world, int id, int parentX, int parentZ, int baseX, int baseY, int baseZ, int xSize, int ySize, int zSize, UUID owner) {
         this.world = world;
         this.id = id;
         this.parentX = parentX;
@@ -84,7 +85,11 @@ public final class Subplot implements Storable {
         this.ySize = ySize;
         this.zSize = zSize;
         this.owner = owner;
-        this.individualPrivileges = individualPrivileges;
+        this.individualPrivileges = new THashMap<>();
+    }
+
+    public Subplot(PoliticsWorld world, int id, int parentX, int parentZ, Cuboid cuboid, UUID owner) {
+        this(world, id, parentX, parentZ, cuboid.getMinX(), cuboid.getMinY(), cuboid.getMinZ(), cuboid.getXSize(), cuboid.getYSize(), cuboid.getZSize(), owner);
     }
 
     public Subplot(BasicBSONObject bObj) {
@@ -167,8 +172,8 @@ public final class Subplot implements Storable {
         return zSize;
     }
 
-    public Vector3f getSize() {
-        return new Vector3f(xSize, ySize, zSize);
+    public Vector3i getSize() {
+        return new Vector3i(xSize, ySize, zSize);
     }
 
     public UUID getOwnerId() {

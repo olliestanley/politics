@@ -22,9 +22,11 @@ package pw.ollie.politics.activity;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.activity.activities.CuboidSelectionActivity;
 import pw.ollie.politics.util.Position;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -54,19 +56,25 @@ public final class ActivityUpdateListener implements Listener {
             return;
         }
 
+        Player player = event.getPlayer();
         Location location = block.getLocation();
         Position position = Position.fromLocation(location);
 
         CuboidSelectionActivity selectionActivity = (CuboidSelectionActivity) activity;
         if (!selectionActivity.isFirstPointSet()) {
+            MessageBuilder.begin("First point set. Please left click a block to select second point.").send(player);
             selectionActivity.setFirstPoint(position);
             return;
         }
 
         if (!selectionActivity.isSecondPointSet()) {
+            if (!position.getWorld().equals(selectionActivity.getFirstPoint().getWorld())) {
+                plugin.getActivityManager().endActivity(player);
+                return;
+            }
             selectionActivity.setSecondPoint(position);
             selectionActivity.complete();
-            plugin.getActivityManager().endActivity(event.getPlayer());
+            plugin.getActivityManager().endActivity(player);
             return;
         }
 

@@ -22,30 +22,30 @@ package pw.ollie.politics.util.math;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Vector3f implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Vector3i implements Serializable {
+    private static final long serialVersionUID = 7L;
 
-    private final float x, y, z;
+    private final int x, y, z;
 
-    public Vector3f(float x, float y, float z) {
+    public Vector3i(int x, int y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public float lengthSquared() {
+    public int lengthSquared() {
         return x * x + y * y + z * z;
     }
 
-    public float getX() {
+    public int getX() {
         return x;
     }
 
-    public float getY() {
+    public int getY() {
         return y;
     }
 
-    public float getZ() {
+    public int getZ() {
         return z;
     }
 
@@ -54,11 +54,11 @@ public class Vector3f implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof Vector3f)) {
+        if (!(obj instanceof Vector3i)) {
             return false;
         }
 
-        Vector3f other = (Vector3f) obj;
+        Vector3i other = (Vector3i) obj;
         return x == other.x && y == other.y && z == other.z;
     }
 

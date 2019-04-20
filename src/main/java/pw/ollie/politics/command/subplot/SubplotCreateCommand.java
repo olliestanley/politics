@@ -20,16 +20,24 @@
 package pw.ollie.politics.command.subplot;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.activity.ActivityManager;
+import pw.ollie.politics.activity.PoliticsActivity;
+import pw.ollie.politics.activity.activities.CuboidSelectionActivity;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.util.math.Cuboid;
+import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.world.WorldManager;
+import pw.ollie.politics.world.plot.Plot;
+import pw.ollie.politics.world.plot.Subplot;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
 
 // starts process create a new subplot in current plot
-// need an area selection method for this
 public class SubplotCreateCommand extends SubplotSubCommand {
     SubplotCreateCommand() {
         super("create");
@@ -37,7 +45,40 @@ public class SubplotCreateCommand extends SubplotSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        // todo
+        ActivityManager activityManager = plugin.getActivityManager();
+        Player player = (Player) sender;
+        if (activityManager.isActive(player)) {
+            throw new CommandException("You already have an ongoing task you must finish before starting a new one.");
+        }
+
+        PoliticsActivity activity = new CuboidSelectionActivity(player.getUniqueId(), selection -> {
+            WorldManager worldManager = plugin.getWorldManager();
+            Plot plot = worldManager.getPlotAt(selection.getFirstPoint());
+            if (!plot.equals(worldManager.getPlotAt(selection.getSecondPoint()))) {
+                MessageBuilder.beginError().append("Both corners of the subplot must be inside the same plot.").send(sender);
+                return;
+            }
+
+            Cuboid cuboid = selection.getCuboid();
+            for (Subplot existingSubplot : plot.getSubplots()) {
+                Cuboid existingCuboid = existingSubplot.getCuboid();
+                if (existingCuboid.intersects(cuboid)) {
+                    MessageBuilder.beginError().append("The selection overlaps an existing subplot!").send(sender);
+                    return;
+                }
+            }
+
+            Subplot subplot = new Subplot(plot.getPoliticsWorld(), plot.generateSubplotId(), plot.getX(), plot.getZ(),
+                    cuboid, player.getUniqueId());
+            if (plot.addSubplot(subplot)) {
+                MessageBuilder.begin("Successfully created subplot!").send(sender);
+            } else {
+                MessageBuilder.beginError().append("Failed to create subplot.").send(sender);
+            }
+        });
+
+        MessageBuilder.begin("Please select the maximum and minimum points of the subplot area by left-clicking blocks.").send(sender);
+        activityManager.beginActivity(activity);
     }
 
     @Override

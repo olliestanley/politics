@@ -57,6 +57,7 @@ public final class Privileges {
     public static final class GroupPlot {
         public static final Privilege BUILD = new Privilege("BUILD", PrivilegeType.GROUP, PrivilegeType.PLOT);
         public static final Privilege INTERACT = new Privilege("INTERACT", PrivilegeType.GROUP, PrivilegeType.PLOT);
+        public static final Privilege MANAGE_SUBPLOTS = new Privilege("MANAGE_SUBPLOTS", PrivilegeType.GROUP, PrivilegeType.PLOT);
         public static final Privilege[] ALL = {BUILD, INTERACT};
 
         public static List<Privilege> all() {

@@ -21,6 +21,7 @@ package pw.ollie.politics.activity.activities;
 
 import pw.ollie.politics.activity.PoliticsActivity;
 import pw.ollie.politics.util.Position;
+import pw.ollie.politics.util.math.Cuboid;
 
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -64,6 +65,13 @@ public final class CuboidSelectionActivity implements PoliticsActivity {
 
     public boolean isSecondPointSet() {
         return secondPoint != null;
+    }
+
+    public Cuboid getCuboid() {
+        if (!isFirstPointSet() || !isSecondPointSet()) {
+            return null;
+        }
+        return new Cuboid(getFirstPoint(), getSecondPoint());
     }
 
     @Override

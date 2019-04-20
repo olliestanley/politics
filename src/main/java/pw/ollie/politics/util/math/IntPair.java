@@ -21,7 +21,7 @@ package pw.ollie.politics.util.math;
 
 import java.util.Objects;
 
-public final class IntPair {
+public class IntPair {
     public static IntPair of(int x, int z) {
         return new IntPair(x, z);
     }

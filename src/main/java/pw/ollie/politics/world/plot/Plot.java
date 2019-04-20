@@ -20,7 +20,6 @@
 package pw.ollie.politics.world.plot;
 
 import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.THashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.hash.THashSet;
 
@@ -256,6 +255,17 @@ public final class Plot implements Storable {
 
     public boolean can(Player player, Privilege privilege) {
         return getOwner().getPrivileges(player).contains(privilege);
+    }
+
+    public int generateSubplotId() {
+        for (int i = 0; i < Integer.MAX_VALUE; i++) {
+            if (subplots.get(i) != null) {
+                continue;
+            }
+            return i;
+        }
+
+        throw new IllegalStateException("This plot has " + Integer.MAX_VALUE + " subplots. Oh dear.");
     }
 
     @Override

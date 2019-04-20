@@ -19,52 +19,95 @@
  */
 package pw.ollie.politics.util.math;
 
+import pw.ollie.politics.util.Position;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.Objects;
 
-public final class Cuboid {
+public class Cuboid {
     private final Location base;
-    private final Vector3f size;
-
-    private final int x;
-    private final int y;
-    private final int z;
+    private final Vector3i size;
 
     private int hash = 0;
 
-    public Cuboid(Location base, Vector3f size) {
+    public Cuboid(Location base, Vector3i size) {
         this.base = base;
         this.size = size;
+    }
 
-        this.x = (int) (base.getX() / size.getX());
-        this.y = (int) (base.getY() / size.getY());
-        this.z = (int) (base.getZ() / size.getZ());
+    public Cuboid(Position base, Vector3i size) {
+        this(base.toLocation(), size);
+    }
+
+    public Cuboid(Location base, Location opposite) {
+        if (!base.getWorld().equals(opposite.getWorld())) {
+            throw new IllegalArgumentException("cuboid cannot span multiple worlds");
+        }
+
+        this.base = new Location(base.getWorld(), Math.min(base.getBlockX(), opposite.getBlockX()), Math.min(base.getBlockY(), opposite.getBlockY()), Math.min(base.getBlockZ(), opposite.getBlockZ()));
+        size = new Vector3i(Math.abs(opposite.getBlockX() - base.getBlockX()), Math.abs(opposite.getBlockY() - base.getBlockY()), Math.abs(opposite.getBlockZ() - base.getBlockZ()));
+    }
+
+    public Cuboid(Position base, Position opposite) {
+        this(base.toLocation(), opposite.toLocation());
     }
 
     public Location getBase() {
         return this.base;
     }
 
-    public Vector3f getSize() {
+    public Location getMinPoint() {
+        return base;
+    }
+
+    public Location getMaxPoint() {
+        return MathUtil.add(size, base);
+    }
+
+    public int getMinX() {
+        return getMinPoint().getBlockX();
+    }
+
+    public int getMinY() {
+        return getMinPoint().getBlockY();
+    }
+
+    public int getMinZ() {
+        return getMinPoint().getBlockZ();
+    }
+
+    public int getMaxX() {
+        return getMaxPoint().getBlockX();
+    }
+
+    public int getMaxY() {
+        return getMaxPoint().getBlockY();
+    }
+
+    public int getMaxZ() {
+        return getMaxPoint().getBlockZ();
+    }
+
+    public Vector3i getSize() {
         return this.size;
     }
 
-    public int getX() {
-        return this.x;
+    public int getXSize() {
+        return size.getX();
     }
 
-    public int getY() {
-        return this.y;
+    public int getYSize() {
+        return size.getY();
     }
 
-    public int getZ() {
-        return this.z;
+    public int getZSize() {
+        return size.getZ();
     }
 
-    public boolean contains(Vector3f vec) {
-        Vector3f max = MathUtil.add(base, size);
+    public boolean contains(Vector3i vec) {
+        Vector3i max = MathUtil.add(base, size);
         return base.getX() <= vec.getX() && vec.getX() < max.getX()
                 && base.getY() <= vec.getY() && vec.getY() < max.getY()
                 && base.getZ() <= vec.getZ() && vec.getZ() < max.getZ();
@@ -75,10 +118,21 @@ public final class Cuboid {
             return false;
         }
 
-        Vector3f max = MathUtil.add(base, size);
+        Vector3i max = MathUtil.add(base, size);
         return base.getX() <= location.getBlockX() && location.getBlockX() < max.getX()
                 && base.getY() <= location.getBlockY() && location.getBlockY() < max.getY()
                 && base.getZ() <= location.getBlockZ() && location.getBlockZ() < max.getZ();
+    }
+
+    public boolean intersects(Cuboid o) {
+        return !notIntersects(o);
+    }
+
+    private boolean notIntersects(Cuboid o) {
+        // compares z before y for a micro performance gain - in minecraft many cuboids will be similar on the y axis
+        return o.getMinX() > getMaxX() || o.getMaxX() < getMinX()
+                || o.getMinZ() > getMaxZ() || o.getMaxZ() < getMinZ()
+                || o.getMinY() > getMaxY() || o.getMaxY() < getMinY();
     }
 
     public World getWorld() {
@@ -103,7 +157,7 @@ public final class Cuboid {
         }
 
         Cuboid cuboid = (Cuboid) obj;
-        return cuboid.size.getX() == size.getX() && cuboid.size.getY() == size.getY() && cuboid.size.getZ() == size.getZ() && cuboid.getWorld().equals(getWorld()) && cuboid.getX() == getX() && cuboid.getY() == getY() && cuboid.getZ() == getZ();
+        return cuboid.size.getX() == size.getX() && cuboid.size.getY() == size.getY() && cuboid.size.getZ() == size.getZ() && cuboid.getWorld().equals(getWorld()) && cuboid.base.getX() == base.getX() && cuboid.base.getY() == base.getY() && cuboid.base.getZ() == base.getZ();
     }
 
 }
