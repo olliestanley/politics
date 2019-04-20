@@ -17,55 +17,53 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.command.politics;
+package pw.ollie.politics.command.universe;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsSubCommand;
 import pw.ollie.politics.command.args.Arguments;
-import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.util.message.MessageUtil;
 
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
-public class PoliticsHelpCommand extends PoliticsSubCommand {
-    PoliticsHelpCommand() {
-        super("help");
+public class UniverseListCommand extends PoliticsSubCommand {
+    UniverseListCommand() {
+        super("list");
     }
 
     @Override
-    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
-        MessageBuilder message = MessageUtil.startBlockMessage("Politics - Command Overview");
-        message.newLine().append("Universe Commands: ").highlight("/universe help");
-        message.newLine().append("Plot Commands: ").highlight("/plot help");
-        message.newLine().append("Subplot Commands: ").highlight("/subplot help");
-        for (GroupLevel groupLevel : plugin.getUniverseManager().getGroupLevels()) {
-            message.newLine().normal(groupLevel.getName()).append(" Commands: ").highlight("/")
-                    .append(groupLevel.getId()).append(" help");
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        MessageBuilder message = MessageUtil.startBlockMessage("Universes");
+        Set<Universe> universes = plugin.getUniverseManager().getUniverses();
+        if (universes.isEmpty()) {
+            message.newLine().error("There are no universes.").send(sender);
+            return;
         }
+
+        for (Universe universe : universes) {
+            message.newLine().highlight(universe.getName());
+        }
+
         message.send(sender);
     }
 
     @Override
     public String getPermission() {
-        return "politics.help";
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return Arrays.asList("commands", "cmds", "h");
+        return "politics.universe.list";
     }
 
     @Override
     public String getUsage() {
-        return "/politics help";
+        return "/universe list";
     }
 
     @Override
     public String getDescription() {
-        return "Provides general command help for Politics.";
+        return "Gives a list of universes.";
     }
 }

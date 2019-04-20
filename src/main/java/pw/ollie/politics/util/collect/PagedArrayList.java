@@ -31,7 +31,7 @@ public class PagedArrayList<E> implements PagedList<E> {
     private final List<E> delegate;
     private final Map<Integer, List<E>> pages;
 
-    private int elementsPerPage = 10;
+    private int elementsPerPage = 8;
     private boolean autoRefresh = true;
     private boolean refreshOnGet = false;
 

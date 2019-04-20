@@ -22,12 +22,12 @@ package pw.ollie.politics.universe;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
+import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.data.InvalidConfigurationException;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.world.PoliticsWorld;
 
@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 
 public final class UniverseManager {
@@ -109,6 +110,10 @@ public final class UniverseManager {
             }
         }
         return null;
+    }
+
+    public Set<Universe> getUniverses() {
+        return new THashSet<>(universes.values());
     }
 
     public Universe getUniverse(PoliticsWorld world, GroupLevel level) {
