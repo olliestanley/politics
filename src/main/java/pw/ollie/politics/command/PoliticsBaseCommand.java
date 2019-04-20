@@ -128,6 +128,7 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
             return completions;
         }
 
+        // todo completion for arguments beyond the subcommand?
         return new ArrayList<>();
     }
 

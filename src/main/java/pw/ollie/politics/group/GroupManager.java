@@ -19,18 +19,59 @@
  */
 package pw.ollie.politics.group;
 
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
+import gnu.trove.set.hash.THashSet;
+
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.level.GroupLevel;
 
 import java.util.List;
+import java.util.Set;
 
 public final class GroupManager {
     private final PoliticsPlugin plugin;
+    private final TIntObjectMap<Set<GroupAffiliationRequest>> affiliationInvites;
 
     public GroupManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
+        this.affiliationInvites = new TIntObjectHashMap<>();
 
         plugin.getServer().getPluginManager().registerEvents(new GroupCombatProtectionListener(plugin), plugin);
+    }
+
+    public Set<GroupAffiliationRequest> getAffiliationRequests(int group) {
+        Set<GroupAffiliationRequest> requests = affiliationInvites.get(group);
+        if (requests != null) {
+            return new THashSet<>(requests);
+        }
+        return new THashSet<>();
+    }
+
+    public Set<GroupAffiliationRequest> getAffiliationRequests(Group group) {
+        return getAffiliationRequests(group.getUid());
+    }
+
+    public boolean addAffiliationRequest(GroupAffiliationRequest request) {
+        Group sender = getGroupById(request.getSender());
+        Group recipient = getGroupById(request.getRecipient());
+        if (sender == null || recipient == null) {
+            return false;
+        }
+
+        PoliticsEventFactory.callGroupChildInviteEvent(sender, recipient);
+        affiliationInvites.putIfAbsent(request.getRecipient(), new THashSet<>());
+        affiliationInvites.get(request.getRecipient()).add(request);
+        return true;
+    }
+
+    public boolean removeAffiliationRequest(GroupAffiliationRequest request) {
+        Set<GroupAffiliationRequest> requests = affiliationInvites.get(request.getRecipient());
+        if (requests != null) {
+            return requests.remove(request);
+        }
+        return false;
     }
 
     public List<GroupLevel> getGroupLevels() {

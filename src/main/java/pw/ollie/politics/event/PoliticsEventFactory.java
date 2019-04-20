@@ -24,6 +24,7 @@ import pw.ollie.politics.activity.PoliticsActivity;
 import pw.ollie.politics.event.activity.ActivityBeginEvent;
 import pw.ollie.politics.event.activity.ActivityEndEvent;
 import pw.ollie.politics.event.group.GroupChildAddEvent;
+import pw.ollie.politics.event.group.GroupChildInviteEvent;
 import pw.ollie.politics.event.group.GroupChildRemoveEvent;
 import pw.ollie.politics.event.group.GroupClaimPlotEvent;
 import pw.ollie.politics.event.group.GroupCreateEvent;
@@ -65,6 +66,10 @@ public final class PoliticsEventFactory {
 
     public static GroupChildAddEvent callGroupChildAddEvent(Group group, Group child) {
         return callEvent(new GroupChildAddEvent(group, child));
+    }
+
+    public static GroupChildInviteEvent callGroupChildInviteEvent(Group group, Group child) {
+        return callEvent(new GroupChildInviteEvent(group, child));
     }
 
     public static GroupChildRemoveEvent callGroupChildRemoveEvent(Group group, Group child) {
