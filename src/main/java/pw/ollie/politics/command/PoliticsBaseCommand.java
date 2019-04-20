@@ -61,7 +61,7 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         if (subCommand != null) {
             if (checkPerms(subCommand, sender)) {
                 try {
-                    subCommand.runCommand(plugin, sender, args.subArgs(1, args.length()));
+                    subCommand.runCommand(plugin, sender, args.subArgs(1, args.length(false)));
                 } catch (CommandException e) {
                     MessageBuilder.beginError().append(e.getMessage()).send(sender);
                 }
