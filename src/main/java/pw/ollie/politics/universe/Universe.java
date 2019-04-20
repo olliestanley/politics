@@ -318,6 +318,13 @@ public final class Universe implements Storable {
         bson.put("groups", groupsBson);
         bson.put("children", childrenBson);
 
+        BasicBSONList worldsBson = new BasicBSONList();
+        for (PoliticsWorld world : worlds) {
+            worldsBson.add(world.getName());
+        }
+
+        bson.put("worlds", worldsBson);
+
         return bson;
     }
 
