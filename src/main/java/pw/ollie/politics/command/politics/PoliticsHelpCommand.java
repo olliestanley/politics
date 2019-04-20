@@ -41,8 +41,8 @@ public class PoliticsHelpCommand extends PoliticsSubCommand {
         MessageBuilder message = MessageUtil.startBlockMessage("Politics - Command Overview");
         message.newLine().append("Universe Commands: ").highlight("/universe help");
         for (GroupLevel groupLevel : plugin.getUniverseManager().getGroupLevels()) {
-            message.newLine().normal(groupLevel.getId()).append(" Commands: ").highlight("/")
-                    .append(groupLevel.getName()).append(" help");
+            message.newLine().normal(groupLevel.getName()).append(" Commands: ").highlight("/")
+                    .append(groupLevel.getId()).append(" help");
         }
         message.send(sender);
     }

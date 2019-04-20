@@ -51,7 +51,7 @@ public final class PoliticsCommandHelper {
             return;
         }
 
-        MessageBuilder message = MessageUtil.startBlockMessage(baseCommand.getName() + " Help (" + pageNumber + " of " + pages.pages() + ")");
+        MessageBuilder message = MessageUtil.startBlockMessage("/" + baseCommand.getName() + " Help (" + pageNumber + " of " + pages.pages() + ")");
         List<PoliticsSubCommand> page = pages.getPage(pageNumber);
         for (PoliticsSubCommand subCommand : page) {
             message.newLine().highlight("/" + baseCommand.getName() + " " + subCommand.getName()).normal(" - " + subCommand.getDescription());
