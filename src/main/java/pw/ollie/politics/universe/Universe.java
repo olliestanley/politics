@@ -313,7 +313,7 @@ public final class Universe implements Storable {
             for (Group child : group.getGroups()) {
                 children.add(child.getUid());
             }
-            childrenBson.put(Long.toHexString(group.getUid()), children);
+            childrenBson.put(Integer.toString(group.getUid()), children);
         }
 
         bson.put("groups", groupsBson);
@@ -386,10 +386,10 @@ public final class Universe implements Storable {
         final BasicBSONObject childrenBson = (BasicBSONObject) childrenObj;
         for (Map.Entry<String, Object> childEntry : childrenBson.entrySet()) {
             String groupId = childEntry.getKey();
-            long uid = Long.parseLong(groupId, 16);
+            int uid = Integer.parseInt(groupId);
             Group c = groups.get(uid);
             if (c == null) {
-                throw new IllegalStateException("Unknown group id " + Long.toHexString(uid));
+                throw new IllegalStateException("Unknown group id " + uid);
             }
 
             Object childsObj = childEntry.getValue();

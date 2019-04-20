@@ -24,7 +24,6 @@ import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Argument;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.collect.PagedArrayList;
@@ -70,7 +69,7 @@ public class GroupListCommand extends GroupSubCommand {
         MessageBuilder message = MessageUtil.startBlockMessage(groupLevel.getPlural().toUpperCase());
         List<Group> pageGroups = paged.getPage(page);
         for (Group group : pageGroups) {
-            message.newLine().highlight().append((String) group.getProperty(GroupProperty.TAG));
+            message.newLine().highlight().append(group.getName());
         }
         message.build().send(sender);
     }
