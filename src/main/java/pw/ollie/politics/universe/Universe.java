@@ -84,7 +84,7 @@ public final class Universe implements Storable {
         CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
 
         builder.maximumSize(Politics.getServer().getMaxPlayers());
-        builder.expireAfterAccess(10L, TimeUnit.MINUTES);
+        builder.expireAfterAccess(5L, TimeUnit.MINUTES);
 
         citizenGroupCache = builder.build(new CacheLoader<UUID, Set<Group>>() {
             @Override
@@ -276,7 +276,12 @@ public final class Universe implements Storable {
 
     public Set<Group> getCitizenGroups(UUID player) {
         try {
-            return new HashSet<>(citizenGroupCache.get(player));
+            Set<Group> groups = citizenGroupCache.get(player);
+            if (groups == null) {
+                citizenGroupCache.refresh(player);
+                groups = citizenGroupCache.get(player);
+            }
+            return new HashSet<>(groups);
         } catch (final ExecutionException e) {
             Politics.getLogger().log(Level.SEVERE, "Could not load a set of citizen groups! This is a PROBLEM!", e);
             return new HashSet<>();
