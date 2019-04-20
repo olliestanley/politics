@@ -87,7 +87,6 @@ public final class ActivityManager {
         if (activity == null) {
             return false;
         }
-        activity.complete();
         PoliticsEventFactory.callActivityEndEvent(activity);
         activities.remove(playerId);
         return true;

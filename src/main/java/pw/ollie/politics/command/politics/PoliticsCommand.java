@@ -28,6 +28,7 @@ public final class PoliticsCommand extends PoliticsBaseCommand {
 
         this.registerSubCommand(new PoliticsAboutCommand());
         this.registerSubCommand(new PoliticsCancelCommand());
+        this.registerSubCommand(new PoliticsConfirmCommand());
         this.registerSubCommand(new PoliticsHelpCommand());
     }
 }

@@ -65,6 +65,7 @@ public final class ActivityUpdateListener implements Listener {
 
         if (!selectionActivity.isSecondPointSet()) {
             selectionActivity.setSecondPoint(position);
+            selectionActivity.complete();
             plugin.getActivityManager().endActivity(event.getPlayer());
             return;
         }
