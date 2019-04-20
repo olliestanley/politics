@@ -27,6 +27,8 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.collect.PagedArrayList;
+import pw.ollie.politics.util.collect.PagedList;
 import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.util.message.MessageUtil;
 
@@ -51,8 +53,8 @@ public class GroupListCommand extends GroupSubCommand {
         }
 
         int page = 1;
-        if (args.length() > 0) {
-            Argument arg1 = args.get(0);
+        if (args.length(false) > 0) {
+            Argument arg1 = args.get(0, false);
             if (!arg1.isInt()) {
                 throw new CommandException("Invalid page number supplied!");
             }
@@ -60,14 +62,13 @@ public class GroupListCommand extends GroupSubCommand {
             page = arg1.asInt();
         }
 
-        int min = (page - 1) * PAGE_HEIGHT - 1; // Screen height
-        int max = Math.min(groups.size(), page * PAGE_HEIGHT) - 2;
-        if (max <= min) {
-            throw new CommandException("There are no " + groupLevel.getPlural() + " on this page!");
+        PagedList<Group> paged = new PagedArrayList<>(groups);
+        if (page > paged.pages()) {
+            throw new CommandException("There are only " + paged.pages() + " pages!");
         }
 
         MessageBuilder message = MessageUtil.startBlockMessage(groupLevel.getPlural().toUpperCase());
-        List<Group> pageGroups = groups.subList(min, max);
+        List<Group> pageGroups = paged.getPage(page);
         for (Group group : pageGroups) {
             message.newLine().highlight().append((String) group.getProperty(GroupProperty.TAG));
         }

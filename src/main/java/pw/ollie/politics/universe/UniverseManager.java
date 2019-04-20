@@ -135,6 +135,13 @@ public final class UniverseManager {
     public Universe createUniverse(String name, UniverseRules theRules) {
         Universe universe = new Universe(name, theRules);
         universes.put(name, universe);
+        for (PoliticsWorld world : universe.getWorlds()) {
+            worldLevels.putIfAbsent(world, new THashMap<>());
+            Map<GroupLevel, Universe> map = worldLevels.get(world);
+            for (GroupLevel level : theRules.getGroupLevels()) {
+                map.put(level, universe);
+            }
+        }
         return universe;
     }
 

@@ -139,7 +139,7 @@ public final class WorldManager {
         return conf;
     }
 
-    public PoliticsWorld getWorld(final String name) {
+    public PoliticsWorld getWorld(String name) {
         PoliticsWorld world = worlds.get(name);
         if (world == null) {
             world = createWorld(name);
@@ -147,7 +147,7 @@ public final class WorldManager {
         return world;
     }
 
-    public PoliticsWorld getWorld(final World world) {
+    public PoliticsWorld getWorld(World world) {
         return getWorld(world.getName());
     }
 

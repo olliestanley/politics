@@ -75,8 +75,8 @@ public class GroupCreateCommand extends GroupSubCommand {
         }
 
         StringBuilder nameBuilder = new StringBuilder();
-        for (int i = 0; i < args.length(); i++) {
-            nameBuilder.append(args.getString(i)).append(' ');
+        for (int i = 0; i < args.length(false); i++) {
+            nameBuilder.append(args.getString(i, false)).append(' ');
         }
 
         String name = nameBuilder.toString().trim();
