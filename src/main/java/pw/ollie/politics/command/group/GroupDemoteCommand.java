@@ -92,7 +92,7 @@ public class GroupDemoteCommand extends GroupSubCommand {
 
         group.setRole(player.getUniqueId(), next);
         MessageBuilder.begin().highlight(player.getName()).normal(" was demoted to ").highlight(next.getName())
-                .normal(" in the ").append(groupLevel.getName()).append("!").send(sender);
+                .normal(" in the ").append(level.getName()).append("!").send(sender);
     }
 
     @Override
@@ -102,11 +102,11 @@ public class GroupDemoteCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " demote <player> [-t track] [-g " + groupLevel.getName() + "] [-u universe]";
+        return "/" + level.getId() + " demote <player> [-t track] [-g " + level.getName() + "] [-u universe]";
     }
 
     @Override
     public String getDescription() {
-        return "Demotes somebody in the " + groupLevel.getName() + ".";
+        return "Demotes somebody in the " + level.getName() + ".";
     }
 }

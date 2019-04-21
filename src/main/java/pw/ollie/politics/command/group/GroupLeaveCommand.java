@@ -25,7 +25,6 @@ import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.group.GroupMemberLeaveEvent;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.util.message.MessageBuilder;
 
@@ -47,12 +46,12 @@ public class GroupLeaveCommand extends GroupSubCommand {
         Player player = (Player) sender;
         UUID playerId = player.getUniqueId();
         if (!group.isImmediateMember(playerId)) {
-            throw new CommandException("You are not a member of that " + groupLevel.getName() + ".");
+            throw new CommandException("You are not a member of that " + level.getName() + ".");
         }
 
         GroupMemberLeaveEvent leaveEvent = PoliticsEventFactory.callGroupMemberLeaveEvent(group, player, false);
         if (leaveEvent.isCancelled()) {
-            throw new CommandException("You cannot leave the " + groupLevel.getName() + ".");
+            throw new CommandException("You cannot leave the " + level.getName() + ".");
         }
 
         group.removeRole(playerId);
@@ -71,12 +70,12 @@ public class GroupLeaveCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " leave [-g " + groupLevel.getName() + "]";
+        return "/" + level.getId() + " leave [-g " + level.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "Leaves your " + groupLevel.getName() + ".";
+        return "Leaves your " + level.getName() + ".";
     }
 
     @Override

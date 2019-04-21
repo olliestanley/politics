@@ -42,7 +42,7 @@ public class GroupUninviteCommand extends GroupSubCommand {
         Group group = findGroup(sender, args);
 
         if (!group.can(sender, Privileges.Group.INVITE)) {
-            throw new CommandException("You don't have permission to invite to the " + groupLevel.getName() + ".");
+            throw new CommandException("You don't have permission to invite to the " + level.getName() + ".");
         }
 
         if (args.length(false) < 1) {
@@ -60,7 +60,7 @@ public class GroupUninviteCommand extends GroupSubCommand {
         }
 
         group.removeInvitation(playerId);
-        MessageBuilder.begin("Successfully uninvited ").highlight(player.getName()).normal(" to the " + groupLevel.getName() + ".").send(sender);
+        MessageBuilder.begin("Successfully uninvited ").highlight(player.getName()).normal(" to the " + level.getName() + ".").send(sender);
     }
 
     @Override
@@ -70,11 +70,11 @@ public class GroupUninviteCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " uninvite <player> [-g " + groupLevel.getName() + "]";
+        return "/" + level.getId() + " uninvite <player> [-g " + level.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "Uninvites a player to the " + groupLevel.getName() + ".";
+        return "Uninvites a player to the " + level.getName() + ".";
     }
 }

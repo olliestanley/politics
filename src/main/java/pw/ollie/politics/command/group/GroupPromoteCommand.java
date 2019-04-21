@@ -93,7 +93,7 @@ public class GroupPromoteCommand extends GroupSubCommand {
 
         group.setRole(player.getUniqueId(), next);
         MessageBuilder.begin().highlight(player.getName()).normal(" was promoted to ").highlight(next.getName())
-                .normal(" in the ").append(groupLevel.getName()).append("!").send(sender);
+                .normal(" in the ").append(level.getName()).append("!").send(sender);
     }
 
     @Override
@@ -103,11 +103,11 @@ public class GroupPromoteCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " promote <player> [-t track] [-g " + groupLevel.getName() + "] [-u universe]";
+        return "/" + level.getId() + " promote <player> [-t track] [-g " + level.getName() + "] [-u universe]";
     }
 
     @Override
     public String getDescription() {
-        return "Promotes somebody in a " + groupLevel.getName() + ".";
+        return "Promotes somebody in a " + level.getName() + ".";
     }
 }

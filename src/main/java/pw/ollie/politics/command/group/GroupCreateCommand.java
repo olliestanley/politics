@@ -54,12 +54,12 @@ public class GroupCreateCommand extends GroupSubCommand {
 
         // Check for a founder, this would only happen if he is not a player
         if (founderName == null) {
-            throw new CommandException("The founder for the to-be-created " + groupLevel.getName()
+            throw new CommandException("The founder for the to-be-created " + level.getName()
                     + " is unknown. A founder can be specified with the `-f' option.");
         }
 
         if (args.length(false) < 1) {
-            throw new CommandException("You must specify a name for the " + groupLevel.getName() + ".");
+            throw new CommandException("You must specify a name for the " + level.getName() + ".");
         }
 
         Player founder = plugin.getServer().getPlayer(founderName);
@@ -69,11 +69,11 @@ public class GroupCreateCommand extends GroupSubCommand {
 
         Universe universe = findUniverse(sender, args);
 
-        if (!groupLevel.allowedMultiple()) {
+        if (!level.allowedMultiple()) {
             Set<Group> founderGroups = universe.getCitizenGroups(founder);
             for (Group group : founderGroups) {
-                if (group.getLevel().equals(groupLevel)) {
-                    throw new CommandException("A " + groupLevel.getName() + " may not be founded by somebody already in one.");
+                if (group.getLevel().equals(level)) {
+                    throw new CommandException("A " + level.getName() + " may not be founded by somebody already in one.");
                 }
             }
         }
@@ -86,24 +86,24 @@ public class GroupCreateCommand extends GroupSubCommand {
         String name = nameBuilder.toString().trim();
         String tag = name.toLowerCase().replace(" ", "-");
         if (plugin.getGroupManager().getGroupByTag(tag) != null) {
-            throw new CommandException("A " + groupLevel.getName() + " with the same name already exists.");
+            throw new CommandException("A " + level.getName() + " with the same name already exists.");
         }
 
         if (args.hasValueFlag("t")) {
             tag = args.getValueFlag("t").getStringValue();
         }
 
-        Group group = universe.createGroup(groupLevel);
-        group.setRole(founder.getUniqueId(), groupLevel.getFounder());
+        Group group = universe.createGroup(level);
+        group.setRole(founder.getUniqueId(), level.getFounder());
         group.setProperty(GroupProperty.NAME, name);
         group.setProperty(GroupProperty.TAG, tag);
 
         if (PoliticsEventFactory.callGroupCreateEvent(group, sender).isCancelled()) {
             universe.destroyGroup(group);
-            throw new CommandException(groupLevel.getName() + " creation denied!");
+            throw new CommandException(level.getName() + " creation denied!");
         }
 
-        MessageBuilder.begin("Your ").highlight(groupLevel.getName()).normal(" was successfully created.").send(sender);
+        MessageBuilder.begin("Your ").highlight(level.getName()).normal(" was successfully created.").send(sender);
     }
 
     @Override
@@ -118,11 +118,11 @@ public class GroupCreateCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " create <name> [-f founder] [-u universe] [-t tag]";
+        return "/" + level.getId() + " create <name> [-f founder] [-u universe] [-t tag]";
     }
 
     @Override
     public String getDescription() {
-        return "Creates a new " + groupLevel.getName() + ".";
+        return "Creates a new " + level.getName() + ".";
     }
 }

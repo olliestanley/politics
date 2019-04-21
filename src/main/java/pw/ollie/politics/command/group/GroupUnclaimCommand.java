@@ -26,7 +26,6 @@ import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.group.GroupUnclaimPlotEvent;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.message.MessageUtil;
@@ -45,7 +44,7 @@ public class GroupUnclaimCommand extends GroupSubCommand {
         Group group = findGroup(sender, args);
 
         if (!group.can(sender, Privileges.Group.UNCLAIM) && !hasAdmin(sender)) {
-            throw new CommandException("You don't have permissions to unclaim land in this " + groupLevel.getName() + ".");
+            throw new CommandException("You don't have permissions to unclaim land in this " + level.getName() + ".");
         }
 
         Location location = findLocation(sender, args);
@@ -79,11 +78,11 @@ public class GroupUnclaimCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " unclaim [-g " + groupLevel.getName() + "] [-u universe]";
+        return "/" + level.getId() + " unclaim [-g " + level.getName() + "] [-u universe]";
     }
 
     @Override
     public String getDescription() {
-        return "Unclaims land for a " + groupLevel.getName() + ".";
+        return "Unclaims land for a " + level.getName() + ".";
     }
 }

@@ -42,8 +42,8 @@ public class GroupAddCommand extends GroupSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        if (!groupLevel.hasImmediateMembers()) {
-            throw new CommandException("You cannot add to a " + groupLevel.getName() + " other than through a sub-organisation.");
+        if (!level.hasImmediateMembers()) {
+            throw new CommandException("You cannot add to a " + level.getName() + " other than through a sub-organisation.");
         }
 
         Group group = findGroup(sender, args);
@@ -62,23 +62,23 @@ public class GroupAddCommand extends GroupSubCommand {
             throw new CommandException("That player is not online.");
         }
 
-        if (!groupLevel.allowedMultiple()) {
-            Set<Group> playerGroups = plugin.getUniverseManager().getUniverse(player.getWorld(), groupLevel).getCitizenGroups(player);
+        if (!level.allowedMultiple()) {
+            Set<Group> playerGroups = plugin.getUniverseManager().getUniverse(player.getWorld(), level).getCitizenGroups(player);
             for (Group playerGroup : playerGroups) {
-                if (playerGroup.getLevel().equals(groupLevel)) {
-                    throw new CommandException("The player is already part of a " + groupLevel.getName() + ".");
+                if (playerGroup.getLevel().equals(level)) {
+                    throw new CommandException("The player is already part of a " + level.getName() + ".");
                 }
             }
         }
 
-        GroupMemberJoinEvent joinEvent = PoliticsEventFactory.callGroupMemberJoinEvent(group, player, groupLevel.getInitial());
+        GroupMemberJoinEvent joinEvent = PoliticsEventFactory.callGroupMemberJoinEvent(group, player, level.getInitial());
         if (joinEvent.isCancelled()) {
-            throw new CommandException("You may not add that player to that " + groupLevel.getName() + ".");
+            throw new CommandException("You may not add that player to that " + level.getName() + ".");
         }
 
-        group.setRole(player.getUniqueId(), groupLevel.getInitial());
-        MessageBuilder.begin("Added the player to the ").append(groupLevel.getName()).append(" with role ")
-                .highlight(groupLevel.getInitial().getName()).normal(".").send(sender);
+        group.setRole(player.getUniqueId(), level.getInitial());
+        MessageBuilder.begin("Added the player to the ").append(level.getName()).append(" with role ")
+                .highlight(level.getInitial().getName()).normal(".").send(sender);
     }
 
     @Override
@@ -88,11 +88,11 @@ public class GroupAddCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " add <player> [-g " + groupLevel.getName() + "]";
+        return "/" + level.getId() + " add <player> [-g " + level.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "Force adds a player to a " + groupLevel.getName() + ".";
+        return "Force adds a player to a " + level.getName() + ".";
     }
 }

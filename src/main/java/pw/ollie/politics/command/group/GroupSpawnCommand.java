@@ -49,18 +49,18 @@ public class GroupSpawnCommand extends GroupSubCommand {
         Group group = findGroup(sender, args);
 
         if (!group.can(sender, Privileges.Group.SPAWN) && !hasAdmin(sender)) {
-            throw new CommandException("You don't have permissions to spawn to that " + groupLevel.getName() + ".");
+            throw new CommandException("You don't have permissions to spawn to that " + level.getName() + ".");
         }
 
         RotatedPosition spawn = group.getTransformProperty(GroupProperty.SPAWN);
         if (spawn == null) {
-            throw new CommandException("The " + groupLevel.getName() + " doesn't have a spawn!");
+            throw new CommandException("The " + level.getName() + " doesn't have a spawn!");
         }
 
         Player player = null;
         String playerName = null;
         if (args.hasValueFlag("p")) {
-            if (!sender.hasPermission("politics.admin.group." + groupLevel.getId() + ".spawnother")) {
+            if (!sender.hasPermission("politics.admin.group." + level.getId() + ".spawnother")) {
                 throw new CommandException("You aren't allowed to spawn other players!");
             }
 
@@ -87,11 +87,11 @@ public class GroupSpawnCommand extends GroupSubCommand {
         player.teleport(new Location(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), spawnRot.getX(), spawnRot.getY()));
 
         if (playerName != null) {
-            MessageBuilder.begin().highlight(playerName).normal(" was teleported to the " + groupLevel.getName() + " spawn.")
+            MessageBuilder.begin().highlight(playerName).normal(" was teleported to the " + level.getName() + " spawn.")
                     .send(sender);
         }
 
-        MessageUtil.message(sender, "You have been teleported to the " + groupLevel.getName() + " spawn.");
+        MessageUtil.message(sender, "You have been teleported to the " + level.getName() + " spawn.");
     }
 
     @Override
@@ -101,11 +101,11 @@ public class GroupSpawnCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " spawn [-p player] [-g " + groupLevel.getName() + "] [-u universe]";
+        return "/" + level.getId() + " spawn [-p player] [-g " + level.getName() + "] [-u universe]";
     }
 
     @Override
     public String getDescription() {
-        return "Travel to the spawn location of a " + groupLevel.getName() + ".";
+        return "Travel to the spawn location of a " + level.getName() + ".";
     }
 }

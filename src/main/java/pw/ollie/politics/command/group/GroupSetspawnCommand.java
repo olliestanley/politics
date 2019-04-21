@@ -46,7 +46,7 @@ public class GroupSetspawnCommand extends GroupSubCommand {
         Group group = findGroup(sender, args);
 
         if (!group.can(sender, Privileges.Group.SET_SPAWN) && !hasAdmin(sender)) {
-            throw new CommandException("You don't have permissions to set the spawn of your " + groupLevel.getName() + "!");
+            throw new CommandException("You don't have permissions to set the spawn of your " + level.getName() + "!");
         }
 
         Player player;
@@ -75,7 +75,7 @@ public class GroupSetspawnCommand extends GroupSubCommand {
         }
 
         group.setProperty(GroupProperty.SPAWN, rotatedPosition);
-        MessageUtil.message(sender, "The spawn of your " + groupLevel.getName() + " was set successfully!");
+        MessageUtil.message(sender, "The spawn of your " + level.getName() + " was set successfully!");
     }
 
     @Override
@@ -85,11 +85,11 @@ public class GroupSetspawnCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " setspawn [-p player] [-g " + groupLevel.getName() + "] [-u universe]";
+        return "/" + level.getId() + " setspawn [-p player] [-g " + level.getName() + "] [-u universe]";
     }
 
     @Override
     public String getDescription() {
-        return "Sets the spawn location for a " + groupLevel.getName() + ".";
+        return "Sets the spawn location for a " + level.getName() + ".";
     }
 }

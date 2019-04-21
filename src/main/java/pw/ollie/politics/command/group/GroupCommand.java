@@ -24,30 +24,30 @@ import pw.ollie.politics.command.PoliticsBaseCommand;
 import pw.ollie.politics.group.level.GroupLevel;
 
 public final class GroupCommand extends PoliticsBaseCommand {
-    public GroupCommand(PoliticsPlugin plugin, GroupLevel groupLevel) {
-        super(plugin, groupLevel.getName(), "Base command for " + groupLevel.getName() + "-related actions.");
+    public GroupCommand(PoliticsPlugin plugin, GroupLevel level) {
+        super(plugin, level.getName(), "Base command for " + level.getName() + "-related actions.");
 
-        this.registerSubCommand(new GroupAddCommand(groupLevel));
-        this.registerSubCommand(new GroupClaimCommand(groupLevel));
-        this.registerSubCommand(new GroupCreateCommand(groupLevel));
-        this.registerSubCommand(new GroupDemoteCommand(groupLevel));
-        this.registerSubCommand(new GroupDestroyCommand(groupLevel));
-        this.registerSubCommand(new GroupHelpCommand(groupLevel));
-        this.registerSubCommand(new GroupInfoCommand(groupLevel));
-        this.registerSubCommand(new GroupInviteCommand(groupLevel));
-        this.registerSubCommand(new GroupJoinCommand(groupLevel));
-        this.registerSubCommand(new GroupKickCommand(groupLevel));
-        this.registerSubCommand(new GroupLeaveCommand(groupLevel));
-        this.registerSubCommand(new GroupListCommand(groupLevel));
-        this.registerSubCommand(new GroupManageCommand(groupLevel));
-        this.registerSubCommand(new GroupMotdCommand(groupLevel));
-        this.registerSubCommand(new GroupOnlineCommand(groupLevel));
-        this.registerSubCommand(new GroupPromoteCommand(groupLevel));
-        this.registerSubCommand(new GroupSetroleCommand(groupLevel));
-        this.registerSubCommand(new GroupSetspawnCommand(groupLevel));
-        this.registerSubCommand(new GroupSpawnCommand(groupLevel));
-        this.registerSubCommand(new GroupToggleCommand(groupLevel));
-        this.registerSubCommand(new GroupUnclaimCommand(groupLevel));
-        this.registerSubCommand(new GroupUninviteCommand(groupLevel));
+        this.registerSubCommand(new GroupAddCommand(level));
+        this.registerSubCommand(new GroupClaimCommand(level));
+        this.registerSubCommand(new GroupCreateCommand(level));
+        this.registerSubCommand(new GroupDemoteCommand(level));
+        this.registerSubCommand(new GroupDestroyCommand(level));
+        this.registerSubCommand(new GroupHelpCommand(level));
+        this.registerSubCommand(new GroupInfoCommand(level));
+        this.registerSubCommand(new GroupInviteCommand(level));
+        this.registerSubCommand(new GroupJoinCommand(level));
+        this.registerSubCommand(new GroupKickCommand(level));
+        this.registerSubCommand(new GroupLeaveCommand(level));
+        this.registerSubCommand(new GroupListCommand(level));
+        this.registerSubCommand(new GroupManageCommand(level));
+        this.registerSubCommand(new GroupMotdCommand(level));
+        this.registerSubCommand(new GroupOnlineCommand(level));
+        this.registerSubCommand(new GroupPromoteCommand(level));
+        this.registerSubCommand(new GroupSetroleCommand(level));
+        this.registerSubCommand(new GroupSetspawnCommand(level));
+        this.registerSubCommand(new GroupSpawnCommand(level));
+        this.registerSubCommand(new GroupToggleCommand(level));
+        this.registerSubCommand(new GroupUnclaimCommand(level));
+        this.registerSubCommand(new GroupUninviteCommand(level));
     }
 }

@@ -80,7 +80,7 @@ public class GroupSetroleCommand extends GroupSubCommand {
 
         group.setRole(player.getUniqueId(), role);
         MessageBuilder.begin().highlight(player.getName()).normal(" had their role set to ").highlight(role.getName())
-                .normal(" in the ").append(groupLevel.getName()).append("!").send(sender);
+                .normal(" in the ").append(level.getName()).append("!").send(sender);
     }
 
     @Override
@@ -90,11 +90,11 @@ public class GroupSetroleCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " setrole <player> <role> [-g group] [-u universe]";
+        return "/" + level.getId() + " setrole <player> <role> [-g group] [-u universe]";
     }
 
     @Override
     public String getDescription() {
-        return "Sets somebody's role in a " + groupLevel.getName() + ".";
+        return "Sets somebody's role in a " + level.getName() + ".";
     }
 }

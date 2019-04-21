@@ -40,18 +40,18 @@ public class GroupInviteCommand extends GroupSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        if (!groupLevel.hasImmediateMembers()) {
-            throw new CommandException("You cannot invite to a " + groupLevel.getName() + " other than through a sub-organisation.");
+        if (!level.hasImmediateMembers()) {
+            throw new CommandException("You cannot invite to a " + level.getName() + " other than through a sub-organisation.");
         }
 
         Group group = findGroup(sender, args);
 
         if (!group.can(sender, Privileges.Group.INVITE)) {
-            throw new CommandException("You don't have permission to invite to the " + groupLevel.getName() + ".");
+            throw new CommandException("You don't have permission to invite to the " + level.getName() + ".");
         }
 
         if (group.getBooleanProperty(GroupProperty.OPEN, false)) {
-            throw new CommandException("The " + groupLevel.getName() + " is open to join without invitation.");
+            throw new CommandException("The " + level.getName() + " is open to join without invitation.");
         }
 
         if (args.length(false) < 1) {
@@ -70,7 +70,7 @@ public class GroupInviteCommand extends GroupSubCommand {
 
         group.addInvitation(playerId);
         MessageBuilder.begin("Successfully invited ").highlight(player.getName()).normal(" to the ")
-                .highlight(groupLevel.getName()).normal(".").send(sender);
+                .highlight(level.getName()).normal(".").send(sender);
     }
 
     @Override
@@ -80,11 +80,11 @@ public class GroupInviteCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " invite <player> [-g " + groupLevel.getName() + "]";
+        return "/" + level.getId() + " invite <player> [-g " + level.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "Invites a player to the " + groupLevel.getName() + ".";
+        return "Invites a player to the " + level.getName() + ".";
     }
 }

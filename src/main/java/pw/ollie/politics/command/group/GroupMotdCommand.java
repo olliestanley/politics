@@ -42,7 +42,7 @@ public class GroupMotdCommand extends GroupSubCommand {
 
         if (args.length(false) > 0) {
             if (!group.can(sender, Privileges.Group.SET_INFO) && !hasAdmin(sender)) {
-                throw new CommandException("You don't have permissions to set the MOTD of your " + groupLevel.getName() + "!");
+                throw new CommandException("You don't have permissions to set the MOTD of your " + level.getName() + "!");
             }
 
             StringBuilder motdBuilder = new StringBuilder();
@@ -51,13 +51,13 @@ public class GroupMotdCommand extends GroupSubCommand {
             }
 
             group.setProperty(GroupProperty.MOTD, motdBuilder.toString());
-            MessageUtil.message(sender, "The MOTD of your " + groupLevel.getName() + " was set successfully!");
+            MessageUtil.message(sender, "The MOTD of your " + level.getName() + " was set successfully!");
         } else {
             if (sender instanceof Player && !group.isMember(((Player) sender).getUniqueId())) {
                 throw new CommandException("You must be a member of the group to view its MOTD.");
             }
 
-            MessageUtil.message(sender, group.getStringProperty(GroupProperty.MOTD, "The " + groupLevel.getName() + " has no MOTD."));
+            MessageUtil.message(sender, group.getStringProperty(GroupProperty.MOTD, "The " + level.getName() + " has no MOTD."));
         }
     }
 
@@ -68,11 +68,11 @@ public class GroupMotdCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " motd [-g " + groupLevel.getName() + "]";
+        return "/" + level.getId() + " motd [-g " + level.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "View or set the MOTD for a " + groupLevel.getName() + ".";
+        return "View or set the MOTD for a " + level.getName() + ".";
     }
 }

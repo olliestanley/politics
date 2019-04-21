@@ -35,15 +35,15 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public abstract class GroupSubCommand extends PoliticsSubCommand {
-    protected final GroupLevel groupLevel;
+    protected final GroupLevel level;
 
-    protected GroupSubCommand(String name, GroupLevel groupLevel) {
+    protected GroupSubCommand(String name, GroupLevel level) {
         super(name);
-        this.groupLevel = groupLevel;
+        this.level = level;
     }
 
     protected String getBasePermissionNode() {
-        return "politics.group." + groupLevel.getId();
+        return "politics.group." + level.getId();
     }
 
     protected Citizen getCitizen(Player player) {
@@ -55,7 +55,7 @@ public abstract class GroupSubCommand extends PoliticsSubCommand {
     }
 
     protected Universe getUniverse(Player player) {
-        return Politics.getUniverseManager().getUniverse(player.getWorld(), groupLevel);
+        return Politics.getUniverseManager().getUniverse(player.getWorld(), level);
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class GroupSubCommand extends PoliticsSubCommand {
         if (sender instanceof Player) {
             universe = getUniverse((Player) sender);
             if (universe == null) {
-                throw new CommandException("You aren't currently in a universe containing " + groupLevel.getPlural() + ".");
+                throw new CommandException("You aren't currently in a universe containing " + level.getPlural() + ".");
             }
         } else {
             throw new CommandException("You must specify a universe.");
@@ -102,17 +102,17 @@ public abstract class GroupSubCommand extends PoliticsSubCommand {
         Group group;
         if (context.hasValueFlag("g")) {
             String groupName = context.getValueFlag("g").getStringValue();
-            group = universe.getFirstGroupByProperty(groupLevel, GroupProperty.TAG, groupName.toLowerCase());
+            group = universe.getFirstGroupByProperty(level, GroupProperty.TAG, groupName.toLowerCase());
             return group;
         }
 
         if (sender instanceof Player) {
-            group = getCitizen((Player) sender).getGroup(groupLevel);
+            group = getCitizen((Player) sender).getGroup(level);
             if (group == null) {
-                throw new CommandException("You aren't currently in a " + groupLevel.getName() + ".");
+                throw new CommandException("You aren't currently in a " + level.getName() + ".");
             }
         } else {
-            throw new CommandException("You must specify a " + groupLevel.getName() + ".");
+            throw new CommandException("You must specify a " + level.getName() + ".");
         }
 
         return group;

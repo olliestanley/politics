@@ -27,7 +27,6 @@ import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.group.GroupClaimPlotEvent;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.Position;
@@ -44,14 +43,14 @@ public class GroupClaimCommand extends GroupSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        if (!groupLevel.canOwnLand()) {
-            throw new CommandException(groupLevel.getPlural() + " cannot claim land other than through sub-organisations.");
+        if (!level.canOwnLand()) {
+            throw new CommandException(level.getPlural() + " cannot claim land other than through sub-organisations.");
         }
 
         Group group = findGroup(sender, args);
 
         if (!group.can(sender, Privileges.Group.CLAIM) && !hasAdmin(sender)) {
-            throw new CommandException("You don't have permissions to claim land in this " + groupLevel.getName() + ".");
+            throw new CommandException("You don't have permissions to claim land in this " + level.getName() + ".");
         }
 
         Location location = findLocation(sender, args);
@@ -94,11 +93,11 @@ public class GroupClaimCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " claim [-g " + groupLevel.getName() + "] [-u universe]";
+        return "/" + level.getId() + " claim [-g " + level.getName() + "] [-u universe]";
     }
 
     @Override
     public String getDescription() {
-        return "Claims land for a " + groupLevel.getName() + ".";
+        return "Claims land for a " + level.getName() + ".";
     }
 }

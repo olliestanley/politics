@@ -67,7 +67,7 @@ public class GroupKickCommand extends GroupSubCommand {
                 group.removeRole(playerId);
                 MessageUtil.message(sender, "Successfully removed the player.");
             } else {
-                throw new CommandException("That player is not a member of the " + groupLevel.getName() + ".");
+                throw new CommandException("That player is not a member of the " + level.getName() + ".");
             }
 
             return;
@@ -91,7 +91,7 @@ public class GroupKickCommand extends GroupSubCommand {
                         group.removeRole(offlinePlayerId);
                         MessageUtil.message(sender, "Successfully removed the player.");
                     } else {
-                        MessageBuilder.beginError().append("That player is not a member of the " + groupLevel.getName() + ".").send(sender);
+                        MessageBuilder.beginError().append("That player is not a member of the " + level.getName() + ".").send(sender);
                     }
                 }
             });
@@ -105,11 +105,11 @@ public class GroupKickCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " kick <player> [-g " + groupLevel.getName() + "]";
+        return "/" + level.getId() + " kick <player> [-g " + level.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "Kicks a player from the " + groupLevel.getName() + ".";
+        return "Kicks a player from the " + level.getName() + ".";
     }
 }

@@ -24,7 +24,6 @@ import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Argument;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.util.collect.PagedArrayList;
 import pw.ollie.politics.util.collect.PagedList;
@@ -80,11 +79,11 @@ public class GroupOnlineCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " online [-g " + groupLevel.getName() + "]";
+        return "/" + level.getId() + " online [-g " + level.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "Lists online players in the " + groupLevel.getName() + ".";
+        return "Lists online players in the " + level.getName() + ".";
     }
 }

@@ -40,7 +40,7 @@ public class GroupToggleCommand extends GroupSubCommand {
         Group group = findGroup(sender, args);
 
         if (!group.can(sender, Privileges.Group.TOGGLES) && !hasAdmin(sender)) {
-            throw new CommandException("You aren't allowed to toggle that " + groupLevel.getName() + "'s settings.");
+            throw new CommandException("You aren't allowed to toggle that " + level.getName() + "'s settings.");
         }
 
         if (args.length(false) < 1) {
@@ -66,11 +66,11 @@ public class GroupToggleCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " toggle <toggle> [-g" + groupLevel.getName() + "]";
+        return "/" + level.getId() + " toggle <toggle> [-g" + level.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "Toggle settings for the " + groupLevel.getName() + ".";
+        return "Toggle settings for the " + level.getName() + ".";
     }
 }

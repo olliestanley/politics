@@ -46,9 +46,9 @@ public class GroupListCommand extends GroupSubCommand {
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Universe universe = findUniverse(sender, args);
 
-        List<Group> groups = universe.getGroups(groupLevel);
+        List<Group> groups = universe.getGroups(level);
         if (groups.isEmpty()) {
-            throw new CommandException("There are no " + groupLevel.getPlural() + "!");
+            throw new CommandException("There are no " + level.getPlural() + "!");
         }
 
         int page = 1;
@@ -66,7 +66,7 @@ public class GroupListCommand extends GroupSubCommand {
             throw new CommandException("There are only " + paged.pages() + " pages!");
         }
 
-        MessageBuilder message = MessageUtil.startBlockMessage(groupLevel.getPlural().toUpperCase());
+        MessageBuilder message = MessageUtil.startBlockMessage(level.getPlural().toUpperCase());
         List<Group> pageGroups = paged.getPage(page);
         for (Group group : pageGroups) {
             message.newLine().highlight().append(group.getName());
@@ -81,11 +81,11 @@ public class GroupListCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " list [page]";
+        return "/" + level.getId() + " list [page]";
     }
 
     @Override
     public String getDescription() {
-        return "Provides a list of " + groupLevel.getPlural() + ".";
+        return "Provides a list of " + level.getPlural() + ".";
     }
 }

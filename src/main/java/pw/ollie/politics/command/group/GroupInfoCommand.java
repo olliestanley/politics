@@ -42,7 +42,7 @@ public class GroupInfoCommand extends GroupSubCommand {
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
 
-        MessageBuilder message = MessageUtil.startBlockMessage(groupLevel.getName() + " Info");
+        MessageBuilder message = MessageUtil.startBlockMessage(level.getName() + " Info");
         message.newLine().normal("Name: ").highlight(group.getName());
         message.newLine().normal("Tag: ").highlight(group.getTag());
         message.newLine().normal("Members: ").highlight(Integer.toString(group.getPlayers().size()));
@@ -62,11 +62,11 @@ public class GroupInfoCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " info [-g " + groupLevel.getName() + "]";
+        return "/" + level.getId() + " info [-g " + level.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "Provides information about a " + groupLevel.getName() + ".";
+        return "Provides information about a " + level.getName() + ".";
     }
 }

@@ -42,37 +42,37 @@ public class GroupJoinCommand extends GroupSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        if (!groupLevel.hasImmediateMembers()) {
-            throw new CommandException("You cannot join a " + groupLevel.getName() + " other than through a sub-organisation.");
+        if (!level.hasImmediateMembers()) {
+            throw new CommandException("You cannot join a " + level.getName() + " other than through a sub-organisation.");
         }
 
         if (args.length(false) < 1) {
-            throw new CommandException("There was no " + groupLevel.getName() + " specified to join.");
+            throw new CommandException("There was no " + level.getName() + " specified to join.");
         }
 
         Group group = plugin.getGroupManager().getGroupByTag(args.getString(0, false));
         if (group == null) {
-            throw new CommandException("That " + groupLevel.getName() + " does not exist.");
+            throw new CommandException("That " + level.getName() + " does not exist.");
         }
 
         // safe cast as isPlayerOnly() returns true
         Player player = (Player) sender;
-        if (!groupLevel.allowedMultiple()) {
-            Set<Group> playerGroups = plugin.getUniverseManager().getUniverse(player.getWorld(), groupLevel).getCitizenGroups(player);
+        if (!level.allowedMultiple()) {
+            Set<Group> playerGroups = plugin.getUniverseManager().getUniverse(player.getWorld(), level).getCitizenGroups(player);
             for (Group playerGroup : playerGroups) {
-                if (playerGroup.getLevel().equals(groupLevel)) {
-                    throw new CommandException("You are already part of a " + groupLevel.getName() + ".");
+                if (playerGroup.getLevel().equals(level)) {
+                    throw new CommandException("You are already part of a " + level.getName() + ".");
                 }
             }
         }
 
         if (!group.getBooleanProperty(GroupProperty.OPEN, false) && !group.isInvited(player)) {
-            throw new CommandException("That " + groupLevel.getName() + " is closed and you don't have an invitation.");
+            throw new CommandException("That " + level.getName() + " is closed and you don't have an invitation.");
         }
 
-        GroupMemberJoinEvent joinEvent = PoliticsEventFactory.callGroupMemberJoinEvent(group, player, groupLevel.getInitial());
+        GroupMemberJoinEvent joinEvent = PoliticsEventFactory.callGroupMemberJoinEvent(group, player, level.getInitial());
         if (joinEvent.isCancelled()) {
-            throw new CommandException("You may not join that " + groupLevel.getName() + ".");
+            throw new CommandException("You may not join that " + level.getName() + ".");
         }
 
         UUID playerId = player.getUniqueId();
@@ -88,12 +88,12 @@ public class GroupJoinCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " join <" + groupLevel.getName() + ">";
+        return "/" + level.getId() + " join <" + level.getName() + ">";
     }
 
     @Override
     public String getDescription() {
-        return "Joins the " + groupLevel.getName() + ".";
+        return "Joins the " + level.getName() + ".";
     }
 
     @Override

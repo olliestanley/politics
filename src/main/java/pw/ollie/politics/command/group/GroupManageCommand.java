@@ -26,7 +26,6 @@ import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupAffiliationRequest;
-import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.universe.Universe;
@@ -57,7 +56,7 @@ public class GroupManageCommand extends GroupSubCommand {
         Group group = findGroup(sender, args);
 
         if (!group.can(sender, Privileges.Group.MANAGE)) {
-            throw new CommandException("You don't have permission to do that in your " + groupLevel.getName() + ".");
+            throw new CommandException("You don't have permission to do that in your " + level.getName() + ".");
         }
 
         if (args.length(false) < 1) {
@@ -99,19 +98,19 @@ public class GroupManageCommand extends GroupSubCommand {
         @Override
         public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args, Group group) throws CommandException {
             if (args.length() < 1) {
-                throw new CommandException("There was no " + groupLevel.getName() + " specified to invite.");
+                throw new CommandException("There was no " + level.getName() + " specified to invite.");
             }
 
             String invitedGroupTag = args.getString(0, false);
             Group invited = plugin.getGroupManager().getGroupByTag(invitedGroupTag);
             if (invited == null) {
-                throw new CommandException("No " + groupLevel.getName() + " with that tag exists.");
+                throw new CommandException("No " + level.getName() + " with that tag exists.");
             }
 
             Player player = (Player) sender;
-            Universe universe = plugin.getUniverseManager().getUniverse(player.getWorld(), groupLevel);
+            Universe universe = plugin.getUniverseManager().getUniverse(player.getWorld(), level);
             if (!universe.getGroups().contains(invited)) {
-                throw new CommandException(invited.getName() + " does not exist in the same universe as " + groupLevel.getPlural() + ".");
+                throw new CommandException(invited.getName() + " does not exist in the same universe as " + level.getPlural() + ".");
             }
             if (!(group.getLevel().getRank() > invited.getLevel().getRank())) {
                 throw new CommandException("A " + group.getLevel().getName() + " cannot have " + invited.getLevel().getPlural() + " as sub-organisations.");
@@ -119,9 +118,9 @@ public class GroupManageCommand extends GroupSubCommand {
 
             GroupAffiliationRequest affiliationRequest = new GroupAffiliationRequest(group.getUid(), invited.getUid());
             if (plugin.getGroupManager().addAffiliationRequest(affiliationRequest)) {
-                MessageBuilder.begin("The ").highlight(groupLevel.getName()).normal(" was successfully invited.").send(sender);
+                MessageBuilder.begin("The ").highlight(level.getName()).normal(" was successfully invited.").send(sender);
             } else {
-                throw new CommandException("That " + groupLevel.getName() + " cannot be invited as a child of yours.");
+                throw new CommandException("That " + level.getName() + " cannot be invited as a child of yours.");
             }
         }
     }
@@ -134,7 +133,7 @@ public class GroupManageCommand extends GroupSubCommand {
         @Override
         public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args, Group group) throws CommandException {
             if (args.length() < 1) {
-                throw new CommandException("There was no " + groupLevel.getName() + " specified to join.");
+                throw new CommandException("There was no " + level.getName() + " specified to join.");
             }
 
             if (group.getParent() != null) {
@@ -144,7 +143,7 @@ public class GroupManageCommand extends GroupSubCommand {
             String parentTag = args.getString(0, false);
             Group parent = plugin.getGroupManager().getGroupByTag(parentTag);
             if (parent == null) {
-                throw new CommandException("No " + groupLevel.getName() + " with that tag exists.");
+                throw new CommandException("No " + level.getName() + " with that tag exists.");
             }
 
             Set<GroupAffiliationRequest> affiliationRequests = plugin.getGroupManager().getAffiliationRequests(group.getUid());
@@ -159,7 +158,7 @@ public class GroupManageCommand extends GroupSubCommand {
                 MessageBuilder.begin().highlight(parent.getName()).normal(" has successfully joined ")
                         .highlight(group.getName()).normal(" as a sub-organisation.").send(sender);
             } else {
-                throw new CommandException("Your " + groupLevel.getName() + " cannot be a child of that " + parent.getLevel().getName());
+                throw new CommandException("Your " + level.getName() + " cannot be a child of that " + parent.getLevel().getName());
             }
         }
     }
@@ -172,13 +171,13 @@ public class GroupManageCommand extends GroupSubCommand {
         @Override
         public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args, Group group) throws CommandException {
             if (args.length() < 1) {
-                throw new CommandException("There was no " + groupLevel.getName() + " specified to join.");
+                throw new CommandException("There was no " + level.getName() + " specified to join.");
             }
 
             String otherTag = args.getString(0, false);
             Group other = plugin.getGroupManager().getGroupByTag(otherTag);
             if (other == null) {
-                throw new CommandException("No " + groupLevel.getName() + " with that tag exists.");
+                throw new CommandException("No " + level.getName() + " with that tag exists.");
             }
 
             if (group.equals(other.getParent())) {
@@ -212,12 +211,12 @@ public class GroupManageCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " manage <invite/join/disaffiliate> [args...] [-g " + groupLevel.getName() + "]";
+        return "/" + level.getId() + " manage <invite/join/disaffiliate> [args...] [-g " + level.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "Allows management of the " + groupLevel.getName() + ", such as inviting sub-" + groupLevel.getPlural() + ".";
+        return "Allows management of the " + level.getName() + ", such as inviting sub-" + level.getPlural() + ".";
     }
 
     @Override

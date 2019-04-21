@@ -43,7 +43,7 @@ public class GroupHelpCommand extends GroupSubCommand {
             }
         }
 
-        PoliticsCommandHelper.sendCommandHelp(sender, plugin.getCommandManager().getRegisteredCommand(groupLevel.getId()), pageNumber);
+        PoliticsCommandHelper.sendCommandHelp(sender, plugin.getCommandManager().getRegisteredCommand(level.getId()), pageNumber);
     }
 
     @Override
@@ -53,11 +53,11 @@ public class GroupHelpCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " help";
+        return "/" + level.getId() + " help";
     }
 
     @Override
     public String getDescription() {
-        return "Provides help for " + groupLevel.getName() + " commands";
+        return "Provides help for " + level.getName() + " commands";
     }
 }

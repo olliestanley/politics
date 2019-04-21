@@ -23,7 +23,6 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.message.MessageBuilder;
@@ -47,7 +46,7 @@ public class GroupDestroyCommand extends GroupSubCommand {
         }
 
         group.getUniverse().destroyGroup(group);
-        MessageBuilder.begin("The " + groupLevel.getName() + " ").highlight(group.getName())
+        MessageBuilder.begin("The " + level.getName() + " ").highlight(group.getName())
                 .normal(" has been disbanded.").send(sender);
     }
 
@@ -63,11 +62,11 @@ public class GroupDestroyCommand extends GroupSubCommand {
 
     @Override
     public String getUsage() {
-        return "/" + groupLevel.getId() + " destroy <group>";
+        return "/" + level.getId() + " destroy <group>";
     }
 
     @Override
     public String getDescription() {
-        return "Destroys a " + groupLevel.getName() + ".";
+        return "Destroys a " + level.getName() + ".";
     }
 }
