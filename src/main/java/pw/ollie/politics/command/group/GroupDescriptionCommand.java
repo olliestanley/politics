@@ -34,9 +34,9 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 
-public class GroupMotdCommand extends GroupSubCommand {
-    GroupMotdCommand(GroupLevel groupLevel) {
-        super("motd", groupLevel);
+public class GroupDescriptionCommand extends GroupSubCommand {
+    GroupDescriptionCommand(GroupLevel groupLevel) {
+        super("description", groupLevel);
     }
 
     @Override
@@ -45,42 +45,42 @@ public class GroupMotdCommand extends GroupSubCommand {
 
         if (args.length(false) > 0) {
             if (!group.can(sender, Privileges.Group.SET_INFO) && !hasAdmin(sender)) {
-                throw new CommandException("You don't have permissions to set the MOTD of your " + level.getName() + "!");
+                throw new CommandException("You don't have permissions to set the description of your " + level.getName() + "!");
             }
 
-            StringBuilder motdBuilder = new StringBuilder();
+            StringBuilder descriptionBuilder = new StringBuilder();
             for (int i = 0; i < args.length(false); i++) {
-                motdBuilder.append(args.getString(i, false)).append(' ');
+                descriptionBuilder.append(args.getString(i, false)).append(' ');
             }
 
-            group.setProperty(GroupProperty.MOTD, motdBuilder.toString());
-            MessageUtil.message(sender, "The MOTD of your " + level.getName() + " was set successfully!");
+            group.setProperty(GroupProperty.DESCRIPTION, descriptionBuilder.toString());
+            MessageUtil.message(sender, "The description of your " + level.getName() + " was set successfully!");
         } else {
             if (sender instanceof Player && !group.isMember(((Player) sender).getUniqueId())) {
                 throw new CommandException("You must be a member of the group to view its MOTD.");
             }
 
-            MessageUtil.message(sender, group.getStringProperty(GroupProperty.MOTD, "The " + level.getName() + " has no MOTD."));
+            MessageUtil.message(sender, group.getStringProperty(GroupProperty.DESCRIPTION, "The " + level.getName() + " has no description."));
         }
     }
 
     @Override
     public String getPermission() {
-        return getBasePermissionNode() + ".motd";
+        return getBasePermissionNode() + ".description";
     }
 
     @Override
     public String getUsage() {
-        return "/" + level.getId() + " motd [-g " + level.getName() + "]";
+        return "/" + level.getId() + " description [-g " + level.getName() + "]";
     }
 
     @Override
     public String getDescription() {
-        return "View or set the MOTD for a " + level.getName() + ".";
+        return "View or set the description for a " + level.getName() + ".";
     }
 
     @Override
     public List<String> getAliases() {
-        return Collections.singletonList("message");
+        return Collections.singletonList("desc");
     }
 }
