@@ -223,12 +223,38 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.10</version>
+      <version>4.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>1.7.1</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
+          <artifactId>powermock-module-junit4-common</artifactId>
+          <groupId>org.powermock</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>hamcrest-core</artifactId>
           <groupId>org.hamcrest</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito2</artifactId>
+      <version>1.7.1</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>powermock-api-mockito-common</artifactId>
+          <groupId>org.powermock</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>mockito-core</artifactId>
+          <groupId>org.mockito</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -237,6 +263,7 @@
     <apiVersion>dev-SNAPSHOT</apiVersion>
     <mainClass>pw.ollie.politics.PoliticsPlugin</mainClass>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <powermock.version>1.7.1</powermock.version>
     <buildNumber>0</buildNumber>
     <github.global.server>github</github.global.server>
   </properties>

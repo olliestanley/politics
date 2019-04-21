@@ -30,6 +30,10 @@ public final class WarManager {
     private final Set<War> activeWars;
 
     public WarManager(PoliticsPlugin plugin) {
+        if (!plugin.getPoliticsConfig().areWarsEnabled()) {
+            throw new IllegalStateException("attempt to create war manager when wars are not enabled");
+        }
+
         this.plugin = plugin;
         this.activeWars = new THashSet<>();
     }

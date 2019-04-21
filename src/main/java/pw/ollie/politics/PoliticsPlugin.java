@@ -30,8 +30,6 @@ import pw.ollie.politics.util.visualise.Visualiser;
 import pw.ollie.politics.war.WarManager;
 import pw.ollie.politics.world.WorldManager;
 
-import org.bukkit.Server;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PoliticsPlugin extends JavaPlugin {
@@ -90,9 +88,7 @@ public final class PoliticsPlugin extends JavaPlugin {
 
         this.visualiser = new Visualiser(this);
 
-        Server server = this.getServer();
-        PluginManager pluginManager = server.getPluginManager();
-        pluginManager.registerEvents(new PoliticsListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new PoliticsListener(this), this);
     }
 
     @Override
