@@ -22,8 +22,11 @@ package pw.ollie.politics.command.subplot;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.util.visualise.Visualisation;
+import pw.ollie.politics.world.plot.Subplot;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class SubplotViewCommand extends SubplotSubCommand {
     SubplotViewCommand() {
@@ -32,8 +35,12 @@ public class SubplotViewCommand extends SubplotSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        // todo
-        // use fake blocks to show the outline of the subplot the player is in
+        Subplot subplot = findSubplot(sender, args);
+        Player player = (Player) sender;
+        Visualisation visualisation = plugin.getVisualiser().visualiseSubplot(subplot);
+        if (!visualisation.apply(plugin.getVisualiser(), player)) {
+            throw new CommandException("You must complete or cancel your current activity first.");
+        }
     }
 
     @Override
@@ -49,5 +56,10 @@ public class SubplotViewCommand extends SubplotSubCommand {
     @Override
     public String getDescription() {
         return "Visualise the outline of your current subplot";
+    }
+
+    @Override
+    public boolean isPlayerOnly() {
+        return true;
     }
 }
