@@ -45,7 +45,7 @@ public class PlotOwnerChangeEvent extends PlotEvent implements Cancellable {
     }
 
     public Group getGroup() {
-        return Politics.getUniverseManager().getGroupById(group);
+        return Politics.getGroupById(group);
     }
 
     public boolean isAdd() {

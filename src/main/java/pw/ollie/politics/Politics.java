@@ -20,12 +20,15 @@
 package pw.ollie.politics;
 
 import pw.ollie.politics.activity.ActivityManager;
+import pw.ollie.politics.command.PoliticsCommandManager;
 import pw.ollie.politics.data.PoliticsFileSystem;
+import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.message.ColourScheme;
 import pw.ollie.politics.util.visualise.Visualiser;
+import pw.ollie.politics.war.WarManager;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldManager;
 
@@ -75,16 +78,28 @@ public final class Politics {
         return Politics.getPlugin().getActivityManager();
     }
 
+    public static WarManager getWarManager() {
+        return Politics.getPlugin().getWarManager();
+    }
+
+    public static PoliticsCommandManager getCommandManager() {
+        return Politics.getPlugin().getCommandManager();
+    }
+
     public static Visualiser getVisualiser() {
         return Politics.getPlugin().getVisualiser();
     }
 
     public static PoliticsWorld getWorld(World world) {
-        return Politics.getPlugin().getWorldManager().getWorld(world);
+        return Politics.getWorldManager().getWorld(world);
     }
 
     public static PoliticsWorld getWorld(String world) {
-        return Politics.getPlugin().getWorldManager().getWorld(world);
+        return Politics.getWorldManager().getWorld(world);
+    }
+
+    public static Group getGroupById(int id) {
+        return Politics.getUniverseManager().getGroupById(id);
     }
 
     public static Logger getLogger() {

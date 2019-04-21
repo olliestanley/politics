@@ -32,7 +32,7 @@ public final class War {
     }
 
     public Group getAggressor() {
-        return Politics.getGroupManager().getGroupById(aggressor);
+        return Politics.getGroupById(aggressor);
     }
 
     public int getAggressorId() {
@@ -40,7 +40,7 @@ public final class War {
     }
 
     public Group getDefender() {
-        return Politics.getGroupManager().getGroupById(defender);
+        return Politics.getGroupById(defender);
     }
 
     public int getDefenderId() {
