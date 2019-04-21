@@ -45,6 +45,7 @@ public class GroupInfoCommand extends GroupSubCommand {
         MessageBuilder message = MessageUtil.startBlockMessage(level.getName() + " Info");
         message.newLine().normal("Name: ").highlight(group.getName());
         message.newLine().normal("Tag: ").highlight(group.getTag());
+        message.newLine().normal("Description: ").highlight(group.getStringProperty(GroupProperty.DESCRIPTION));
         message.newLine().normal("Members: ").highlight(Integer.toString(group.getPlayers().size()));
         message.newLine().normal("Open: ").highlight(group.getBooleanProperty(GroupProperty.OPEN, false) ? "Yes" : "No");
         message.send(sender);
