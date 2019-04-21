@@ -21,6 +21,7 @@ package pw.ollie.politics.util.math;
 
 import pw.ollie.politics.util.Position;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -160,4 +161,9 @@ public class Cuboid {
         return cuboid.size.getX() == size.getX() && cuboid.size.getY() == size.getY() && cuboid.size.getZ() == size.getZ() && cuboid.getWorld().equals(getWorld()) && cuboid.base.getX() == base.getX() && cuboid.base.getY() == base.getY() && cuboid.base.getZ() == base.getZ();
     }
 
+    public static Cuboid fromChunk(Chunk chunk) {
+        Location min = new Location(chunk.getWorld(), chunk.getX() * 16, 0, chunk.getZ() * 16);
+        Location max = new Location(chunk.getWorld(), (chunk.getX() * 16) + 15, 255, (chunk.getZ() * 16) + 15);
+        return new Cuboid(min, max);
+    }
 }

@@ -49,6 +49,10 @@ public class Vector3i implements Serializable {
         return z;
     }
 
+    public Vector3i divide(float i) {
+        return new Vector3i((int) (x / i), (int) (y / i), (int) (z / i));
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

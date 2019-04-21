@@ -20,9 +20,14 @@
 package pw.ollie.politics.util.visualise;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.Subplot;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -45,14 +50,32 @@ public final class Visualiser {
     }
 
     public Visualisation visualisePlot(Plot plot) {
-        Set<VisualisedBlock> blocks = new HashSet<>();
-        // todo
-        return new Visualisation(blocks);
+        return visualiseCuboid(Cuboid.fromChunk(plot.getChunk()), Material.BLUE_STAINED_GLASS.createBlockData());
     }
 
     public Visualisation visualiseSubplot(Subplot subplot) {
+        return visualiseCuboid(subplot.getCuboid(), Material.YELLOW_STAINED_GLASS.createBlockData());
+    }
+
+    public Visualisation visualiseCuboid(Cuboid cuboid, BlockData fake) {
         Set<VisualisedBlock> blocks = new HashSet<>();
-        // todo
+        World world = cuboid.getWorld();
+
+        for (int x = cuboid.getMinX(); x <= cuboid.getMaxX(); x++) {
+            for (int z = cuboid.getMinZ(); z <= cuboid.getMaxZ(); z++) {
+                for (int y = cuboid.getMinY(); y <= cuboid.getMaxY(); y++) {
+                    if (!(y == cuboid.getMinY() || y == cuboid.getMaxY()
+                            || x == cuboid.getMinX() || x == cuboid.getMaxX()
+                            || z == cuboid.getMinZ() || z == cuboid.getMaxZ())) {
+                        continue;
+                    }
+
+                    Location location = new Location(world, x, y, z);
+                    blocks.add(new VisualisedBlock(location, fake, location.getBlock().getBlockData()));
+                }
+            }
+        }
+
         return new Visualisation(blocks);
     }
 

@@ -104,7 +104,7 @@ public class Visualisation {
         blocks.removeIf(b -> b.getLocation().equals(location));
     }
 
-    private void removeOutOfRange(int minX, int minZ, int maxX, int maxZ) {
+    void removeOutOfRange(int minX, int minZ, int maxX, int maxZ) {
         blocks.removeIf(b -> b.getX() < minX || b.getX() > maxX || b.getZ() < minZ || b.getZ() > maxZ);
     }
 }

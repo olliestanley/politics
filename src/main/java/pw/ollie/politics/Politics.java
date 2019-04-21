@@ -25,6 +25,7 @@ import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.message.ColourScheme;
+import pw.ollie.politics.util.visualise.Visualiser;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldManager;
 
@@ -72,6 +73,10 @@ public final class Politics {
 
     public static ActivityManager getActivityManager() {
         return Politics.getPlugin().getActivityManager();
+    }
+
+    public static Visualiser getVisualiser() {
+        return Politics.getPlugin().getVisualiser();
     }
 
     public static PoliticsWorld getWorld(World world) {

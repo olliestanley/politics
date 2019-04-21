@@ -26,6 +26,7 @@ import pw.ollie.politics.data.PoliticsFileSystem;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
+import pw.ollie.politics.util.visualise.Visualiser;
 import pw.ollie.politics.world.WorldManager;
 
 import org.bukkit.Server;
@@ -48,6 +49,8 @@ public final class PoliticsPlugin extends JavaPlugin {
     private PoliticsCommandManager commandManager;
 
     private PoliticsDataSaveTask saveTask;
+
+    private Visualiser visualiser;
 
     @Override
     public void onEnable() {
@@ -77,6 +80,8 @@ public final class PoliticsPlugin extends JavaPlugin {
 
         this.saveTask = new PoliticsDataSaveTask(this);
         this.saveTask.runTaskTimer(this, 5 * 60 * 20, 5 * 60 * 20);
+
+        this.visualiser = new Visualiser(this);
 
         Server server = this.getServer();
         PluginManager pluginManager = server.getPluginManager();
@@ -124,6 +129,10 @@ public final class PoliticsPlugin extends JavaPlugin {
 
     public PoliticsCommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public Visualiser getVisualiser() {
+        return visualiser;
     }
 
     public static PoliticsPlugin instance() {

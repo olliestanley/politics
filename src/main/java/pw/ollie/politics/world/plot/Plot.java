@@ -126,6 +126,10 @@ public final class Plot implements Storable {
         return new Location(chunk.getWorld(), baseX, 0, baseZ);
     }
 
+    public Location getMaxPoint() {
+        return new Location(chunk.getWorld(), baseX + 15, 255, baseZ + 15);
+    }
+
     public boolean contains(Location location) {
         return baseX <= location.getBlockX() && baseX + 16 <= location.getBlockX()
                 && baseZ <= location.getBlockZ() && baseZ + 16 <= location.getBlockZ();

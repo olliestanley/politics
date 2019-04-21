@@ -30,6 +30,10 @@ public final class MathUtil {
         return new Location(two.getWorld(), two.getBlockX() + one.getX(), two.getBlockY() + one.getY(), two.getBlockZ() + one.getZ());
     }
 
+    public static Vector3i diff(Location one, Location two) {
+        return new Vector3i(Math.abs(one.getBlockX() - two.getBlockX()), Math.abs(one.getBlockY() - two.getBlockY()), Math.abs(one.getBlockZ() - two.getBlockZ()));
+    }
+
     private MathUtil() {
         throw new UnsupportedOperationException();
     }

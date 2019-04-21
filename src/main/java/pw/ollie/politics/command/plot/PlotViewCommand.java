@@ -22,8 +22,11 @@ package pw.ollie.politics.command.plot;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.util.visualise.Visualisation;
+import pw.ollie.politics.world.plot.Plot;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class PlotViewCommand extends PlotSubCommand {
     PlotViewCommand() {
@@ -32,8 +35,12 @@ public class PlotViewCommand extends PlotSubCommand {
 
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        // todo
-        // use fake blocks to show the outline of the plot the player is in
+        Player player = (Player) sender;
+        Plot plot = plugin.getWorldManager().getPlotAt(player.getLocation());
+        Visualisation visualisation = plugin.getVisualiser().visualisePlot(plot);
+        if (!visualisation.apply(plugin.getVisualiser(), player)) {
+            throw new CommandException("You must complete or cancel your current activity first.");
+        }
     }
 
     @Override
