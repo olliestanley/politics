@@ -24,6 +24,7 @@ public final class GroupProperty {
     public static final int NAME = 0x1;
     public static final int SPAWN = 0x2;
     public static final int OPEN = 0x3;
+    public static final int MOTD = 0x4;
 
     private GroupProperty() {
         throw new UnsupportedOperationException();

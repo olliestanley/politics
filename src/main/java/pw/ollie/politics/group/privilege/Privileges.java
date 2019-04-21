@@ -36,9 +36,10 @@ public final class Privileges {
         public static final Privilege SPAWN = new Privilege("SPAWN", PrivilegeType.GROUP);
         public static final Privilege SET_SPAWN = new Privilege("SET_SPAWN", PrivilegeType.GROUP);
         public static final Privilege SPAWN_OTHER = new Privilege("SPAWN_OTHER", PrivilegeType.GROUP);
+        public static final Privilege SET_INFO = new Privilege("SET_INFO", PrivilegeType.GROUP);
         public static final Privilege TOGGLES = new Privilege("TOGGLES", PrivilegeType.GROUP);
         public static final Privilege UNCLAIM = new Privilege("UNCLAIM", PrivilegeType.GROUP);
-        public static final Privilege[] ALL = {CLAIM, DISBAND, INFO, INVITE, KICK, LEAVE, MANAGE, ONLINE, SET_ROLE, SET_SPAWN, SPAWN, SPAWN_OTHER, TOGGLES, UNCLAIM};
+        public static final Privilege[] ALL = {CLAIM, DISBAND, INFO, INVITE, KICK, LEAVE, MANAGE, ONLINE, SET_ROLE, SET_SPAWN, SPAWN, SPAWN_OTHER, SET_INFO, TOGGLES, UNCLAIM};
 
         public static List<Privilege> all() {
             return Arrays.asList(ALL);
@@ -67,7 +68,7 @@ public final class Privileges {
 
     public static final Privilege[] ALL = {
             Group.CLAIM, Group.DISBAND, Group.INFO, Group.LEAVE, Group.MANAGE, Group.ONLINE, Group.INVITE, Group.KICK,
-            Group.SET_ROLE, Group.SPAWN, Group.SET_SPAWN, Group.SPAWN_OTHER, Group.TOGGLES, Group.UNCLAIM,
+            Group.SET_ROLE, Group.SPAWN, Group.SET_SPAWN, Group.SPAWN_OTHER, Group.SET_INFO, Group.TOGGLES, Group.UNCLAIM,
             Plot.SUBPLOT_PRIVILEGES,
             GroupPlot.BUILD, GroupPlot.INTERACT, GroupPlot.MANAGE_SUBPLOTS
     };
