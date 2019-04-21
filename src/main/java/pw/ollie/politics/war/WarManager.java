@@ -43,6 +43,10 @@ public final class WarManager {
         this.activeWars = new THashSet<>();
     }
 
+    public Set<War> getActiveWars() {
+        return new THashSet<>(activeWars);
+    }
+
     public War getWarBetween(int one, int two) {
         return activeWars.stream()
                 .filter(war -> war.involves(one) && war.involves(two))
@@ -68,6 +72,15 @@ public final class WarManager {
             return false;
         }
 
+        Group defender = war.getDefender();
+        Group aggressor = war.getAggressor();
+        if (defender == null || aggressor == null) {
+            throw new IllegalArgumentException("cannot start war with one or more null participants");
+        }
+        if (!aggressor.getLevel().equals(defender.getLevel())) {
+            throw new IllegalArgumentException("cannot start war between groups of different levels");
+        }
+
         WarBeginEvent event = PoliticsEventFactory.callWarBeginEvent(war);
         if (event.isCancelled()) {
             return false;
@@ -78,12 +91,16 @@ public final class WarManager {
     }
 
     public boolean finishWar(War war) {
+        return finishWar(war, false);
+    }
+
+    public boolean finishWar(War war, boolean force) {
         if (!activeWars.contains(war)) {
             return false;
         }
 
         WarFinishEvent event = PoliticsEventFactory.callWarFinishEvent(war);
-        if (event.isCancelled()) {
+        if (!force && event.isCancelled()) {
             return false;
         }
 

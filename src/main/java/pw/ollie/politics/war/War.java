@@ -22,6 +22,7 @@ package pw.ollie.politics.war;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.group.Group;
+import pw.ollie.politics.universe.Universe;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
@@ -47,6 +48,10 @@ public final class War implements Storable {
         defender = bObj.getInt("defender");
         aggressorScore = bObj.getInt("aggressor-score");
         defenderScore = bObj.getInt("defender-score");
+    }
+
+    public Universe getUniverse() {
+        return getAggressor().getUniverse();
     }
 
     public Group getAggressor() {
