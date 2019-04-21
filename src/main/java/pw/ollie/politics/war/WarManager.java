@@ -75,7 +75,7 @@ public final class WarManager {
     }
 
     public boolean beginWar(War war) {
-        if (activeWars.contains(war) || getWarBetween(war.getAggressorId(), war.getDefenderId()) != null) {
+        if (war.isActive() || activeWars.contains(war) || getWarBetween(war.getAggressorId(), war.getDefenderId()) != null) {
             return false;
         }
 
@@ -93,6 +93,7 @@ public final class WarManager {
             return false;
         }
 
+        war.setActive(true);
         activeWars.add(war);
         return true;
     }
@@ -102,7 +103,7 @@ public final class WarManager {
     }
 
     public boolean finishWar(War war, boolean force) {
-        if (!activeWars.contains(war)) {
+        if (!war.isActive() || !activeWars.contains(war)) {
             return false;
         }
 
@@ -111,6 +112,7 @@ public final class WarManager {
             return false;
         }
 
+        war.setActive(false);
         activeWars.remove(war);
         return true;
     }

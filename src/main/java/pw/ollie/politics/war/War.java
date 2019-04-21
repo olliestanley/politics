@@ -34,6 +34,8 @@ public final class War implements Storable {
     private int aggressorScore = 0;
     private int defenderScore = 0;
 
+    private boolean active;
+
     public War(int aggressor, int defender) {
         if (aggressor == defender) {
             throw new IllegalArgumentException("cannot create a war where the aggressor is also the defender");
@@ -96,6 +98,14 @@ public final class War implements Storable {
 
     public boolean involves(Group group) {
         return involves(group.getUid());
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override
