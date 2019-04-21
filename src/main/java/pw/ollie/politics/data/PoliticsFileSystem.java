@@ -24,6 +24,7 @@ import java.io.File;
 public final class PoliticsFileSystem {
     private final File baseDir;
     private final File rulesDir;
+    private final File dataDir;
     private final File universesDir;
     private final File worldConfigDir;
     private final File worldsDir;
@@ -31,6 +32,7 @@ public final class PoliticsFileSystem {
     public PoliticsFileSystem(File baseDir) {
         this.baseDir = baseDir;
         this.rulesDir = new File(baseDir, "rules/");
+        this.dataDir = new File(baseDir, "data/");
         this.universesDir = new File(baseDir, "data/universes/");
         this.worldConfigDir = new File(baseDir, "worlds/");
         this.worldsDir = new File(baseDir, "data/worlds/");
@@ -44,6 +46,10 @@ public final class PoliticsFileSystem {
 
     public File getRulesDir() {
         return rulesDir;
+    }
+
+    public File getDataDir() {
+        return dataDir;
     }
 
     public File getWorldConfigDir() {

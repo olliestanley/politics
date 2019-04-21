@@ -26,6 +26,7 @@ import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.war.WarBeginEvent;
 import pw.ollie.politics.event.war.WarFinishEvent;
 import pw.ollie.politics.group.Group;
+import pw.ollie.politics.universe.Universe;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,6 +46,12 @@ public final class WarManager {
 
     public Set<War> getActiveWars() {
         return new THashSet<>(activeWars);
+    }
+
+    public Set<War> getActiveWars(Universe universe) {
+        return activeWars.stream()
+                .filter(war -> war.getUniverse().equals(universe))
+                .collect(Collectors.toSet());
     }
 
     public War getWarBetween(int one, int two) {
@@ -109,7 +116,7 @@ public final class WarManager {
     }
 
     public void loadWars() {
-        // todo
+        // todo save all wars to wars.pws file in data directory
     }
 
     public void saveWars() {
