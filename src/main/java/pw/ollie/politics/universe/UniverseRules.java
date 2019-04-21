@@ -41,11 +41,13 @@ public final class UniverseRules {
     private final String name;
     private final String description;
     private final Map<String, GroupLevel> groupLevels;
+    private final boolean warsEnabled;
 
-    private UniverseRules(String name, String description, Map<String, GroupLevel> groupLevels) {
+    private UniverseRules(String name, String description, Map<String, GroupLevel> groupLevels, boolean warsEnabled) {
         this.name = name;
         this.description = description;
         this.groupLevels = groupLevels;
+        this.warsEnabled = warsEnabled;
     }
 
     public String getName() {
@@ -64,7 +66,16 @@ public final class UniverseRules {
         return groupLevels.get(name.toLowerCase());
     }
 
+    public boolean areWarsEnabled() {
+        return warsEnabled;
+    }
+
     public void save(ConfigurationSection config) {
+        config.set("description", description);
+
+        ConfigurationSection warsSection = ConfigUtil.getOrCreateSection(config, "wars");
+        warsSection.set("enabled", warsEnabled);
+
         for (GroupLevel level : groupLevels.values()) {
             ConfigurationSection node = ConfigUtil.getOrCreateSection(config, "levels." + level.getId());
             level.save(node);
@@ -73,6 +84,9 @@ public final class UniverseRules {
 
     public static UniverseRules load(String name, ConfigurationSection config) {
         String description = config.getString("description", "No description given.");
+
+        ConfigurationSection warsSection = ConfigUtil.getOrCreateSection(config, "wars");
+        boolean warsEnabled = warsSection.getBoolean("enabled", false);
 
         Map<String, GroupLevel> levelMap = new HashMap<>();
         // Get the levels turned into objects
@@ -113,6 +127,6 @@ public final class UniverseRules {
             levelEntry.getKey().setAllowedChildren(allowed);
         }
 
-        return new UniverseRules(name, description, levelMap);
+        return new UniverseRules(name, description, levelMap, warsEnabled);
     }
 }

@@ -1,6 +1,9 @@
 # a politics configuration used for plugin testing and as an example
 description: Testing configuration for Politics
 
+wars:
+  enabled: true
+
 levels:
   household:
     name: Household

@@ -35,8 +35,7 @@ public class WarFinishEvent extends WarEvent implements Cancellable {
     }
 
     public Group getWinner() {
-        War war = getWar();
-        return war.getAggressorScore() > war.getDefenderScore() ? war.getAggressor() : war.getDefender();
+        return getWar().getWinningGroup();
     }
 
     @Override
