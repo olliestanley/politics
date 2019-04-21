@@ -6,3 +6,7 @@ colour-scheme:
   error: red
   highlight: yellow
   prefix: dark_green
+
+# wars configuration
+wars:
+  enabled: false

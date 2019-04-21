@@ -77,8 +77,10 @@ public final class PoliticsPlugin extends JavaPlugin {
 
         this.activityManager = new ActivityManager(this);
 
-        this.warManager = new WarManager(this);
-        this.warManager.loadWars();
+        if (config.areWarsEnabled()) {
+            this.warManager = new WarManager(this);
+            this.warManager.loadWars();
+        }
 
         this.commandManager = new PoliticsCommandManager(this);
         this.commandManager.registerCommands();
@@ -97,7 +99,10 @@ public final class PoliticsPlugin extends JavaPlugin {
     public void onDisable() {
         this.saveTask.cancel();
 
-        this.warManager.saveWars();
+        if (config.areWarsEnabled()) {
+            this.warManager.saveWars();
+        }
+
         this.worldManager.saveWorlds();
         this.universeManager.saveRules();
         this.universeManager.saveUniverses();

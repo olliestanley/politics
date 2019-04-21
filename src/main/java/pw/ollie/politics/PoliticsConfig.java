@@ -34,7 +34,11 @@ public final class PoliticsConfig {
     private final PoliticsPlugin plugin;
     private final File configFile;
 
+    // colour scheme
     private ColourScheme colourScheme;
+
+    // wars
+    private boolean warsEnabled;
 
     public PoliticsConfig(PoliticsPlugin plugin) {
         this.plugin = plugin;
@@ -43,6 +47,10 @@ public final class PoliticsConfig {
 
     public ColourScheme getColourScheme() {
         return colourScheme;
+    }
+
+    public boolean areWarsEnabled() {
+        return warsEnabled;
     }
 
     void loadConfig() {
@@ -58,5 +66,8 @@ public final class PoliticsConfig {
         ChatColor highlight = ChatColor.valueOf(colourSchemeSection.getString("highlight", "yellow").toUpperCase());
         ChatColor prefix = ChatColor.valueOf(colourSchemeSection.getString("prefix", "dark_green").toUpperCase());
         colourScheme = new ColourScheme(normal, error, highlight, prefix);
+
+        ConfigurationSection warsSection = ConfigUtil.getOrCreateSection(config, "wars");
+        warsEnabled = warsSection.getBoolean("enabled", false);
     }
 }

@@ -32,7 +32,10 @@ public final class PoliticsDataSaveTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        plugin.getWarManager().saveWars();
+        if (plugin.getPoliticsConfig().areWarsEnabled()) {
+            plugin.getWarManager().saveWars();
+        }
+
         plugin.getWorldManager().saveWorlds();
         plugin.getUniverseManager().saveRules();
         plugin.getUniverseManager().saveUniverses();
