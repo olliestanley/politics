@@ -27,6 +27,7 @@ import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.visualise.Visualiser;
+import pw.ollie.politics.war.WarManager;
 import pw.ollie.politics.world.WorldManager;
 
 import org.bukkit.Server;
@@ -45,6 +46,7 @@ public final class PoliticsPlugin extends JavaPlugin {
     private UniverseManager universeManager;
     private GroupManager groupManager;
     private ActivityManager activityManager;
+    private WarManager warManager;
 
     private PoliticsCommandManager commandManager;
 
@@ -75,6 +77,9 @@ public final class PoliticsPlugin extends JavaPlugin {
 
         this.activityManager = new ActivityManager(this);
 
+        this.warManager = new WarManager(this);
+        this.warManager.loadWars();
+
         this.commandManager = new PoliticsCommandManager(this);
         this.commandManager.registerCommands();
 
@@ -92,6 +97,7 @@ public final class PoliticsPlugin extends JavaPlugin {
     public void onDisable() {
         this.saveTask.cancel();
 
+        this.warManager.saveWars();
         this.worldManager.saveWorlds();
         this.universeManager.saveRules();
         this.universeManager.saveUniverses();
@@ -125,6 +131,10 @@ public final class PoliticsPlugin extends JavaPlugin {
 
     public ActivityManager getActivityManager() {
         return activityManager;
+    }
+
+    public WarManager getWarManager() {
+        return warManager;
     }
 
     public PoliticsCommandManager getCommandManager() {

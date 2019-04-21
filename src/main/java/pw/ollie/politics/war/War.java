@@ -17,24 +17,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.data;
+package pw.ollie.politics.war;
 
-import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.Politics;
+import pw.ollie.politics.group.Group;
 
-import org.bukkit.scheduler.BukkitRunnable;
+public final class War {
+    private final int aggressor;
+    private final int defender;
 
-public final class PoliticsDataSaveTask extends BukkitRunnable {
-    private final PoliticsPlugin plugin;
-
-    public PoliticsDataSaveTask(PoliticsPlugin plugin) {
-        this.plugin = plugin;
+    public War(int aggressor, int defender) {
+        this.aggressor = aggressor;
+        this.defender = defender;
     }
 
-    @Override
-    public void run() {
-        plugin.getWarManager().saveWars();
-        plugin.getWorldManager().saveWorlds();
-        plugin.getUniverseManager().saveRules();
-        plugin.getUniverseManager().saveUniverses();
+    public Group getAggressor() {
+        return Politics.getGroupManager().getGroupById(aggressor);
+    }
+
+    public int getAggressorId() {
+        return aggressor;
+    }
+
+    public Group getDefender() {
+        return Politics.getGroupManager().getGroupById(defender);
+    }
+
+    public int getDefenderId() {
+        return defender;
     }
 }

@@ -17,24 +17,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.data;
+package pw.ollie.politics.war;
+
+import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.PoliticsPlugin;
 
-import org.bukkit.scheduler.BukkitRunnable;
+import java.util.Set;
 
-public final class PoliticsDataSaveTask extends BukkitRunnable {
+public final class WarManager {
     private final PoliticsPlugin plugin;
+    private final Set<War> activeWars;
 
-    public PoliticsDataSaveTask(PoliticsPlugin plugin) {
+    public WarManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
+        this.activeWars = new THashSet<>();
     }
 
-    @Override
-    public void run() {
-        plugin.getWarManager().saveWars();
-        plugin.getWorldManager().saveWorlds();
-        plugin.getUniverseManager().saveRules();
-        plugin.getUniverseManager().saveUniverses();
+    public void loadWars() {
+        // todo
+    }
+
+    public void saveWars() {
+        // todo
     }
 }
