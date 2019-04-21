@@ -22,8 +22,13 @@ package pw.ollie.politics.war;
 import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.event.PoliticsEventFactory;
+import pw.ollie.politics.event.war.WarBeginEvent;
+import pw.ollie.politics.event.war.WarFinishEvent;
+import pw.ollie.politics.group.Group;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class WarManager {
     private final PoliticsPlugin plugin;
@@ -36,6 +41,54 @@ public final class WarManager {
 
         this.plugin = plugin;
         this.activeWars = new THashSet<>();
+    }
+
+    public War getWarBetween(int one, int two) {
+        return activeWars.stream()
+                .filter(war -> war.involves(one) && war.involves(two))
+                .findAny().orElse(null);
+    }
+
+    public War getWarBetween(Group group1, Group group2) {
+        return getWarBetween(group1.getUid(), group2.getUid());
+    }
+
+    public Set<War> getInvolvedWars(int groupId) {
+        return activeWars.stream()
+                .filter(war -> war.involves(groupId))
+                .collect(Collectors.toSet());
+    }
+
+    public Set<War> getInvolvedWars(Group group) {
+        return getInvolvedWars(group.getUid());
+    }
+
+    public boolean beginWar(War war) {
+        if (activeWars.contains(war) || getWarBetween(war.getAggressorId(), war.getDefenderId()) != null) {
+            return false;
+        }
+
+        WarBeginEvent event = PoliticsEventFactory.callWarBeginEvent(war);
+        if (event.isCancelled()) {
+            return false;
+        }
+
+        activeWars.add(war);
+        return true;
+    }
+
+    public boolean finishWar(War war) {
+        if (!activeWars.contains(war)) {
+            return false;
+        }
+
+        WarFinishEvent event = PoliticsEventFactory.callWarFinishEvent(war);
+        if (event.isCancelled()) {
+            return false;
+        }
+
+        activeWars.remove(war);
+        return true;
     }
 
     public void loadWars() {

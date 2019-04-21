@@ -27,6 +27,7 @@ import pw.ollie.politics.command.plot.PlotCommand;
 import pw.ollie.politics.command.politics.PoliticsCommand;
 import pw.ollie.politics.command.subplot.SubplotCommand;
 import pw.ollie.politics.command.universe.UniverseCommand;
+import pw.ollie.politics.command.war.WarCommand;
 import pw.ollie.politics.group.level.GroupLevel;
 
 import org.bukkit.command.Command;
@@ -61,6 +62,7 @@ public final class PoliticsCommandManager {
         this.registerCommand(new PoliticsCommand(plugin));
         this.registerCommand(new SubplotCommand(plugin));
         this.registerCommand(new UniverseCommand(plugin));
+        this.registerCommand(new WarCommand(plugin));
 
         for (GroupLevel groupLevel : plugin.getUniverseManager().getGroupLevels()) {
             this.registerCommand(new GroupCommand(plugin, groupLevel));

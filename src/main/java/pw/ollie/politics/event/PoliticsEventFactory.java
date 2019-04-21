@@ -42,10 +42,13 @@ import pw.ollie.politics.event.plot.subplot.SubplotOwnerChangeEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotPrivilegeChangeEvent;
 import pw.ollie.politics.event.universe.UniverseCreateEvent;
 import pw.ollie.politics.event.universe.UniverseDestroyEvent;
+import pw.ollie.politics.event.war.WarBeginEvent;
+import pw.ollie.politics.event.war.WarFinishEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.war.War;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.Subplot;
 
@@ -139,6 +142,14 @@ public final class PoliticsEventFactory {
 
     public static UniverseDestroyEvent callUniverseDestroyEvent(Universe universe) {
         return callEvent(new UniverseDestroyEvent(universe));
+    }
+
+    public static WarBeginEvent callWarBeginEvent(War war) {
+        return callEvent(new WarBeginEvent(war));
+    }
+
+    public static WarFinishEvent callWarFinishEvent(War war) {
+        return callEvent(new WarFinishEvent(war));
     }
 
     public static <T extends Event> T callEvent(T event) {

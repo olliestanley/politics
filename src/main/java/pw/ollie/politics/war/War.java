@@ -20,15 +20,33 @@
 package pw.ollie.politics.war;
 
 import pw.ollie.politics.Politics;
+import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.group.Group;
 
-public final class War {
+import org.bson.BSONObject;
+import org.bson.BasicBSONObject;
+
+public final class War implements Storable {
     private final int aggressor;
     private final int defender;
 
+    private int aggressorScore = 0;
+    private int defenderScore = 0;
+
     public War(int aggressor, int defender) {
+        if (aggressor == defender) {
+            throw new IllegalArgumentException("cannot create a war where the aggressor is also the defender");
+        }
+
         this.aggressor = aggressor;
         this.defender = defender;
+    }
+
+    War(BasicBSONObject bObj) {
+        aggressor = bObj.getInt("aggressor");
+        defender = bObj.getInt("defender");
+        aggressorScore = bObj.getInt("aggressor-score");
+        defenderScore = bObj.getInt("defender-score");
     }
 
     public Group getAggressor() {
@@ -45,5 +63,44 @@ public final class War {
 
     public int getDefenderId() {
         return defender;
+    }
+
+    public int getAggressorScore() {
+        return aggressorScore;
+    }
+
+    public void setAggressorScore(int aggressorScore) {
+        this.aggressorScore = aggressorScore;
+    }
+
+    public int getDefenderScore() {
+        return defenderScore;
+    }
+
+    public void setDefenderScore(int defenderScore) {
+        this.defenderScore = defenderScore;
+    }
+
+    public boolean involves(int groupId) {
+        return defender == groupId || aggressor == groupId;
+    }
+
+    public boolean involves(Group group) {
+        return involves(group.getUid());
+    }
+
+    @Override
+    public BSONObject toBSONObject() {
+        BasicBSONObject result = new BasicBSONObject();
+        result.put("aggressor", aggressor);
+        result.put("defender", defender);
+        result.put("aggressor-score", aggressorScore);
+        result.put("defender-score", defenderScore);
+        return result;
+    }
+
+    @Override
+    public boolean canStore() {
+        return true;
     }
 }
