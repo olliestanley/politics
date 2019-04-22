@@ -34,7 +34,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.UUID;
 
-public class GroupProtectionListener implements Listener {
+public final class GroupProtectionListener implements Listener {
     private final PoliticsPlugin plugin;
 
     public GroupProtectionListener(PoliticsPlugin plugin) {

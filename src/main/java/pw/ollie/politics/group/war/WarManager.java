@@ -42,6 +42,8 @@ public final class WarManager {
 
         this.plugin = plugin;
         this.activeWars = new THashSet<>();
+
+        plugin.getServer().getPluginManager().registerEvents(new WarProtectionListener(plugin), plugin);
     }
 
     public Set<War> getActiveWars() {
