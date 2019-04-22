@@ -64,8 +64,7 @@ public final class GroupProtectionListener implements Listener {
                 continue;
             }
 
-            if (universe.getCitizenGroups(damagedId).stream()
-                    .anyMatch(group -> group.isImmediateMember(damagerId))) {
+            if (universe.getCitizenGroups(damagedId).stream().anyMatch(group -> group.isMember(damagerId))) {
                 event.setCancelled(true);
                 return;
             }
