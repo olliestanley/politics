@@ -22,7 +22,7 @@ package pw.ollie.politics.command;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.args.Arguments;
-import pw.ollie.politics.group.Citizen;
+import pw.ollie.politics.universe.Citizen;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;

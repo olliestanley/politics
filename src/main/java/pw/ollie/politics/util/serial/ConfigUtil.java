@@ -19,7 +19,16 @@
  */
 package pw.ollie.politics.util.serial;
 
+import pw.ollie.politics.Politics;
+import pw.ollie.politics.PoliticsPlugin;
+
+import com.google.common.io.Files;
+
 import org.bukkit.configuration.ConfigurationSection;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
 
 public final class ConfigUtil {
     public static ConfigurationSection getOrCreateSection(ConfigurationSection parent, String name) {
@@ -28,6 +37,24 @@ public final class ConfigUtil {
             result = parent.createSection(name);
         }
         return result;
+    }
+
+    public static boolean copyUniverseRulesTemplate(String name, String as) {
+        PoliticsPlugin plugin = Politics.getPlugin();
+        plugin.saveResource("templates/" + name.toLowerCase() + ".yml", false);
+        File savedPath = new File(plugin.getDataFolder(), "templates/" + name.toLowerCase() + ".yml");
+        File toPath = new File(plugin.getFileSystem().getRulesDir(), as.toLowerCase() + ".yml");
+        try {
+            Files.move(savedPath, toPath);
+            File templatesDir = savedPath.getParentFile();
+            if (templatesDir.isDirectory()) {
+                templatesDir.delete();
+            }
+            return true;
+        } catch (IOException e) {
+            Politics.getLogger().log(Level.SEVERE, "Could not write template as " + toPath.getPath() + "!", e);
+            return false;
+        }
     }
 
     private ConfigUtil() {

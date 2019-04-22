@@ -24,7 +24,6 @@ import gnu.trove.map.hash.TLongObjectHashMap;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
-import pw.ollie.politics.group.Citizen;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.war.War;
@@ -287,7 +286,7 @@ public final class Universe implements Storable {
                 groups = citizenGroupCache.get(player);
             }
             return new HashSet<>(groups);
-        } catch (final ExecutionException e) {
+        } catch (ExecutionException e) {
             Politics.getLogger().log(Level.SEVERE, "Could not load a set of citizen groups! This is a PROBLEM!", e);
             return new HashSet<>();
         }

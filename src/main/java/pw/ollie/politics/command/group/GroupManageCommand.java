@@ -25,7 +25,6 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupAffiliationRequest;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.universe.Universe;
@@ -37,7 +36,6 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class GroupManageCommand extends GroupSubcommand {
     private final Map<String, GroupManageSubCommand> subcommands;
@@ -116,8 +114,7 @@ public class GroupManageCommand extends GroupSubcommand {
                 throw new CommandException("A " + group.getLevel().getName() + " cannot have " + invited.getLevel().getPlural() + " as sub-organisations.");
             }
 
-            GroupAffiliationRequest affiliationRequest = new GroupAffiliationRequest(group.getUid(), invited.getUid());
-            if (plugin.getGroupManager().addAffiliationRequest(affiliationRequest)) {
+            if (group.inviteChild(invited)) {
                 MessageBuilder.begin("The ").highlight(level.getName()).normal(" was successfully invited.").send(sender);
             } else {
                 throw new CommandException("That " + level.getName() + " cannot be invited as a child of yours.");
@@ -146,15 +143,12 @@ public class GroupManageCommand extends GroupSubcommand {
                 throw new CommandException("No " + level.getName() + " with that tag exists.");
             }
 
-            Set<GroupAffiliationRequest> affiliationRequests = plugin.getGroupManager().getAffiliationRequests(group.getUid());
-            GroupAffiliationRequest request = affiliationRequests.stream()
-                    .filter(req -> req.getSender() == parent.getUid()).findAny().orElse(null);
-            if (request == null) {
+            if (parent.isInvitedChild(group)) {
                 throw new CommandException(parent.getName() + " has not invited " + group.getName() + " to be a sub-organisation.");
             }
 
             if (parent.addChildGroup(group)) {
-                plugin.getGroupManager().removeAffiliationRequest(request);
+                parent.uninviteChild(group);
                 MessageBuilder.begin().highlight(parent.getName()).normal(" has successfully joined ")
                         .highlight(group.getName()).normal(" as a sub-organisation.").send(sender);
             } else {

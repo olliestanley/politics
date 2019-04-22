@@ -23,7 +23,9 @@ import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
+import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.THashSet;
+import gnu.trove.set.hash.TIntHashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
@@ -61,6 +63,7 @@ public final class Group implements Comparable<Group>, Storable {
     private final TIntObjectMap<Object> properties;
     private final Map<UUID, Role> players;
     private final Set<UUID> invitedPlayers;
+    private final TIntSet invitedChildren;
 
     private Universe universe;
 
@@ -74,6 +77,7 @@ public final class Group implements Comparable<Group>, Storable {
         this.properties = properties;
         this.players = players;
         this.invitedPlayers = new THashSet<>();
+        this.invitedChildren = new TIntHashSet();
     }
 
     public void initialize(Universe universe) {
@@ -111,6 +115,24 @@ public final class Group implements Comparable<Group>, Storable {
         }
 
         return universe.removeChildGroup(this, group);
+    }
+
+    public boolean inviteChild(Group group) {
+        if (group == null || group.getParent() != null || group.getLevel().getRank() >= level.getRank()) {
+            return false;
+        }
+
+        PoliticsEventFactory.callGroupChildInviteEvent(this, group);
+        invitedChildren.add(group.getUid());
+        return true;
+    }
+
+    public boolean uninviteChild(Group group) {
+        return group != null && invitedChildren.remove(group.getUid());
+    }
+
+    public boolean isInvitedChild(Group group) {
+        return group != null && invitedChildren.contains(group.getUid());
     }
 
     public GroupLevel getLevel() {

@@ -23,9 +23,9 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsSubcommand;
 import pw.ollie.politics.command.args.Arguments;
-import pw.ollie.politics.universe.RuleTemplates;
 import pw.ollie.politics.universe.UniverseRules;
 import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.util.serial.ConfigUtil;
 
 import org.bukkit.command.CommandSender;
 
@@ -54,7 +54,7 @@ public class UniverseGenRulesCommand extends PoliticsSubcommand {
                     + "' already exists. Use the '--f' option to overwrite an existing rule set.");
         }
 
-        if (RuleTemplates.copyTemplate(templateName, name)) {
+        if (ConfigUtil.copyUniverseRulesTemplate(templateName, name)) {
             MessageBuilder.begin("A new set of rules named '").highlight(name).normal("' based on the template '")
                     .highlight(templateName).normal("' has been generated. Please restart the server to see your changes.")
                     .send(sender);

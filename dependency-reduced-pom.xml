@@ -5,9 +5,8 @@
   <artifactId>politics</artifactId>
   <name>Politics</name>
   <version>0.0.1-SNAPSHOT</version>
-  <description>${project.name} is a full-featured replacement for Towny, Factions, and other similar plugins built for
-        Bukkit.</description>
-  <url>http://ollie.pw/politics</url>
+  <description>${project.name} is a self-service community management system, built for Bukkit.</description>
+  <url>http://dzineit.github.io/politics</url>
   <issueManagement>
     <system>github</system>
     <url>http://github.com/DziNeIT/${project.name}/issues</url>
@@ -147,6 +146,12 @@
                 </filter>
                 <filter>
                   <artifact>commons-io:commons-io</artifact>
+                  <includes>
+                    <include>org/apache/**</include>
+                  </includes>
+                </filter>
+                <filter>
+                  <artifact>commons-lang:commons-lang</artifact>
                   <includes>
                     <include>org/apache/**</include>
                   </includes>
