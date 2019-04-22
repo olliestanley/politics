@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.war;
+package pw.ollie.politics.group.war;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;

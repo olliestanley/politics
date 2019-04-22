@@ -27,7 +27,7 @@ import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.visualise.Visualiser;
-import pw.ollie.politics.war.WarManager;
+import pw.ollie.politics.group.war.WarManager;
 import pw.ollie.politics.world.WorldManager;
 
 import org.bukkit.plugin.java.JavaPlugin;

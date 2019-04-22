@@ -28,7 +28,7 @@ import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.message.ColourScheme;
 import pw.ollie.politics.util.visualise.Visualiser;
-import pw.ollie.politics.war.WarManager;
+import pw.ollie.politics.group.war.WarManager;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldManager;
 

@@ -19,7 +19,7 @@
  */
 package pw.ollie.politics.event.war;
 
-import pw.ollie.politics.war.War;
+import pw.ollie.politics.group.war.War;
 
 import org.bukkit.event.Event;
 

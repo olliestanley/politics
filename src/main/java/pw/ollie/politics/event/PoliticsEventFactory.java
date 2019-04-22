@@ -48,7 +48,7 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.universe.Universe;
-import pw.ollie.politics.war.War;
+import pw.ollie.politics.group.war.War;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.Subplot;
 

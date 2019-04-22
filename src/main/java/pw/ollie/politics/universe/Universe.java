@@ -27,7 +27,7 @@ import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.group.Citizen;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
-import pw.ollie.politics.war.War;
+import pw.ollie.politics.group.war.War;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import com.google.common.cache.CacheBuilder;
