@@ -10,10 +10,8 @@
 
     <!-- Description -->
     <name>Politics</name>
-    <url>http://ollie.pw/politics</url>
-    <description>${project.name} is a full-featured replacement for Towny, Factions, and other similar plugins built for
-        Bukkit.
-    </description>
+    <url>http://dzineit.github.io/politics</url>
+    <description>${project.name} is a self-service community management system, built for Bukkit.</description>
 
     <!-- Properties -->
     <properties>
