@@ -17,35 +17,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.group;
+package pw.ollie.politics.util;
 
-import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.group.level.GroupLevel;
+public final class Pair<K, V> {
+    private final K k;
+    private final V v;
 
-import java.util.List;
-
-public final class GroupManager {
-    private final PoliticsPlugin plugin;
-
-    public GroupManager(PoliticsPlugin plugin) {
-        this.plugin = plugin;
-
-        plugin.getServer().getPluginManager().registerEvents(new GroupProtectionListener(plugin), plugin);
+    public Pair(K k, V v) {
+        this.k = k;
+        this.v = v;
     }
 
-    public List<GroupLevel> getGroupLevels() {
-        return plugin.getUniverseManager().getGroupLevels();
+    public K getFirst() {
+        return k;
     }
 
-    public Group getGroupById(int id) {
-        return plugin.getUniverseManager().getGroupById(id);
-    }
-
-    public Group getGroupByTag(String tag) {
-        return plugin.getUniverseManager().getGroupByTag(tag);
-    }
-
-    public PoliticsPlugin getPlugin() {
-        return plugin;
+    public V getSecond() {
+        return v;
     }
 }

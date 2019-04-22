@@ -36,10 +36,12 @@ import pw.ollie.politics.event.group.GroupPropertySetEvent;
 import pw.ollie.politics.event.group.GroupUnclaimPlotEvent;
 import pw.ollie.politics.event.player.PlayerChangePlotEvent;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
+import pw.ollie.politics.event.plot.PlotProtectionTriggerEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotCreateEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotDestroyEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotOwnerChangeEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotPrivilegeChangeEvent;
+import pw.ollie.politics.event.plot.subplot.SubplotProtectionTriggerEvent;
 import pw.ollie.politics.event.universe.UniverseCreateEvent;
 import pw.ollie.politics.event.universe.UniverseDestroyEvent;
 import pw.ollie.politics.event.war.WarBeginEvent;
@@ -50,9 +52,11 @@ import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.group.war.War;
 import pw.ollie.politics.world.plot.Plot;
+import pw.ollie.politics.world.plot.PlotDamageSource;
 import pw.ollie.politics.world.plot.Subplot;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -116,6 +120,10 @@ public final class PoliticsEventFactory {
         return callEvent(new PlotOwnerChangeEvent(plot, groupId, add));
     }
 
+    public static PlotProtectionTriggerEvent callPlotProtectionTriggerEvent(Plot plot, Block damaged, PlotDamageSource source, PlotProtectionTriggerEvent.PlotProtectionType type) {
+        return callEvent(new PlotProtectionTriggerEvent(plot, damaged, source, type));
+    }
+
     public static SubplotCreateEvent callSubplotCreateEvent(Plot plot, Subplot subplot) {
         return callEvent(new SubplotCreateEvent(plot, subplot));
     }
@@ -130,6 +138,10 @@ public final class PoliticsEventFactory {
 
     public static SubplotPrivilegeChangeEvent callSubplotPrivilegeChangeEvent(Plot plot, Subplot subplot, UUID subject, Privilege privilege, boolean granted) {
         return callEvent(new SubplotPrivilegeChangeEvent(plot, subplot, subject, privilege, granted));
+    }
+
+    public static SubplotProtectionTriggerEvent callSubplotProtectionTriggerEvent(Plot plot, Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionTriggerEvent.PlotProtectionType type) {
+        return callEvent(new SubplotProtectionTriggerEvent(plot, subplot, damaged, source, type));
     }
 
     public static PlayerChangePlotEvent callPlayerChangePlotEvent(Player player, Plot from, Plot to) {
