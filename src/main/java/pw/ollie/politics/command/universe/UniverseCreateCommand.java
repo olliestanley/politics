@@ -21,7 +21,7 @@ package pw.ollie.politics.command.universe;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
-import pw.ollie.politics.command.PoliticsSubCommand;
+import pw.ollie.politics.command.PoliticsSubcommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.universe.Universe;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class UniverseCreateCommand extends PoliticsSubCommand {
+public class UniverseCreateCommand extends PoliticsSubcommand {
     UniverseCreateCommand() {
         super("create");
     }

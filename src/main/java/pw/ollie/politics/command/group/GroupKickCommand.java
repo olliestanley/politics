@@ -37,7 +37,7 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class GroupKickCommand extends GroupSubCommand {
+public class GroupKickCommand extends GroupSubcommand {
     GroupKickCommand(GroupLevel groupLevel) {
         super("kick", groupLevel);
     }

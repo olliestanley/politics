@@ -40,7 +40,7 @@ import java.util.Arrays;
 import java.util.List;
 
 // starts process create a new subplot in current plot
-public class SubplotCreateCommand extends SubplotSubCommand {
+public class SubplotCreateCommand extends SubplotSubcommand {
     SubplotCreateCommand() {
         super("create");
     }
@@ -51,7 +51,7 @@ public class SubplotCreateCommand extends SubplotSubCommand {
         Player player = (Player) sender;
         Plot currentPlot = worldManager.getPlotAt(player.getLocation());
         Group ownerGroup = currentPlot.getOwner();
-        if (ownerGroup == null || !ownerGroup.can(player, Privileges.GroupPlot.MANAGE_SUBPLOTS)) {
+        if (ownerGroup == null || !(ownerGroup.can(player, Privileges.GroupPlot.MANAGE_SUBPLOTS) || hasPlotsAdmin(sender))) {
             throw new CommandException("You aren't in the plot of an organisation you're permitted to do that for.");
         }
 

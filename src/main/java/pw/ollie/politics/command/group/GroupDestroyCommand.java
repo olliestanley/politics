@@ -32,7 +32,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Arrays;
 import java.util.List;
 
-public class GroupDestroyCommand extends GroupSubCommand {
+public class GroupDestroyCommand extends GroupSubcommand {
     GroupDestroyCommand(GroupLevel groupLevel) {
         super("destroy", groupLevel);
     }

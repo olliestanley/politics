@@ -34,7 +34,7 @@ import pw.ollie.politics.world.plot.Plot;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
-public class GroupUnclaimCommand extends GroupSubCommand {
+public class GroupUnclaimCommand extends GroupSubcommand {
     GroupUnclaimCommand(GroupLevel groupLevel) {
         super("unclaim", groupLevel);
     }

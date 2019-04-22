@@ -32,7 +32,7 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class GroupUninviteCommand extends GroupSubCommand {
+public class GroupUninviteCommand extends GroupSubcommand {
     GroupUninviteCommand(GroupLevel groupLevel) {
         super("uninvite", groupLevel);
     }

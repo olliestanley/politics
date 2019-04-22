@@ -28,7 +28,7 @@ import pw.ollie.politics.group.level.GroupLevel;
 
 import org.bukkit.command.CommandSender;
 
-public class GroupHelpCommand extends GroupSubCommand {
+public class GroupHelpCommand extends GroupSubcommand {
     GroupHelpCommand(GroupLevel groupLevel) {
         super("help", groupLevel);
     }

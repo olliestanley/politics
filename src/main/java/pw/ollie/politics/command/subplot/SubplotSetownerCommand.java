@@ -21,7 +21,6 @@ package pw.ollie.politics.command.subplot;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
-import pw.ollie.politics.command.PoliticsCommandHelper;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.privilege.Privileges;
@@ -31,9 +30,8 @@ import pw.ollie.politics.world.plot.Subplot;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-public class SubplotSetownerCommand extends SubplotSubCommand {
+public class SubplotSetownerCommand extends SubplotSubcommand {
     SubplotSetownerCommand() {
         super("setowner");
     }
@@ -42,8 +40,7 @@ public class SubplotSetownerCommand extends SubplotSubCommand {
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Subplot subplot = findSubplot(sender, args);
         Group group = subplot.getParent().getOwner();
-        if (sender instanceof Player && !sender.hasPermission(PoliticsCommandHelper.PLOTS_ADMIN_PERMISSION)
-                && !group.can(sender, Privileges.GroupPlot.MANAGE_SUBPLOTS)) {
+        if (!hasPlotsAdmin(sender) && !group.can(sender, Privileges.GroupPlot.MANAGE_SUBPLOTS)) {
             throw new CommandException("You cannot set the owner for that subplot.");
         }
 

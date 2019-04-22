@@ -34,7 +34,7 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 
-public class GroupDescriptionCommand extends GroupSubCommand {
+public class GroupDescriptionCommand extends GroupSubcommand {
     GroupDescriptionCommand(GroupLevel groupLevel) {
         super("description", groupLevel);
     }

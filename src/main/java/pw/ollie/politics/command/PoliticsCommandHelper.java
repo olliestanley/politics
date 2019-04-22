@@ -27,6 +27,7 @@ import pw.ollie.politics.util.message.MessageUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.permissions.Permission;
 
 import java.util.Collection;
@@ -41,9 +42,17 @@ public final class PoliticsCommandHelper {
         PoliticsCommandHelper.sendCommandHelp(sender, baseCommand, 1);
     }
 
+    public static boolean hasPlotsAdmin(CommandSender source) {
+        return source instanceof ConsoleCommandSender || source.hasPermission(PLOTS_ADMIN_PERMISSION);
+    }
+
+    public static boolean hasGroupsAdmin(CommandSender source) {
+        return source instanceof ConsoleCommandSender || source.hasPermission(GROUPS_ADMIN_PERMISSION);
+    }
+
     // page counts from 1 (not an index)
     public static void sendCommandHelp(CommandSender sender, PoliticsBaseCommand baseCommand, int pageNumber) {
-        PagedList<PoliticsSubCommand> pages = new PagedArrayList<>(baseCommand.getSubCommands().stream()
+        PagedList<PoliticsSubcommand> pages = new PagedArrayList<>(baseCommand.getSubCommands().stream()
                 .filter(cmd -> cmd.getPermission() == null || sender.hasPermission(cmd.getPermission()))
                 .collect(Collectors.toList()));
         if (pageNumber > pages.pages()) {
@@ -52,21 +61,21 @@ public final class PoliticsCommandHelper {
         }
 
         MessageBuilder message = MessageUtil.startBlockMessage("/" + baseCommand.getName() + " Help (" + pageNumber + " of " + pages.pages() + ")");
-        List<PoliticsSubCommand> page = pages.getPage(pageNumber);
-        for (PoliticsSubCommand subCommand : page) {
-            message.newLine().highlight("/" + baseCommand.getName() + " " + subCommand.getName()).normal(" - " + subCommand.getDescription());
+        List<PoliticsSubcommand> page = pages.getPage(pageNumber);
+        for (PoliticsSubcommand subcommand : page) {
+            message.newLine().highlight("/" + baseCommand.getName() + " " + subcommand.getName()).normal(" - " + subcommand.getDescription());
         }
         message.send(sender);
     }
 
-    public static PoliticsSubCommand getClosestMatch(Collection<PoliticsSubCommand> subCommands, String label) {
-        return fuzzyLookup(subCommands, label, 2);
+    public static PoliticsSubcommand getClosestMatch(Collection<PoliticsSubcommand> subcommands, String label) {
+        return fuzzyLookup(subcommands, label, 2);
     }
 
-    private static PoliticsSubCommand fuzzyLookup(Collection<PoliticsSubCommand> collection, String name, int tolerance) {
+    private static PoliticsSubcommand fuzzyLookup(Collection<PoliticsSubcommand> collection, String name, int tolerance) {
         String adjName = name.replaceAll("[ _]", "").toLowerCase();
 
-        PoliticsSubCommand result = collection.stream()
+        PoliticsSubcommand result = collection.stream()
                 .filter(cmd -> cmd.getName().toLowerCase().equals(adjName) || cmd.getAliases().contains(name))
                 .findAny().orElse(null);
         if (result != null) {
@@ -74,8 +83,8 @@ public final class PoliticsCommandHelper {
         }
 
         int lowest = -1;
-        PoliticsSubCommand best = null;
-        for (PoliticsSubCommand cmd : collection) {
+        PoliticsSubcommand best = null;
+        for (PoliticsSubcommand cmd : collection) {
             char char0 = adjName.charAt(0);
             if (cmd.getName().charAt(0) != char0 && cmd.getAliases().stream().noneMatch(alias -> alias.charAt(0) == char0)) {
                 continue;

@@ -36,7 +36,7 @@ import pw.ollie.politics.world.plot.Plot;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
-public class GroupClaimCommand extends GroupSubCommand {
+public class GroupClaimCommand extends GroupSubcommand {
     GroupClaimCommand(GroupLevel groupLevel) {
         super("claim", groupLevel);
     }

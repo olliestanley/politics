@@ -21,6 +21,7 @@ package pw.ollie.politics.command.plot;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.PoliticsSubcommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.util.visualise.Visualisation;
 import pw.ollie.politics.world.plot.Plot;
@@ -28,7 +29,7 @@ import pw.ollie.politics.world.plot.Plot;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class PlotViewCommand extends PlotSubCommand {
+public class PlotViewCommand extends PoliticsSubcommand {
     PlotViewCommand() {
         super("view");
     }

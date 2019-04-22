@@ -35,7 +35,7 @@ import org.bukkit.entity.Player;
 import java.util.Set;
 import java.util.UUID;
 
-public class GroupJoinCommand extends GroupSubCommand {
+public class GroupJoinCommand extends GroupSubcommand {
     GroupJoinCommand(GroupLevel groupLevel) {
         super("join", groupLevel);
     }

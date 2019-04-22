@@ -21,7 +21,6 @@ package pw.ollie.politics.command.subplot;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
-import pw.ollie.politics.command.PoliticsCommandHelper;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.privilege.Privileges;
@@ -34,7 +33,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Arrays;
 import java.util.List;
 
-public class SubplotDestroyCommand extends SubplotSubCommand {
+public class SubplotDestroyCommand extends SubplotSubcommand {
     SubplotDestroyCommand() {
         super("destroy");
     }
@@ -48,8 +47,7 @@ public class SubplotDestroyCommand extends SubplotSubCommand {
         Subplot subplot = findSubplot(sender, args.getString(0, false), args);
         Plot parentPlot = subplot.getParent();
         Group plotOwner = parentPlot.getOwner();
-        if ((plotOwner == null || !plotOwner.can(sender, Privileges.GroupPlot.MANAGE_SUBPLOTS))
-                && !sender.hasPermission(PoliticsCommandHelper.PLOTS_ADMIN_PERMISSION)) {
+        if ((plotOwner == null || !plotOwner.can(sender, Privileges.GroupPlot.MANAGE_SUBPLOTS)) && !hasPlotsAdmin(sender)) {
             throw new CommandException("You can't do that.");
         }
 

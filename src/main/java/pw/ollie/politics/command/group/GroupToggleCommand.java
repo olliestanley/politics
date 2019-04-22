@@ -30,7 +30,7 @@ import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 
-public class GroupToggleCommand extends GroupSubCommand {
+public class GroupToggleCommand extends GroupSubcommand {
     GroupToggleCommand(GroupLevel groupLevel) {
         super("toggle", groupLevel);
     }

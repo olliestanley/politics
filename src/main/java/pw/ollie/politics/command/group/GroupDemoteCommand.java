@@ -34,7 +34,7 @@ import pw.ollie.politics.util.message.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class GroupDemoteCommand extends GroupSubCommand {
+public class GroupDemoteCommand extends GroupSubcommand {
     GroupDemoteCommand(GroupLevel groupLevel) {
         super("demote", groupLevel);
     }

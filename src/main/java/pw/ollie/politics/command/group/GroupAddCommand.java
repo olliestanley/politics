@@ -35,7 +35,7 @@ import org.bukkit.entity.Player;
 import java.util.Set;
 
 // note: admin command for force adding a player to a group
-public class GroupAddCommand extends GroupSubCommand {
+public class GroupAddCommand extends GroupSubcommand {
     GroupAddCommand(GroupLevel groupLevel) {
         super("add", groupLevel);
     }

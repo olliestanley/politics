@@ -26,6 +26,6 @@ public final class WarCommand extends PoliticsBaseCommand {
     public WarCommand(PoliticsPlugin plugin) {
         super(plugin, "war", "Base war management command");
 
-        // todo register subcommands
+        this.registerSubCommand(new WarDeclareCommand());
     }
 }

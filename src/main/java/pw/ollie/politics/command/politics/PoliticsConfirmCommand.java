@@ -24,13 +24,13 @@ import pw.ollie.politics.activity.ActivityManager;
 import pw.ollie.politics.activity.PoliticsActivity;
 import pw.ollie.politics.activity.activities.ConfirmationActivity;
 import pw.ollie.politics.command.CommandException;
-import pw.ollie.politics.command.PoliticsSubCommand;
+import pw.ollie.politics.command.PoliticsSubcommand;
 import pw.ollie.politics.command.args.Arguments;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class PoliticsConfirmCommand extends PoliticsSubCommand {
+public class PoliticsConfirmCommand extends PoliticsSubcommand {
     PoliticsConfirmCommand() {
         super("confirm");
     }

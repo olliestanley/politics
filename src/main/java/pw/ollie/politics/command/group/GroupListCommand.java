@@ -35,7 +35,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
-public class GroupListCommand extends GroupSubCommand {
+public class GroupListCommand extends GroupSubcommand {
     public static final int PAGE_HEIGHT = 6;
 
     GroupListCommand(GroupLevel groupLevel) {

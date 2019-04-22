@@ -33,7 +33,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Collections;
 import java.util.List;
 
-public class GroupInfoCommand extends GroupSubCommand {
+public class GroupInfoCommand extends GroupSubcommand {
     GroupInfoCommand(GroupLevel groupLevel) {
         super("info", groupLevel);
     }

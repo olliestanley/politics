@@ -22,12 +22,13 @@ package pw.ollie.politics.command.plot;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsCommandHelper;
+import pw.ollie.politics.command.PoliticsSubcommand;
 import pw.ollie.politics.command.args.Argument;
 import pw.ollie.politics.command.args.Arguments;
 
 import org.bukkit.command.CommandSender;
 
-public class PlotHelpCommand extends PlotSubCommand {
+public class PlotHelpCommand extends PoliticsSubcommand {
     PlotHelpCommand() {
         super("help");
     }

@@ -25,7 +25,7 @@ import pw.ollie.politics.command.args.Arguments;
 
 import org.bukkit.command.CommandSender;
 
-public class SubplotListCommand extends SubplotSubCommand {
+public class SubplotListCommand extends SubplotSubcommand {
     SubplotListCommand() {
         super("list");
     }

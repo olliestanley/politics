@@ -21,9 +21,9 @@ package pw.ollie.politics.command.plot;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.PoliticsSubcommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.util.message.MessageUtil;
 import pw.ollie.politics.world.plot.Plot;
@@ -34,7 +34,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Collections;
 import java.util.List;
 
-public class PlotInfoCommand extends PlotSubCommand {
+public class PlotInfoCommand extends PoliticsSubcommand {
     PlotInfoCommand() {
         super("info");
     }

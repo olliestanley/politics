@@ -28,7 +28,7 @@ import pw.ollie.politics.world.plot.Subplot;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class SubplotViewCommand extends SubplotSubCommand {
+public class SubplotViewCommand extends SubplotSubcommand {
     SubplotViewCommand() {
         super("view");
     }

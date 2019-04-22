@@ -22,13 +22,13 @@ package pw.ollie.politics.command.universe;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsCommandHelper;
-import pw.ollie.politics.command.PoliticsSubCommand;
+import pw.ollie.politics.command.PoliticsSubcommand;
 import pw.ollie.politics.command.args.Argument;
 import pw.ollie.politics.command.args.Arguments;
 
 import org.bukkit.command.CommandSender;
 
-public class UniverseHelpCommand extends PoliticsSubCommand {
+public class UniverseHelpCommand extends PoliticsSubcommand {
     UniverseHelpCommand() {
         super("help");
     }

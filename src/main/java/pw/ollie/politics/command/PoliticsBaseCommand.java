@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 public abstract class PoliticsBaseCommand extends BukkitCommand {
     private final PoliticsPlugin plugin;
-    private final List<PoliticsSubCommand> subCommands = new ArrayList<>();
+    private final List<PoliticsSubcommand> subcommands = new ArrayList<>();
 
     protected PoliticsBaseCommand(PoliticsPlugin plugin, String name, String description) {
         super(name.toLowerCase(), description, "Type '/" + name + " help' for usage help!", new ArrayList<>());
@@ -56,18 +56,18 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         }
 
         String arg1 = args.getString(0);
-        PoliticsSubCommand subCommand = findSubCommand(arg1);
+        PoliticsSubcommand subcommand = findSubCommand(arg1);
 
-        if (subCommand != null) {
-            if (checkPerms(subCommand, sender)) {
+        if (subcommand != null) {
+            if (checkPerms(subcommand, sender)) {
                 try {
-                    subCommand.runCommand(plugin, sender, args.subArgs(1, args.length(false)));
+                    subcommand.runCommand(plugin, sender, args.subArgs(1, args.length(false)));
                 } catch (CommandException e) {
                     MessageBuilder.beginError().append(e.getMessage()).send(sender);
                 }
             }
         } else {
-            PoliticsSubCommand closestMatch = PoliticsCommandHelper.getClosestMatch(subCommands, arg1);
+            PoliticsSubcommand closestMatch = PoliticsCommandHelper.getClosestMatch(subcommands, arg1);
 
             if (closestMatch != null) {
                 MessageBuilder.beginError().append("Unrecognised subcommand - did you mean '")
@@ -79,31 +79,31 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         }
     }
 
-    public boolean registerSubCommand(PoliticsSubCommand subCommand) {
-        String subCommandName = subCommand.getName().toLowerCase();
-        if (subCommands.stream()
-                .anyMatch(registered -> registered.getName().equals(subCommandName) || registered.getAliases().contains(subCommandName))) {
-            Politics.getLogger().log(Level.WARNING, "Duplicate command name or name used as alias for other command: " + subCommandName);
+    public boolean registerSubCommand(PoliticsSubcommand subcommand) {
+        String subcommandName = subcommand.getName().toLowerCase();
+        if (subcommands.stream()
+                .anyMatch(registered -> registered.getName().equals(subcommandName) || registered.getAliases().contains(subcommandName))) {
+            Politics.getLogger().log(Level.WARNING, "Duplicate command name or name used as alias for other command: " + subcommandName);
             return false;
         }
 
-        String subCommandPerm = subCommand.getPermission();
-        if (subCommandPerm != null) {
-            PoliticsCommandHelper.registerPermission(subCommandPerm);
+        String subcommandPerm = subcommand.getPermission();
+        if (subcommandPerm != null) {
+            PoliticsCommandHelper.registerPermission(subcommandPerm);
         }
 
-        subCommands.add(subCommand);
+        subcommands.add(subcommand);
         return true;
     }
 
-    public List<PoliticsSubCommand> getSubCommands() {
-        return new ArrayList<>(subCommands);
+    public List<PoliticsSubcommand> getSubCommands() {
+        return new ArrayList<>(subcommands);
     }
 
-    private PoliticsSubCommand findSubCommand(String arg) {
+    private PoliticsSubcommand findSubCommand(String arg) {
         String lcArg = arg.toLowerCase();
 
-        return subCommands.stream()
+        return subcommands.stream()
                 .filter(cmd -> cmd.getName().equals(lcArg) || cmd.getAliases().contains(lcArg))
                 .findFirst().orElse(null);
     }
@@ -121,7 +121,7 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
     public List<String> tabComplete(CommandSender sender, String name, String[] args, Location location) {
         // todo check if this is the right check - only tab complete if they haven't typed beyond the first argument
         if (args.length < 2) {
-            List<String> names = subCommands.stream().map(PoliticsSubCommand::getName).collect(Collectors.toList());
+            List<String> names = subcommands.stream().map(PoliticsSubcommand::getName).collect(Collectors.toList());
             List<String> completions = new ArrayList<>();
             StringUtil.copyPartialMatches(args[0], names, completions);
             Collections.sort(completions);
@@ -132,13 +132,13 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         return new ArrayList<>();
     }
 
-    private boolean checkPerms(PoliticsSubCommand subCommand, CommandSender sender) {
-        if (subCommand.getPermission() != null && !(sender.hasPermission(subCommand.getPermission()))) {
+    private boolean checkPerms(PoliticsSubcommand subcommand, CommandSender sender) {
+        if (subcommand.getPermission() != null && !(sender.hasPermission(subcommand.getPermission()))) {
             MessageBuilder.beginError().append("You don't have permission for that.").send(sender);
             return false;
         }
 
-        if (subCommand.isPlayerOnly() && !(sender instanceof Player)) {
+        if (subcommand.isPlayerOnly() && !(sender instanceof Player)) {
             MessageBuilder.beginError().append("You must be a player to do that.").send(sender);
             return false;
         }

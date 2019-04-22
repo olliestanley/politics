@@ -34,7 +34,7 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 
-public class GroupMotdCommand extends GroupSubCommand {
+public class GroupMotdCommand extends GroupSubcommand {
     GroupMotdCommand(GroupLevel groupLevel) {
         super("motd", groupLevel);
     }

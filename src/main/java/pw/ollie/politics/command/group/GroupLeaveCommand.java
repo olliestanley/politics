@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class GroupLeaveCommand extends GroupSubCommand {
+public class GroupLeaveCommand extends GroupSubcommand {
     GroupLeaveCommand(GroupLevel groupLevel) {
         super("leave", groupLevel);
     }

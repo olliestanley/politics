@@ -35,7 +35,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class GroupOnlineCommand extends GroupSubCommand {
+public class GroupOnlineCommand extends GroupSubcommand {
     GroupOnlineCommand(GroupLevel groupLevel) {
         super("online", groupLevel);
     }

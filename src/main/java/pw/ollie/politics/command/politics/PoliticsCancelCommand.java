@@ -23,14 +23,14 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.activity.ActivityManager;
 import pw.ollie.politics.activity.PoliticsActivity;
 import pw.ollie.politics.command.CommandException;
-import pw.ollie.politics.command.PoliticsSubCommand;
+import pw.ollie.politics.command.PoliticsSubcommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class PoliticsCancelCommand extends PoliticsSubCommand {
+public class PoliticsCancelCommand extends PoliticsSubcommand {
     PoliticsCancelCommand() {
         super("cancel");
     }

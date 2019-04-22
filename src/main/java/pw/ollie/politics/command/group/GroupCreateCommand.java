@@ -36,7 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class GroupCreateCommand extends GroupSubCommand {
+public class GroupCreateCommand extends GroupSubcommand {
     GroupCreateCommand(GroupLevel groupLevel) {
         super("create", groupLevel);
     }

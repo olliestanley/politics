@@ -21,7 +21,7 @@ package pw.ollie.politics.command.universe;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
-import pw.ollie.politics.command.PoliticsSubCommand;
+import pw.ollie.politics.command.PoliticsSubcommand;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.universe.RuleTemplates;
 import pw.ollie.politics.universe.UniverseRules;
@@ -32,7 +32,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Arrays;
 import java.util.List;
 
-public class UniverseGenRulesCommand extends PoliticsSubCommand {
+public class UniverseGenRulesCommand extends PoliticsSubcommand {
     UniverseGenRulesCommand() {
         super("genrules");
     }

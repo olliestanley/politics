@@ -19,10 +19,35 @@
  */
 package pw.ollie.politics.command.war;
 
-import pw.ollie.politics.command.PoliticsSubCommand;
+import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.PoliticsSubcommand;
+import pw.ollie.politics.command.args.Arguments;
 
-public abstract class WarSubCommand extends PoliticsSubCommand {
-    protected WarSubCommand(String name) {
-        super(name);
+import org.bukkit.command.CommandSender;
+
+public class WarDeclareCommand extends PoliticsSubcommand {
+    WarDeclareCommand() {
+        super("declare");
+    }
+
+    @Override
+    public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        // todo
+    }
+
+    @Override
+    public String getPermission() {
+        return "politics.war.declare";
+    }
+
+    @Override
+    public String getUsage() {
+        return "/war declare <target> [-g declarer]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Declare war on a target organisation.";
     }
 }

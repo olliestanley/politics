@@ -33,7 +33,7 @@ import pw.ollie.politics.util.message.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class GroupSetroleCommand extends GroupSubCommand {
+public class GroupSetroleCommand extends GroupSubcommand {
     GroupSetroleCommand(GroupLevel groupLevel) {
         super("setrole", groupLevel);
     }

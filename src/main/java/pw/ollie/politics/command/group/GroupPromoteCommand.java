@@ -34,7 +34,7 @@ import pw.ollie.politics.util.message.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class GroupPromoteCommand extends GroupSubCommand {
+public class GroupPromoteCommand extends GroupSubcommand {
     GroupPromoteCommand(GroupLevel groupLevel) {
         super("promote", groupLevel);
     }
@@ -79,7 +79,7 @@ public class GroupPromoteCommand extends GroupSubCommand {
         }
 
         if (!hasAdmin(sender)) {
-            // cast is safe as a console sender is filtered out by the hasAdmin check
+            // cast is safe as a console sender is filtered out by the hasPlotsAdmin check
             Role myRole = group.getRole(((Player) sender).getUniqueId());
             if (myRole.getRank() - next.getRank() <= 1) {
                 throw new CommandException("You can't promote someone to a role equal to or higher than your own!");

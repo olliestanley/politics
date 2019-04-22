@@ -39,12 +39,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class GroupManageCommand extends GroupSubCommand {
-    private final Map<String, GroupManageSubCommand> subCommands;
+public class GroupManageCommand extends GroupSubcommand {
+    private final Map<String, GroupManageSubCommand> subcommands;
 
     GroupManageCommand(GroupLevel groupLevel) {
         super("manage", groupLevel);
-        this.subCommands = new THashMap<>();
+        this.subcommands = new THashMap<>();
 
         this.registerSubCommand(new GroupManageInviteCommand());
         this.registerSubCommand(new GroupManageJoinCommand());
@@ -63,17 +63,17 @@ public class GroupManageCommand extends GroupSubCommand {
             throw new CommandException("There was no subcommand specified (invite/join/disaffiliate).");
         }
 
-        String subCommand = args.getString(0, false);
-        GroupManageSubCommand subCommandExecutor = subCommands.get(subCommand);
-        if (subCommandExecutor == null) {
+        String subcommand = args.getString(0, false);
+        GroupManageSubCommand subcommandExecutor = subcommands.get(subcommand);
+        if (subcommandExecutor == null) {
             throw new CommandException("The specified subcommand is invalid (invite/join/disaffiliate).");
         }
 
-        subCommandExecutor.runCommand(plugin, sender, args.subArgs(1, args.length()), group);
+        subcommandExecutor.runCommand(plugin, sender, args.subArgs(1, args.length()), group);
     }
 
-    private void registerSubCommand(GroupManageSubCommand subCommand) {
-        subCommands.put(subCommand.getName(), subCommand);
+    private void registerSubCommand(GroupManageSubCommand subcommand) {
+        subcommands.put(subcommand.getName(), subcommand);
     }
 
     private abstract class GroupManageSubCommand {
