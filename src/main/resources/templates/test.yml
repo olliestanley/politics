@@ -25,6 +25,7 @@ levels:
     has-immediate-members: true
     can-own-land: true
     allowed-multiple: false
+    can-war: false
   town:
     name: Town
     plural: Towns
@@ -47,3 +48,4 @@ levels:
     has-immediate-members: false
     can-own-land: true
     allowed-multiple: false
+    can-war: true

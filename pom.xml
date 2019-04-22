@@ -267,6 +267,12 @@
                                     </includes>
                                 </filter>
                                 <filter>
+                                    <artifact>commons-lang:commons-lang</artifact>
+                                    <includes>
+                                        <include>org/apache/**</include>
+                                    </includes>
+                                </filter>
+                                <filter>
                                     <artifact>org.bukkit:*</artifact>
                                     <excludes>
                                         <exclude>**</exclude>
