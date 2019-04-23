@@ -91,6 +91,14 @@ public final class WarManager {
             throw new IllegalArgumentException("cannot start war between groups of different levels");
         }
 
+        if (!aggressor.getLevel().canWar()) {
+            return false;
+        }
+        if (aggressor.getBooleanProperty(GroupProperty.PEACEFUL)
+                || defender.getBooleanProperty(GroupProperty.PEACEFUL)) {
+            return false;
+        }
+
         WarBeginEvent event = PoliticsEventFactory.callWarBeginEvent(war);
         if (event.isCancelled()) {
             return false;

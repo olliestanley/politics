@@ -21,7 +21,6 @@ package pw.ollie.politics.universe;
 
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
-import pw.ollie.politics.universe.Universe;
 
 import java.util.Set;
 import java.util.UUID;
