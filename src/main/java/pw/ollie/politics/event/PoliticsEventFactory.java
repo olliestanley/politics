@@ -21,8 +21,11 @@ package pw.ollie.politics.event;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.activity.PoliticsActivity;
+import pw.ollie.politics.economy.PoliticsTransferReason;
+import pw.ollie.politics.economy.TaxDetails;
 import pw.ollie.politics.event.activity.ActivityBeginEvent;
 import pw.ollie.politics.event.activity.ActivityEndEvent;
+import pw.ollie.politics.event.group.GroupBalanceChangeEvent;
 import pw.ollie.politics.event.group.GroupChildAddEvent;
 import pw.ollie.politics.event.group.GroupChildInviteEvent;
 import pw.ollie.politics.event.group.GroupChildRemoveEvent;
@@ -33,6 +36,7 @@ import pw.ollie.politics.event.group.GroupMemberLeaveEvent;
 import pw.ollie.politics.event.group.GroupMemberRoleChangeEvent;
 import pw.ollie.politics.event.group.GroupMemberSpawnEvent;
 import pw.ollie.politics.event.group.GroupPropertySetEvent;
+import pw.ollie.politics.event.group.GroupTaxImposeEvent;
 import pw.ollie.politics.event.group.GroupUnclaimPlotEvent;
 import pw.ollie.politics.event.player.PlayerChangePlotEvent;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
@@ -49,8 +53,8 @@ import pw.ollie.politics.event.war.WarFinishEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.group.privilege.Privilege;
-import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.group.war.War;
+import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.PlotDamageSource;
 import pw.ollie.politics.world.plot.PlotProtectionType;
@@ -64,6 +68,9 @@ import org.bukkit.event.Event;
 
 import java.util.UUID;
 
+/**
+ * Static methods for calling events which return the called event for ease of access.
+ */
 public final class PoliticsEventFactory {
     public static ActivityBeginEvent callActivityBeginEvent(PoliticsActivity activity) {
         return callEvent(new ActivityBeginEvent(activity));
@@ -71,6 +78,10 @@ public final class PoliticsEventFactory {
 
     public static ActivityEndEvent callActivityEndEvent(PoliticsActivity activity) {
         return callEvent(new ActivityEndEvent(activity));
+    }
+
+    public static GroupBalanceChangeEvent callGroupBalanceChangeEvent(Group group, double balance, PoliticsTransferReason reason) {
+        return callEvent(new GroupBalanceChangeEvent(group, balance, reason));
     }
 
     public static GroupChildAddEvent callGroupChildAddEvent(Group group, Group child) {
@@ -89,16 +100,8 @@ public final class PoliticsEventFactory {
         return callEvent(new GroupCreateEvent(group, creator));
     }
 
-    public static GroupPropertySetEvent callGroupPropertySetEvent(Group group, int property, Object value) {
-        return callEvent(new GroupPropertySetEvent(group, property, value));
-    }
-
     public static GroupClaimPlotEvent callGroupClaimPlotEvent(Group group, Plot plot, CommandSender claimer) {
         return callEvent(new GroupClaimPlotEvent(group, plot, claimer));
-    }
-
-    public static GroupUnclaimPlotEvent callGroupUnclaimPlotEvent(Group group, Plot plot, CommandSender unclaimer) {
-        return callEvent(new GroupUnclaimPlotEvent(group, plot, unclaimer));
     }
 
     public static GroupMemberJoinEvent callGroupMemberJoinEvent(Group group, OfflinePlayer member, Role role) {
@@ -115,6 +118,22 @@ public final class PoliticsEventFactory {
 
     public static GroupMemberSpawnEvent callGroupMemberSpawnEvent(Group group, OfflinePlayer player) {
         return callEvent(new GroupMemberSpawnEvent(group, player));
+    }
+
+    public static GroupPropertySetEvent callGroupPropertySetEvent(Group group, int property, Object value) {
+        return callEvent(new GroupPropertySetEvent(group, property, value));
+    }
+
+    public static GroupTaxImposeEvent callGroupTaxImposeEvent(Group group, TaxDetails taxDetails) {
+        return callEvent(new GroupTaxImposeEvent(group, taxDetails));
+    }
+
+    public static GroupUnclaimPlotEvent callGroupUnclaimPlotEvent(Group group, Plot plot, CommandSender unclaimer) {
+        return callEvent(new GroupUnclaimPlotEvent(group, plot, unclaimer));
+    }
+
+    public static PlayerChangePlotEvent callPlayerChangePlotEvent(Player player, Plot from, Plot to) {
+        return callEvent(new PlayerChangePlotEvent(player, from, to));
     }
 
     public static PlotOwnerChangeEvent callPlotOwnerChangeEvent(Plot plot, int groupId, boolean add) {
@@ -143,10 +162,6 @@ public final class PoliticsEventFactory {
 
     public static SubplotProtectionTriggerEvent callSubplotProtectionTriggerEvent(Plot plot, Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionType type) {
         return callEvent(new SubplotProtectionTriggerEvent(plot, subplot, damaged, source, type));
-    }
-
-    public static PlayerChangePlotEvent callPlayerChangePlotEvent(Player player, Plot from, Plot to) {
-        return callEvent(new PlayerChangePlotEvent(player, from, to));
     }
 
     public static UniverseCreateEvent callUniverseCreateEvent(Universe universe) {

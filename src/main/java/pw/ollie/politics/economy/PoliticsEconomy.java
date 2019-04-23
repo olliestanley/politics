@@ -19,6 +19,7 @@
  */
 package pw.ollie.politics.economy;
 
+import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.Group;
 
 import java.util.Map;
@@ -29,14 +30,24 @@ import java.util.UUID;
  * <p>
  * This mainly deals with the economic side of groups and their balances, taxation, etc.
  */
-public interface PoliticsEconomy {
+public abstract class PoliticsEconomy {
+    private final PoliticsPlugin plugin;
+
+    protected PoliticsEconomy(PoliticsPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    public PoliticsPlugin getPlugin() {
+        return plugin;
+    }
+
     /**
      * Gets the current balance of a group.
      *
      * @param group the group to get balance for
      * @return the balance of the group
      */
-    double getBalance(Group group);
+    public abstract double getBalance(Group group);
 
     /**
      * Gives the specified group the specified amount of money.
@@ -48,7 +59,7 @@ public interface PoliticsEconomy {
      * @param reason the reason for the group receiving money
      * @return the result of the attempted transfer
      */
-    PoliticsEconomyResult give(Group group, double amount, PoliticsTransferReason reason);
+    public abstract PoliticsEconomyResult give(Group group, double amount, PoliticsTransferReason reason);
 
     /**
      * Takes from the specified group the specified amount of money.
@@ -60,7 +71,7 @@ public interface PoliticsEconomy {
      * @param reason the reason for the group losing money
      * @return the result of the attempted transfer
      */
-    PoliticsEconomyResult take(Group group, double amount, PoliticsTransferReason reason);
+    public abstract PoliticsEconomyResult take(Group group, double amount, PoliticsTransferReason reason);
 
     /**
      * Takes from all members of the group the specified amount, depositing it into the group's balance.
@@ -69,5 +80,5 @@ public interface PoliticsEconomy {
      * @param details the description of the tax to impose
      * @return a map of the unique ids of members to the results of the attempt to tax them
      */
-    Map<UUID, PoliticsEconomyResult> taxMembers(Group group, TaxDetails details);
+    public abstract Map<UUID, PoliticsEconomyResult> taxMembers(Group group, TaxDetails details);
 }

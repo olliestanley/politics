@@ -32,11 +32,9 @@ import java.util.UUID;
 /**
  * Vault-based economy functions implementation for Politics.
  */
-public class PoliticsEconomyVault implements PoliticsEconomy {
-    private final PoliticsPlugin plugin;
-
+public class PoliticsEconomyVault extends PoliticsEconomy {
     public PoliticsEconomyVault(PoliticsPlugin plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
     @Override
