@@ -94,6 +94,11 @@ public final class PoliticsPlugin extends JavaPlugin {
             } else {
                 this.getLogger().log(Level.SEVERE, "Economy features are set to enabled but the specified economy type is invalid. Economic features will not be enabled.");
             }
+
+            if (this.politicsEconomy != null && !this.politicsEconomy.loadEconomy()) {
+                this.getLogger().log(Level.SEVERE, "Economy features are set to enabled but the economy type could not load. Economic features will not be enabled.");
+                this.politicsEconomy = null;
+            }
         }
 
         this.commandManager = new PoliticsCommandManager(this);

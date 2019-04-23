@@ -19,11 +19,16 @@
  */
 package pw.ollie.politics.economy.vault;
 
+import net.milkbowl.vault.economy.Economy;
+
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.economy.PoliticsEconomy;
 import pw.ollie.politics.economy.PoliticsEconomyResult;
 import pw.ollie.politics.economy.TaxDetails;
 import pw.ollie.politics.group.Group;
+
+import org.bukkit.Server;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.util.Map;
 import java.util.UUID;
@@ -32,8 +37,26 @@ import java.util.UUID;
  * Vault-based economy functions implementation for Politics.
  */
 public class PoliticsEconomyVault extends PoliticsEconomy {
+    private Economy vaultEconomy;
+
     public PoliticsEconomyVault(PoliticsPlugin plugin) {
         super(plugin);
+    }
+
+    @Override
+    public boolean loadEconomy() {
+        Server server = getPlugin().getServer();
+        if (server.getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+
+        RegisteredServiceProvider<Economy> rsp = server.getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+
+        vaultEconomy = rsp.getProvider();
+        return vaultEconomy != null;
     }
 
     @Override

@@ -40,6 +40,8 @@ public abstract class PoliticsEconomy {
         this.plugin = plugin;
     }
 
+    public abstract boolean loadEconomy();
+
     public PoliticsPlugin getPlugin() {
         return plugin;
     }
