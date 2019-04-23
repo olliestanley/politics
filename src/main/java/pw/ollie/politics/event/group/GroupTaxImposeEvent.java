@@ -19,26 +19,39 @@
  */
 package pw.ollie.politics.event.group;
 
-import pw.ollie.politics.economy.TaxDetails;
 import pw.ollie.politics.group.Group;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
+
+import java.util.UUID;
 
 public class GroupTaxImposeEvent extends GroupEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
-    private final TaxDetails taxDetails;
+    private final UUID taxedMember;
+    private final double amount;
 
     private boolean cancelled;
 
-    public GroupTaxImposeEvent(Group group, TaxDetails taxDetails) {
+    public GroupTaxImposeEvent(Group group, UUID taxedMember, double amount) {
         super(group);
-        this.taxDetails = taxDetails;
+        this.taxedMember = taxedMember;
+        this.amount = amount;
     }
 
-    public TaxDetails getTaxDetails() {
-        return taxDetails;
+    public Player getTaxedMember() {
+        return Bukkit.getPlayer(taxedMember);
+    }
+
+    public UUID getTaxedMemberId() {
+        return taxedMember;
+    }
+
+    public double getAmount() {
+        return amount;
     }
 
     @Override

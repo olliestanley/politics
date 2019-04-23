@@ -24,13 +24,11 @@ import net.milkbowl.vault.economy.Economy;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.economy.PoliticsEconomy;
 import pw.ollie.politics.economy.PoliticsEconomyResult;
-import pw.ollie.politics.economy.TaxDetails;
 import pw.ollie.politics.group.Group;
 
 import org.bukkit.Server;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -60,8 +58,7 @@ public class PoliticsEconomyVault extends PoliticsEconomy {
     }
 
     @Override
-    public Map<UUID, PoliticsEconomyResult> taxMembers(Group group, TaxDetails details) {
-        // todo
+    public PoliticsEconomyResult taxMember(Group group, UUID member, double amount) {
         return null;
     }
 }

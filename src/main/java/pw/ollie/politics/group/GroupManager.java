@@ -19,10 +19,15 @@
  */
 package pw.ollie.politics.group;
 
+import gnu.trove.set.hash.THashSet;
+
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.universe.Universe;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public final class GroupManager {
     private final PoliticsPlugin plugin;
@@ -31,6 +36,14 @@ public final class GroupManager {
         this.plugin = plugin;
 
         plugin.getServer().getPluginManager().registerEvents(new GroupProtectionListener(plugin), plugin);
+    }
+
+    public Set<Group> getAllCitizenGroups(UUID playerId) {
+        Set<Group> result = new THashSet<>();
+        for (Universe universe : plugin.getUniverseManager().getUniverses()) {
+            result.addAll(universe.getCitizenGroups(playerId));
+        }
+        return result;
     }
 
     public List<GroupLevel> getGroupLevels() {

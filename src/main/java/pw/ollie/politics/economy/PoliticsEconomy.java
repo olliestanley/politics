@@ -113,11 +113,12 @@ public abstract class PoliticsEconomy {
     }
 
     /**
-     * Takes from all members of the group the specified amount, depositing it into the group's balance.
+     * Taxes the given member of the given group by the given amount.
      *
-     * @param group   the group to tax the members of
-     * @param details the description of the tax to impose
-     * @return a map of the unique ids of members to the results of the attempt to tax them
+     * @param group   the group to tax the member of
+     * @param member  the member to tax
+     * @param amount  the amount to tax the member
+     * @return the result of the attempt to tax the member
      */
-    public abstract Map<UUID, PoliticsEconomyResult> taxMembers(Group group, TaxDetails details);
+    public abstract PoliticsEconomyResult taxMember(Group group, UUID member, double amount);
 }

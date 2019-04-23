@@ -15,3 +15,6 @@ wars:
 economic:
   enabled: true
   economy-type: vault
+  tax: false
+  max-fixed-tax: 10
+  tax-period: 1440 # minutes

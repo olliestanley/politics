@@ -22,7 +22,6 @@ package pw.ollie.politics.event;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.activity.PoliticsActivity;
 import pw.ollie.politics.economy.PoliticsTransferReason;
-import pw.ollie.politics.economy.TaxDetails;
 import pw.ollie.politics.event.activity.ActivityBeginEvent;
 import pw.ollie.politics.event.activity.ActivityEndEvent;
 import pw.ollie.politics.event.group.GroupBalanceChangeEvent;
@@ -124,8 +123,8 @@ public final class PoliticsEventFactory {
         return callEvent(new GroupPropertySetEvent(group, property, value));
     }
 
-    public static GroupTaxImposeEvent callGroupTaxImposeEvent(Group group, TaxDetails taxDetails) {
-        return callEvent(new GroupTaxImposeEvent(group, taxDetails));
+    public static GroupTaxImposeEvent callGroupTaxImposeEvent(Group group, UUID taxedMember, double amount) {
+        return callEvent(new GroupTaxImposeEvent(group, taxedMember, amount));
     }
 
     public static GroupUnclaimPlotEvent callGroupUnclaimPlotEvent(Group group, Plot plot, CommandSender unclaimer) {

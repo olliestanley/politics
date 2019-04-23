@@ -43,6 +43,9 @@ public final class PoliticsConfig {
     // economy
     private boolean economyEnabled;
     private String economyType;
+    private boolean taxEnabled;
+    private double maxFixedTax;
+    private int taxPeriod;
 
     public PoliticsConfig(PoliticsPlugin plugin) {
         this.plugin = plugin;
@@ -65,6 +68,18 @@ public final class PoliticsConfig {
         return economyType;
     }
 
+    public boolean isTaxEnabled() {
+        return taxEnabled;
+    }
+
+    public double getMaxFixedTax() {
+        return maxFixedTax;
+    }
+
+    public int getTaxPeriod() {
+        return taxPeriod;
+    }
+
     void loadConfig() {
         // save the default config file without overwriting an existing one
         plugin.saveResource("config.yml", false);
@@ -85,5 +100,8 @@ public final class PoliticsConfig {
         ConfigurationSection economicSection = ConfigUtil.getOrCreateSection(config, "economic");
         economyEnabled = economicSection.getBoolean("enabled", true);
         economyType = economicSection.getString("economy-type", "vault").toLowerCase();
+        taxEnabled = economicSection.getBoolean("tax", false);
+        maxFixedTax = economicSection.getDouble("max-fixed-tax", 10);
+        taxPeriod = economicSection.getInt("tax-period", 1440);
     }
 }

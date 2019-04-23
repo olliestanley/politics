@@ -22,6 +22,8 @@ package pw.ollie.politics;
 import pw.ollie.politics.activity.ActivityManager;
 import pw.ollie.politics.command.PoliticsCommandManager;
 import pw.ollie.politics.data.PoliticsFileSystem;
+import pw.ollie.politics.economy.PoliticsEconomy;
+import pw.ollie.politics.economy.TaxationManager;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
@@ -37,6 +39,10 @@ import org.bukkit.World;
 
 import java.util.logging.Logger;
 
+/**
+ * Static access methods for Politics' managers and other objects. Note that some methods may return null if the
+ * relevant aspect of Politics is configured to be disabled.
+ */
 public final class Politics {
     public static PoliticsPlugin getPlugin() {
         return PoliticsPlugin.instance();
@@ -80,6 +86,14 @@ public final class Politics {
 
     public static WarManager getWarManager() {
         return Politics.getPlugin().getWarManager();
+    }
+
+    public static PoliticsEconomy getPoliticsEconomy() {
+        return Politics.getPlugin().getEconomy();
+    }
+
+    public static TaxationManager getTaxationManager() {
+        return Politics.getPlugin().getTaxationManager();
     }
 
     public static PoliticsCommandManager getCommandManager() {

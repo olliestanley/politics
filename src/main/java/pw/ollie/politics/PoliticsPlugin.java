@@ -24,6 +24,7 @@ import pw.ollie.politics.command.PoliticsCommandManager;
 import pw.ollie.politics.data.PoliticsDataSaveTask;
 import pw.ollie.politics.data.PoliticsFileSystem;
 import pw.ollie.politics.economy.PoliticsEconomy;
+import pw.ollie.politics.economy.TaxationManager;
 import pw.ollie.politics.economy.vault.PoliticsEconomyVault;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
@@ -51,6 +52,7 @@ public final class PoliticsPlugin extends JavaPlugin {
     private ActivityManager activityManager;
     private WarManager warManager;
     private PoliticsEconomy politicsEconomy;
+    private TaxationManager taxationManager;
 
     private PoliticsCommandManager commandManager;
 
@@ -88,8 +90,8 @@ public final class PoliticsPlugin extends JavaPlugin {
 
         PluginManager pluginManager = this.getServer().getPluginManager();
 
-        if (config.areEconomicFeaturesEnabled()) {
-            if (config.getEconomyImplementation().equals("vault") && pluginManager.getPlugin("Vault") != null) {
+        if (this.config.areEconomicFeaturesEnabled()) {
+            if (this.config.getEconomyImplementation().equals("vault") && pluginManager.getPlugin("Vault") != null) {
                 this.politicsEconomy = new PoliticsEconomyVault(this);
             } else {
                 this.getLogger().log(Level.SEVERE, "Economy features are set to enabled but the specified economy type is invalid. Economic features will not be enabled.");
@@ -98,6 +100,11 @@ public final class PoliticsPlugin extends JavaPlugin {
             if (this.politicsEconomy != null && !this.politicsEconomy.loadEconomy()) {
                 this.getLogger().log(Level.SEVERE, "Economy features are set to enabled but the economy type could not load. Economic features will not be enabled.");
                 this.politicsEconomy = null;
+            }
+
+            if (this.config.isTaxEnabled() && this.politicsEconomy != null) {
+                this.taxationManager = new TaxationManager(this);
+                this.taxationManager.loadTaxData();
             }
         }
 
@@ -116,8 +123,12 @@ public final class PoliticsPlugin extends JavaPlugin {
     public void onDisable() {
         this.saveTask.cancel();
 
-        if (config.areWarsEnabled()) {
+        if (this.config.areWarsEnabled()) {
             this.warManager.saveWars();
+        }
+
+        if (this.taxationManager != null) {
+            this.taxationManager.saveTaxData(true);
         }
 
         this.worldManager.saveWorlds();
@@ -157,6 +168,14 @@ public final class PoliticsPlugin extends JavaPlugin {
 
     public WarManager getWarManager() {
         return warManager;
+    }
+
+    public PoliticsEconomy getEconomy() {
+        return politicsEconomy;
+    }
+
+    public TaxationManager getTaxationManager() {
+        return taxationManager;
     }
 
     public PoliticsCommandManager getCommandManager() {

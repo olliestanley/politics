@@ -56,6 +56,7 @@ public final class GroupLevel {
     private final boolean allowedMultiple;
     private final boolean canWar;
     private final boolean mayBePeaceful;
+    private final boolean canTax;
     private final Map<String, String> otherSettings;
 
     private Set<GroupLevel> allowedChildren;
@@ -63,7 +64,7 @@ public final class GroupLevel {
     private GroupLevel(String id, String name, int rank, Map<String, Role> roles, String plural,
                        Map<String, RoleTrack> tracks, Role initial, Role founder, boolean friendlyFire,
                        boolean immediateMembers, boolean ownsLand, boolean allowedMultiple, boolean canWar,
-                       boolean mayBePeaceful, Map<String, String> otherSettings) {
+                       boolean mayBePeaceful, boolean canTax, Map<String, String> otherSettings) {
         this.id = id;
         this.name = name;
         this.rank = rank;
@@ -78,6 +79,7 @@ public final class GroupLevel {
         this.allowedMultiple = allowedMultiple;
         this.canWar = canWar;
         this.mayBePeaceful = mayBePeaceful;
+        this.canTax = canTax;
         this.otherSettings = otherSettings;
     }
 
@@ -157,6 +159,10 @@ public final class GroupLevel {
         return canWar;
     }
 
+    public boolean canTax() {
+        return canTax;
+    }
+
     public boolean canBePeaceful() {
         return mayBePeaceful;
     }
@@ -213,24 +219,16 @@ public final class GroupLevel {
     }
 
     public static GroupLevel load(String id, ConfigurationSection node, Map<GroupLevel, List<String>> levels) {
-        Set<String> keys = new THashSet<>();
-
         String levelName = node.getString("name", id);
-        keys.add("name");
-
-        id = id.toLowerCase();
-
+        String plural = node.getString("plural", levelName + "s");
         int rank = node.getInt("rank");
-        keys.add("rank");
 
         // Load children
         List<String> children = node.getStringList("children");
-        keys.add("children");
 
         // Load roles
         Map<String, Role> rolesMap = new HashMap<>();
         ConfigurationSection rolesNode = node.getConfigurationSection("roles");
-        keys.add("roles");
         if (rolesNode != null) {
             for (String roleId : rolesNode.getKeys(false)) {
                 ConfigurationSection roleNode = rolesNode.getConfigurationSection(roleId);
@@ -238,9 +236,6 @@ public final class GroupLevel {
                 rolesMap.put(roleId, role);
             }
         }
-
-        String plural = node.getString("plural", levelName + "s");
-        keys.add("plural");
 
         Map<String, RoleTrack> tracks = new HashMap<>();
         Role initial = null;
@@ -306,49 +301,62 @@ public final class GroupLevel {
             }
         }
 
-        keys.add("tracks");
-        keys.add("initial");
-        keys.add("founder");
-
         boolean friendlyFire = node.getBoolean("friendly-fire", false);
-        keys.add("friendly-fire");
-
         boolean immediateMembers = node.getBoolean("has-immediate-members", true);
-        keys.add("has-immediate-members");
-
         boolean ownsLand = node.getBoolean("can-own-land", true);
-        keys.add("can-own-land");
-
         boolean allowedMultiple = node.getBoolean("allowed-multiple", false);
-        keys.add("allowed-multiple");
-
         boolean canWar = node.getBoolean("can-war", false);
-        keys.add("can-war");
-
         boolean mayBePeaceful = node.getBoolean("may-be-peaceful", true);
-        keys.add("may-be-peaceful");
+        boolean canTax = node.getBoolean("can-tax", false);
 
         Map<String, String> otherSettings = new THashMap<>();
-        node.getKeys(false).stream()
-                .filter(key -> !keys.contains(key))
-                .forEach(key -> {
-                    String value = node.getString(key);
-                    if (value != null) {
-                        otherSettings.put(key, value);
-                    }
-                });
+        node.getKeys(false).stream().filter(GroupLevel::notUsedKey).forEach(key -> {
+            String value = node.getString(key);
+            if (value != null) {
+                otherSettings.put(key, value);
+            }
+        });
 
-        GroupLevel theLevel = new GroupLevel(id, levelName, rank, rolesMap, plural, tracks, initial, founder,
-                friendlyFire, immediateMembers, ownsLand, allowedMultiple, canWar, mayBePeaceful, otherSettings);
+        GroupLevel theLevel = new GroupLevel(id.toLowerCase(), levelName, rank, rolesMap, plural, tracks, initial,
+                founder, friendlyFire, immediateMembers, ownsLand, allowedMultiple, canWar, mayBePeaceful, canTax,
+                otherSettings);
         // Children so we can get our allowed children in the future
         levels.put(theLevel, children);
         return theLevel;
     }
 
+    private static Set<String> configKeys = new THashSet<>();
+
+    static {
+        configKeys.add("name");
+        configKeys.add("plural");
+        configKeys.add("rank");
+        configKeys.add("children");
+        configKeys.add("roles");
+        configKeys.add("tracks");
+        configKeys.add("initial");
+        configKeys.add("founder");
+        configKeys.add("friendly-fire");
+        configKeys.add("has-immediate-members");
+        configKeys.add("can-own-land");
+        configKeys.add("allowed-multiple");
+        configKeys.add("can-war");
+        configKeys.add("may-be-peaceful");
+        configKeys.add("can-tax");
+    }
+
+    private static boolean notUsedKey(String key) {
+        return !configKeys.contains(key);
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         GroupLevel that = (GroupLevel) o;
         return id.equals(that.id) &&
                 name.equals(that.name);

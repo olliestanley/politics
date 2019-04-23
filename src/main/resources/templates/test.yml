@@ -29,6 +29,7 @@ levels:
     allowed-multiple: false
     can-war: false
     may-be-peaceful: true
+    can-tax: false
   town:
     name: Town
     plural: Towns
@@ -53,3 +54,4 @@ levels:
     allowed-multiple: false
     can-war: true
     may-be-peaceful: true
+    can-tax: true

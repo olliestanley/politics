@@ -32,6 +32,7 @@ public final class GroupProperty {
     public static final int PEACEFUL = 0x9;
     public static final int ENTRY_MESSAGE = 0x10;
     public static final int EXIT_MESSAGE = 0x11;
+    public static final int FIXED_TAX = 0x12;
 
     private GroupProperty() {
         throw new UnsupportedOperationException();
