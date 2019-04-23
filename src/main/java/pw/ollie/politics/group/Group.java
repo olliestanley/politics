@@ -38,7 +38,6 @@ import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.universe.UniverseRules;
-import pw.ollie.politics.util.Position;
 import pw.ollie.politics.util.math.RotatedPosition;
 import pw.ollie.politics.util.serial.PropertyDeserializationException;
 import pw.ollie.politics.util.serial.PropertySerializer;
@@ -169,8 +168,20 @@ public final class Group implements Comparable<Group>, Storable {
 
     public int getIntProperty(int property, int def) {
         Object p = getProperty(property);
-        if (p instanceof Integer) {
-            return (Integer) p;
+        if (p instanceof Number) {
+            return ((Number) p).intValue();
+        }
+        return def;
+    }
+
+    public double getDoubleProperty(int property) {
+        return getDoubleProperty(property, 0.0);
+    }
+
+    public double getDoubleProperty(int property, double def) {
+        Object p = getProperty(property);
+        if (p instanceof Number) {
+            return ((Number) p).doubleValue();
         }
         return def;
     }
@@ -207,28 +218,6 @@ public final class Group implements Comparable<Group>, Storable {
 
     public void setProperty(int property, RotatedPosition value) {
         setProperty(property, PropertySerializer.serializeRotatedPosition(value));
-    }
-
-    public Position getPositionProperty(int property) {
-        return getPositionProperty(property, null);
-    }
-
-    public Position getPositionProperty(int property, Position def) {
-        String s = getStringProperty(property);
-        if (s == null) {
-            return def;
-        }
-
-        try {
-            return PropertySerializer.deserializePosition(s);
-        } catch (PropertyDeserializationException ex) {
-            Politics.getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a position!", ex);
-            return def;
-        }
-    }
-
-    public void setProperty(int property, Position value) {
-        setProperty(property, PropertySerializer.serializePosition(value));
     }
 
     public void setProperty(int property, Object value) {

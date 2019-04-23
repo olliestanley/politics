@@ -22,7 +22,6 @@ package pw.ollie.politics.economy.vault;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.economy.PoliticsEconomy;
 import pw.ollie.politics.economy.PoliticsEconomyResult;
-import pw.ollie.politics.economy.PoliticsTransferReason;
 import pw.ollie.politics.economy.TaxDetails;
 import pw.ollie.politics.group.Group;
 
@@ -35,24 +34,6 @@ import java.util.UUID;
 public class PoliticsEconomyVault extends PoliticsEconomy {
     public PoliticsEconomyVault(PoliticsPlugin plugin) {
         super(plugin);
-    }
-
-    @Override
-    public double getBalance(Group group) {
-        // todo
-        return 0;
-    }
-
-    @Override
-    public PoliticsEconomyResult give(Group group, double amount, PoliticsTransferReason reason) {
-        // todo
-        return null;
-    }
-
-    @Override
-    public PoliticsEconomyResult take(Group group, double amount, PoliticsTransferReason reason) {
-        // todo
-        return null;
     }
 
     @Override

@@ -20,7 +20,10 @@
 package pw.ollie.politics.economy;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.event.PoliticsEventFactory;
+import pw.ollie.politics.event.group.GroupBalanceChangeEvent;
 import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupProperty;
 
 import java.util.Map;
 import java.util.UUID;
@@ -49,7 +52,9 @@ public abstract class PoliticsEconomy {
      * @param group the group to get balance for
      * @return the balance of the group
      */
-    public abstract double getBalance(Group group);
+    public double getBalance(Group group) {
+        return group.getDoubleProperty(GroupProperty.BALANCE);
+    }
 
     /**
      * Gives the specified group the specified amount of money.
@@ -61,7 +66,20 @@ public abstract class PoliticsEconomy {
      * @param reason the reason for the group receiving money
      * @return the result of the attempted transfer
      */
-    public abstract PoliticsEconomyResult give(Group group, double amount, PoliticsTransferReason reason);
+    public PoliticsEconomyResult give(Group group, double amount, PoliticsTransferReason reason) {
+        if (amount < 0) {
+            return take(group, -amount, reason);
+        }
+
+        double current = getBalance(group);
+        GroupBalanceChangeEvent event = PoliticsEventFactory.callGroupBalanceChangeEvent(group, amount, reason);
+        if (event.isCancelled()) {
+            return PoliticsEconomyResult.FAILURE;
+        }
+
+        group.setProperty(GroupProperty.BALANCE, current + amount);
+        return PoliticsEconomyResult.SUCCESS;
+    }
 
     /**
      * Takes from the specified group the specified amount of money.
@@ -73,7 +91,24 @@ public abstract class PoliticsEconomy {
      * @param reason the reason for the group losing money
      * @return the result of the attempted transfer
      */
-    public abstract PoliticsEconomyResult take(Group group, double amount, PoliticsTransferReason reason);
+    public PoliticsEconomyResult take(Group group, double amount, PoliticsTransferReason reason) {
+        if (amount < 0) {
+            return give(group, -amount, reason);
+        }
+
+        double current = getBalance(group);
+        if (current < amount) {
+            return PoliticsEconomyResult.INSUFFICIENT_BALANCE;
+        }
+
+        GroupBalanceChangeEvent event = PoliticsEventFactory.callGroupBalanceChangeEvent(group, -amount, reason);
+        if (event.isCancelled()) {
+            return PoliticsEconomyResult.FAILURE;
+        }
+
+        group.setProperty(GroupProperty.BALANCE, current - amount);
+        return PoliticsEconomyResult.SUCCESS;
+    }
 
     /**
      * Takes from all members of the group the specified amount, depositing it into the group's balance.
