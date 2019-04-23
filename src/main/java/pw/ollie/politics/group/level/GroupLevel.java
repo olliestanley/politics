@@ -161,6 +161,10 @@ public final class GroupLevel {
         return mayBePeaceful;
     }
 
+    public String getAdditionalSetting(String key) {
+        return otherSettings.get(key);
+    }
+
     public void save(ConfigurationSection node) {
         node.set("name", name);
         node.set("rank", rank);
