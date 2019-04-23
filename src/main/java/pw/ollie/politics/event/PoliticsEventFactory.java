@@ -38,7 +38,7 @@ import pw.ollie.politics.event.group.GroupMemberSpawnEvent;
 import pw.ollie.politics.event.group.GroupPropertySetEvent;
 import pw.ollie.politics.event.group.GroupTaxImposeEvent;
 import pw.ollie.politics.event.group.GroupUnclaimPlotEvent;
-import pw.ollie.politics.event.player.PlayerChangePlotEvent;
+import pw.ollie.politics.event.player.PlayerPlotChangeEvent;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.event.plot.PlotProtectionTriggerEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotCreateEvent;
@@ -132,8 +132,8 @@ public final class PoliticsEventFactory {
         return callEvent(new GroupUnclaimPlotEvent(group, plot, unclaimer));
     }
 
-    public static PlayerChangePlotEvent callPlayerChangePlotEvent(Player player, Plot from, Plot to) {
-        return callEvent(new PlayerChangePlotEvent(player, from, to));
+    public static PlayerPlotChangeEvent callPlayerPlotChangeEvent(Player player, Plot from, Plot to) {
+        return callEvent(new PlayerPlotChangeEvent(player, from, to));
     }
 
     public static PlotOwnerChangeEvent callPlotOwnerChangeEvent(Plot plot, int groupId, boolean add) {

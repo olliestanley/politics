@@ -1,6 +1,8 @@
 # a politics configuration used for plugin testing and as an example
 description: Testing configuration for Politics
 
+wilderness-message: Wilderness
+
 wars:
   enabled: true
 

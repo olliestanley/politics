@@ -26,7 +26,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
-public class PlayerChangePlotEvent extends PlayerEvent implements Cancellable {
+public class PlayerPlotChangeEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     private final Plot from;
@@ -34,7 +34,7 @@ public class PlayerChangePlotEvent extends PlayerEvent implements Cancellable {
 
     private boolean cancelled;
 
-    public PlayerChangePlotEvent(Player p, Plot from, Plot to) {
+    public PlayerPlotChangeEvent(Player p, Plot from, Plot to) {
         super(p);
         this.from = from;
         this.to = to;

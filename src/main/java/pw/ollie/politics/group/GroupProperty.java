@@ -30,6 +30,8 @@ public final class GroupProperty {
     public static final int WAR_VICTORIES = 0x7;
     public static final int WAR_DEFEATS = 0x8;
     public static final int PEACEFUL = 0x9;
+    public static final int ENTRY_MESSAGE = 0x10;
+    public static final int EXIT_MESSAGE = 0x11;
 
     private GroupProperty() {
         throw new UnsupportedOperationException();

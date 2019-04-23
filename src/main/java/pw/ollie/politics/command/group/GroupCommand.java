@@ -33,6 +33,8 @@ public final class GroupCommand extends PoliticsBaseCommand {
         this.registerSubCommand(new GroupDemoteCommand(level));
         this.registerSubCommand(new GroupDescriptionCommand(level));
         this.registerSubCommand(new GroupDestroyCommand(level));
+        this.registerSubCommand(new GroupEntryCommand(level));
+        this.registerSubCommand(new GroupExitCommand(level));
         this.registerSubCommand(new GroupHelpCommand(level));
         this.registerSubCommand(new GroupInfoCommand(level));
         this.registerSubCommand(new GroupInviteCommand(level));

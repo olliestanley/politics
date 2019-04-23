@@ -165,6 +165,10 @@ public final class Universe implements Storable {
         return new ArrayList<>(worlds);
     }
 
+    public boolean containsWorld(PoliticsWorld world) {
+        return worlds.contains(world);
+    }
+
     public List<Group> getGroups(GroupLevel level) {
         return new ArrayList<>(getInternalGroups(level));
     }

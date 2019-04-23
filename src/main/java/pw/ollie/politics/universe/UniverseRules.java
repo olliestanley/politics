@@ -40,14 +40,16 @@ import java.util.logging.Level;
 public final class UniverseRules {
     private final String name;
     private final String description;
-    private final Map<String, GroupLevel> groupLevels;
+    private final String wildernessMessage;
     private final boolean warsEnabled;
+    private final Map<String, GroupLevel> groupLevels;
 
-    private UniverseRules(String name, String description, Map<String, GroupLevel> groupLevels, boolean warsEnabled) {
+    private UniverseRules(String name, String description, String wildernessMessage, boolean warsEnabled, Map<String, GroupLevel> groupLevels) {
         this.name = name;
         this.description = description;
-        this.groupLevels = groupLevels;
+        this.wildernessMessage = wildernessMessage;
         this.warsEnabled = warsEnabled;
+        this.groupLevels = groupLevels;
     }
 
     public String getName() {
@@ -58,16 +60,20 @@ public final class UniverseRules {
         return description;
     }
 
+    public String getWildernessMessage() {
+        return wildernessMessage;
+    }
+
     public List<GroupLevel> getGroupLevels() {
         return new ArrayList<>(groupLevels.values());
     }
 
-    public GroupLevel getGroupLevel(String name) {
-        return groupLevels.get(name.toLowerCase());
-    }
-
     public boolean areWarsEnabled() {
         return warsEnabled;
+    }
+
+    public GroupLevel getGroupLevel(String name) {
+        return groupLevels.get(name.toLowerCase());
     }
 
     public void save(ConfigurationSection config) {
@@ -84,6 +90,8 @@ public final class UniverseRules {
 
     public static UniverseRules load(String name, ConfigurationSection config) {
         String description = config.getString("description", "No description given.");
+
+        String wildernessMessage = config.getString("wilderness-message", "Wilderness");
 
         ConfigurationSection warsSection = ConfigUtil.getOrCreateSection(config, "wars");
         boolean warsEnabled = warsSection.getBoolean("enabled", false);
@@ -127,6 +135,6 @@ public final class UniverseRules {
             levelEntry.getKey().setAllowedChildren(allowed);
         }
 
-        return new UniverseRules(name, description, levelMap, warsEnabled);
+        return new UniverseRules(name, description, wildernessMessage, warsEnabled, levelMap);
     }
 }

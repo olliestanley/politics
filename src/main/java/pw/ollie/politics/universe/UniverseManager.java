@@ -52,6 +52,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public final class UniverseManager {
     private final PoliticsPlugin plugin;
@@ -114,6 +115,16 @@ public final class UniverseManager {
 
     public Set<Universe> getUniverses() {
         return new THashSet<>(universes.values());
+    }
+
+    public Set<Universe> getUniverses(PoliticsWorld world) {
+        return universes.values().stream()
+                .filter(universe -> universe.containsWorld(world))
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Universe> getUniverses(World world) {
+        return getUniverses(plugin.getWorldManager().getWorld(world));
     }
 
     public Universe getUniverse(PoliticsWorld world, GroupLevel level) {

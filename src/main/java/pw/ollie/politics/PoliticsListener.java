@@ -20,7 +20,7 @@
 package pw.ollie.politics;
 
 import pw.ollie.politics.event.PoliticsEventFactory;
-import pw.ollie.politics.event.player.PlayerChangePlotEvent;
+import pw.ollie.politics.event.player.PlayerPlotChangeEvent;
 import pw.ollie.politics.world.WorldManager;
 import pw.ollie.politics.world.plot.Plot;
 
@@ -51,7 +51,7 @@ public final class PoliticsListener implements Listener {
         Plot to = worldManager.getPlotAt(event.getTo());
 
         if (!from.equals(to)) {
-            PlayerChangePlotEvent pcpe = PoliticsEventFactory.callPlayerChangePlotEvent(player, from, to);
+            PlayerPlotChangeEvent pcpe = PoliticsEventFactory.callPlayerPlotChangeEvent(player, from, to);
             if (pcpe.isCancelled()) {
                 event.setCancelled(true);
             }
