@@ -26,51 +26,6 @@ import pw.ollie.politics.util.math.Vector2f;
 import org.bukkit.Bukkit;
 
 public class PropertySerializer {
-    public static String serializePosition(Position position) {
-        return "p/" + position.getWorld() + "," + position.getX() + "," + position.getY() + "," + position.getZ();
-    }
-
-    public static Position deserializePosition(String serialized) throws PropertyDeserializationException {
-        String[] parts1 = serialized.split("/");
-        if (parts1.length != 2) {
-            throw new PropertyDeserializationException("Not a serialized property!");
-        }
-        if (!parts1[0].equalsIgnoreCase("p")) {
-            throw new PropertyDeserializationException("Not a position!");
-        }
-
-        String[] whatMatters = parts1[1].split(",");
-        if (whatMatters.length < 4) {
-            throw new PropertyDeserializationException("Not enough position data!");
-        }
-
-        String world = whatMatters[0];
-        if (Bukkit.getWorld(world) == null) {
-            throw new PropertyDeserializationException("The world '" + world + "' no longer exists!");
-        }
-
-        float x;
-        float y;
-        float z;
-        try {
-            x = Float.parseFloat(whatMatters[1]);
-        } catch (NumberFormatException ex) {
-            throw new PropertyDeserializationException("The x is not a float!", ex);
-        }
-        try {
-            y = Float.parseFloat(whatMatters[2]);
-        } catch (NumberFormatException ex) {
-            throw new PropertyDeserializationException("The y is not a float!", ex);
-        }
-        try {
-            z = Float.parseFloat(whatMatters[3]);
-        } catch (NumberFormatException ex) {
-            throw new PropertyDeserializationException("The z is not a float!", ex);
-        }
-
-        return new Position(world, x, y, z);
-    }
-
     public static String serializeRotatedPosition(RotatedPosition rotatedPosition) {
         return "t/" + rotatedPosition.getPosition().getWorld() + "," + rotatedPosition.getPosition().getX() + "," + rotatedPosition.getPosition().getY() + "," + rotatedPosition.getPosition().getZ() + "," + rotatedPosition.getRotation().getX() + "," + rotatedPosition.getRotation().getY() + "," + rotatedPosition.getRotation().getY();
     }
