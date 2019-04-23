@@ -92,6 +92,10 @@ public final class War implements Storable {
         return aggressorScore > defenderScore ? getAggressor() : getDefender();
     }
 
+    public Group getLosingGroup() {
+        return aggressorScore > defenderScore ? getDefender() : getAggressor();
+    }
+
     public boolean involves(int groupId) {
         return defender == groupId || aggressor == groupId;
     }

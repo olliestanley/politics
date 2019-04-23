@@ -26,6 +26,7 @@ import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.war.WarBeginEvent;
 import pw.ollie.politics.event.war.WarFinishEvent;
 import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.universe.Universe;
 
 import java.util.Set;
@@ -113,6 +114,12 @@ public final class WarManager {
         if (!force && event.isCancelled()) {
             return false;
         }
+
+        // update victory and defeat statistics for involved groups
+        Group winner = war.getWinningGroup();
+        winner.setProperty(GroupProperty.WAR_VICTORIES, winner.getIntProperty(GroupProperty.WAR_VICTORIES, 0) + 1);
+        Group loser = war.getLosingGroup();
+        loser.setProperty(GroupProperty.WAR_DEFEATS, winner.getIntProperty(GroupProperty.WAR_DEFEATS, 0) + 1);
 
         war.setActive(false);
         activeWars.remove(war);

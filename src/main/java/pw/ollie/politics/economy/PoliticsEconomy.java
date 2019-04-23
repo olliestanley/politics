@@ -43,6 +43,8 @@ public abstract class PoliticsEconomy {
 
     /**
      * Gets the current balance of a group.
+     * <p>
+     * Note that group balances are treated as a double property of a group.
      *
      * @param group the group to get balance for
      * @return the balance of the group
