@@ -54,11 +54,10 @@
         <url>http://github.com/DziNeIT/${project.name}/issues</url>
     </issueManagement>
 
-    <!-- Continuous integration - TODO?
     <ciManagement>
-        <system>travis-ci</system>
+        <system>jenkins-ci</system>
+        <url>https://ci.codemc.org/job/dzineit/job/politics/</url>
     </ciManagement>
-    -->
 
     <!-- Repository locations -->
     <repositories>
