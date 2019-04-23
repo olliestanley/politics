@@ -26,6 +26,7 @@ levels:
     can-own-land: true
     allowed-multiple: false
     can-war: false
+    may-be-peaceful: true
   town:
     name: Town
     plural: Towns
@@ -49,3 +50,4 @@ levels:
     can-own-land: true
     allowed-multiple: false
     can-war: true
+    may-be-peaceful: true

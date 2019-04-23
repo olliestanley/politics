@@ -52,12 +52,14 @@ public final class GroupLevel {
     private final boolean ownsLand;
     private final boolean allowedMultiple;
     private final boolean canWar;
+    private final boolean mayBePeaceful;
 
     private Set<GroupLevel> allowedChildren;
 
     public GroupLevel(String id, String name, int rank, Map<String, Role> roles, String plural,
                       Map<String, RoleTrack> tracks, Role initial, Role founder, boolean friendlyFire,
-                      boolean immediateMembers, boolean ownsLand, boolean allowedMultiple, boolean canWar) {
+                      boolean immediateMembers, boolean ownsLand, boolean allowedMultiple, boolean canWar,
+                      boolean mayBePeaceful) {
         this.id = id;
         this.name = name;
         this.rank = rank;
@@ -71,6 +73,7 @@ public final class GroupLevel {
         this.ownsLand = ownsLand;
         this.allowedMultiple = allowedMultiple;
         this.canWar = canWar;
+        this.mayBePeaceful = mayBePeaceful;
     }
 
     public void setAllowedChildren(Set<GroupLevel> allowedChildren) {
@@ -149,6 +152,10 @@ public final class GroupLevel {
         return canWar;
     }
 
+    public boolean canBePeaceful() {
+        return mayBePeaceful;
+    }
+
     public void save(ConfigurationSection node) {
         node.set("name", name);
         node.set("rank", rank);
@@ -189,6 +196,7 @@ public final class GroupLevel {
         node.set("can-own-land", ownsLand);
         node.set("allowed-multiple", allowedMultiple);
         node.set("can-war", canWar);
+        node.set("may-be-peaceful", mayBePeaceful);
     }
 
     public static GroupLevel load(String id, ConfigurationSection node, Map<GroupLevel, List<String>> levels) {
@@ -283,9 +291,10 @@ public final class GroupLevel {
         boolean ownsLand = node.getBoolean("can-own-land", true);
         boolean allowedMultiple = node.getBoolean("allowed-multiple", false);
         boolean canWar = node.getBoolean("can-war", false);
+        boolean mayBePeaceful = node.getBoolean("may-be-peaceful", true);
 
         GroupLevel theLevel = new GroupLevel(id, levelName, rank, rolesMap, plural, tracks, initial, founder,
-                friendlyFire, immediateMembers, ownsLand, allowedMultiple, canWar);
+                friendlyFire, immediateMembers, ownsLand, allowedMultiple, canWar, mayBePeaceful);
         // Children so we can get our allowed children in the future
         levels.put(theLevel, children);
         return theLevel;

@@ -29,6 +29,7 @@ public final class GroupProperty {
     public static final int BALANCE = 0x6;
     public static final int WAR_VICTORIES = 0x7;
     public static final int WAR_DEFEATS = 0x8;
+    public static final int PEACEFUL = 0x9;
 
     private GroupProperty() {
         throw new UnsupportedOperationException();

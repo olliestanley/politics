@@ -28,6 +28,7 @@ public final class GroupToggleables {
 
     static {
         toggleableProperties.put("open", GroupProperty.OPEN);
+        toggleableProperties.put("peaceful", GroupProperty.PEACEFUL);
     }
 
     public static boolean isToggleableProperty(String name) {
