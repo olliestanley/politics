@@ -25,15 +25,15 @@ import pw.ollie.politics.event.plot.PlotProtectionTriggerEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotProtectionTriggerEvent;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
-import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.Pair;
+import pw.ollie.politics.util.message.MessageUtil;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -59,46 +59,85 @@ public final class PlotProtectionListener implements Listener {
         this.plugin = plugin;
     }
 
-    // todo update this class to use the new messaging system
+    private void checkProtection(PlotDamageSource source, Block block, Cancellable event, PlotProtectionType type) {
+        Location location = block.getLocation();
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
-    public void onBlockBreak(BlockBreakEvent event) {
-        // todo abstract the below code so it isn't duplicated over and over
+        if (source.isPlayer()) {
+            Player player = source.getPlayer();
+            Privilege privilege = type.getPermission();
 
-        Player player = event.getPlayer();
-        Location location = event.getBlock().getLocation();
-        Pair<Subplot, Boolean> subplotCheck = canInSubplot(player, location, Privileges.GroupPlot.BUILD);
-        if (!subplotCheck.getSecond()) {
-            SubplotProtectionTriggerEvent triggerEvent = callSubplotProtectionEvent(subplotCheck.getFirst(), event.getBlock(),
-                    new PlotDamageSource(player.getUniqueId()), PlotProtectionTriggerEvent.PlotProtectionType.BLOCK_BREAK);
-            if (!triggerEvent.isCancelled()) {
+            if (privilege == null) {
                 event.setCancelled(true);
-                event.getPlayer().sendMessage(ChatColor.RED + "You can't build in this plot.");
+                MessageUtil.error(player, "You can't do that in this plot.");
+                return;
+            }
+
+            Pair<Subplot, Boolean> subplotCheck = canInSubplot(player, location, privilege);
+            if (!subplotCheck.getSecond()) {
+                SubplotProtectionTriggerEvent triggerEvent = callSubplotProtectionEvent(subplotCheck.getFirst(), block, source, type);
+                if (!triggerEvent.isCancelled()) {
+                    event.setCancelled(true);
+                    MessageUtil.error(player, "You can't do that in this plot.");
+                }
+
+                return;
+            }
+
+            Pair<Plot, Boolean> plotCheck = canInPlot(player, location, privilege);
+            if (!plotCheck.getSecond()) {
+                PlotProtectionTriggerEvent triggerEvent = callPlotProtectionEvent(plotCheck.getFirst(), block, source, type);
+                if (!triggerEvent.isCancelled()) {
+                    event.setCancelled(true);
+                    MessageUtil.error(player, "You can't do that in this plot.");
+                }
             }
 
             return;
         }
 
-        Pair<Plot, Boolean> plotCheck = canInPlot(player, location, Privileges.GroupPlot.BUILD);
-        if (!plotCheck.getSecond()) {
-            PlotProtectionTriggerEvent triggerEvent = callPlotProtectionEvent(plotCheck.getFirst(), event.getBlock(),
-                    new PlotDamageSource(player.getUniqueId()), PlotProtectionTriggerEvent.PlotProtectionType.BLOCK_BREAK);
-            if (!triggerEvent.isCancelled()) {
-                event.setCancelled(true);
-                event.getPlayer().sendMessage(ChatColor.RED + "You can't build in this subplot.");
-            }
+        // todo check non-player related protections
+    }
+
+    private Pair<Plot, Boolean> canInPlot(Player player, Location location, Privilege privilege) {
+        if (!(privilege.getTypes().contains(PrivilegeType.PLOT))) {
+            throw new IllegalArgumentException("Must be a plot-type privilege");
         }
+
+        Plot plot = plugin.getWorldManager().getPlotAt(location);
+        return new Pair<>(plot, plot.can(player, privilege));
+    }
+
+    private Pair<Subplot, Boolean> canInSubplot(Player player, Location location, Privilege privilege) {
+        if (!(privilege.getTypes().contains(PrivilegeType.PLOT))) {
+            throw new IllegalArgumentException("Must be a plot-type privilege");
+        }
+
+        Plot plot = plugin.getWorldManager().getPlotAt(location);
+        Subplot subplot = plot.getSubplotAt(location);
+        if (subplot == null) {
+            return new Pair<>(null, true);
+        }
+        return new Pair<>(subplot, subplot.can(player, privilege));
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+    public void onBlockBreak(BlockBreakEvent event) {
+        checkProtection(new PlotDamageSource(event.getPlayer().getUniqueId()), event.getBlock(), event, PlotProtectionType.BLOCK_BREAK);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
-        // todo
+        checkProtection(new PlotDamageSource(event.getPlayer().getUniqueId()), event.getBlock(), event, PlotProtectionType.BLOCK_PLACE);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onBlockMultiPlace(BlockMultiPlaceEvent event) {
         for (BlockState block : event.getReplacedBlockStates()) {
-            // todo
+            checkProtection(new PlotDamageSource(event.getPlayer().getUniqueId()), event.getBlock(), event, PlotProtectionType.BLOCK_PLACE);
+
+            if (event.isCancelled()) {
+                break;
+            }
         }
     }
 
@@ -181,33 +220,11 @@ public final class PlotProtectionListener implements Listener {
         // todo cancel if from one plot to another or from outside plot into plot
     }
 
-    private PlotProtectionTriggerEvent callPlotProtectionEvent(Plot plot, Block damaged, PlotDamageSource source, PlotProtectionTriggerEvent.PlotProtectionType type) {
+    private PlotProtectionTriggerEvent callPlotProtectionEvent(Plot plot, Block damaged, PlotDamageSource source, PlotProtectionType type) {
         return PoliticsEventFactory.callPlotProtectionTriggerEvent(plot, damaged, source, type);
     }
 
-    private SubplotProtectionTriggerEvent callSubplotProtectionEvent(Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionTriggerEvent.PlotProtectionType type) {
+    private SubplotProtectionTriggerEvent callSubplotProtectionEvent(Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionType type) {
         return PoliticsEventFactory.callSubplotProtectionTriggerEvent(subplot.getParent(), subplot, damaged, source, type);
-    }
-
-    private Pair<Plot, Boolean> canInPlot(Player player, Location location, Privilege privilege) {
-        if (!(privilege.getTypes().contains(PrivilegeType.PLOT))) {
-            throw new IllegalArgumentException("Must be a plot-type privilege");
-        }
-
-        Plot plot = plugin.getWorldManager().getPlotAt(location);
-        return new Pair<>(plot, plot.can(player, privilege));
-    }
-
-    private Pair<Subplot, Boolean> canInSubplot(Player player, Location location, Privilege privilege) {
-        if (!(privilege.getTypes().contains(PrivilegeType.PLOT))) {
-            throw new IllegalArgumentException("Must be a plot-type privilege");
-        }
-
-        Plot plot = plugin.getWorldManager().getPlotAt(location);
-        Subplot subplot = plot.getSubplotAt(location);
-        if (subplot == null) {
-            return new Pair<>(null, true);
-        }
-        return new Pair<>(subplot, subplot.can(player, privilege));
     }
 }

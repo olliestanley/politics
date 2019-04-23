@@ -33,7 +33,17 @@ public final class MessageUtil {
      * @param message   the message to send
      */
     public static void message(CommandSender recipient, String message) {
-        MessageBuilder.begin(message).build().send(recipient);
+        MessageBuilder.begin(message).send(recipient);
+    }
+
+    /**
+     * Sends a formatted message with the plugin colour scheme and in error colour.
+     *
+     * @param recipient the recipient of the message
+     * @param message   the message to send
+     */
+    public static void error(CommandSender recipient, String message) {
+        MessageBuilder.beginError().append(message).send(recipient);
     }
 
     private MessageUtil() {

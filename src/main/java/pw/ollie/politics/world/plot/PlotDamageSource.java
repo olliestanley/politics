@@ -60,11 +60,23 @@ public class PlotDamageSource {
         return Bukkit.getPlayer(playerId);
     }
 
+    public boolean isPlayer() {
+        return getPlayerId() != null;
+    }
+
     public Entity getNonPlayerEntity() {
         return nonPlayerEntity;
     }
 
+    public boolean isNonPlayerEntity() {
+        return getNonPlayerEntity() != null;
+    }
+
     public Block getBlock() {
         return block;
+    }
+
+    public boolean isBlock() {
+        return getBlock() != null;
     }
 }

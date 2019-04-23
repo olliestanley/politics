@@ -19,9 +19,9 @@
  */
 package pw.ollie.politics.event.plot.subplot;
 
-import pw.ollie.politics.event.plot.PlotProtectionTriggerEvent;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.PlotDamageSource;
+import pw.ollie.politics.world.plot.PlotProtectionType;
 import pw.ollie.politics.world.plot.Subplot;
 
 import org.bukkit.block.Block;
@@ -33,11 +33,11 @@ public class SubplotProtectionTriggerEvent extends SubplotEvent implements Cance
 
     private final Block damaged;
     private final PlotDamageSource source;
-    private final PlotProtectionTriggerEvent.PlotProtectionType type;
+    private final PlotProtectionType type;
 
     private boolean cancelled;
 
-    public SubplotProtectionTriggerEvent(Plot plot, Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionTriggerEvent.PlotProtectionType type) {
+    public SubplotProtectionTriggerEvent(Plot plot, Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionType type) {
         super(plot, subplot);
         this.damaged = damaged;
         this.source = source;
@@ -52,7 +52,7 @@ public class SubplotProtectionTriggerEvent extends SubplotEvent implements Cance
         return source;
     }
 
-    public PlotProtectionTriggerEvent.PlotProtectionType getProtectionType() {
+    public PlotProtectionType getProtectionType() {
         return type;
     }
 

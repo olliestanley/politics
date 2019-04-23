@@ -21,6 +21,7 @@ package pw.ollie.politics.event.plot;
 
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.PlotDamageSource;
+import pw.ollie.politics.world.plot.PlotProtectionType;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
@@ -62,11 +63,6 @@ public class PlotProtectionTriggerEvent extends PlotEvent implements Cancellable
     @Override
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
-    }
-
-    public enum PlotProtectionType {
-        BLOCK_BREAK,
-        // todo fill in all types
     }
 
     @Override

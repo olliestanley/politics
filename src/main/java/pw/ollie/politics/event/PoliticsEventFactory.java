@@ -53,6 +53,7 @@ import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.group.war.War;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.PlotDamageSource;
+import pw.ollie.politics.world.plot.PlotProtectionType;
 import pw.ollie.politics.world.plot.Subplot;
 
 import org.bukkit.OfflinePlayer;
@@ -120,7 +121,7 @@ public final class PoliticsEventFactory {
         return callEvent(new PlotOwnerChangeEvent(plot, groupId, add));
     }
 
-    public static PlotProtectionTriggerEvent callPlotProtectionTriggerEvent(Plot plot, Block damaged, PlotDamageSource source, PlotProtectionTriggerEvent.PlotProtectionType type) {
+    public static PlotProtectionTriggerEvent callPlotProtectionTriggerEvent(Plot plot, Block damaged, PlotDamageSource source, PlotProtectionType type) {
         return callEvent(new PlotProtectionTriggerEvent(plot, damaged, source, type));
     }
 
@@ -140,7 +141,7 @@ public final class PoliticsEventFactory {
         return callEvent(new SubplotPrivilegeChangeEvent(plot, subplot, subject, privilege, granted));
     }
 
-    public static SubplotProtectionTriggerEvent callSubplotProtectionTriggerEvent(Plot plot, Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionTriggerEvent.PlotProtectionType type) {
+    public static SubplotProtectionTriggerEvent callSubplotProtectionTriggerEvent(Plot plot, Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionType type) {
         return callEvent(new SubplotProtectionTriggerEvent(plot, subplot, damaged, source, type));
     }
 

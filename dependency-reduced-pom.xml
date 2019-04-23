@@ -11,6 +11,10 @@
     <system>github</system>
     <url>http://github.com/DziNeIT/${project.name}/issues</url>
   </issueManagement>
+  <ciManagement>
+    <system>jenkins-ci</system>
+    <url>https://ci.codemc.org/job/dzineit/job/politics/</url>
+  </ciManagement>
   <inceptionYear>2019</inceptionYear>
   <developers>
     <developer>
