@@ -40,6 +40,10 @@ public final class PoliticsConfig {
     // wars
     private boolean warsEnabled;
 
+    // economy
+    private boolean economyEnabled;
+    private String economyType;
+
     public PoliticsConfig(PoliticsPlugin plugin) {
         this.plugin = plugin;
         this.configFile = new File(plugin.getFileSystem().getBaseDir(), CONFIG_FILE_NAME);
@@ -51,6 +55,14 @@ public final class PoliticsConfig {
 
     public boolean areWarsEnabled() {
         return warsEnabled;
+    }
+
+    public boolean areEconomicFeaturesEnabled() {
+        return economyEnabled;
+    }
+
+    public String getEconomyImplementation() {
+        return economyType;
     }
 
     void loadConfig() {
@@ -69,5 +81,9 @@ public final class PoliticsConfig {
 
         ConfigurationSection warsSection = ConfigUtil.getOrCreateSection(config, "wars");
         warsEnabled = warsSection.getBoolean("enabled", false);
+
+        ConfigurationSection economicSection = ConfigUtil.getOrCreateSection(config, "economic");
+        economyEnabled = economicSection.getBoolean("enabled", true);
+        economyType = economicSection.getString("economy-type", "vault").toLowerCase();
     }
 }

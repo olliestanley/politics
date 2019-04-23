@@ -23,14 +23,19 @@ import pw.ollie.politics.activity.ActivityManager;
 import pw.ollie.politics.command.PoliticsCommandManager;
 import pw.ollie.politics.data.PoliticsDataSaveTask;
 import pw.ollie.politics.data.PoliticsFileSystem;
+import pw.ollie.politics.economy.PoliticsEconomy;
+import pw.ollie.politics.economy.vault.PoliticsEconomyVault;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
+import pw.ollie.politics.group.war.WarManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.visualise.Visualiser;
-import pw.ollie.politics.group.war.WarManager;
 import pw.ollie.politics.world.WorldManager;
 
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.logging.Level;
 
 public final class PoliticsPlugin extends JavaPlugin {
     private static PoliticsPlugin instance;
@@ -45,6 +50,7 @@ public final class PoliticsPlugin extends JavaPlugin {
     private GroupManager groupManager;
     private ActivityManager activityManager;
     private WarManager warManager;
+    private PoliticsEconomy politicsEconomy;
 
     private PoliticsCommandManager commandManager;
 
@@ -80,6 +86,16 @@ public final class PoliticsPlugin extends JavaPlugin {
             this.warManager.loadWars();
         }
 
+        PluginManager pluginManager = this.getServer().getPluginManager();
+
+        if (config.areEconomicFeaturesEnabled()) {
+            if (config.getEconomyImplementation().equals("vault") && pluginManager.getPlugin("Vault") != null) {
+                this.politicsEconomy = new PoliticsEconomyVault(this);
+            } else {
+                this.getLogger().log(Level.SEVERE, "Economy features are set to enabled but the specified economy type is invalid. Economic features will not be enabled.");
+            }
+        }
+
         this.commandManager = new PoliticsCommandManager(this);
         this.commandManager.registerCommands();
 
@@ -88,7 +104,7 @@ public final class PoliticsPlugin extends JavaPlugin {
 
         this.visualiser = new Visualiser(this);
 
-        this.getServer().getPluginManager().registerEvents(new PoliticsListener(this), this);
+        pluginManager.registerEvents(new PoliticsListener(this), this);
     }
 
     @Override

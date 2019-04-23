@@ -10,3 +10,8 @@ colour-scheme:
 # wars configuration
 wars:
   enabled: false
+
+# politics economy functions configuration
+economic:
+  enabled: true
+  economy-type: vault

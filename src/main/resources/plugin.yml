@@ -1,3 +1,5 @@
 name: Politics
 version: ${project.version}
 main: pw.ollie.politics.PoliticsPlugin
+
+softdepend: [Vault]
