@@ -65,22 +65,19 @@ public final class Group implements Comparable<Group>, Storable {
     private final Set<UUID> invitedPlayers;
     private final TIntSet invitedChildren;
 
-    private double balance = 0;
-
     private Universe universe;
 
     public Group(int uid, GroupLevel level) {
-        this(uid, level, new TIntObjectHashMap<>(), new THashMap<>(), 0);
+        this(uid, level, new TIntObjectHashMap<>(), new THashMap<>());
     }
 
-    private Group(int uid, GroupLevel level, TIntObjectMap<Object> properties, Map<UUID, Role> players, double balance) {
+    private Group(int uid, GroupLevel level, TIntObjectMap<Object> properties, Map<UUID, Role> players) {
         this.uid = uid;
         this.level = level;
         this.properties = properties;
         this.players = players;
         this.invitedPlayers = new THashSet<>();
         this.invitedChildren = new TIntHashSet();
-        this.balance = balance;
     }
 
     public void initialize(Universe universe) {
@@ -312,22 +309,6 @@ public final class Group implements Comparable<Group>, Storable {
         }
     }
 
-    public double getBalance() {
-        return balance;
-    }
-
-    public void addMoney(double amount) {
-        balance += amount;
-    }
-
-    public boolean removeMoney(double amount) {
-        if (balance < amount) {
-            return false;
-        }
-        balance -= amount;
-        return true;
-    }
-
     public Set<Privilege> getPrivileges(UUID playerId) {
         Role role = getRole(playerId);
         if (role == null) {
@@ -383,10 +364,6 @@ public final class Group implements Comparable<Group>, Storable {
         }
         object.put("players", playersBson);
 
-        if (balance > 0) {
-            object.put("balance", balance);
-        }
-
         return object;
     }
 
@@ -433,9 +410,7 @@ public final class Group implements Comparable<Group>, Storable {
             players.put(UUID.fromString(entry.getKey()), role);
         }
 
-        double balance = bobject.getDouble("balance", 0);
-
-        return new Group(uid, level, properties, players, balance);
+        return new Group(uid, level, properties, players);
     }
 
     @Override

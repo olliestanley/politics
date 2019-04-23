@@ -26,6 +26,9 @@ public final class GroupProperty {
     public static final int OPEN = 0x3;
     public static final int MOTD = 0x4;
     public static final int DESCRIPTION = 0x5;
+    public static final int BALANCE = 0x6;
+    public static final int WAR_VICTORIES = 0x7;
+    public static final int WAR_DEFEATS = 0x8;
 
     private GroupProperty() {
         throw new UnsupportedOperationException();
