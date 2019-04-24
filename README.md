@@ -3,6 +3,8 @@ Politics is an ultra-configurable self-serve community management system, built 
 
 By configuring Politics to your liking, it can reproduce the systems offered by other plugins, like Towny or Factions, or it can be something else entirely. Politics' configurability makes it somewhat complicated, but pre-made configuration templates are offered to allow anyone to use it with ease. Once you've understood how the configuration works, it becomes fairly easy to build unique and specific configurations.
 
+Documentation: https://github.com/dzineit/politics/wiki
+
 ### Downloads
 
 Politics is currently not in a production-usable state and large swathes of the plugin are untested, so there is no stable version to download. If you'd like to acquire a developer build, they're kindly hosted by CodeMC.org.
