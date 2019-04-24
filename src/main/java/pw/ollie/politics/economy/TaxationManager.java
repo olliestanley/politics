@@ -23,7 +23,10 @@ import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.universe.Universe;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public final class TaxationManager {
@@ -31,26 +34,32 @@ public final class TaxationManager {
     private static final long TASK_PERIOD = 20 * 60;
 
     private final PoliticsPlugin plugin;
-    private final TObjectIntMap<UUID> lastCollections;
+    private final Map<UUID, TObjectIntMap<Universe>> lastCollections;
 
     private TaxationCollectionTask collectionTask;
 
     public TaxationManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
-        this.lastCollections = new TObjectIntHashMap<>();
+        this.lastCollections = new HashMap<>();
     }
 
-    public int getLastCollection(UUID playerId) {
-        lastCollections.putIfAbsent(playerId, 0);
+    public TObjectIntMap<Universe> getLastCollections(UUID playerId) {
+        lastCollections.putIfAbsent(playerId, new TObjectIntHashMap<>());
         return lastCollections.get(playerId);
     }
 
-    public void resetLastCollection(UUID playerId) {
-        lastCollections.put(playerId, 0);
+    public int getLastCollection(UUID playerId, Universe universe) {
+        return getLastCollections(playerId).get(universe);
     }
 
-    public void incrementLastCollection(UUID playerId) {
-        lastCollections.put(playerId, getLastCollection(playerId) + 1);
+    public void resetLastCollection(UUID playerId, Universe universe) {
+        lastCollections.putIfAbsent(playerId, new TObjectIntHashMap<>());
+        lastCollections.get(playerId).put(universe, 0);
+    }
+
+    public void incrementLastCollection(UUID playerId, Universe universe) {
+        lastCollections.putIfAbsent(playerId, new TObjectIntHashMap<>());
+        lastCollections.get(playerId).put(universe, getLastCollection(playerId, universe) + 1);
     }
 
     public void loadTaxData() {

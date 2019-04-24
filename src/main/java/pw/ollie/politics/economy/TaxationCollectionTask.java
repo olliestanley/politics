@@ -22,6 +22,7 @@ package pw.ollie.politics.economy;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
+import pw.ollie.politics.universe.Universe;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -47,22 +48,25 @@ public final class TaxationCollectionTask extends BukkitRunnable {
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             UUID playerId = player.getUniqueId();
-            int lastCollection = taxationManager.getLastCollection(playerId);
 
-            if (lastCollection >= collectionPeriod) {
-                for (Group group : plugin.getGroupManager().getAllCitizenGroups(playerId)) {
-                    if (!group.getLevel().canTax()) {
-                        continue;
+            for (Universe universe : plugin.getUniverseManager().getUniverses(player.getWorld())) {
+                int lastCollection = taxationManager.getLastCollection(playerId, universe);
+
+                if (lastCollection >= collectionPeriod) {
+                    for (Group group : universe.getCitizenGroups(playerId)) {
+                        if (!group.getLevel().canTax()) {
+                            continue;
+                        }
+
+                        double taxAmount = Math.min(group.getDoubleProperty(GroupProperty.FIXED_TAX, 0.0),
+                                plugin.getPoliticsConfig().getMaxFixedTax());
+                        economy.taxMember(group, playerId, taxAmount);
                     }
 
-                    double taxAmount = Math.min(group.getDoubleProperty(GroupProperty.FIXED_TAX, 0.0),
-                            plugin.getPoliticsConfig().getMaxFixedTax());
-                    economy.taxMember(group, playerId, taxAmount);
+                    taxationManager.resetLastCollection(playerId, universe);
+                } else {
+                    taxationManager.incrementLastCollection(playerId, universe);
                 }
-
-                taxationManager.resetLastCollection(playerId);
-            } else {
-                taxationManager.incrementLastCollection(playerId);
             }
         }
     }
