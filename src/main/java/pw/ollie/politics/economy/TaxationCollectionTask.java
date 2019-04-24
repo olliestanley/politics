@@ -60,6 +60,10 @@ public final class TaxationCollectionTask extends BukkitRunnable {
 
                         double taxAmount = Math.min(group.getDoubleProperty(GroupProperty.FIXED_TAX, 0.0),
                                 plugin.getPoliticsConfig().getMaxFixedTax());
+                        if (!(taxAmount > 0)) {
+                            continue;
+                        }
+
                         economy.taxMember(group, playerId, taxAmount);
                     }
 
