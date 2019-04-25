@@ -40,6 +40,9 @@ public class GroupJoinCommand extends GroupSubcommand {
         super("join", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         if (!level.hasImmediateMembers()) {
@@ -81,21 +84,33 @@ public class GroupJoinCommand extends GroupSubcommand {
                 .normal(".").send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + ".join";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " join <" + level.getName() + ">";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Joins the " + level.getName() + ".";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isPlayerOnly() {
         return true;

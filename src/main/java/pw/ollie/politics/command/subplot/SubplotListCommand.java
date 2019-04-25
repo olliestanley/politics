@@ -30,21 +30,33 @@ public class SubplotListCommand extends SubplotSubcommand {
         super("list");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         // todo
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.plot.subplot.list";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/subplot list [-l x,y,z]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Lists subplots in your current plot";

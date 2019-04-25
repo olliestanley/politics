@@ -35,6 +35,9 @@ public class PoliticsCancelCommand extends PoliticsSubcommand {
         super("cancel");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Player player = (Player) sender;
@@ -48,21 +51,33 @@ public class PoliticsCancelCommand extends PoliticsSubcommand {
         MessageBuilder.begin("Your ").highlight(activity.getName()).normal(" was cancelled.").send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/politics cancel";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Cancels an ongoing activity";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isPlayerOnly() {
         return true;

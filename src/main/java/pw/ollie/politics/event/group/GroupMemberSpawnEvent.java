@@ -35,11 +35,17 @@ public class GroupMemberSpawnEvent extends GroupMemberEvent implements Cancellab
         super(group, member);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
@@ -53,6 +59,9 @@ public class GroupMemberSpawnEvent extends GroupMemberEvent implements Cancellab
         this.cancelMessage = cancelMessage;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HandlerList getHandlers() {
         return handlers;

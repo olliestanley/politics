@@ -37,11 +37,17 @@ public final class ConfirmationActivity implements PoliticsActivity {
         this.callback = callback;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UUID getPlayerId() {
         return playerId;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean complete() {
         if (complete) {
@@ -52,11 +58,17 @@ public final class ConfirmationActivity implements PoliticsActivity {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasCompleted() {
         return complete;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return "Confirmation";

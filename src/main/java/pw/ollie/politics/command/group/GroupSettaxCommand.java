@@ -36,6 +36,9 @@ public class GroupSettaxCommand extends GroupSubcommand {
         super("settax", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
@@ -63,16 +66,25 @@ public class GroupSettaxCommand extends GroupSubcommand {
         throw new CommandException("You must specify a new amount to set the tax to.");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + ".settax";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " settax [-g " + level.getName() + "]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "View or set the tax for a " + level.getName() + ".";

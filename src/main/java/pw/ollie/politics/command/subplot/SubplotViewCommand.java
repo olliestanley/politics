@@ -33,6 +33,9 @@ public class SubplotViewCommand extends SubplotSubcommand {
         super("view");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Subplot subplot = findSubplot(sender, args);
@@ -43,21 +46,33 @@ public class SubplotViewCommand extends SubplotSubcommand {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.plot.subplot.view";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/subplot view";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Visualise the outline of your current subplot";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isPlayerOnly() {
         return true;

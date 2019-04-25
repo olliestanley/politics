@@ -45,6 +45,9 @@ public class SubplotCreateCommand extends SubplotSubcommand {
         super("create");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         WorldManager worldManager = plugin.getWorldManager();
@@ -94,26 +97,41 @@ public class SubplotCreateCommand extends SubplotSubcommand {
         activityManager.beginActivity(activity);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.plot.subplot.create";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/subplot create";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Adds a subplot to your current plot";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getAliases() {
         return Arrays.asList("new", "add");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isPlayerOnly() {
         return true;

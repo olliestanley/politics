@@ -36,6 +36,9 @@ public class UniverseListCommand extends PoliticsSubcommand {
         super("list");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         MessageBuilder message = MessageUtil.startBlockMessage("Universes");
@@ -52,16 +55,25 @@ public class UniverseListCommand extends PoliticsSubcommand {
         message.send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.universe.list";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/universe list";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Gives a list of universes.";

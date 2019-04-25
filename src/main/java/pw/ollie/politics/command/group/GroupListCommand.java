@@ -42,6 +42,9 @@ public class GroupListCommand extends GroupSubcommand {
         super("list", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Universe universe = findUniverse(sender, args);
@@ -62,6 +65,7 @@ public class GroupListCommand extends GroupSubcommand {
         }
 
         PagedList<Group> paged = new PagedArrayList<>(groups);
+        paged.setElementsPerPage(PAGE_HEIGHT);
         if (page > paged.pages()) {
             throw new CommandException("There are only " + paged.pages() + " pages!");
         }
@@ -74,16 +78,25 @@ public class GroupListCommand extends GroupSubcommand {
         message.build().send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + ".list";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " list [page]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Provides a list of " + level.getPlural() + ".";

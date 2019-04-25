@@ -48,16 +48,25 @@ public class PlayerPlotChangeEvent extends PlayerEvent implements Cancellable {
         return to;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isCancelled() {
         return this.cancelled;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HandlerList getHandlers() {
         return handlers;

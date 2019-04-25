@@ -39,6 +39,9 @@ public class GroupPromoteCommand extends GroupSubcommand {
         super("promote", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
@@ -96,16 +99,25 @@ public class GroupPromoteCommand extends GroupSubcommand {
                 .normal(" in the ").append(level.getName()).append("!").send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + ".promote";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " promote <player> [-t track] [-g " + level.getName() + "] [-u universe]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Promotes somebody in a " + level.getName() + ".";

@@ -41,6 +41,9 @@ public class UniverseCreateCommand extends PoliticsSubcommand {
         super("create");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         if (args.length() < 3) {
@@ -96,21 +99,33 @@ public class UniverseCreateCommand extends PoliticsSubcommand {
                 .normal("' with the rules '").highlight(rules).normal("'.").send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.universe.create";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getAliases() {
         return Arrays.asList("make", "new");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/universe create <universe> <ruleset> <world1,world2...>";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Creates a new universe.";

@@ -49,6 +49,9 @@ public class GroupManageCommand extends GroupSubcommand {
         this.registerSubCommand(new GroupManageDisaffiliateCommand());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
@@ -93,6 +96,9 @@ public class GroupManageCommand extends GroupSubcommand {
             super("invite");
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args, Group group) throws CommandException {
             if (args.length() < 1) {
@@ -127,6 +133,9 @@ public class GroupManageCommand extends GroupSubcommand {
             super("join");
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args, Group group) throws CommandException {
             if (args.length() < 1) {
@@ -162,6 +171,9 @@ public class GroupManageCommand extends GroupSubcommand {
             super("disaffiliate");
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args, Group group) throws CommandException {
             if (args.length() < 1) {
@@ -198,26 +210,41 @@ public class GroupManageCommand extends GroupSubcommand {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + ".manage";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " manage <invite/join/disaffiliate> [args...] [-g " + level.getName() + "]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Allows management of the " + level.getName() + ", such as inviting sub-" + level.getPlural() + ".";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isPlayerOnly() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getAliases() {
         return Collections.singletonList("management");

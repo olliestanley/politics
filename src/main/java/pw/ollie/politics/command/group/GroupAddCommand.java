@@ -40,6 +40,9 @@ public class GroupAddCommand extends GroupSubcommand {
         super("add", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         if (!level.hasImmediateMembers()) {
@@ -81,16 +84,25 @@ public class GroupAddCommand extends GroupSubcommand {
                 .highlight(level.getInitial().getName()).normal(".").send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return PoliticsCommandHelper.GROUPS_ADMIN_PERMISSION;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " add <player> [-g " + level.getName() + "]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Force adds a player to a " + level.getName() + ".";

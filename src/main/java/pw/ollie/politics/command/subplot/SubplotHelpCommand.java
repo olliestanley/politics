@@ -32,6 +32,9 @@ public class SubplotHelpCommand extends SubplotSubcommand {
         super("help");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         int pageNumber = 1;
@@ -45,16 +48,25 @@ public class SubplotHelpCommand extends SubplotSubcommand {
         PoliticsCommandHelper.sendCommandHelp(sender, plugin.getCommandManager().getRegisteredCommand("subplot"), pageNumber);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.plot.subplot.help";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/subplot help";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Gives help for subplot commands";

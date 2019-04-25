@@ -37,11 +37,17 @@ public final class VisualisationActivity implements PoliticsActivity {
         this.callback = callback;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UUID getPlayerId() {
         return playerId;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean complete() {
         complete = true;
@@ -49,11 +55,17 @@ public final class VisualisationActivity implements PoliticsActivity {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasCompleted() {
         return complete;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return "Visualisation";

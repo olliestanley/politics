@@ -46,16 +46,25 @@ public class GroupMemberJoinEvent extends GroupMemberEvent implements Cancellabl
         this.role = role;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HandlerList getHandlers() {
         return handlers;

@@ -37,6 +37,9 @@ public class SubplotPrivilegeCommand extends SubplotSubcommand {
         super("privilege");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Subplot subplot = findSubplot(sender, args);
@@ -79,16 +82,25 @@ public class SubplotPrivilegeCommand extends SubplotSubcommand {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.plot.subplot.privilege";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/subplot privilege <add/remove> <player> <privilege> [-p location] [-sp subplot-id]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Manage privileges for a subplot you own";

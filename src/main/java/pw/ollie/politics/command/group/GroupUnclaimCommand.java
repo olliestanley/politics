@@ -39,6 +39,9 @@ public class GroupUnclaimCommand extends GroupSubcommand {
         super("unclaim", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
@@ -71,16 +74,25 @@ public class GroupUnclaimCommand extends GroupSubcommand {
         MessageUtil.message(sender, "The plot was claimed successfully");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + ".unclaim";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " unclaim [-g " + level.getName() + "] [-u universe]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Unclaims land for a " + level.getName() + ".";

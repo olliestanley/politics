@@ -44,6 +44,9 @@ public class GroupSpawnCommand extends GroupSubcommand {
         super("spawn", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
@@ -94,16 +97,25 @@ public class GroupSpawnCommand extends GroupSubcommand {
         MessageUtil.message(sender, "You have been teleported to the " + level.getName() + " spawn.");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + ".spawn";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " spawn [-p player] [-g " + level.getName() + "] [-u universe]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Travel to the spawn location of a " + level.getName() + ".";

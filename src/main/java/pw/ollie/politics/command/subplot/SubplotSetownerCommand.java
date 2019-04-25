@@ -36,6 +36,9 @@ public class SubplotSetownerCommand extends SubplotSubcommand {
         super("setowner");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Subplot subplot = findSubplot(sender, args);
@@ -61,16 +64,25 @@ public class SubplotSetownerCommand extends SubplotSubcommand {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.plot.subplot.setowner";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/subplot setowner <player> [-p location] [-sp subplot-id]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Set the owner of a subplot";

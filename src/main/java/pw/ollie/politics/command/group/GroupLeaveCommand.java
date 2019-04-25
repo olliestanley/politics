@@ -40,6 +40,9 @@ public class GroupLeaveCommand extends GroupSubcommand {
         super("leave", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
@@ -58,26 +61,41 @@ public class GroupLeaveCommand extends GroupSubcommand {
         MessageBuilder.begin("Successfully left ").highlight(group.getName()).normal(".").send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getAliases() {
         return Collections.singletonList("quit");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + ".leave";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " leave [-g " + level.getName() + "]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Leaves your " + level.getName() + ".";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isPlayerOnly() {
         return true;

@@ -109,6 +109,9 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
                 .findFirst().orElse(null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final boolean execute(CommandSender sender, String label, String[] args) {
         if (checkPerms(sender)) {
@@ -118,6 +121,9 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> tabComplete(CommandSender sender, String name, String[] args, Location location) {
         // todo check if this is the right check - only tab complete if they haven't typed beyond the first argument

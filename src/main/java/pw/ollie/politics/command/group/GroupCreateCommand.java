@@ -41,6 +41,9 @@ public class GroupCreateCommand extends GroupSubcommand {
         super("create", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         String founderName = null;
@@ -106,21 +109,33 @@ public class GroupCreateCommand extends GroupSubcommand {
         MessageBuilder.begin("Your ").highlight(level.getName()).normal(" was successfully created.").send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + ".create";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getAliases() {
         return Arrays.asList("new", "setup");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " create <name> [-f founder] [-u universe] [-t tag]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Creates a new " + level.getName() + ".";

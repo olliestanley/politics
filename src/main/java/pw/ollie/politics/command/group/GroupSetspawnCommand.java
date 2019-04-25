@@ -41,6 +41,9 @@ public class GroupSetspawnCommand extends GroupSubcommand {
         super("setspawn", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
@@ -78,16 +81,25 @@ public class GroupSetspawnCommand extends GroupSubcommand {
         MessageUtil.message(sender, "The spawn of your " + level.getName() + " was set successfully!");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + ".setspawn";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " setspawn [-p player] [-g " + level.getName() + "] [-u universe]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Sets the spawn location for a " + level.getName() + ".";

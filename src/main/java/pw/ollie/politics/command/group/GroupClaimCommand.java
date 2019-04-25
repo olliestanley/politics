@@ -41,6 +41,9 @@ public class GroupClaimCommand extends GroupSubcommand {
         super("claim", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         if (!level.canOwnLand()) {
@@ -86,16 +89,25 @@ public class GroupClaimCommand extends GroupSubcommand {
         MessageUtil.message(sender, "The plot was claimed successfully");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + ".claim";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " claim [-g " + level.getName() + "] [-u universe]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Claims land for a " + level.getName() + ".";

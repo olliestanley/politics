@@ -35,6 +35,9 @@ public class PoliticsConfirmCommand extends PoliticsSubcommand {
         super("confirm");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Player player = (Player) sender;
@@ -47,21 +50,33 @@ public class PoliticsConfirmCommand extends PoliticsSubcommand {
         plugin.getActivityManager().endActivity(player);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/politics confirm";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Confirms an action";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isPlayerOnly() {
         return true;

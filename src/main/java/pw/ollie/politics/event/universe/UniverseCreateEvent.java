@@ -30,6 +30,9 @@ public final class UniverseCreateEvent extends UniverseEvent {
         super(universe);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HandlerList getHandlers() {
         return handlers;

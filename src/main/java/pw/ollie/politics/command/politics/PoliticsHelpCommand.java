@@ -36,6 +36,9 @@ public class PoliticsHelpCommand extends PoliticsSubcommand {
         super("help");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
         MessageBuilder message = MessageUtil.startBlockMessage("Politics - Command Overview");
@@ -49,21 +52,33 @@ public class PoliticsHelpCommand extends PoliticsSubcommand {
         message.send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.help";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getAliases() {
         return Arrays.asList("commands", "cmds", "h");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/politics help";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Provides general command help for Politics.";

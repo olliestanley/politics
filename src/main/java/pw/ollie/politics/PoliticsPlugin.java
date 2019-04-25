@@ -65,6 +65,9 @@ public final class PoliticsPlugin extends JavaPlugin {
 
     private Visualiser visualiser;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onEnable() {
         instance = this;
@@ -124,6 +127,9 @@ public final class PoliticsPlugin extends JavaPlugin {
         pluginManager.registerEvents(new PoliticsListener(this), this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onDisable() {
         this.saveTask.cancel();

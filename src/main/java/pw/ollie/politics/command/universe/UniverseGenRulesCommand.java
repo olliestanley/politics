@@ -37,6 +37,9 @@ public class UniverseGenRulesCommand extends PoliticsSubcommand {
         super("genrules");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         if (args.length() < 2) {
@@ -63,21 +66,33 @@ public class UniverseGenRulesCommand extends PoliticsSubcommand {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.universe.genrules";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getAliases() {
         return Arrays.asList("makerules", "createrules");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/universe genrules <template> <name> [--f]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Generates a new set of rules from a template.";

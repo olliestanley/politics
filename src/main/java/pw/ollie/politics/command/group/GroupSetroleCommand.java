@@ -38,6 +38,9 @@ public class GroupSetroleCommand extends GroupSubcommand {
         super("setrole", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
@@ -83,16 +86,25 @@ public class GroupSetroleCommand extends GroupSubcommand {
                 .normal(" in the ").append(level.getName()).append("!").send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + ".setrole";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " setrole <player> <role> [-g group] [-u universe]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Sets somebody's role in a " + level.getName() + ".";

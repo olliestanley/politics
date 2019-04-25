@@ -48,6 +48,9 @@ public class GroupPropertySetEvent extends GroupEvent {
         this.value = value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HandlerList getHandlers() {
         return handlers;

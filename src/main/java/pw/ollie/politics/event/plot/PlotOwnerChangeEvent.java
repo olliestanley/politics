@@ -56,16 +56,25 @@ public class PlotOwnerChangeEvent extends PlotEvent implements Cancellable {
         return !add;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isCancelled() {
         return cancelled;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HandlerList getHandlers() {
         return handlers;

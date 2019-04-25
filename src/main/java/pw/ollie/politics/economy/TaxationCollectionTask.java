@@ -39,6 +39,9 @@ public final class TaxationCollectionTask extends BukkitRunnable {
         this.plugin = plugin;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
         PoliticsEconomy economy = plugin.getEconomy();

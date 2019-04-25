@@ -34,6 +34,9 @@ public class ActivityEndEvent extends ActivityEvent {
         return getActivity().hasCompleted();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HandlerList getHandlers() {
         return handlers;

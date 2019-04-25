@@ -34,6 +34,9 @@ public class PoliticsAboutCommand extends PoliticsSubcommand {
         super("about");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
         MessageBuilder.begin().highlight("Politics ").normal(plugin.getDescription().getVersion())
@@ -42,21 +45,33 @@ public class PoliticsAboutCommand extends PoliticsSubcommand {
                 .send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.about";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getAliases() {
         return Arrays.asList("info", "information");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/politics about";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Provides basic information about Politics.";

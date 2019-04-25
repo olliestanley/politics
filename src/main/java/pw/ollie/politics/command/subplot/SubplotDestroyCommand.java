@@ -38,6 +38,9 @@ public class SubplotDestroyCommand extends SubplotSubcommand {
         super("destroy");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         if (args.length(false) < 1) {
@@ -58,21 +61,33 @@ public class SubplotDestroyCommand extends SubplotSubcommand {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.plot.subplot.destroy";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/subplot destroy <here> OR <id> OR <x,y,z> [-p plot-location]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Removes a subplot from a plot";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getAliases() {
         return Arrays.asList("delete", "remove");

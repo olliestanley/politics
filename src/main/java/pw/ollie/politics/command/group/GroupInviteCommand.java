@@ -38,6 +38,9 @@ public class GroupInviteCommand extends GroupSubcommand {
         super("invite", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         if (!level.hasImmediateMembers()) {
@@ -73,16 +76,25 @@ public class GroupInviteCommand extends GroupSubcommand {
                 .highlight(level.getName()).normal(".").send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + ".invite";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " invite <player> [-g " + level.getName() + "]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Invites a player to the " + level.getName() + ".";

@@ -74,16 +74,25 @@ public final class CuboidSelectionActivity implements PoliticsActivity {
         return new Cuboid(getFirstPoint(), getSecondPoint());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UUID getPlayerId() {
         return playerId;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasCompleted() {
         return completed;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean complete() {
         if (completed || !isFirstPointSet() || !isSecondPointSet()) {
@@ -95,6 +104,9 @@ public final class CuboidSelectionActivity implements PoliticsActivity {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return "Cuboid Selection";

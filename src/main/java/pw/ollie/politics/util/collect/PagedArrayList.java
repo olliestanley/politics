@@ -52,6 +52,9 @@ public class PagedArrayList<E> implements PagedList<E> {
         calculatePages();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized List<E> getPage(int page) {
         if (refreshOnGet) {
@@ -60,6 +63,9 @@ public class PagedArrayList<E> implements PagedList<E> {
         return pages.get(page);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int pages() {
         if (refreshOnGet) {
@@ -68,21 +74,33 @@ public class PagedArrayList<E> implements PagedList<E> {
         return pages.size();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getElementsPerPage() {
         return elementsPerPage;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isAutoRefresh() {
         return autoRefresh;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isRefreshOnGet() {
         return refreshOnGet;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setElementsPerPage(int elementsPerPage) {
         this.elementsPerPage = elementsPerPage;
@@ -91,11 +109,17 @@ public class PagedArrayList<E> implements PagedList<E> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setAutoRefresh(boolean autoRefresh) {
         this.autoRefresh = autoRefresh;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setRefreshOnGet(boolean refreshOnGet) {
         this.refreshOnGet = refreshOnGet;
@@ -120,36 +144,57 @@ public class PagedArrayList<E> implements PagedList<E> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int size() {
         return delegate.size();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isEmpty() {
         return delegate.isEmpty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean contains(Object o) {
         return delegate.contains(o);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterator<E> iterator() {
         return delegate.iterator();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object[] toArray() {
         return delegate.toArray();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T[] toArray(T[] a) {
         return delegate.toArray(a);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean add(E e) {
         boolean result = delegate.add(e);
@@ -159,6 +204,9 @@ public class PagedArrayList<E> implements PagedList<E> {
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean remove(Object o) {
         boolean result = delegate.remove(o);
@@ -168,11 +216,17 @@ public class PagedArrayList<E> implements PagedList<E> {
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean containsAll(Collection<?> c) {
         return delegate.containsAll(c);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addAll(Collection<? extends E> c) {
         boolean result = delegate.addAll(c);
@@ -182,6 +236,9 @@ public class PagedArrayList<E> implements PagedList<E> {
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
         boolean result = delegate.addAll(index, c);
@@ -191,6 +248,9 @@ public class PagedArrayList<E> implements PagedList<E> {
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean removeAll(Collection<?> c) {
         boolean result = delegate.removeAll(c);
@@ -200,6 +260,9 @@ public class PagedArrayList<E> implements PagedList<E> {
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean retainAll(Collection<?> c) {
         boolean result = delegate.retainAll(c);
@@ -209,6 +272,9 @@ public class PagedArrayList<E> implements PagedList<E> {
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void clear() {
         delegate.clear();
@@ -217,11 +283,17 @@ public class PagedArrayList<E> implements PagedList<E> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E get(int index) {
         return delegate.get(index);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E set(int index, E element) {
         E result = delegate.set(index, element);
@@ -231,6 +303,9 @@ public class PagedArrayList<E> implements PagedList<E> {
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void add(int index, E element) {
         delegate.add(index, element);
@@ -239,6 +314,9 @@ public class PagedArrayList<E> implements PagedList<E> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E remove(int index) {
         E result = delegate.remove(index);
@@ -248,26 +326,41 @@ public class PagedArrayList<E> implements PagedList<E> {
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int indexOf(Object o) {
         return delegate.indexOf(o);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int lastIndexOf(Object o) {
         return delegate.lastIndexOf(o);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ListIterator<E> listIterator() {
         return delegate.listIterator();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ListIterator<E> listIterator(int index) {
         return delegate.listIterator(index);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
         return delegate.subList(fromIndex, toIndex);

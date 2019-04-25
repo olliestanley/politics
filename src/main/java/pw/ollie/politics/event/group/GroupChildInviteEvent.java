@@ -37,6 +37,9 @@ public class GroupChildInviteEvent extends GroupEvent {
         return child;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HandlerList getHandlers() {
         return handlers;

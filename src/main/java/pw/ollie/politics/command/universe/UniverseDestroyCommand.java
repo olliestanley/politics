@@ -37,6 +37,9 @@ public class UniverseDestroyCommand extends PoliticsSubcommand {
         super("destroy");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         if (args.length(false) < 1) {
@@ -53,21 +56,33 @@ public class UniverseDestroyCommand extends PoliticsSubcommand {
         MessageBuilder.begin("Universe destroyed, sir.").send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.universe.destroy";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getAliases() {
         return Arrays.asList("delete", "remove");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/universe destroy <universe>";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Destroys a universe.";

@@ -37,6 +37,9 @@ public class UniverseRulesCommand extends PoliticsSubcommand {
         super("rules");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         List<UniverseRules> ruleList = plugin.getUniverseManager().listRules();
@@ -51,21 +54,33 @@ public class UniverseRulesCommand extends PoliticsSubcommand {
         message.send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.universe.rules";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getAliases() {
         return Arrays.asList("r", "rulesets");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/universe rules";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Lists existing sets of rules.";

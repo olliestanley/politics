@@ -39,6 +39,9 @@ public class GroupDemoteCommand extends GroupSubcommand {
         super("demote", groupLevel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
@@ -95,16 +98,25 @@ public class GroupDemoteCommand extends GroupSubcommand {
                 .normal(" in the ").append(level.getName()).append("!").send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return getBasePermissionNode() + "demote";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/" + level.getId() + " demote <player> [-t track] [-g " + level.getName() + "] [-u universe]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Demotes somebody in the " + level.getName() + ".";

@@ -46,6 +46,9 @@ public class PoliticsEconomyVault extends PoliticsEconomy {
         super(plugin);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean loadEconomy() {
         Server server = getPlugin().getServer();
@@ -62,6 +65,9 @@ public class PoliticsEconomyVault extends PoliticsEconomy {
         return vaultEconomy != null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PoliticsEconomyResult taxMember(Group group, UUID member, double amount) {
         OfflinePlayer offlinePlayer = getPlugin().getServer().getOfflinePlayer(member);

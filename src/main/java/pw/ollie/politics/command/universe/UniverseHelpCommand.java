@@ -33,6 +33,9 @@ public class UniverseHelpCommand extends PoliticsSubcommand {
         super("help");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         int pageNumber = 1;
@@ -46,16 +49,25 @@ public class UniverseHelpCommand extends PoliticsSubcommand {
         PoliticsCommandHelper.sendCommandHelp(sender, plugin.getCommandManager().getRegisteredCommand("universe"), pageNumber);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermission() {
         return "politics.universe.help";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUsage() {
         return "/universe help";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Gives help for universe commands.";
