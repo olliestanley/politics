@@ -55,8 +55,6 @@ public final class WorldManager {
 
     public WorldManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
-
-        plugin.getServer().getPluginManager().registerEvents(new PlotProtectionListener(plugin), plugin);
     }
 
     /**
@@ -106,6 +104,8 @@ public final class WorldManager {
             PoliticsWorld world = new PoliticsWorld(worldName, config, (BasicBSONObject) object);
             worlds.put(world.getName(), world);
         }
+
+        plugin.getServer().getPluginManager().registerEvents(new PlotProtectionListener(plugin), plugin);
     }
 
     /**

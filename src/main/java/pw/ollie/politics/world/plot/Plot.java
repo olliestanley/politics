@@ -303,6 +303,15 @@ public final class Plot implements Storable {
     }
 
     /**
+     * Checks whether this Plot has an owner.
+     *
+     * @return whether the Plot has an owner
+     */
+    public boolean hasOwner() {
+        return owner != -1;
+    }
+
+    /**
      * Gets a {@link List} of all {@link Group}s involved in ownership of this Plot. This means the direct owner of the
      * Plot plus all parent Groups of the direct owner.
      *
