@@ -107,16 +107,20 @@ public final class PoliticsEventFactory {
         return callEvent(new GroupMemberJoinEvent(group, member, role));
     }
 
-    public static GroupMemberLeaveEvent callGroupMemberLeaveEvent(Group group, OfflinePlayer member, boolean kick) {
-        return callEvent(new GroupMemberLeaveEvent(group, member, kick));
+    public static GroupMemberLeaveEvent callGroupMemberLeaveEvent(Group group, Player member) {
+        return callEvent(new GroupMemberLeaveEvent(group, member, null));
     }
 
-    public static GroupMemberRoleChangeEvent callGroupMemberRoleChangeEvent(Group group, OfflinePlayer member, Role oldRole, Role newRole) {
-        return callEvent(new GroupMemberRoleChangeEvent(group, member, oldRole, newRole));
+    public static GroupMemberLeaveEvent callGroupMemberLeaveEvent(Group group, OfflinePlayer member, CommandSender kicker) {
+        return callEvent(new GroupMemberLeaveEvent(group, member, kicker));
     }
 
-    public static GroupMemberSpawnEvent callGroupMemberSpawnEvent(Group group, OfflinePlayer player) {
-        return callEvent(new GroupMemberSpawnEvent(group, player));
+    public static GroupMemberRoleChangeEvent callGroupMemberRoleChangeEvent(Group group, OfflinePlayer member, Role oldRole, Role newRole, CommandSender source) {
+        return callEvent(new GroupMemberRoleChangeEvent(group, member, oldRole, newRole, source));
+    }
+
+    public static GroupMemberSpawnEvent callGroupMemberSpawnEvent(Group group, OfflinePlayer player, CommandSender source) {
+        return callEvent(new GroupMemberSpawnEvent(group, player, source));
     }
 
     public static GroupPropertySetEvent callGroupPropertySetEvent(Group group, int property, Object value) {
@@ -171,8 +175,8 @@ public final class PoliticsEventFactory {
         return callEvent(new UniverseDestroyEvent(universe));
     }
 
-    public static WarBeginEvent callWarBeginEvent(War war) {
-        return callEvent(new WarBeginEvent(war));
+    public static WarBeginEvent callWarBeginEvent(War war, CommandSender source) {
+        return callEvent(new WarBeginEvent(war, source));
     }
 
     public static WarFinishEvent callWarFinishEvent(War war) {

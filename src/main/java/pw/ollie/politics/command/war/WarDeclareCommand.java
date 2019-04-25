@@ -68,7 +68,7 @@ public class WarDeclareCommand extends PoliticsSubcommand {
         }
 
         War war = new War(declarer, target);
-        if (plugin.getWarManager().beginWar(war)) {
+        if (plugin.getWarManager().beginWar(war, sender)) {
             MessageBuilder.begin().highlight(declarer.getName()).normal(" has declared war on ")
                     .highlight(target.getName()).normal("!").send(sender);
         } else {

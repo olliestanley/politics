@@ -19,25 +19,29 @@
  */
 package pw.ollie.politics.event.group;
 
+import pw.ollie.politics.event.Sourced;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.Role;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-public class GroupMemberRoleChangeEvent extends GroupMemberEvent implements Cancellable {
+public class GroupMemberRoleChangeEvent extends GroupMemberEvent implements Cancellable, Sourced {
     private static final HandlerList handlers = new HandlerList();
 
     private final Role oldRole;
     private final Role newRole;
+    private final CommandSender source;
 
     private boolean cancelled;
 
-    public GroupMemberRoleChangeEvent(Group group, OfflinePlayer member, Role oldRole, Role newRole) {
+    public GroupMemberRoleChangeEvent(Group group, OfflinePlayer member, Role oldRole, Role newRole, CommandSender source) {
         super(group, member);
         this.oldRole = oldRole;
         this.newRole = newRole;
+        this.source = source;
     }
 
     public Role getOldRole() {
@@ -46,6 +50,14 @@ public class GroupMemberRoleChangeEvent extends GroupMemberEvent implements Canc
 
     public Role getNewRole() {
         return newRole;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public CommandSender getSource() {
+        return source;
     }
 
     /**

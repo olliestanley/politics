@@ -62,7 +62,7 @@ public class GroupKickCommand extends GroupSubcommand {
         if (player != null) {
             UUID playerId = player.getUniqueId();
             if (group.isImmediateMember(playerId)) {
-                GroupMemberLeaveEvent leaveEvent = PoliticsEventFactory.callGroupMemberLeaveEvent(group, player, true);
+                GroupMemberLeaveEvent leaveEvent = PoliticsEventFactory.callGroupMemberLeaveEvent(group, player, sender);
                 if (leaveEvent.isCancelled()) {
                     throw new CommandException("You cannot kick the player.");
                 }
@@ -85,7 +85,7 @@ public class GroupKickCommand extends GroupSubcommand {
                     MessageBuilder.beginError().append("That player does not exist.").send(sender);
                 } else {
                     if (group.isImmediateMember(offlinePlayerId)) {
-                        GroupMemberLeaveEvent leaveEvent = PoliticsEventFactory.callGroupMemberLeaveEvent(group, offlinePlayer, true);
+                        GroupMemberLeaveEvent leaveEvent = PoliticsEventFactory.callGroupMemberLeaveEvent(group, offlinePlayer, sender);
                         if (leaveEvent.isCancelled()) {
                             MessageBuilder.beginError().append("You cannot kick the player.").send(sender);
                             return;

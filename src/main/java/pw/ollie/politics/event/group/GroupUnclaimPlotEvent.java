@@ -19,6 +19,7 @@
  */
 package pw.ollie.politics.event.group;
 
+import pw.ollie.politics.event.Sourced;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.world.plot.Plot;
 
@@ -26,7 +27,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-public class GroupUnclaimPlotEvent extends GroupPlotEvent implements Cancellable {
+public class GroupUnclaimPlotEvent extends GroupPlotEvent implements Cancellable, Sourced {
     private static final HandlerList handlers = new HandlerList();
 
     private final CommandSender unclaimer;
@@ -38,7 +39,11 @@ public class GroupUnclaimPlotEvent extends GroupPlotEvent implements Cancellable
         this.unclaimer = unclaimer;
     }
 
-    public CommandSender getUnclaimer() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public CommandSender getSource() {
         return unclaimer;
     }
 

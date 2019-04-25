@@ -79,7 +79,7 @@ public class GroupSpawnCommand extends GroupSubcommand {
             throw new CommandException("The player wasn't specified, or the specified player is offline!");
         }
 
-        GroupMemberSpawnEvent spawnEvent = PoliticsEventFactory.callGroupMemberSpawnEvent(group, player);
+        GroupMemberSpawnEvent spawnEvent = PoliticsEventFactory.callGroupMemberSpawnEvent(group, player, sender);
         if (spawnEvent.isCancelled()) {
             throw new CommandException("Cannot teleport to spawn now.");
         }

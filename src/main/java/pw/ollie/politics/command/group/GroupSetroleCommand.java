@@ -76,7 +76,7 @@ public class GroupSetroleCommand extends GroupSubcommand {
         }
 
         Role oldRole = group.getRole(player.getUniqueId());
-        GroupMemberRoleChangeEvent roleChangeEvent = PoliticsEventFactory.callGroupMemberRoleChangeEvent(group, player, oldRole, role);
+        GroupMemberRoleChangeEvent roleChangeEvent = PoliticsEventFactory.callGroupMemberRoleChangeEvent(group, player, oldRole, role, sender);
         if (roleChangeEvent.isCancelled()) {
             throw new CommandException("You can't set that player's role,");
         }

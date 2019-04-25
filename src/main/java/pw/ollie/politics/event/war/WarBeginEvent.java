@@ -19,18 +19,31 @@
  */
 package pw.ollie.politics.event.war;
 
+import pw.ollie.politics.event.Sourced;
 import pw.ollie.politics.group.war.War;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-public class WarBeginEvent extends WarEvent implements Cancellable {
+public class WarBeginEvent extends WarEvent implements Cancellable, Sourced {
     private static final HandlerList handlers = new HandlerList();
+
+    private final CommandSender source;
 
     private boolean cancelled;
 
-    public WarBeginEvent(War war) {
+    public WarBeginEvent(War war, CommandSender source) {
         super(war);
+        this.source = source;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public CommandSender getSource() {
+        return source;
     }
 
     /**

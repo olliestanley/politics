@@ -19,26 +19,37 @@
  */
 package pw.ollie.politics.event.group;
 
+import pw.ollie.politics.event.Sourced;
 import pw.ollie.politics.group.Group;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-public class GroupMemberLeaveEvent extends GroupMemberEvent implements Cancellable {
+public class GroupMemberLeaveEvent extends GroupMemberEvent implements Cancellable, Sourced {
     private static final HandlerList handlers = new HandlerList();
 
-    private final boolean kicked;
+    private final CommandSender kicker;
 
     private boolean cancelled;
 
-    public GroupMemberLeaveEvent(Group group, OfflinePlayer member, boolean kicked) {
+    public GroupMemberLeaveEvent(Group group, OfflinePlayer member, CommandSender kicker) {
         super(group, member);
-        this.kicked = kicked;
+        this.kicker = kicker;
     }
 
     public boolean isKick() {
-        return kicked;
+        return kicker != null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public CommandSender getSource() {
+        // if there is no kicker, the kicked player must be online and therefore a CommandSender
+        return kicker == null ? (CommandSender) getMember() : kicker;
     }
 
     /**

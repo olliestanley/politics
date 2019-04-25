@@ -29,6 +29,9 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.universe.Universe;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -82,6 +85,10 @@ public final class WarManager {
     }
 
     public boolean beginWar(War war) {
+        return beginWar(war, Bukkit.getConsoleSender());
+    }
+
+    public boolean beginWar(War war, CommandSender source) {
         if (war.isActive() || activeWars.contains(war) || getWarBetween(war.getAggressorId(), war.getDefenderId()) != null) {
             return false;
         }
@@ -103,7 +110,7 @@ public final class WarManager {
             return false;
         }
 
-        WarBeginEvent event = PoliticsEventFactory.callWarBeginEvent(war);
+        WarBeginEvent event = PoliticsEventFactory.callWarBeginEvent(war, source);
         if (event.isCancelled()) {
             return false;
         }

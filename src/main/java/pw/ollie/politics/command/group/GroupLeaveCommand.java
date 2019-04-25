@@ -52,7 +52,7 @@ public class GroupLeaveCommand extends GroupSubcommand {
             throw new CommandException("You are not a member of that " + level.getName() + ".");
         }
 
-        GroupMemberLeaveEvent leaveEvent = PoliticsEventFactory.callGroupMemberLeaveEvent(group, player, false);
+        GroupMemberLeaveEvent leaveEvent = PoliticsEventFactory.callGroupMemberLeaveEvent(group, player);
         if (leaveEvent.isCancelled()) {
             throw new CommandException("You cannot leave the " + level.getName() + ".");
         }

@@ -89,7 +89,7 @@ public class GroupPromoteCommand extends GroupSubcommand {
             }
         }
 
-        GroupMemberRoleChangeEvent roleChangeEvent = PoliticsEventFactory.callGroupMemberRoleChangeEvent(group, player, role, next);
+        GroupMemberRoleChangeEvent roleChangeEvent = PoliticsEventFactory.callGroupMemberRoleChangeEvent(group, player, role, next, sender);
         if (roleChangeEvent.isCancelled()) {
             throw new CommandException("You can't promote that player,");
         }
