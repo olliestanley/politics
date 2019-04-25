@@ -81,7 +81,7 @@ public class GroupSpawnCommand extends GroupSubcommand {
 
         GroupMemberSpawnEvent spawnEvent = PoliticsEventFactory.callGroupMemberSpawnEvent(group, player);
         if (spawnEvent.isCancelled()) {
-            throw new CommandException(spawnEvent.getCancelMessage());
+            throw new CommandException("Cannot teleport to spawn now.");
         }
 
         Position spawnPos = spawn.getPosition();

@@ -19,12 +19,13 @@
  */
 package pw.ollie.politics.event.group;
 
+import pw.ollie.politics.event.Sourced;
 import pw.ollie.politics.group.Group;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 
-public class GroupChildInviteEvent extends GroupEvent {
+public class GroupChildInviteEvent extends GroupEvent implements Sourced {
     private static final HandlerList handlers = new HandlerList();
 
     private final Group child;
@@ -40,6 +41,10 @@ public class GroupChildInviteEvent extends GroupEvent {
         return child;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public CommandSender getSource() {
         return source;
     }

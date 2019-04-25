@@ -19,13 +19,14 @@
  */
 package pw.ollie.politics.event.group;
 
+import pw.ollie.politics.event.Sourced;
 import pw.ollie.politics.group.Group;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-public final class GroupCreateEvent extends GroupEvent implements Cancellable {
+public final class GroupCreateEvent extends GroupEvent implements Cancellable, Sourced {
     private static final HandlerList handlers = new HandlerList();
 
     private final CommandSender creator;
@@ -37,7 +38,11 @@ public final class GroupCreateEvent extends GroupEvent implements Cancellable {
         this.creator = creator;
     }
 
-    public CommandSender getCreator() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public CommandSender getSource() {
         return creator;
     }
 
