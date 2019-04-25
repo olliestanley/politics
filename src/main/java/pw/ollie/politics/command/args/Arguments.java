@@ -28,7 +28,6 @@ import java.util.List;
  * types and parsing flags.
  */
 public class Arguments {
-    // todo docs
     private final List<Argument> all;
     private final List<Argument> arguments;
     private final List<Flag> flags;
@@ -89,10 +88,24 @@ public class Arguments {
         }
     }
 
+
+    /**
+     * Gets the {@link Argument} for the argument at the given index, including flag arguments.
+     *
+     * @param index the index to get the argument from
+     * @return a Argument object for the argument at the given index
+     */
     public Argument get(int index) {
         return get(index, true);
     }
 
+    /**
+     * Gets the {@link Argument} for the argument at the given index.
+     *
+     * @param index           the index to get the argument from
+     * @param includeFlagArgs whether to include flag args in the index
+     * @return a Argument object for the argument at the given index
+     */
     public Argument get(int index, boolean includeFlagArgs) {
         if (includeFlagArgs) {
             return all.get(index);
@@ -101,14 +114,33 @@ public class Arguments {
         }
     }
 
+    /**
+     * Gets the raw string for the argument at the given index, including flag arguments.
+     *
+     * @param index the index to get the argument from
+     * @return a raw String for the argument at the given index
+     */
     public String getString(int index) {
         return getString(index, true);
     }
 
+    /**
+     * Gets the raw string for the argument at the given index.
+     *
+     * @param index           the index to get the argument from
+     * @param includeFlagArgs whether to include flag args in the index
+     * @return a raw String for the argument at the given index
+     */
     public String getString(int index, boolean includeFlagArgs) {
         return get(index, includeFlagArgs).get();
     }
 
+    /**
+     * Gets the {@link Flag} object with the given name, or null if it doesn't exist.
+     *
+     * @param flag the name of the value flag to get the Flag object for
+     * @return the Flag with the given name or {@code null} if there isn't one
+     */
     public Flag getValueFlag(String flag) {
         for (Flag f : flags) {
             if (f.getName().equalsIgnoreCase(flag)) {
@@ -118,6 +150,12 @@ public class Arguments {
         return null;
     }
 
+    /**
+     * Checks whether these arguments contain a {@link Flag} with a value with the given name.
+     *
+     * @param flag the name of the Flag to check for
+     * @return whether these arguments contain a value Flag with the given name
+     */
     public boolean hasValueFlag(String flag) {
         for (Flag f : flags) {
             if (f.getName().equalsIgnoreCase(flag)) {
@@ -127,6 +165,12 @@ public class Arguments {
         return false;
     }
 
+    /**
+     * Checks whether these arguments contain a flag with no value with the given name.
+     *
+     * @param flag the name of the flag to check for
+     * @return whether these arguments contain a non-value flag with the given name
+     */
     public boolean hasNonValueFlag(String flag) {
         for (Argument f : doubleFlags) {
             if (f.get().equalsIgnoreCase(flag)) {
@@ -136,10 +180,21 @@ public class Arguments {
         return false;
     }
 
+    /**
+     * Gets the length of the arguments, including flag arguments.
+     *
+     * @return the amount of arguments in this Arguments object
+     */
     public int length() {
         return length(true);
     }
 
+    /**
+     * Gets the length of the arguments.
+     *
+     * @param includeFlagArgs whether to include flag args in the arg count
+     * @return the amount of arguments in this Arguments object
+     */
     public int length(boolean includeFlagArgs) {
         if (includeFlagArgs) {
             return all.size();
@@ -148,10 +203,25 @@ public class Arguments {
         }
     }
 
+    /**
+     * Get sub-arguments for this Arguments objects, <b>not</b> including flag arguments.
+     *
+     * @param startIndex start index for sub-arguments (inclusive)
+     * @param endIndex   end index for sub-arguments (non-inclusive)
+     * @return sub-arguments between the specified indices
+     */
     public Arguments subArgs(int startIndex, int endIndex) {
         return subArgs(startIndex, endIndex, false);
     }
 
+    /**
+     * Get sub-arguments for this Arguments objects.
+     *
+     * @param startIndex      start index for sub-arguments (inclusive)
+     * @param endIndex        end index for sub-arguments (non-inclusive)
+     * @param includeFlagArgs whether to include flag arguments in index
+     * @return sub-arguments between the specified indices
+     */
     public Arguments subArgs(int startIndex, int endIndex, boolean includeFlagArgs) {
         if (startIndex == length() && includeFlagArgs) {
             return new Arguments();
@@ -188,6 +258,11 @@ public class Arguments {
         return new Arguments(newRaw);
     }
 
+    /**
+     * Converts this Arguments object to a raw String[] of arguments.
+     *
+     * @return a raw String[] of arguments for this object
+     */
     public String[] toStringArray() {
         String[] result = new String[raw.length];
         System.arraycopy(raw, 0, result, 0, raw.length);

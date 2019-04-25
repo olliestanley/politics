@@ -20,30 +20,47 @@
 package pw.ollie.politics.command.args;
 
 /**
- * A flag which simply has a name and (sometimes) a value.
+ * A flag which simply has a name and a value.
  */
 public final class Flag {
-    // todo docs
     private final String name;
     private final Argument valArg;
 
+    /**
+     * Constructs a new {@link Flag} with the given name and the given value.
+     *
+     * @param name  the name of the flag
+     * @param value the value for the flag
+     */
     public Flag(String name, Argument value) {
         this.name = name;
         this.valArg = value;
     }
 
-    public Flag(String name, String value) {
-        this(name, new Argument(value));
-    }
-
+    /**
+     * Gets the name of this flag - for example, 'f' in '-f trees'.
+     *
+     * @return this flag's name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the {@link Argument} which represents the value provided for  this flag.
+     *
+     * @return this flag's value
+     */
     public Argument getValue() {
         return valArg;
     }
 
+
+    /**
+     * Gets the raw {@link String} value which was provided for this flag. For example, 'trees' in '-f trees'.
+     *
+     * @return this flag's raw String value
+     */
     public String getStringValue() {
         return getValue().get();
     }
