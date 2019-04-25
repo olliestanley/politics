@@ -6,6 +6,7 @@ By configuring Politics to your liking, it can reproduce the systems offered by 
 A detailed guide to configuring and using Politics on your Bukkit server will be available on the wiki.
 
 Documentation (Wiki): https://github.com/dzineit/politics/wiki
+JavaDocs: https://dzineit.github.io/politics/apidocs
 
 ### Downloads
 
