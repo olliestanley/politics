@@ -120,7 +120,7 @@ public class GroupManageCommand extends GroupSubcommand {
                 throw new CommandException("A " + group.getLevel().getName() + " cannot have " + invited.getLevel().getPlural() + " as sub-organisations.");
             }
 
-            if (group.inviteChild(invited)) {
+            if (group.inviteChild(invited, sender)) {
                 MessageBuilder.begin("The ").highlight(level.getName()).normal(" was successfully invited.").send(sender);
             } else {
                 throw new CommandException("That " + level.getName() + " cannot be invited as a child of yours.");
@@ -187,7 +187,7 @@ public class GroupManageCommand extends GroupSubcommand {
             }
 
             if (group.equals(other.getParent())) {
-                if (group.removeChildGroup(other)) {
+                if (group.removeChildGroup(other, sender)) {
                     MessageBuilder.begin().highlight(group.getName() + " is no longer the parent organisation of ")
                             .highlight(other.getName()).normal(".").send(sender);
                 } else {
@@ -197,7 +197,7 @@ public class GroupManageCommand extends GroupSubcommand {
             }
 
             if (other.equals(group.getParent())) {
-                if (other.removeChildGroup(group)) {
+                if (other.removeChildGroup(group, sender)) {
                     MessageBuilder.begin().highlight(group.getName() + " is no longer the child organisation of ")
                             .highlight(other.getName()).normal(".").send(sender);
                 } else {

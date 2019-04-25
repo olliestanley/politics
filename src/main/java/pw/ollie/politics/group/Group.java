@@ -46,6 +46,7 @@ import pw.ollie.politics.world.plot.Plot;
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -115,7 +116,11 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     public boolean removeChildGroup(Group group) {
-        GroupChildRemoveEvent event = PoliticsEventFactory.callGroupChildRemoveEvent(this, group);
+        return removeChildGroup(group, Bukkit.getConsoleSender());
+    }
+
+    public boolean removeChildGroup(Group group, CommandSender source) {
+        GroupChildRemoveEvent event = PoliticsEventFactory.callGroupChildRemoveEvent(this, group, source);
         if (event.isCancelled()) {
             return false;
         }
@@ -124,11 +129,15 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     public boolean inviteChild(Group group) {
+        return inviteChild(group, Bukkit.getConsoleSender());
+    }
+
+    public boolean inviteChild(Group group, CommandSender invitationSource) {
         if (group == null || group.getParent() != null || group.getLevel().getRank() >= level.getRank()) {
             return false;
         }
 
-        PoliticsEventFactory.callGroupChildInviteEvent(this, group);
+        PoliticsEventFactory.callGroupChildInviteEvent(this, group, invitationSource);
         invitedChildren.add(group.getUid());
         return true;
     }

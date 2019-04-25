@@ -21,6 +21,7 @@ package pw.ollie.politics.event.group;
 
 import pw.ollie.politics.group.Group;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
@@ -28,16 +29,22 @@ public class GroupChildRemoveEvent extends GroupEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     private final Group child;
+    private final CommandSender source;
 
     private boolean cancelled;
 
-    public GroupChildRemoveEvent(Group group, Group child) {
+    public GroupChildRemoveEvent(Group group, Group child, CommandSender source) {
         super(group);
         this.child = child;
+        this.source = source;
     }
 
     public Group getChild() {
         return child;
+    }
+
+    public CommandSender getSource() {
+        return source;
     }
 
     /**

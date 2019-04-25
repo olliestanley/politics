@@ -87,12 +87,12 @@ public final class PoliticsEventFactory {
         return callEvent(new GroupChildAddEvent(group, child));
     }
 
-    public static GroupChildInviteEvent callGroupChildInviteEvent(Group group, Group child) {
-        return callEvent(new GroupChildInviteEvent(group, child));
+    public static GroupChildInviteEvent callGroupChildInviteEvent(Group group, Group child, CommandSender source) {
+        return callEvent(new GroupChildInviteEvent(group, child, source));
     }
 
-    public static GroupChildRemoveEvent callGroupChildRemoveEvent(Group group, Group child) {
-        return callEvent(new GroupChildRemoveEvent(group, child));
+    public static GroupChildRemoveEvent callGroupChildRemoveEvent(Group group, Group child, CommandSender source) {
+        return callEvent(new GroupChildRemoveEvent(group, child, source));
     }
 
     public static GroupCreateEvent callGroupCreateEvent(Group group, CommandSender creator) {
