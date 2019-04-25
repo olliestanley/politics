@@ -29,7 +29,6 @@ public class GroupMemberSpawnEvent extends GroupMemberEvent implements Cancellab
     private static final HandlerList handlers = new HandlerList();
 
     private boolean cancelled;
-    private String cancelMessage = "You can't teleport to spawn now.";
 
     public GroupMemberSpawnEvent(Group group, OfflinePlayer member) {
         super(group, member);
@@ -49,14 +48,6 @@ public class GroupMemberSpawnEvent extends GroupMemberEvent implements Cancellab
     @Override
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
-    }
-
-    public String getCancelMessage() {
-        return cancelMessage;
-    }
-
-    public void setCancelMessage(String cancelMessage) {
-        this.cancelMessage = cancelMessage;
     }
 
     /**

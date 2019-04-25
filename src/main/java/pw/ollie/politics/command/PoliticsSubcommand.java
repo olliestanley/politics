@@ -173,6 +173,9 @@ public abstract class PoliticsSubcommand {
         if (context.hasValueFlag("g")) {
             String groupName = context.getValueFlag("g").getStringValue();
             group = universe.getFirstGroupByProperty(level, GroupProperty.TAG, groupName.toLowerCase());
+            if (group == null) {
+                throw new CommandException("There is no " + level.getName() + " by that tag.");
+            }
             return group;
         }
 

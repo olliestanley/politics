@@ -49,6 +49,10 @@ public final class War implements Storable {
         this.defender = defender;
     }
 
+    public War(Group aggressor, Group defender) {
+        this(aggressor.getUid(), defender.getUid());
+    }
+
     War(BasicBSONObject bObj) {
         aggressor = bObj.getInt("aggressor");
         defender = bObj.getInt("defender");

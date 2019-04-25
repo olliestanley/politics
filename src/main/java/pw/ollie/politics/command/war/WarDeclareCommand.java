@@ -21,8 +21,14 @@ package pw.ollie.politics.command.war;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
+import pw.ollie.politics.command.PoliticsCommandHelper;
 import pw.ollie.politics.command.PoliticsSubcommand;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.group.war.War;
+import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
 
@@ -36,7 +42,38 @@ public class WarDeclareCommand extends PoliticsSubcommand {
      */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
-        // todo
+        if (args.length(false) < 1) {
+            throw new CommandException("You must specify who to declare war on.");
+        }
+
+        StringBuilder nameBuilder = new StringBuilder();
+        for (int i = 0; i < args.length(false); i++) {
+            nameBuilder.append(args.getString(i, false)).append(' ');
+        }
+
+        String tag = nameBuilder.toString().replace(" ", "-");
+        Group target = plugin.getGroupManager().getGroupByTag(tag);
+        if (target == null) {
+            throw new CommandException(nameBuilder.toString() + " does not exist.");
+        }
+
+        GroupLevel level = target.getLevel();
+        Group declarer = findGroup(level, sender, args);
+        if (declarer.equals(target)) {
+            throw new CommandException("A " + level.getName() + " cannot declare war on itself.");
+        }
+
+        if (!PoliticsCommandHelper.hasGroupsAdmin(sender) && !declarer.can(sender, Privileges.Group.DECLARE_WAR)) {
+            throw new CommandException("You cannot declare a war on behalf of " + declarer.getName() + ".");
+        }
+
+        War war = new War(declarer, target);
+        if (plugin.getWarManager().beginWar(war)) {
+            MessageBuilder.begin().highlight(declarer.getName()).normal(" has declared war on ")
+                    .highlight(target.getName()).normal("!").send(sender);
+        } else {
+            throw new CommandException("The war could not be declared.");
+        }
     }
 
     /**

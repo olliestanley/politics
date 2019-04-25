@@ -32,6 +32,7 @@ public final class Privileges {
     public static final class Group {
         public static final Privilege CLAIM = new Privilege("CLAIM", PrivilegeType.GROUP);
         public static final Privilege DISBAND = new Privilege("DISBAND", PrivilegeType.GROUP);
+        public static final Privilege DECLARE_WAR = new Privilege("DECLARE_WAR", PrivilegeType.GROUP);
         public static final Privilege INFO = new Privilege("INFO", PrivilegeType.GROUP);
         public static final Privilege INVITE = new Privilege("INVITE", PrivilegeType.GROUP);
         public static final Privilege KICK = new Privilege("KICK", PrivilegeType.GROUP);
@@ -46,7 +47,7 @@ public final class Privileges {
         public static final Privilege SET_INFO = new Privilege("SET_INFO", PrivilegeType.GROUP);
         public static final Privilege TOGGLES = new Privilege("TOGGLES", PrivilegeType.GROUP);
         public static final Privilege UNCLAIM = new Privilege("UNCLAIM", PrivilegeType.GROUP);
-        public static final Privilege[] ALL = {CLAIM, DISBAND, INFO, INVITE, KICK, LEAVE, MANAGE, ONLINE, SET_ROLE, SET_SPAWN, SPAWN, SPAWN_OTHER, SET_TAX, SET_INFO, TOGGLES, UNCLAIM};
+        public static final Privilege[] ALL = {CLAIM, DISBAND, DECLARE_WAR, INFO, INVITE, KICK, LEAVE, MANAGE, ONLINE, SET_ROLE, SET_SPAWN, SPAWN, SPAWN_OTHER, SET_TAX, SET_INFO, TOGGLES, UNCLAIM};
 
         public static List<Privilege> all() {
             return Arrays.asList(ALL);
