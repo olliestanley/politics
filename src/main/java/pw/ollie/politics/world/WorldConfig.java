@@ -21,20 +21,45 @@ package pw.ollie.politics.world;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+/**
+ * Stores Politics configuration values specific to a single world.
+ */
 public final class WorldConfig {
     private final String name;
 
+    /**
+     * Constructs a blank new configuration for a world with the given name.
+     *
+     * @param name the world name for this configuration
+     */
     public WorldConfig(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets the name of the world this configuration is for.
+     *
+     * @return the world name for this configuration
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Saves configuration values to the given configuration node.
+     *
+     * @param config the node to save values to
+     */
     public void save(ConfigurationSection config) {
     }
 
+    /**
+     * Loads a WorldConfig with the given world name from the given configuration node.
+     *
+     * @param name   the name of the world
+     * @param config the configuration node to load from
+     * @return a world configuration for the given world name from the given configuration node
+     */
     public static WorldConfig load(String name, ConfigurationSection config) {
         WorldConfig wc = new WorldConfig(name);
         return wc;

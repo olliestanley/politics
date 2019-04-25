@@ -30,7 +30,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Represents a role held by a player within a Group. Holding a Role affords the holder the {@link Privilege}s which are
+ * designated to the Role.
+ */
 public final class Role implements Comparable<Role> {
+    // todo docs
     private final String id;
     private final String name;
     private final Set<Privilege> privileges;

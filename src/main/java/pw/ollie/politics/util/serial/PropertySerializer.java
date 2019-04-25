@@ -25,11 +25,27 @@ import pw.ollie.politics.util.math.Vector2f;
 
 import org.bukkit.Bukkit;
 
+/**
+ * Serializes and deserializes certain types which Politics stores.
+ */
 public class PropertySerializer {
+    /**
+     * Converts a {@link RotatedPosition} to a storable {@link String}.
+     *
+     * @param rotatedPosition the RotatedPosition to serialize
+     * @return serialized representation of the given object
+     */
     public static String serializeRotatedPosition(RotatedPosition rotatedPosition) {
         return "t/" + rotatedPosition.getPosition().getWorld() + "," + rotatedPosition.getPosition().getX() + "," + rotatedPosition.getPosition().getY() + "," + rotatedPosition.getPosition().getZ() + "," + rotatedPosition.getRotation().getX() + "," + rotatedPosition.getRotation().getY() + "," + rotatedPosition.getRotation().getY();
     }
 
+    /**
+     * Deserializes the given serial {@link String} into a {@link RotatedPosition}.
+     *
+     * @param serialized the serial String to read data from
+     * @return deserialized RotatedPosition based on the given serial String
+     * @throws PropertyDeserializationException if the serialized string is invalid
+     */
     public static RotatedPosition deserializeRotatedPosition(String serialized) throws PropertyDeserializationException {
         String[] parts1 = serialized.split("/");
         if (parts1.length != 2) {

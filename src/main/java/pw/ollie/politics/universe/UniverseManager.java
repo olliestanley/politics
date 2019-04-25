@@ -54,7 +54,11 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+/**
+ * Manages data and configuration for {@link Universe}s in Politics.
+ */
 public final class UniverseManager {
+    // todo docs
     private final PoliticsPlugin plugin;
 
     private Map<String, Universe> universes;

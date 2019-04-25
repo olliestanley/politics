@@ -21,7 +21,18 @@ package pw.ollie.politics.util.collect;
 
 import java.util.Collection;
 
+/**
+ * Utilities relating to {@link Collection}s used by Politics.
+ */
 public final class CollectionUtil {
+    /**
+     * Checks whether the contents of the two given {@link Collection}s are identical.
+     *
+     * @param collection  the first Collection
+     * @param collection2 the second Collection
+     * @param <T>         the type of the Collections
+     * @return whether the two Collections have identical contents
+     */
     public static <T> boolean contentsEqual(Collection<T> collection, Collection<T> collection2) {
         if (collection.size() != collection2.size()) {
             return false;

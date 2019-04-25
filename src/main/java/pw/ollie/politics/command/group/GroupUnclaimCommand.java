@@ -54,7 +54,7 @@ public class GroupUnclaimCommand extends GroupSubcommand {
             throw new CommandException("Sorry, this plot is not owned by " + group.getName() + ".");
         }
 
-        if (!plot.removeOwner(group)) {
+        if (!plot.removeOwner()) {
             throw new CommandException("The plot could not be unclaimed.");
         }
 

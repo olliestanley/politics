@@ -19,22 +19,15 @@
  */
 package pw.ollie.politics.util.math;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class Vector3i implements Serializable {
-    private static final long serialVersionUID = 7L;
-
+public class Vector3i {
     private final int x, y, z;
 
     public Vector3i(int x, int y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
-    }
-
-    public int lengthSquared() {
-        return x * x + y * y + z * z;
     }
 
     public int getX() {
@@ -47,10 +40,6 @@ public class Vector3i implements Serializable {
 
     public int getZ() {
         return z;
-    }
-
-    public Vector3i divide(float i) {
-        return new Vector3i((int) (x / i), (int) (y / i), (int) (z / i));
     }
 
     @Override

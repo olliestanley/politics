@@ -37,6 +37,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public abstract class PoliticsBaseCommand extends BukkitCommand {
+    // todo docs
     private final PoliticsPlugin plugin;
     private final List<PoliticsSubcommand> subcommands = new ArrayList<>();
 

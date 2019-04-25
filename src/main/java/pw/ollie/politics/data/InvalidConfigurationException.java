@@ -19,15 +19,14 @@
  */
 package pw.ollie.politics.data;
 
+/**
+ * Thrown when a configuration file in Politics is invalid.
+ */
 public class InvalidConfigurationException extends Exception {
     private static final long serialVersionUID = -3792841272998195396L;
 
     public InvalidConfigurationException(String reason) {
         super(reason);
-    }
-
-    public InvalidConfigurationException(Throwable cause) {
-        super(cause);
     }
 
     public InvalidConfigurationException(String reason, Throwable cause) {

@@ -34,6 +34,7 @@ import java.util.UUID;
  * Manages players' ongoing activities.
  */
 public final class ActivityManager {
+    // todo docs
     private final PoliticsPlugin plugin;
     private final Map<UUID, PoliticsActivity> activities;
 

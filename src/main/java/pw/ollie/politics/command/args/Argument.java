@@ -28,6 +28,7 @@ package pw.ollie.politics.command.args;
  * a modification(s) to the state of the Argument will return a new object.
  */
 public final class Argument {
+    // todo docs
     private final String raw;
 
     public Argument(String arg) {

@@ -36,10 +36,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Used to generate {@link Visualisation}s to display to players.
+ */
 public final class Visualiser {
+    // todo docs
     private final PoliticsPlugin plugin;
     private final Map<UUID, Visualisation> current;
 
+    /**
+     * Creates a new Visualiser instance for the given plugin.
+     *
+     * @param plugin the plugin instance
+     */
     public Visualiser(PoliticsPlugin plugin) {
         this.plugin = plugin;
         this.current = new HashMap<>();

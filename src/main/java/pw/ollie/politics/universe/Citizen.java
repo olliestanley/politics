@@ -25,7 +25,11 @@ import pw.ollie.politics.group.level.GroupLevel;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * A Citizen is a player's representation in a single Universe in Politics.
+ */
 public final class Citizen {
+    // todo docs
     private final UUID id;
     private final Universe universe;
 

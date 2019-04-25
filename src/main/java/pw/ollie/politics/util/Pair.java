@@ -19,19 +19,41 @@
  */
 package pw.ollie.politics.util;
 
+/**
+ * Immutable pair of objects.
+ *
+ * @param <K> the type of the first object
+ * @param <V> the type of the second object
+ */
 public final class Pair<K, V> {
     private final K k;
     private final V v;
 
+    /**
+     * Constructs a new Pair.
+     *
+     * @param k the first item
+     * @param v the second item
+     */
     public Pair(K k, V v) {
         this.k = k;
         this.v = v;
     }
 
+    /**
+     * Gets the first item of the pair.
+     *
+     * @return the first item
+     */
     public K getFirst() {
         return k;
     }
 
+    /**
+     * Gets the second item of the pair.
+     *
+     * @return the second item
+     */
     public V getSecond() {
         return v;
     }

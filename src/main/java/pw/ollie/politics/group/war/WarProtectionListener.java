@@ -27,6 +27,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+/**
+ * Listens to Politics' protection trigger events and cancels them if necessary due to ongoing {@link War}s.
+ */
 public final class WarProtectionListener implements Listener {
     private final PoliticsPlugin plugin;
 

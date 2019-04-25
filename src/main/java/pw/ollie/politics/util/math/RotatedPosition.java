@@ -23,24 +23,40 @@ import pw.ollie.politics.util.Position;
 
 import com.google.common.base.MoreObjects;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class RotatedPosition implements Serializable {
-    private static final long serialVersionUID = 2L;
-
+/**
+ * Stores both a position (x, y, z) and a rotation (yaw, pitch).
+ */
+public class RotatedPosition {
     private final Position position;
     private final Vector2f rotation;
 
+    /**
+     * Constructs a new RotatedPosition with given positional and rotational components.
+     *
+     * @param position the Position component of the RotatedPosition
+     * @param rotation the rotation of the RotatedPosition
+     */
     public RotatedPosition(Position position, Vector2f rotation) {
         this.position = position;
         this.rotation = rotation;
     }
 
+    /**
+     * Gets the positional component of this RotatedPosition.
+     *
+     * @return the Position of this object
+     */
     public Position getPosition() {
         return position;
     }
 
+    /**
+     * Gets the rotational component of this RotatedPosition.
+     *
+     * @return the rotation of this object
+     */
     public Vector2f getRotation() {
         return rotation;
     }

@@ -22,37 +22,77 @@ package pw.ollie.politics.util.visualise;
 import org.bukkit.Location;
 import org.bukkit.block.data.BlockData;
 
+/**
+ * Represents a single block sent to a player as part of a {@link Visualisation}.
+ */
 public class VisualisedBlock {
     private final Location location;
     private final BlockData fakeBlock;
     private final BlockData realBlock;
 
-    public VisualisedBlock(Location location, BlockData visualizedBlock, BlockData realBlock) {
+    /**
+     * Creates a new VisualisedBlock with specified properties.
+     *
+     * @param location  the {@link Location} at which the block is
+     * @param fakeBlock the data for the fake block being shown as part of the visualisation
+     * @param realBlock the data for the real block at the Location of the VisualisedBlock
+     */
+    public VisualisedBlock(Location location, BlockData fakeBlock, BlockData realBlock) {
         this.location = location;
-        this.fakeBlock = visualizedBlock;
+        this.fakeBlock = fakeBlock;
         this.realBlock = realBlock;
     }
 
+    /**
+     * Gets the {@link Location} at which the VisualisedBlock is located.
+     *
+     * @return the VisualisedBlock's Location
+     */
     public Location getLocation() {
         return location;
     }
 
+    /**
+     * Gets the x coordinate of the VisualisedBlock.
+     *
+     * @return the block's x coordinate
+     */
     public int getX() {
         return location.getBlockX();
     }
 
+    /**
+     * Gets the y coordinate of the VisualisedBlock.
+     *
+     * @return the block's y coordinate
+     */
     public int getY() {
         return location.getBlockY();
     }
 
+    /**
+     * Gets the z coordinate of the VisualisedBlock.
+     *
+     * @return the block's z coordinate
+     */
     public int getZ() {
         return location.getBlockZ();
     }
 
+    /**
+     * Gets the data of the fake block being visualised.
+     *
+     * @return the fake block data
+     */
     public BlockData getFakeBlock() {
         return fakeBlock;
     }
 
+    /**
+     * Gets the data of the real block at the VisualisedBlock's {@link Location}.
+     *
+     * @return the real block data at the Location
+     */
     public BlockData getRealBlock() {
         return realBlock;
     }

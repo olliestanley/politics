@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public final class TaxationManager {
+    // todo docs
     // run the collection update task once a minute
     private static final long TASK_PERIOD = 20 * 60;
 

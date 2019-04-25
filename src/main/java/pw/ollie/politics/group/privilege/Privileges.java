@@ -22,7 +22,13 @@ package pw.ollie.politics.group.privilege;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Static constants and helper methods for all {@link Privilege}s in Politics.
+ */
 public final class Privileges {
+    /**
+     * Group type Privileges.
+     */
     public static final class Group {
         public static final Privilege CLAIM = new Privilege("CLAIM", PrivilegeType.GROUP);
         public static final Privilege DISBAND = new Privilege("DISBAND", PrivilegeType.GROUP);
@@ -47,6 +53,9 @@ public final class Privileges {
         }
     }
 
+    /**
+     * Plot type Privileges.
+     */
     public static final class Plot {
         public static final Privilege SUBPLOT_PRIVILEGES = new Privilege("SUBPLOT_PRIVILEGES", PrivilegeType.PLOT);
         public static final Privilege[] ALL = {SUBPLOT_PRIVILEGES};
@@ -56,6 +65,9 @@ public final class Privileges {
         }
     }
 
+    /**
+     * Privileges of both Group and Plot types.
+     */
     public static final class GroupPlot {
         public static final Privilege BUILD = new Privilege("BUILD", PrivilegeType.GROUP, PrivilegeType.PLOT);
         public static final Privilege INTERACT = new Privilege("INTERACT", PrivilegeType.GROUP, PrivilegeType.PLOT);

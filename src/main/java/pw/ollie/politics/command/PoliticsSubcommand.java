@@ -43,6 +43,7 @@ import java.util.List;
  * Generic subcommand of any command in Politics.
  */
 public abstract class PoliticsSubcommand {
+    // todo docs
     private final String name;
 
     protected PoliticsSubcommand(String name) {

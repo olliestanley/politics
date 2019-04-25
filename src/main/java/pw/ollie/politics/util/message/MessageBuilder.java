@@ -23,10 +23,18 @@ import pw.ollie.politics.Politics;
 
 import org.bukkit.command.CommandSender;
 
+/**
+ * Builds {@link FormattedMessage} objects using a set {@link ColourScheme}.
+ */
 public final class MessageBuilder {
     private final StringBuilder delegate;
     private final ColourScheme colourScheme;
 
+    /**
+     * Constructs a new MessageBuilder with the given {@link ColourScheme} in normal text colour.
+     *
+     * @param colourScheme the ColourScheme for the MessageBuilder to use
+     */
     public MessageBuilder(ColourScheme colourScheme) {
         this.delegate = new StringBuilder();
         this.colourScheme = colourScheme;
@@ -34,76 +42,165 @@ public final class MessageBuilder {
         normal();
     }
 
+    /**
+     * Appends the given text to this MessageBuilder.
+     *
+     * @return this MessageBuilder object
+     */
     public MessageBuilder append(String content) {
         delegate.append(content);
         return this;
     }
 
+    /**
+     * Switches to normal text colour.
+     *
+     * @return this MessageBuilder object
+     */
     public MessageBuilder normal() {
         delegate.append(colourScheme.getNormal());
         return this;
     }
 
+    /**
+     * Switches to normal text colour, then appends the given text to this MessageBuilder.
+     *
+     * @return this MessageBuilder object
+     */
     public MessageBuilder normal(String content) {
         return normal().append(content);
     }
 
+    /**
+     * Switches to error text colour.
+     *
+     * @return this MessageBuilder object
+     */
     public MessageBuilder error() {
         delegate.append(colourScheme.getError());
         return this;
     }
 
+    /**
+     * Switches to error text colour, then appends the given text to this MessageBuilder.
+     *
+     * @return this MessageBuilder object
+     */
     public MessageBuilder error(String content) {
         return error().append(content);
     }
 
+    /**
+     * Switches to highlighted text colour.
+     *
+     * @return this MessageBuilder object
+     */
     public MessageBuilder highlight() {
         delegate.append(colourScheme.getHighlight());
         return this;
     }
 
+    /**
+     * Switches to highlighted text colour, then appends the given text to this MessageBuilder.
+     *
+     * @return this MessageBuilder object
+     */
     public MessageBuilder highlight(String content) {
         return highlight().append(content);
     }
 
+    /**
+     * Switches to prefix text colour.
+     *
+     * @return this MessageBuilder object
+     */
     public MessageBuilder prefix() {
         delegate.append(colourScheme.getPrefix());
         return this;
     }
 
+    /**
+     * Switches to prefix text colour, then appends the given text to this MessageBuilder.
+     *
+     * @return this MessageBuilder object
+     */
     public MessageBuilder prefix(String content) {
         return prefix().append(content);
     }
 
+    /**
+     * Appends a line break to this MessageBuilder.
+     *
+     * @return this MessageBuilder object
+     */
     public MessageBuilder newLine() {
         delegate.append("\n");
         return this;
     }
 
+    /**
+     * Builds all of the appended content into a {@link FormattedMessage} object.
+     *
+     * @return a FormattedMessage of the content appended to this builder
+     */
     public FormattedMessage build() {
         return new FormattedMessage(delegate.toString());
     }
 
-    public void send(CommandSender sender) {
-        build().send(sender);
+    /**
+     * Sends the current content to the given recipient.
+     *
+     * @param recipient the recipient of the message
+     */
+    public void send(CommandSender recipient) {
+        build().send(recipient);
     }
 
+    /**
+     * Begins a new message in normal colour of the given {@link ColourScheme}.
+     *
+     * @param colourScheme the ColourScheme to be used for the new MessageBuilder
+     * @return a new MessageBuilder set to normal colour of the given ColourScheme
+     */
     public static MessageBuilder begin(ColourScheme colourScheme) {
         return new MessageBuilder(colourScheme);
     }
 
+    /**
+     * Begins a new message in normal colour of the given {@link ColourScheme} with the given initial text.
+     *
+     * @param colourScheme the ColourScheme to be used for the new MessageBuilder
+     * @param initial      the initial text to append to the MessageBuilder
+     * @return a new MessageBuilder set to normal colour of the given ColourScheme with given text
+     */
     public static MessageBuilder begin(ColourScheme colourScheme, String initial) {
         return begin(colourScheme).append(initial);
     }
 
+    /**
+     * Begins a new message in normal colour of the default Politics {@link ColourScheme}.
+     *
+     * @return a new MessageBuilder set to the default normal colour
+     */
     public static MessageBuilder begin() {
         return begin(Politics.getColourScheme());
     }
 
+    /**
+     * Begins a new message in normal colour of the default Politics {@link ColourScheme} with the given starting text.
+     *
+     * @param initial the initial text for the MessageBuilder
+     * @return a new MessageBuilder set to the default normal colour with initial text
+     */
     public static MessageBuilder begin(String initial) {
         return begin().append(initial);
     }
 
+    /**
+     * Begins a new message in error colour of the default Politics {@link ColourScheme}.
+     *
+     * @return a new MessageBuilder set to the default error colour
+     */
     public static MessageBuilder beginError() {
         return begin().error();
     }

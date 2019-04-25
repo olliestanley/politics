@@ -25,7 +25,6 @@ import pw.ollie.politics.event.group.GroupBalanceChangeEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -40,6 +39,11 @@ public abstract class PoliticsEconomy {
         this.plugin = plugin;
     }
 
+    /**
+     * Attempts to load the economy implementation.
+     *
+     * @return whether economy features were successfully enabled
+     */
     public abstract boolean loadEconomy();
 
     public PoliticsPlugin getPlugin() {
@@ -115,9 +119,9 @@ public abstract class PoliticsEconomy {
     /**
      * Taxes the given member of the given group by the given amount.
      *
-     * @param group   the group to tax the member of
-     * @param member  the member to tax
-     * @param amount  the amount to tax the member
+     * @param group  the group to tax the member of
+     * @param member the member to tax
+     * @param amount the amount to tax the member
      * @return the result of the attempt to tax the member
      */
     public abstract PoliticsEconomyResult taxMember(Group group, UUID member, double amount);

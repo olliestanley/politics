@@ -25,15 +25,23 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class Position implements Serializable {
-    private static final long serialVersionUID = 3L;
-
+/**
+ * Represents a point in three dimensions in a specific world.
+ */
+public class Position {
     private final String world;
     private final float x, y, z;
 
+    /**
+     * Construct a new Position.
+     *
+     * @param world the name of the world the Position is within
+     * @param x     x coordinate of the Position
+     * @param y     y coordinate of the Position
+     * @param z     z coordinate of the Position
+     */
     public Position(String world, float x, float y, float z) {
         this.world = world;
         this.x = x;
@@ -41,18 +49,38 @@ public class Position implements Serializable {
         this.z = z;
     }
 
+    /**
+     * Gets the name of the world this Position is within.
+     *
+     * @return the name of the world of this Position
+     */
     public String getWorld() {
-        return this.world;
+        return world;
     }
 
+    /**
+     * Gets the x coordinate of this Position.
+     *
+     * @return the Position x coordinate
+     */
     public float getX() {
         return x;
     }
 
+    /**
+     * Gets the y coordinate of this Position.
+     *
+     * @return the Position y coordinate
+     */
     public float getY() {
         return y;
     }
 
+    /**
+     * Gets the z coordinate of this Position.
+     *
+     * @return the Position z coordinate
+     */
     public float getZ() {
         return z;
     }
@@ -84,6 +112,12 @@ public class Position implements Serializable {
                 .toString();
     }
 
+    /**
+     * Converts this Position to an equivalent {@link Location} object, if possible. If the world name specified for
+     * this Position does not correspond to an existing {@link World}, returns null.
+     *
+     * @return equivalent Location to this Position, if one exists
+     */
     public Location toLocation() {
         World world = Bukkit.getWorld(this.world);
         if (world == null) {
@@ -93,6 +127,12 @@ public class Position implements Serializable {
         return new Location(world, x, y, z);
     }
 
+    /**
+     * Converts the given {@link Location} to an equivalent Position object, if possible. If the {@link World} of the
+     * given Location does not exist, returns null.
+     *
+     * @return equivalent Position to the given Location, if one exists
+     */
     public static Position fromLocation(Location location) {
         if (location.getWorld() == null) {
             return null;

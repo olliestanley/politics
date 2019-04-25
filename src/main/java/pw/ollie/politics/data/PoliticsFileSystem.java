@@ -21,6 +21,9 @@ package pw.ollie.politics.data;
 
 import java.io.File;
 
+/**
+ * Provides easy access to {@link File} objects for important directories Politics uses to store data or configuration.
+ */
 public final class PoliticsFileSystem {
     private final File baseDir;
     private final File rulesDir;

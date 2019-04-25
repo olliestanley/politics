@@ -29,7 +29,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Provides helper methods for accessing {@link Group}s and related features.
+ */
 public final class GroupManager {
+    // todo docs
     private final PoliticsPlugin plugin;
 
     public GroupManager(PoliticsPlugin plugin) {

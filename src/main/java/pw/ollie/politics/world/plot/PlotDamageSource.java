@@ -19,7 +19,6 @@
  */
 package pw.ollie.politics.world.plot;
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -27,55 +26,106 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 /**
- * Represents a source of damage to a plot.
+ * Represents a source of damage to a plot. May represent either an {@link Entity} (including {@link Player}s) or a
+ * {@link Block}.
  */
 public class PlotDamageSource {
-    private final UUID playerId;
-    private final Entity nonPlayerEntity;
+    private final Entity entity;
     private final Block block;
 
-    public PlotDamageSource(UUID playerId) {
-        this(playerId, null, null);
+    /**
+     * Construct a new {@link Entity} PlotDamageSource. If the Entity is a {@link Player}, this will also be a Player
+     * PlotDamageSource.
+     *
+     * @param entity the entity causing damage
+     */
+    public PlotDamageSource(Entity entity) {
+        this(entity, null);
     }
 
-    public PlotDamageSource(Entity nonPlayerEntity) {
-        this(null, nonPlayerEntity, null);
-    }
-
+    /**
+     * Construct a new {@link Block} PlotDamageSource.
+     *
+     * @param block the block causing damage
+     */
     public PlotDamageSource(Block block) {
-        this(null, null, block);
+        this(null, block);
     }
 
-    private PlotDamageSource(UUID playerId, Entity nonPlayerEntity, Block block) {
-        this.playerId = playerId;
-        this.nonPlayerEntity = nonPlayerEntity;
+    private PlotDamageSource(Entity entity, Block block) {
+        this.entity = entity;
         this.block = block;
     }
 
+    /**
+     * Gets the unique id of the {@link Player} represented by this PlotDamageSource object, or null if this object does
+     * not represent a Player.
+     *
+     * @return the unique id of the relevant Player, or {@code null} if there is no relevant Player
+     */
     public UUID getPlayerId() {
-        return playerId;
+        if (!isPlayer()) {
+            return null;
+        }
+        return getPlayer().getUniqueId();
     }
 
+    /**
+     * Gets the {@link Player} represented by this PlotDamageSource object, or null if this object does not represent a
+     * Player.
+     *
+     * @return the relevant Player, or {@code null} if there is no relevant Player
+     */
     public Player getPlayer() {
-        return Bukkit.getPlayer(playerId);
+        if (!isPlayer()) {
+            return null;
+        }
+        return (Player) entity;
     }
 
+    /**
+     * Checks whether this PlotDamageSource object represents a {@link Player}.
+     *
+     * @return whether the source of damage is a Player
+     */
     public boolean isPlayer() {
-        return getPlayerId() != null;
+        return entity instanceof Player;
     }
 
-    public Entity getNonPlayerEntity() {
-        return nonPlayerEntity;
+    /**
+     * Gets the {@link Entity} represented by this PlotDamageSource object, or null if this object does not represent a
+     * Entity.
+     *
+     * @return the relevant Entity, or {@code null} if there is no relevant Entity
+     */
+    public Entity getEntity() {
+        return entity;
     }
 
-    public boolean isNonPlayerEntity() {
-        return getNonPlayerEntity() != null;
+    /**
+     * Checks whether this PlotDamageSource object represents an {@link Entity}.
+     *
+     * @return whether the source of damage is an Entity
+     */
+    public boolean isEntity() {
+        return getEntity() != null;
     }
 
+    /**
+     * Gets the {@link Block} represented by this PlotDamageSource object, or null if this object does not represent a
+     * Block.
+     *
+     * @return the relevant Block, or {@code null} if there is no relevant Block
+     */
     public Block getBlock() {
         return block;
     }
 
+    /**
+     * Checks whether this PlotDamageSource object represents a {@link Block}.
+     *
+     * @return whether the source of damage is an Block
+     */
     public boolean isBlock() {
         return getBlock() != null;
     }

@@ -19,20 +19,12 @@
  */
 package pw.ollie.politics.util.math;
 
-import java.io.Serializable;
-
-public class Vector2f implements Serializable {
-    private static final long serialVersionUID = 4L;
-
+public class Vector2f {
     private final float x, y;
 
     public Vector2f(float x, float y) {
         this.x = x;
         this.y = y;
-    }
-
-    public float lengthSquared() {
-        return x * x + y * y;
     }
 
     public float getX() {

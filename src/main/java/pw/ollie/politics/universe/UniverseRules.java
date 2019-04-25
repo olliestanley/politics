@@ -35,9 +35,10 @@ import java.util.Set;
 import java.util.logging.Level;
 
 /**
- * A (configured) ruleset for a universe.
+ * A configured set of rules for a {@link Universe}.
  */
 public final class UniverseRules {
+    // todo docs
     private final String name;
     private final String description;
     private final String wildernessMessage;

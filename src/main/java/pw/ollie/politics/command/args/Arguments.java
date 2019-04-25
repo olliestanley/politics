@@ -28,6 +28,7 @@ import java.util.List;
  * types and parsing flags.
  */
 public class Arguments {
+    // todo docs
     private final List<Argument> all;
     private final List<Argument> arguments;
     private final List<Flag> flags;

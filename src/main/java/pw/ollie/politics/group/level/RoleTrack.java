@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RoleTrack implements Iterable<Role> {
+    // todo docs
     private final String id;
     private final List<Role> roles;
 

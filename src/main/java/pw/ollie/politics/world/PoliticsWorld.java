@@ -37,12 +37,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Holds Politics data specific to a single world.
+ */
 public final class PoliticsWorld implements Storable {
     private final String name;
     private final WorldConfig config;
     private final Map<IntPair, Plot> chunkPlots;
 
-    public PoliticsWorld(String name, WorldConfig config) {
+    PoliticsWorld(String name, WorldConfig config) {
         this(name, config, new HashMap<>());
     }
 
@@ -52,7 +55,7 @@ public final class PoliticsWorld implements Storable {
         this.chunkPlots = chunkPlots;
     }
 
-    public PoliticsWorld(String name, WorldConfig config, BasicBSONObject object) {
+    PoliticsWorld(String name, WorldConfig config, BasicBSONObject object) {
         this.name = object.getString("name", name);
         chunkPlots = new HashMap<>();
         BasicBSONList list = (BasicBSONList) object.get("plots");
@@ -67,31 +70,64 @@ public final class PoliticsWorld implements Storable {
             }
 
             Plot p = new Plot(plotObj);
-            chunkPlots.put(IntPair.of(p.getX(), p.getZ()), p);
+            chunkPlots.put(IntPair.of(p.getBaseX(), p.getBaseZ()), p);
         }
         this.config = config;
     }
 
+    /**
+     * Gets the name of the world.
+     *
+     * @return the world name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the Politics {@link WorldConfig} of this world.
+     *
+     * @return this world's configuration
+     */
     public WorldConfig getConfig() {
         return config;
     }
 
+    /**
+     * Gets the Bukkit {@link World} associated with this PoliticsWorld.
+     *
+     * @return the relevant Bukkit World to this object
+     */
     public World getWorld() {
         return Politics.getServer().getWorld(name);
     }
 
+    /**
+     * Gets the {@link Universe} associated with this world at the given {@link GroupLevel}.
+     *
+     * @param level the GroupLevel of the universe to get
+     * @return the universe of the given level for this world
+     */
     public Universe getUniverse(GroupLevel level) {
         return Politics.getUniverseManager().getUniverse(this, level);
     }
 
+    /**
+     * Gets the {@link Plot} at the given chunk position in this world.
+     *
+     * @param x chunk x coordinate
+     * @param z chunk z coordinate
+     * @return the Plot at the given chunk position in this world
+     */
     public Plot getPlotAtChunkPosition(int x, int z) {
         return new Plot(this, x, z);
     }
 
+    /**
+     * Gets a {@link List} of all {@link GroupLevel}s present in this world.
+     *
+     * @return all present GroupLevels in this world
+     */
     public List<GroupLevel> getLevels() {
         return Politics.getUniverseManager().getLevelsOfWorld(this);
     }
@@ -108,10 +144,6 @@ public final class PoliticsWorld implements Storable {
     public int hashCode() {
         return Objects.hash(name);
     }
-
-    /*
-     * Note: PoliticsWorld does not have a fromBSONObject method due to the Constructor with similar functionality
-     */
 
     @Override
     public BSONObject toBSONObject() {

@@ -19,7 +19,16 @@
  */
 package pw.ollie.politics.group.privilege;
 
+/**
+ * Represents a type of {@link Privilege}.
+ */
 public enum PrivilegeType {
+    /**
+     * A {@link Privilege} related to actions in a Group.
+     */
     GROUP,
+    /**
+     * A {@link Privilege} related to actions in a Plot.
+     */
     PLOT
 }

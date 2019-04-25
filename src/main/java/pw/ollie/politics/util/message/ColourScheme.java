@@ -21,12 +21,23 @@ package pw.ollie.politics.util.message;
 
 import org.bukkit.ChatColor;
 
+/**
+ * Represents a messaging colour scheme.
+ */
 public final class ColourScheme {
     private final ChatColor normal;
     private final ChatColor error;
     private final ChatColor highlight;
     private final ChatColor prefix;
 
+    /**
+     * Constructs a new ColourScheme using the given {@link ChatColor}s.
+     *
+     * @param normal    the colour to use for normal text
+     * @param error     the colour to use for error text
+     * @param highlight the colour to use for highlighted text
+     * @param prefix    the colour to use for prefix text
+     */
     public ColourScheme(ChatColor normal, ChatColor error, ChatColor highlight, ChatColor prefix) {
         this.normal = normal;
         this.error = error;
@@ -34,18 +45,38 @@ public final class ColourScheme {
         this.prefix = prefix;
     }
 
+    /**
+     * Gets the {@link ChatColor} used for normal text under this ColourScheme.
+     *
+     * @return the normal colour
+     */
     public ChatColor getNormal() {
         return normal;
     }
 
+    /**
+     * Gets the {@link ChatColor} used for error text under this ColourScheme.
+     *
+     * @return the error colour
+     */
     public ChatColor getError() {
         return error;
     }
 
+    /**
+     * Gets the {@link ChatColor} used for highlighted text under this ColourScheme.
+     *
+     * @return the highlight colour
+     */
     public ChatColor getHighlight() {
         return highlight;
     }
 
+    /**
+     * Gets the {@link ChatColor} used for prefix text under this ColourScheme.
+     *
+     * @return the prefix colour
+     */
     public ChatColor getPrefix() {
         return prefix;
     }

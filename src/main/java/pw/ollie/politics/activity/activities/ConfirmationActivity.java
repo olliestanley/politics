@@ -23,6 +23,9 @@ import pw.ollie.politics.activity.PoliticsActivity;
 
 import java.util.UUID;
 
+/**
+ * Represents an activity in which a player is asked for confirmation to execute a potentially sensitive action.
+ */
 public final class ConfirmationActivity implements PoliticsActivity {
     private final UUID playerId;
     private final Runnable callback;

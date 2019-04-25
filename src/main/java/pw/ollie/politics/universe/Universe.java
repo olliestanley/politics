@@ -51,7 +51,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
+/**
+ * A Universe is a collection of {@link PoliticsWorld}s which are subject to a particular set of {@link UniverseRules}
+ * and share existing {@link GroupLevel}s and {@link Citizen} data.
+ */
 public final class Universe implements Storable {
+    // todo docs
     private final String name;
     private final UniverseRules rules;
     private final List<PoliticsWorld> worlds;
@@ -80,6 +85,9 @@ public final class Universe implements Storable {
         }
     }
 
+    /**
+     * Builds the citizen cache for this Universe.
+     */
     private void buildCitizenCache() {
         CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
 
@@ -100,18 +108,43 @@ public final class Universe implements Storable {
         });
     }
 
+    /**
+     * Gets the name of this Universe.
+     * <p>
+     * Note: no two Universes may have the same name.
+     *
+     * @return this Universe's name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the configured {@link UniverseRules} of this universe.
+     *
+     * @return this Universe's configured rule set
+     */
     public UniverseRules getRules() {
         return rules;
     }
 
+    /**
+     * Gets a {@link List} of all {@link Group}s which exist in this Universe.
+     *
+     * @return all Groups present in this Universe
+     */
     public List<Group> getGroups() {
         return new ArrayList<>(groups);
     }
 
+    /**
+     * Gets a {@link List} of all {@link Group}s present in this Universe with the given property set to the given
+     * value.
+     *
+     * @param property the id of the property to check
+     * @param value    the requisite value of the property
+     * @return all Groups in this Universe with the given value for the given property
+     */
     public List<Group> getGroupsByProperty(int property, Object value) {
         List<Group> groups = new ArrayList<>();
         for (Group group : getGroups()) {
@@ -122,16 +155,13 @@ public final class Universe implements Storable {
         return groups;
     }
 
-    public List<Group> getGroupsByProperty(GroupLevel level, int property, Object value) {
-        List<Group> groups = new ArrayList<>();
-        for (Group group : getGroups(level)) {
-            if (group.getProperty(property).equals(value)) {
-                groups.add(group);
-            }
-        }
-        return groups;
-    }
-
+    /**
+     * Gets the first {@link Group} in this Universe found with the given property set to the given value.
+     *
+     * @param property the id of the property to check
+     * @param value    the requisite value of the property
+     * @return the first Group in this Universe with the given value for the given property
+     */
     public Group getFirstGroupByProperty(int property, Object value) {
         for (Group group : getGroups()) {
             if (group.getProperty(property).equals(value)) {
@@ -141,6 +171,15 @@ public final class Universe implements Storable {
         return null;
     }
 
+    /**
+     * Gets the first {@link Group} of the given {@link GroupLevel} in this Universe found with the given property set
+     * to the given value.
+     *
+     * @param level    the GroupLevel to check Groups of
+     * @param property the id of the property to check
+     * @param value    the requisite value of the property
+     * @return the first Group of the given GroupLevel in this Universe with the given value for the given property
+     */
     public Group getFirstGroupByProperty(GroupLevel level, int property, Object value) {
         for (Group group : getGroups(level)) {
             if (group.getProperty(property).equals(value)) {
@@ -150,6 +189,13 @@ public final class Universe implements Storable {
         return null;
     }
 
+    /**
+     * Attempts to add the given {@link PoliticsWorld} to this Universe, meaning that {@link Group}s present in this
+     * Universe will exist in the world and it will be subject to this Universe's {@link UniverseRules}.
+     *
+     * @param world the world to add to the universe
+     * @return whether the world was successfully added
+     */
     public boolean addWorld(PoliticsWorld world) {
         List<GroupLevel> levels = rules.getGroupLevels();
         // Check if the rules are already there

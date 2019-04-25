@@ -23,6 +23,7 @@ package pw.ollie.politics.command.args;
  * A flag which simply has a name and (sometimes) a value.
  */
 public final class Flag {
+    // todo docs
     private final String name;
     private final Argument valArg;
 

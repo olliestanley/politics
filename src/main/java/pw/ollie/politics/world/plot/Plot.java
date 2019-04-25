@@ -106,51 +106,120 @@ public final class Plot implements Storable {
         baseZ = chunk.getZ() * 16;
     }
 
+    /**
+     * Gets the {@link PoliticsWorld} object for the world this Plot is contained within.
+     *
+     * @return the PoliticsWorld this Plot is within
+     */
     public PoliticsWorld getPoliticsWorld() {
         return world;
     }
 
-    public final int getX() {
+    /**
+     * Gets the base block x coordinate for this Plot.
+     *
+     * @return this Plot's base point x coordinate
+     */
+    public int getBaseX() {
         return getBasePoint().getBlockX();
     }
 
-    public final int getZ() {
+    /**
+     * Gets the base block z coordinate for this Plot.
+     *
+     * @return this Plot's base point z coordinate
+     */
+    public int getBaseZ() {
         return getBasePoint().getBlockZ();
     }
 
+    /**
+     * Gets the {@link Chunk} this Plot occupies the space of.
+     *
+     * @return this Plot's relevant Chunk
+     */
     public Chunk getChunk() {
         return chunk;
     }
 
+    /**
+     * Gets the base {@link Location} of this Plot, meaning the point of minimum x, y and z coordinates.
+     *
+     * @return the base point for this Plot
+     */
     public Location getBasePoint() {
         return new Location(chunk.getWorld(), baseX, 0, baseZ);
     }
 
+    /**
+     * Gets the maximum {@link Location} of this Plot, meaning the point of maximum x, y and z coordinates.
+     *
+     * @return the maximum point for this Plot
+     */
     public Location getMaxPoint() {
         return new Location(chunk.getWorld(), baseX + 15, 255, baseZ + 15);
     }
 
+    /**
+     * Checks whether the given {@link Location} is contained within this Plot.
+     *
+     * @param location the Location to check
+     * @return whether the given Location is inside this Plot
+     */
     public boolean contains(Location location) {
         return baseX <= location.getBlockX() && baseX + 16 <= location.getBlockX()
                 && baseZ <= location.getBlockZ() && baseZ + 16 <= location.getBlockZ();
     }
 
+    /**
+     * Checks whether the given {@link Position} is contained within this Plot.
+     *
+     * @param position the Position to check
+     * @return whether the given Position is inside this Plot
+     */
     public boolean contains(Position position) {
         return contains(position.toLocation());
     }
 
+    /**
+     * Gets a {@link Set} of all {@link Subplot}s contained within this Plot.
+     *
+     * @return a Set of all this Plot's Subplots
+     */
     public Set<Subplot> getSubplots() {
         return new THashSet<>(subplots.valueCollection());
     }
 
+    /**
+     * Gets the {@link Subplot} within this Plot with the given id.
+     * <p>
+     * Note that Subplot ids are unique within a Plot but multiple Subplots in different Plots may have the same id. If
+     * there is no Subplot with the given id inside this Plot, null is returned.
+     *
+     * @param id the id of the Subplot to get
+     * @return the Subplot with the given id, or {@code null} if there isn't one with that id
+     */
     public Subplot getSubplot(int id) {
         return subplots.get(id);
     }
 
+    /**
+     * Gets the number of {@link Subplot}s contained within this Plot.
+     *
+     * @return the number of Subplots in this Plot
+     */
     public int getSubplotQuantity() {
         return subplots.size();
     }
 
+    /**
+     * Attempts to add the given {@link Subplot} to this Plot.
+     * <p>
+     * This method calls {@link SubplotCreateEvent}, and will fail if this event is cancelled.
+     *
+     * @param subplot the Subplot to attempt to add to the Plot
+     * @return whether the Subplot was successfully added
+     */
     public boolean addSubplot(Subplot subplot) {
         if (subplots.containsKey(subplot.getId())) {
             return false;
@@ -165,6 +234,14 @@ public final class Plot implements Storable {
         return true;
     }
 
+    /**
+     * Attempts to remove the given {@link Subplot} from this Plot.
+     * <p>
+     * This method calls {@link SubplotDestroyEvent}, and will fail if this event is cancelled.
+     *
+     * @param subplot the Subplot to attempt to remove from the Plot
+     * @return whether the Subplot was successfully removed
+     */
     public boolean removeSubplot(Subplot subplot) {
         if (!subplots.containsKey(subplot.getId())) {
             return false;
@@ -179,6 +256,12 @@ public final class Plot implements Storable {
         return true;
     }
 
+    /**
+     * Gets the {@link Subplot} of this Plot at the given {@link Location}, if there is one.
+     *
+     * @param location the Location to get the Subplot at
+     * @return the relevant Subplot, or {@code null} if there isn't one at the Location
+     */
     public Subplot getSubplotAt(Location location) {
         for (Subplot subplot : subplots.valueCollection()) {
             if (subplot.contains(location)) {
@@ -188,10 +271,21 @@ public final class Plot implements Storable {
         return null;
     }
 
+    /**
+     * Gets the {@link Subplot} of this Plot at the given {@link Position}, if there is one.
+     *
+     * @param position the Position to get the Subplot at
+     * @return the relevant Subplot, or {@code null} if there isn't one at the Position
+     */
     public Subplot getSubplotAt(Position position) {
         return getSubplotAt(position.toLocation());
     }
 
+    /**
+     * Gets the {@link Group} which directly owns this Plot, if there is one.
+     *
+     * @return the Group owning this Plot, or {@code null} if no Group owns the Plot
+     */
     public Group getOwner() {
         if (owner == -1) {
             return null;
@@ -199,10 +293,21 @@ public final class Plot implements Storable {
         return Politics.getUniverseManager().getGroupById(owner);
     }
 
+    /**
+     * Gets the id of the {@link Group} directly owning this Plot.
+     *
+     * @return the group id of this Plot's owner, or -1 if there is no owner
+     */
     public int getOwnerId() {
         return owner;
     }
 
+    /**
+     * Gets a {@link List} of all {@link Group}s involved in ownership of this Plot. This means the direct owner of the
+     * Plot plus all parent Groups of the direct owner.
+     *
+     * @return a List of all direct or indirect owners of the Plot, or an empty List if there is no owner
+     */
     public List<Group> getOwners() {
         List<Group> owners = new ArrayList<>();
         Group group = getOwner();
@@ -213,6 +318,14 @@ public final class Plot implements Storable {
         return owners;
     }
 
+    /**
+     * Attempts to set the direct owner {@link Group} of this Plot to the Group with the given unique id.
+     * <p>
+     * This method calls {@link PlotOwnerChangeEvent} and will fail if this event is cancelled.
+     *
+     * @param id the unique id of the Group to designate as this Plot's new owner
+     * @return whether the owner of the Plot was successfully changed
+     */
     public boolean setOwner(int id) {
         PlotOwnerChangeEvent event = PoliticsEventFactory.callPlotOwnerChangeEvent(this, id, true);
         if (event.isCancelled()) {
@@ -223,45 +336,115 @@ public final class Plot implements Storable {
         return true;
     }
 
+    /**
+     * Attempts to set the direct owner {@link Group} of this Plot to the given Group.
+     * <p>
+     * This method calls {@link PlotOwnerChangeEvent} and will fail if this event is cancelled.
+     *
+     * @param group the Group to designate as this Plot's new owner
+     * @return whether the owner of the Plot was successfully changed
+     */
     public boolean setOwner(Group group) {
         return setOwner(group.getUid());
     }
 
-    public boolean removeOwner(int id) {
-        if (id != owner) {
-            return false;
-        }
-        PlotOwnerChangeEvent event = PoliticsEventFactory.callPlotOwnerChangeEvent(this, id, false);
+    /**
+     * Attempts to remove the direct owner {@link Group} of this Plot.
+     * <p>
+     * This method calls {@link PlotOwnerChangeEvent} and will fail if this event is cancelled.
+     *
+     * @return whether the owner of the Plot was successfully changed
+     */
+    public boolean removeOwner() {
+        PlotOwnerChangeEvent event = PoliticsEventFactory.callPlotOwnerChangeEvent(this, owner, false);
         if (event.isCancelled()) {
             return false;
         }
+
         owner = -1;
         return true;
     }
 
-    public boolean removeOwner(Group group) {
-        return removeOwner(group.getUid());
-    }
-
+    /**
+     * Checks whether the Plot is directly owned by the {@link Group} with the given unique id.
+     *
+     * @param id the id of the Group to check for ownership by
+     * @return whether the Group with the given unique id directly owns this Plot
+     */
     public boolean isOwner(int id) {
         return id == owner;
     }
 
+    /**
+     * Checks whether the Plot is directly owned by the given {@link Group}.
+     *
+     * @param group the Group to check for ownership by
+     * @return whether the given Group directly owns this Plot
+     */
     public boolean isOwner(Group group) {
         return isOwner(group.getUid());
     }
 
+    /**
+     * Checks whether the Plot is directly or indirectly owned by the {@link Group} with the given unique id.
+     *
+     * @param id the id of the Group to check for indirect ownership by
+     * @return whether the Group with the given unique id directly or indirectly owns this Plot
+     */
+    public boolean isIndirectOwner(int id) {
+        return getOwners().stream().map(Group::getUid).anyMatch(uid -> uid == id);
+    }
+
+    /**
+     * Checks whether the Plot is directly or indirectly owned by the given {@link Group}.
+     *
+     * @param group the Group to check for indirect ownership by
+     * @return whether the given Group directly or indirectly owns this Plot
+     */
+    public boolean isIndirectOwner(Group group) {
+        return getOwners().contains(group);
+    }
+
+    /**
+     * Gets a {@link Set} of all plot-type {@link Privilege}s the given {@link Player} is afforded by the {@link Group}
+     * which owns this Plot.
+     * <p>
+     * If the Plot has no owner, null is returned.
+     *
+     * @param player the Player to check the privileges of
+     * @return the plot-type Privileges the given Player has in this Plot
+     */
     public Set<Privilege> getPrivileges(Player player) {
-        return getOwner().getPrivileges(player).stream()
+        Group owner = getOwner();
+        if (owner == null) {
+            return null;
+        }
+        return owner.getPrivileges(player).stream()
                 .filter(privilege -> privilege.getTypes().contains(PrivilegeType.PLOT))
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Checks whether the given {@link Player} has the given {@link Privilege} in this Plot.
+     *
+     * @param player    the Player to check privileges of
+     * @param privilege the Privilege to check for
+     * @return whether the given Player has the given Privilege in this Plot
+     */
     public boolean can(Player player, Privilege privilege) {
-        return getOwner().getPrivileges(player).contains(privilege);
+        Group owner = getOwner();
+        if (owner == null) {
+            return privilege.getTypes().contains(PrivilegeType.PLOT);
+        }
+        return owner.getPrivileges(player).contains(privilege);
     }
 
-    public int generateSubplotId() {
+    /**
+     * Generates the next unused {@link Subplot} id for this Plot.
+     *
+     * @return the next available Subplot id
+     */
+    public synchronized int generateSubplotId() {
         for (int i = 0; i < Integer.MAX_VALUE; i++) {
             if (subplots.get(i) != null) {
                 continue;
@@ -277,8 +460,8 @@ public final class Plot implements Storable {
         BasicBSONObject obj = new BasicBSONObject();
         obj.put("world", world.getName());
         obj.put("owner", owner);
-        obj.put("x", getX());
-        obj.put("z", getZ());
+        obj.put("x", getBaseX());
+        obj.put("z", getBaseZ());
         if (!subplots.isEmpty()) {
             BasicBSONList subplotList = new BasicBSONList();
             for (Subplot subplot : subplots.valueCollection()) {

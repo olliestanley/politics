@@ -31,6 +31,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+/**
+ * Listens to events to send relevant {@link Group}-related informational messages to players.
+ */
 public final class GroupMessageListener implements Listener {
     private final PoliticsPlugin plugin;
 

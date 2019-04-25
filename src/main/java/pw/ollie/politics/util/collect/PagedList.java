@@ -21,7 +21,13 @@ package pw.ollie.politics.util.collect;
 
 import java.util.List;
 
+/**
+ * Represents a paged {@link List}.
+ *
+ * @param <E> the type of the elements
+ */
 public interface PagedList<E> extends List<E> {
+    // todo docs
     List<E> getPage(int page);
 
     int pages();

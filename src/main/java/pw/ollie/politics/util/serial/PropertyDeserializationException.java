@@ -19,14 +19,17 @@
  */
 package pw.ollie.politics.util.serial;
 
+/**
+ * Thrown if a serialized property in Politics is invalid and cannot be deserialized.
+ */
 public class PropertyDeserializationException extends Exception {
     private static final long serialVersionUID = 2338368863788970401L;
 
-    public PropertyDeserializationException(final String string) {
+    public PropertyDeserializationException(String string) {
         super(string);
     }
 
-    public PropertyDeserializationException(final String string, final Throwable thrwbl) {
+    public PropertyDeserializationException(String string, Throwable thrwbl) {
         super(string, thrwbl);
     }
 }

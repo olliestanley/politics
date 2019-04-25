@@ -30,7 +30,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
+/**
+ * Configuration-related utility methods for Politics.
+ */
 public final class ConfigUtil {
+    // todo docs
     public static ConfigurationSection getOrCreateSection(ConfigurationSection parent, String name) {
         ConfigurationSection result = parent.getConfigurationSection(name);
         if (result == null) {

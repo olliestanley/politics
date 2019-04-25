@@ -21,7 +21,11 @@ package pw.ollie.politics.util.math;
 
 import java.util.Objects;
 
+/**
+ * Holds a pair of integers.
+ */
 public class IntPair {
+    // todo docs
     public static IntPair of(int x, int z) {
         return new IntPair(x, z);
     }

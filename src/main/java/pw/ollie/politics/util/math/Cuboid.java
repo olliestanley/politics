@@ -27,7 +27,11 @@ import org.bukkit.World;
 
 import java.util.Objects;
 
+/**
+ * Represents a cuboid space in a Minecraft world.
+ */
 public class Cuboid {
+    // todo docs
     private final Location base;
     private final Vector3i size;
 
@@ -112,6 +116,10 @@ public class Cuboid {
         return base.getX() <= vec.getX() && vec.getX() < max.getX()
                 && base.getY() <= vec.getY() && vec.getY() < max.getY()
                 && base.getZ() <= vec.getZ() && vec.getZ() < max.getZ();
+    }
+
+    public boolean contains(Position position) {
+        return contains(position.toLocation());
     }
 
     public boolean contains(Location location) {

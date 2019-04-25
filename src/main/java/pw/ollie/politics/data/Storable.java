@@ -21,8 +21,21 @@ package pw.ollie.politics.data;
 
 import org.bson.BSONObject;
 
+/**
+ * Represents something that can be stored in Politics.
+ */
 public interface Storable {
+    /**
+     * Converts this object into a {@link BSONObject}.
+     *
+     * @return a BSONObject that represents this Storable object
+     */
     BSONObject toBSONObject();
 
+    /**
+     * Checks whether this Storable object can currently be stored.
+     *
+     * @return whether this object can currently be stored
+     */
     boolean canStore();
 }

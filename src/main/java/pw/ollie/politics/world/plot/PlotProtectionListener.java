@@ -52,12 +52,17 @@ import org.bukkit.event.world.StructureGrowEvent;
 
 import java.util.List;
 
+/**
+ * Applies {@link Plot} and {@link Subplot} region protections where applicable.
+ */
 public final class PlotProtectionListener implements Listener {
     private final PoliticsPlugin plugin;
 
     public PlotProtectionListener(PoliticsPlugin plugin) {
         this.plugin = plugin;
     }
+
+    // logic methods
 
     private void checkProtection(PlotDamageSource source, Block block, Cancellable event, PlotProtectionType type) {
         Location location = block.getLocation();
@@ -120,20 +125,22 @@ public final class PlotProtectionListener implements Listener {
         return new Pair<>(subplot, subplot.can(player, privilege));
     }
 
+    // listener methods which mostly simply make appropriate calls to above logic methods
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
-        checkProtection(new PlotDamageSource(event.getPlayer().getUniqueId()), event.getBlock(), event, PlotProtectionType.BLOCK_BREAK);
+        checkProtection(new PlotDamageSource(event.getPlayer()), event.getBlock(), event, PlotProtectionType.BLOCK_BREAK);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
-        checkProtection(new PlotDamageSource(event.getPlayer().getUniqueId()), event.getBlock(), event, PlotProtectionType.BLOCK_PLACE);
+        checkProtection(new PlotDamageSource(event.getPlayer()), event.getBlock(), event, PlotProtectionType.BLOCK_PLACE);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onBlockMultiPlace(BlockMultiPlaceEvent event) {
         for (BlockState block : event.getReplacedBlockStates()) {
-            checkProtection(new PlotDamageSource(event.getPlayer().getUniqueId()), event.getBlock(), event, PlotProtectionType.BLOCK_PLACE);
+            checkProtection(new PlotDamageSource(event.getPlayer()), event.getBlock(), event, PlotProtectionType.BLOCK_PLACE);
 
             if (event.isCancelled()) {
                 break;

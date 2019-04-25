@@ -28,7 +28,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
+/**
+ * Stores general plugin configuration values for Politics.
+ */
 public final class PoliticsConfig {
+    /**
+     * The file name for the configuration file.
+     */
     private static final String CONFIG_FILE_NAME = "config.yml";
 
     private final PoliticsPlugin plugin;
@@ -47,35 +53,70 @@ public final class PoliticsConfig {
     private double maxFixedTax;
     private int taxPeriod;
 
-    public PoliticsConfig(PoliticsPlugin plugin) {
+    PoliticsConfig(PoliticsPlugin plugin) {
         this.plugin = plugin;
         this.configFile = new File(plugin.getFileSystem().getBaseDir(), CONFIG_FILE_NAME);
     }
 
+    /**
+     * Gets the configured {@link ColourScheme} for Politics' messaging.
+     *
+     * @return the configured ColourScheme
+     */
     public ColourScheme getColourScheme() {
         return colourScheme;
     }
 
+    /**
+     * Returns whether wars are configured to be enabled.
+     *
+     * @return whether wars are allowed
+     */
     public boolean areWarsEnabled() {
         return warsEnabled;
     }
 
+    /**
+     * Returns whether economic features are configured to be enabled.
+     *
+     * @return whether economic features are allowed
+     */
     public boolean areEconomicFeaturesEnabled() {
         return economyEnabled;
     }
 
+    /**
+     * Gets the name of the economy type configured to be in use.
+     *
+     * @return the name of the configured economy type
+     */
     public String getEconomyImplementation() {
         return economyType;
     }
 
+    /**
+     * Returns whether taxation is configured to be enabled.
+     *
+     * @return whether taxation is allowed
+     */
     public boolean isTaxEnabled() {
         return taxEnabled;
     }
 
+    /**
+     * Gets the configured maximum value for fixed-amount taxation by groups.
+     *
+     * @return the maximum taxation amount
+     */
     public double getMaxFixedTax() {
         return maxFixedTax;
     }
 
+    /**
+     * Gets the period between taxation collection, measured in minutes.
+     *
+     * @return the time between tax collections
+     */
     public int getTaxPeriod() {
         return taxPeriod;
     }

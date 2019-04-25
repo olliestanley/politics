@@ -23,8 +23,17 @@ package pw.ollie.politics.economy;
  * Represents the result of an economic event in Politics.
  */
 public enum PoliticsEconomyResult {
+    /**
+     * The economic event failed due to an insufficient balance.
+     */
     INSUFFICIENT_BALANCE,
+    /**
+     * The economic event failed due to an unspecified reason.
+     */
     FAILURE,
+    /**
+     * The economic event succeeded.
+     */
     SUCCESS(true);
 
     private final boolean success;
@@ -37,6 +46,11 @@ public enum PoliticsEconomyResult {
         this.success = success;
     }
 
+    /**
+     * Checks whether the result is of a successful type.
+     *
+     * @return whether the result is a success
+     */
     public boolean isSuccess() {
         return success;
     }

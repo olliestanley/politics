@@ -23,6 +23,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+/**
+ * General utilities relating to {@link Player}s.
+ */
 public final class PlayerUtil {
     /**
      * Gets the offline player object for the given name, if one exists. If no player with that name has played on the

@@ -21,17 +21,17 @@ package pw.ollie.politics.util.math;
 
 import org.bukkit.Location;
 
+/**
+ * Utilities for mathematical methods in Politics.
+ */
 public final class MathUtil {
+    // todo docs
     public static Vector3i add(Location one, Vector3i two) {
         return new Vector3i(one.getBlockX() + two.getX(), one.getBlockY() + two.getY(), one.getBlockZ() + two.getZ());
     }
 
     public static Location add(Vector3i one, Location two) {
         return new Location(two.getWorld(), two.getBlockX() + one.getX(), two.getBlockY() + one.getY(), two.getBlockZ() + one.getZ());
-    }
-
-    public static Vector3i diff(Location one, Location two) {
-        return new Vector3i(Math.abs(one.getBlockX() - two.getBlockX()), Math.abs(one.getBlockY() - two.getBlockY()), Math.abs(one.getBlockZ() - two.getBlockZ()));
     }
 
     private MathUtil() {

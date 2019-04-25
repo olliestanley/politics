@@ -24,7 +24,11 @@ import pw.ollie.politics.PoliticsPlugin;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Stores and provides access to {@link Privilege}s in Politics.
+ */
 public final class PrivilegeManager {
+    // todo docs
     private final PoliticsPlugin plugin;
     private final Map<String, Privilege> privileges = new HashMap<>();
 

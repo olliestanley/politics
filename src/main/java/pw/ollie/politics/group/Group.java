@@ -41,6 +41,7 @@ import pw.ollie.politics.universe.UniverseRules;
 import pw.ollie.politics.util.math.RotatedPosition;
 import pw.ollie.politics.util.serial.PropertyDeserializationException;
 import pw.ollie.politics.util.serial.PropertySerializer;
+import pw.ollie.politics.world.plot.Plot;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
@@ -56,7 +57,13 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
+/**
+ * Represents a group of a certain {@link GroupLevel} in Politics which exists in a single {@link Universe}. A Group may
+ * have child or parent Groups and may or may not have direct members. It may also own land in the form of
+ * {@link Plot}s.
+ */
 public final class Group implements Comparable<Group>, Storable {
+    // todo docs
     private final int uid;
     private final GroupLevel level;
     private final TIntObjectMap<Object> properties;

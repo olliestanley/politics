@@ -22,7 +22,16 @@ package pw.ollie.politics.util;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+/**
+ * General utilities for running tasks through the Bukkit scheduler API.
+ */
 public final class TaskUtil {
+    /**
+     * Runs the given {@link Runnable} on a thread async to the main thread on the next tick.
+     *
+     * @param plugin   the {@link Plugin} to register the task through
+     * @param runnable the task to run
+     */
     public static void async(Plugin plugin, Runnable runnable) {
         new BukkitRunnable() {
             @Override
@@ -32,6 +41,12 @@ public final class TaskUtil {
         }.runTaskAsynchronously(plugin);
     }
 
+    /**
+     * Runs the given {@link Runnable} on the main thread on the next tick.
+     *
+     * @param plugin   the {@link Plugin} to register the task through
+     * @param runnable the task to run
+     */
     public static void sync(Plugin plugin, Runnable runnable) {
         new BukkitRunnable() {
             @Override

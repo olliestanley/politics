@@ -39,7 +39,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 
+/**
+ * A configured type of Group, with a name, rank, roles, role tracks and configuration settings.
+ * <p>
+ * Each Group in Politics must have (only) one GroupLevel.
+ */
 public final class GroupLevel {
+    // todo docs
     private static final String DEFAULT_TRACK = "default";
 
     private final String id;

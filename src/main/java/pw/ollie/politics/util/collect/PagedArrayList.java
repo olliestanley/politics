@@ -27,7 +27,13 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+/**
+ * An implementation of a {@link PagedList} as a wrapper around an {@link ArrayList}.
+ *
+ * @param <E> the type of the contained elements
+ */
 public class PagedArrayList<E> implements PagedList<E> {
+    // todo docs
     private final List<E> delegate;
     private final Map<Integer, List<E>> pages;
 

@@ -38,6 +38,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
 
+/**
+ * Core plugin class for Politics.
+ * <p>
+ * Contains access methods to each branch of the plugin.
+ */
 public final class PoliticsPlugin extends JavaPlugin {
     private static PoliticsPlugin instance;
 
@@ -138,54 +143,124 @@ public final class PoliticsPlugin extends JavaPlugin {
         instance = null;
     }
 
+    /**
+     * Gets the {@link PoliticsFileSystem} of the plugin. This provides access to the directories Politics stores data
+     * and configuration in.
+     *
+     * @return the PoliticsFileSystem object associated with this plugin instance
+     */
     public PoliticsFileSystem getFileSystem() {
         return fileSystem;
     }
 
+    /**
+     * Gets the {@link PoliticsConfig} instance which provides access to general plugin configuration values.
+     *
+     * @return the plugin PoliticsConfig instance
+     */
     public PoliticsConfig getPoliticsConfig() {
         return config;
     }
 
+    /**
+     * Gets the {@link PrivilegeManager} associated with this plugin instance.
+     *
+     * @return the plugin PrivilegeManager instance
+     */
     public PrivilegeManager getPrivilegeManager() {
         return privilegeManager;
     }
 
+    /**
+     * Gets the {@link WorldManager} associated with this plugin instance.
+     *
+     * @return the plugin WorldManager instance
+     */
     public WorldManager getWorldManager() {
         return worldManager;
     }
 
+    /**
+     * Gets the {@link UniverseManager} associated with this plugin instance.
+     *
+     * @return the plugin UniverseManager instance
+     */
     public UniverseManager getUniverseManager() {
         return universeManager;
     }
 
+    /**
+     * Gets the {@link GroupManager} associated with this plugin instance.
+     *
+     * @return the plugin GroupManager instance
+     */
     public GroupManager getGroupManager() {
         return groupManager;
     }
 
+    /**
+     * Gets the {@link ActivityManager} associated with this plugin instance.
+     *
+     * @return the plugin ActivityManager instance
+     */
     public ActivityManager getActivityManager() {
         return activityManager;
     }
 
+    /**
+     * Gets the {@link WarManager} associated with this plugin instance.
+     *
+     * @return the plugin WarManager instance
+     */
     public WarManager getWarManager() {
         return warManager;
     }
 
+    /**
+     * Gets the {@link PoliticsEconomy} associated with this plugin instance.
+     * <p>
+     * Will return null if the plugin is not configured to enable economy features.
+     *
+     * @return the plugin PoliticsEconomy instance, or {@code null} if economy features are disabled
+     */
     public PoliticsEconomy getEconomy() {
         return politicsEconomy;
     }
 
+    /**
+     * Gets the {@link TaxationManager} associated with this plugin instance.
+     * <p>
+     * Will return null if the plugin is not configured to enable economy features.
+     *
+     * @return the plugin TaxationManager instance, or {@code null} if economy features are disabled
+     */
     public TaxationManager getTaxationManager() {
         return taxationManager;
     }
 
+    /**
+     * Gets the {@link PoliticsCommandManager} associated with this plugin instance.
+     *
+     * @return the plugin PoliticsCommandManager instance
+     */
     public PoliticsCommandManager getCommandManager() {
         return commandManager;
     }
 
+    /**
+     * Gets the {@link Visualiser} associated with this plugin instance.
+     *
+     * @return the plugin Visualiser instance
+     */
     public Visualiser getVisualiser() {
         return visualiser;
     }
 
+    /**
+     * Gets the {@link PoliticsPlugin} instance.
+     *
+     * @return the running plugin instance
+     */
     public static PoliticsPlugin instance() {
         return instance;
     }

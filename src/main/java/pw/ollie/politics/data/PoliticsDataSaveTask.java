@@ -23,6 +23,9 @@ import pw.ollie.politics.PoliticsPlugin;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
+/**
+ * Regularly saves all stored data in Politics.
+ */
 public final class PoliticsDataSaveTask extends BukkitRunnable {
     private final PoliticsPlugin plugin;
 

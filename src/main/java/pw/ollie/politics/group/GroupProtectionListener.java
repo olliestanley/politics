@@ -34,6 +34,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.UUID;
 
+/**
+ * Listens to events to apply relevant {@link Group}-related protections to players.
+ */
 public final class GroupProtectionListener implements Listener {
     private final PoliticsPlugin plugin;
 

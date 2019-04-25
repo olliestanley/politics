@@ -23,6 +23,9 @@ import pw.ollie.politics.activity.PoliticsActivity;
 
 import java.util.UUID;
 
+/**
+ * Represents an activity in which a player is being shown a fake block visualisation of a space.
+ */
 public final class VisualisationActivity implements PoliticsActivity {
     private final UUID playerId;
     private final Runnable callback;

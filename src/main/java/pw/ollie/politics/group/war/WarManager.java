@@ -32,7 +32,11 @@ import pw.ollie.politics.universe.Universe;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Stores data on and provides access to {@link War}s in Politics.
+ */
 public final class WarManager {
+    // todo docs
     private final PoliticsPlugin plugin;
     private final Set<War> activeWars;
 

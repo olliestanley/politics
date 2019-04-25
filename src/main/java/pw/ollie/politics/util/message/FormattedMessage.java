@@ -24,25 +24,57 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.logging.Level;
 
+/**
+ * Represents a pre-formatted message ready to be sent to a recipient.
+ */
 public final class FormattedMessage {
     private final String message;
 
+    /**
+     * Constructs a new FormattedMessage with the given raw text.
+     *
+     * @param message the raw text for the message
+     */
     public FormattedMessage(String message) {
         this.message = message;
     }
 
+    /**
+     * Sends this FormattedMessage to the given recipient.
+     *
+     * @param recipient the recipient of the message
+     */
     public void send(CommandSender recipient) {
         recipient.sendMessage(message);
     }
 
+    /**
+     * Logs this FormattedMessage to the given {@link Plugin}'s logger, at the given logging {@link Level}.
+     *
+     * @param plugin the Plugin to use the logger of
+     * @param level  the Level at which to log the message
+     */
     public void log(Plugin plugin, Level level) {
         plugin.getLogger().log(level, message);
     }
 
+    /**
+     * Logs this FormattedMessage to the given {@link Plugin}'s logger, at the given logging {@link Level}, along with
+     * the stack trace of the given {@link Throwable}.
+     *
+     * @param plugin the Plugin to use the logger of
+     * @param level  the Level at which to log the message
+     * @param e      the Throwable to print the stack trace of
+     */
     public void log(Plugin plugin, Level level, Throwable e) {
         plugin.getLogger().log(level, message, e);
     }
 
+    /**
+     * Gets the raw text for this FormattedMessage.
+     *
+     * @return raw text of this message
+     */
     public String get() {
         return message;
     }

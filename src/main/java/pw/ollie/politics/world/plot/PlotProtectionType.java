@@ -22,8 +22,17 @@ package pw.ollie.politics.world.plot;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.Privileges;
 
+/**
+ * Represents a type of protection for a {@link Plot} or {@link Subplot}.
+ */
 public enum PlotProtectionType {
+    /**
+     * A protection from a block being broken.
+     */
     BLOCK_BREAK(Privileges.GroupPlot.BUILD),
+    /**
+     * A protection from a block being placed.
+     */
     BLOCK_PLACE(Privileges.GroupPlot.BUILD);
     // todo fill in all types
 
@@ -37,6 +46,11 @@ public enum PlotProtectionType {
         this.permission = permission;
     }
 
+    /**
+     * Gets the {@link Privilege} which would allow the protection to be bypassed.
+     *
+     * @return the Privilege required to avoid this protection type
+     */
     public Privilege getPermission() {
         return permission;
     }

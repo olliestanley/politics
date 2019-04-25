@@ -81,7 +81,7 @@ public class SubplotCreateCommand extends SubplotSubcommand {
                 }
             }
 
-            Subplot subplot = new Subplot(plot.getPoliticsWorld(), plot.generateSubplotId(), plot.getX(), plot.getZ(),
+            Subplot subplot = new Subplot(plot.getPoliticsWorld(), plot.generateSubplotId(), plot.getBaseX(), plot.getBaseZ(),
                     cuboid, player.getUniqueId());
             if (plot.addSubplot(subplot)) {
                 MessageBuilder.begin("Successfully created subplot!").send(sender);

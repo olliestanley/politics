@@ -26,7 +26,11 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Represents a privilege which allows the holder to perform certain actions.
+ */
 public final class Privilege {
+    // todo docs
     private final String name;
     private final Set<PrivilegeType> types;
 

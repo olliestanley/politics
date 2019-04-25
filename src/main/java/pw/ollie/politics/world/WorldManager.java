@@ -44,6 +44,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+/**
+ * Stores, manages, and provides access to configuration and data for worlds in Politics.
+ */
 public final class WorldManager {
     private final PoliticsPlugin plugin;
 
@@ -56,6 +59,9 @@ public final class WorldManager {
         plugin.getServer().getPluginManager().registerEvents(new PlotProtectionListener(plugin), plugin);
     }
 
+    /**
+     * Loads world configurations from their configuration files.
+     */
     public void loadWorldConfigs() {
         configs = new HashMap<>();
         for (File file : plugin.getFileSystem().getWorldConfigDir().listFiles()) {
@@ -72,6 +78,9 @@ public final class WorldManager {
         }
     }
 
+    /**
+     * Loads world data from their data files.
+     */
     public void loadWorlds() {
         BasicBSONDecoder decoder = new BasicBSONDecoder();
         worlds = new HashMap<>();
@@ -99,6 +108,9 @@ public final class WorldManager {
         }
     }
 
+    /**
+     * Saves world data to data files.
+     */
     public void saveWorlds() {
         BSONEncoder encoder = new BasicBSONEncoder();
         Politics.getFileSystem().getWorldsDir().mkdirs();
@@ -121,6 +133,14 @@ public final class WorldManager {
         }
     }
 
+    /**
+     * Gets the {@link WorldConfig} associated with the world with the given name.
+     * <p>
+     * If there is no current WorldConfig associated with the given name, a default config is created.
+     *
+     * @param name the name of the world to get config for
+     * @return the WorldConfig for the world with the given name
+     */
     public WorldConfig getWorldConfig(String name) {
         WorldConfig conf = configs.get(name);
         if (conf == null) {
@@ -139,6 +159,14 @@ public final class WorldManager {
         return conf;
     }
 
+    /**
+     * Gets the {@link PoliticsWorld} for the world with the given name.
+     * <p>
+     * If there is no current PoliticsWorld associated with the given name, a blank one is created.
+     *
+     * @param name the name of the world to get data for
+     * @return the PoliticsWorld for the world with the given name
+     */
     public PoliticsWorld getWorld(String name) {
         PoliticsWorld world = worlds.get(name);
         if (world == null) {
@@ -147,22 +175,56 @@ public final class WorldManager {
         return world;
     }
 
+    /**
+     * Gets the {@link PoliticsWorld} for the given Bukkit {@link World}.
+     * <p>
+     * If there is no current PoliticsWorld associated with the given world, a blank one is created.
+     *
+     * @param world the world to get data for
+     * @return the PoliticsWorld for the given world
+     */
     public PoliticsWorld getWorld(World world) {
         return getWorld(world.getName());
     }
 
+    /**
+     * Gets the {@link Plot} object for the given chunk coordinates.
+     *
+     * @param world the world to search in
+     * @param x     the chunk x coordinate
+     * @param z     the chunk z coordinate
+     * @return the Plot at the given chunk position in the given World
+     */
     public Plot getPlotAtChunkPosition(World world, int x, int z) {
         return getWorld(world).getPlotAtChunkPosition(x, z);
     }
 
+    /**
+     * Gets the {@link Plot} object for the given {@link Chunk}.
+     *
+     * @param chunk the Chunk to get the Plot at
+     * @return the Plot for the given Chunk
+     */
     public Plot getPlotAtChunk(Chunk chunk) {
         return getWorld(chunk.getWorld()).getPlotAtChunkPosition(chunk.getX(), chunk.getZ());
     }
 
+    /**
+     * Gets the {@link Plot} object for the chunk at the given {@link Location}.
+     *
+     * @param position the Location to get the Plot at
+     * @return the Plot at the given Location
+     */
     public Plot getPlotAt(Location position) {
         return getPlotAtChunkPosition(position.getWorld(), position.getChunk().getX(), position.getChunk().getZ());
     }
 
+    /**
+     * Gets the {@link Plot} object for the chunk at the given {@link Position}.
+     *
+     * @param position the Position to get the Plot at
+     * @return the Plot at the given Position
+     */
     public Plot getPlotAt(Position position) {
         return getPlotAt(position.toLocation());
     }

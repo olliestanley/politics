@@ -27,7 +27,11 @@ import pw.ollie.politics.universe.Universe;
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
 
+/**
+ * Represents and holds data for a war between two different {@link Group}s, with one aggressor and one defender.
+ */
 public final class War implements Storable {
+    // todo docs
     private final int aggressor;
     private final int defender;
 

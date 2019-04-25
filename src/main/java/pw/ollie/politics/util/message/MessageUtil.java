@@ -21,7 +21,17 @@ package pw.ollie.politics.util.message;
 
 import org.bukkit.command.CommandSender;
 
+/**
+ * Utilities for sending formatted messages to players.
+ */
 public final class MessageUtil {
+    /**
+     * Begins a formatted block message with the given text as a heading. The returned {@link MessageBuilder} is set to
+     * the default Politics {@link ColourScheme}.
+     *
+     * @param heading the heading text
+     * @return a new MessageBuilder with a heading using the given text, set to default normal text oolour
+     */
     public static MessageBuilder startBlockMessage(String heading) {
         return MessageBuilder.begin().prefix().append("========= ").highlight().append(heading).prefix().append(" =========").normal();
     }

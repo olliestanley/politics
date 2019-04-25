@@ -25,7 +25,6 @@ import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
-import pw.ollie.politics.group.GroupToggleables;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.message.MessageBuilder;
@@ -50,11 +49,11 @@ public class GroupToggleCommand extends GroupSubcommand {
         }
 
         String toggleName = args.getString(0, false);
-        if (!GroupToggleables.isToggleableProperty(toggleName)) {
+        if (!GroupProperty.isToggleable(toggleName)) {
             throw new CommandException("The provided toggle name was not a valid toggle!");
         }
 
-        int propertyId = GroupToggleables.getPropertyId(toggleName);
+        int propertyId = GroupProperty.getToggleablePropertyId(toggleName);
         if (!canToggleNow(group, propertyId)) {
             throw new CommandException("That setting cannot be toggled now!");
         }
