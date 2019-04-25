@@ -131,6 +131,7 @@ public class Position {
      * Converts the given {@link Location} to an equivalent Position object, if possible. If the {@link World} of the
      * given Location does not exist, returns null.
      *
+     * @param location the Location to convert to equivalent Position
      * @return equivalent Position to the given Location, if one exists
      */
     public static Position fromLocation(Location location) {

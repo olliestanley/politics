@@ -45,6 +45,7 @@ public final class MessageBuilder {
     /**
      * Appends the given text to this MessageBuilder.
      *
+     * @param content the text to append
      * @return this MessageBuilder object
      */
     public MessageBuilder append(String content) {
@@ -65,6 +66,7 @@ public final class MessageBuilder {
     /**
      * Switches to normal text colour, then appends the given text to this MessageBuilder.
      *
+     * @param content the text to append
      * @return this MessageBuilder object
      */
     public MessageBuilder normal(String content) {
@@ -84,6 +86,7 @@ public final class MessageBuilder {
     /**
      * Switches to error text colour, then appends the given text to this MessageBuilder.
      *
+     * @param content the error text to append
      * @return this MessageBuilder object
      */
     public MessageBuilder error(String content) {
@@ -103,6 +106,7 @@ public final class MessageBuilder {
     /**
      * Switches to highlighted text colour, then appends the given text to this MessageBuilder.
      *
+     * @param content the highlighted text to append
      * @return this MessageBuilder object
      */
     public MessageBuilder highlight(String content) {
@@ -122,6 +126,7 @@ public final class MessageBuilder {
     /**
      * Switches to prefix text colour, then appends the given text to this MessageBuilder.
      *
+     * @param content the prefix text to append
      * @return this MessageBuilder object
      */
     public MessageBuilder prefix(String content) {

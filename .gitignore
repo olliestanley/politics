@@ -1,6 +1,7 @@
 .idea/
 *.iml
 target/
+javadoc/
 
 # Compiled class file
 *.class

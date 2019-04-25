@@ -63,6 +63,7 @@ public abstract class PoliticsSubcommand {
      * @param sender  the source of the command
      * @param context the arguments provided
      * @return the location relevant to the context
+     * @throws CommandException if context is not sufficient to find a Location
      */
     protected Location findLocation(CommandSender sender, Arguments context) throws CommandException {
         if (context.hasValueFlag("l")) {
@@ -127,9 +128,11 @@ public abstract class PoliticsSubcommand {
      * Gets a Universe - first checking to see if one was specified, then falling back on the one currently relating to
      * the player if there isn't one specified.
      *
+     * @param level   the GroupLevel of the Universe
      * @param sender  the relevant source of the command
      * @param context the arguments provided
      * @return the universe relevant to the context
+     * @throws CommandException if context is not sufficient to find a Universe
      */
     protected Universe findUniverse(GroupLevel level, CommandSender sender, Arguments context) throws CommandException {
         Universe universe;
@@ -158,9 +161,11 @@ public abstract class PoliticsSubcommand {
      * Gets a Group - first checking to see if one was specified, then falling back on the one currently relating to
      * the player if there isn't one specified.
      *
+     * @param level   the GroupLevel of the Group
      * @param sender  the relevant source of the command
      * @param context the arguments provided
      * @return the group relevant to the context
+     * @throws CommandException if context is not sufficient to find a Group
      */
     protected Group findGroup(GroupLevel level, CommandSender sender, Arguments context) throws CommandException {
         Universe universe = findUniverse(level, sender, context);

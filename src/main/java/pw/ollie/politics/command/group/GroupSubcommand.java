@@ -53,6 +53,7 @@ public abstract class GroupSubcommand extends PoliticsSubcommand {
      * @param sender  the relevant source of the command
      * @param context the arguments provided
      * @return the universe relevant to the context
+     * @throws CommandException if context is not sufficient to find a Universe
      */
     protected Universe findUniverse(CommandSender sender, Arguments context) throws CommandException {
         return findUniverse(level, sender, context);
@@ -65,6 +66,7 @@ public abstract class GroupSubcommand extends PoliticsSubcommand {
      * @param sender  the relevant source of the command
      * @param context the arguments provided
      * @return the group relevant to the context
+     * @throws CommandException if context is not sufficient to find a Group
      */
     protected Group findGroup(CommandSender sender, Arguments context) throws CommandException {
         return findGroup(level, sender, context);
