@@ -30,7 +30,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
 
 import java.util.UUID;
 
@@ -72,5 +74,15 @@ public final class GroupProtectionListener implements Listener {
                 return;
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPotionSplash(PotionSplashEvent event) {
+        // todo prevent damage from potion splash between friendlies
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityCombustByEntity(EntityCombustByEntityEvent event) {
+        // todo prevent friendlies setting each other on fire
     }
 }

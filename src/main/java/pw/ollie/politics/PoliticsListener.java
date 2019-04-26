@@ -21,6 +21,9 @@ package pw.ollie.politics;
 
 import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.player.PlayerPlotChangeEvent;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupProperty;
+import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldManager;
 import pw.ollie.politics.world.plot.Plot;
 
@@ -29,6 +32,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Listener for general/simple purposes.
@@ -56,5 +64,38 @@ public final class PoliticsListener implements Listener {
                 event.setCancelled(true);
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        UUID playerId = event.getPlayer().getUniqueId();
+        PoliticsWorld world = worldManager.getWorld(event.getRespawnLocation().getWorld());
+        Set<Group> playerGroups = plugin.getGroupManager().getAllCitizenGroups(playerId)
+                .stream().filter(g -> g.getUniverse().containsWorld(world)).collect(Collectors.toSet());
+        Group best = getHighestPrioritySpawn(playerGroups);
+        if (best != null) {
+            event.setRespawnLocation(best.getRotatedPositionProperty(GroupProperty.SPAWN).toLocation());
+        }
+    }
+
+    private Group getHighestPrioritySpawn(Set<Group> groups) {
+        Group best = null;
+
+        for (Group group : groups) {
+            if (group.getRotatedPositionProperty(GroupProperty.SPAWN) == null) {
+                continue;
+            }
+
+            if (best == null) {
+                best = group;
+                continue;
+            }
+
+            if (group.getLevel().getRank() < best.getLevel().getRank()) {
+                best = group;
+            }
+        }
+
+        return best;
     }
 }

@@ -55,7 +55,7 @@ public class GroupSpawnCommand extends GroupSubcommand {
             throw new CommandException("You don't have permissions to spawn to that " + level.getName() + ".");
         }
 
-        RotatedPosition spawn = group.getTransformProperty(GroupProperty.SPAWN);
+        RotatedPosition spawn = group.getRotatedPositionProperty(GroupProperty.SPAWN);
         if (spawn == null) {
             throw new CommandException("The " + level.getName() + " doesn't have a spawn!");
         }

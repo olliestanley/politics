@@ -63,6 +63,9 @@ import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.world.StructureGrowEvent;
@@ -412,7 +415,21 @@ public final class PlotProtectionListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPotionSplash(PotionSplashEvent event) {
         // todo prevent harm to animals inside plots / subplots if configured to do so
-        // note: prevention of combat aspects of potion splash will be handled in GroupProtectionListener
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        // todo prevent taking items from armor stands, item frames etc in someone else's plot/subplot
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
+        // todo prevent emptying buckets in someone else's plot/subplot
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onPlayerBucketFill(PlayerBucketFillEvent event) {
+        // todo prevent filling buckets in someone else's plot/subplot
     }
 
     private PlotProtectionTriggerEvent callPlotProtectionEvent(Plot plot, Block damaged, PlotDamageSource source, PlotProtectionType type) {

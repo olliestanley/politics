@@ -23,6 +23,9 @@ import pw.ollie.politics.util.Position;
 
 import com.google.common.base.MoreObjects;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+
 import java.util.Objects;
 
 /**
@@ -59,6 +62,10 @@ public class RotatedPosition {
      */
     public Vector2f getRotation() {
         return rotation;
+    }
+
+    public Location toLocation() {
+        return new Location(Bukkit.getWorld(position.getWorld()), position.getX(), position.getY(), position.getZ(), rotation.getX(), rotation.getY());
     }
 
     @Override

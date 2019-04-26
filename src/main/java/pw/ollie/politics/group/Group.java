@@ -214,11 +214,11 @@ public final class Group implements Comparable<Group>, Storable {
         return def;
     }
 
-    public RotatedPosition getTransformProperty(int property) {
-        return getTransformProperty(property, null);
+    public RotatedPosition getRotatedPositionProperty(int property) {
+        return getRotatedPositionProperty(property, null);
     }
 
-    public RotatedPosition getTransformProperty(int property, RotatedPosition def) {
+    public RotatedPosition getRotatedPositionProperty(int property, RotatedPosition def) {
         String s = getStringProperty(property);
         if (s == null) {
             return def;
