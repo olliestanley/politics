@@ -34,6 +34,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
@@ -42,6 +43,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
@@ -50,6 +52,19 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.block.EntityBlockFormEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityBreakDoorEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.material.Dispenser;
 
@@ -176,17 +191,17 @@ public final class PlotProtectionListener implements Listener {
 
     // listener methods which mostly simply make appropriate calls to above logic methods
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         checkPlayerProtection(event.getPlayer(), event.getBlock(), event, PlotProtectionType.BLOCK_BREAK);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         checkPlayerProtection(event.getPlayer(), event.getBlock(), event, PlotProtectionType.BLOCK_PLACE);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockMultiPlace(BlockMultiPlaceEvent event) {
         for (BlockState block : event.getReplacedBlockStates()) {
             checkPlayerProtection(event.getPlayer(), block.getBlock(), event, PlotProtectionType.BLOCK_PLACE);
@@ -197,7 +212,17 @@ public final class PlotProtectionListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onHangingBreak(HangingBreakEvent event) {
+        // todo prevent breaks in plots or subplots by non-owners just like normal blocks
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onHangingPlace(HangingPlaceEvent event) {
+        // todo prevent placement in plots or subplots by non-owners just like normal blocks
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         Block pistonBlock = event.getBlock();
         Location pistonLoc = pistonBlock.getLocation();
@@ -215,7 +240,7 @@ public final class PlotProtectionListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         Block pistonBlock = event.getBlock();
         Location pistonLoc = pistonBlock.getLocation();
@@ -254,7 +279,7 @@ public final class PlotProtectionListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockDispense(BlockDispenseEvent event) {
         // stop dispensers being used to dispense blocks (e.g. lava) or item between (sub)plots
         Block dispenserBlock = event.getBlock();
@@ -274,7 +299,7 @@ public final class PlotProtectionListener implements Listener {
         // todo check if in a plot
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onStructureGrow(StructureGrowEvent event) {
         // todo make configurable whether to prevent this
         for (BlockState block : event.getBlocks()) {
@@ -282,7 +307,7 @@ public final class PlotProtectionListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockIgnite(BlockIgniteEvent event) {
         if (event.getCause() == BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL) {
             // todo check if this is allowed
@@ -291,12 +316,12 @@ public final class PlotProtectionListener implements Listener {
         // todo also check if burning is allowed etc
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
         // todo check plot of burning block
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockFromTo(BlockFromToEvent event) {
         // protect from things like lava spreading into a plot or subplot from outside
         Block sourceBlock = event.getBlock();
@@ -310,7 +335,7 @@ public final class PlotProtectionListener implements Listener {
         checkBlockProtection(sourceBlock, sourcePlot, sourceSubplot, targetBlock, event, PlotProtectionType.BLOCK_FLOW);
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockSpread(BlockSpreadEvent event) {
         // todo make configurable whether this is enabled
         if (event.getSource().getType() != Material.FIRE) {
@@ -318,6 +343,76 @@ public final class PlotProtectionListener implements Listener {
         }
 
         // todo check if in a plot
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityFormBlock(EntityBlockFormEvent event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof Player) {
+            // todo prevent inside plot/subplot not owned by the player
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onLightningStrike(LightningStrikeEvent event) {
+        // todo deal with lightning strikes caused by players
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+        // todo deal with the following:
+        // endermen, silverfish, rabbits (eating crops), wither (if explosions not allowed)
+        // entities or non-owner players trampling on crops
+        // breaking lilypads by collision with boat with a player driver who does not have permission to break here
+        // falling blocks -> sand cannons, but also directly downwards falling blocks as subplots may be below others
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityBreakDoor(EntityBreakDoorEvent event) {
+        // todo prevent entities from breaking doors in plots and subplots if configured to do so
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityInteract(EntityInteractEvent event) {
+        // todo prevent non-player entities trampling crops in plots / subplots
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityExplode(EntityExplodeEvent event) {
+        // todo prevent creeper etc explosions in plots and subplots if configured to do so
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onBlockExplode(BlockExplodeEvent event) {
+        // todo prevent TNT etc explosions in plots and subplots if configured to do so
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
+        // todo prevent spawn eggs being used in plots or subplots if not permitted to do so
+
+        // todo prevent all monster spawns in plots or subplots if configured to do so
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityDamage(EntityDamageEvent event) {
+        // todo prevent animals in plots or subplots being harmed by non-owners
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityCombustByEntity(EntityCombustByEntityEvent event) {
+        // todo prevent animals in plots or subplots being combusted by non-owners
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onVehicleDamage(VehicleDamageEvent event) {
+        // todo prevent vehicles in plots being damaged
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPotionSplash(PotionSplashEvent event) {
+        // todo prevent harm to animals inside plots / subplots if configured to do so
+        // note: prevention of combat aspects of potion splash will be handled in GroupProtectionListener
     }
 
     private PlotProtectionTriggerEvent callPlotProtectionEvent(Plot plot, Block damaged, PlotDamageSource source, PlotProtectionType type) {
