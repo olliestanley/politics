@@ -180,9 +180,6 @@ public final class PlotProtectionListener implements Listener {
         }
     }
 
-    // todo the below two methods might not be great on performance - need to look into whether this can be improved
-    // possibly some form of caching whether a certain action is acceptable
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         Block pistonBlock = event.getBlock();
@@ -273,6 +270,8 @@ public final class PlotProtectionListener implements Listener {
         if (event.getCause() == BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL) {
             // todo check if this is allowed
         }
+
+        // todo also check if burning is allowed etc
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -282,7 +281,16 @@ public final class PlotProtectionListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onBlockFromTo(BlockFromToEvent event) {
-        // todo prevent blocks flowing from one plot to another
+        // protect from things like lava spreading into a plot or subplot from outside
+        Block sourceBlock = event.getBlock();
+        Location sourceLoc = sourceBlock.getLocation();
+
+        Plot sourcePlot = worldManager.getPlotAt(sourceLoc);
+        Subplot sourceSubplot = sourcePlot.getSubplotAt(sourceLoc);
+
+        Block targetBlock = event.getToBlock();
+
+        checkBlockProtection(sourceBlock, sourcePlot, sourceSubplot, targetBlock, event, PlotProtectionType.BLOCK_FLOW);
     }
 
     @EventHandler(priority = EventPriority.LOW)

@@ -45,7 +45,11 @@ public enum PlotProtectionType {
     /**
      * A protection from a dispenser releasing a block.
      */
-    DISPENSER;
+    DISPENSER(null),
+    /**
+     * A protection from a block flowing naturally.
+     */
+    BLOCK_FLOW(null);
     // todo fill in all types
 
     private final Privilege permission;
