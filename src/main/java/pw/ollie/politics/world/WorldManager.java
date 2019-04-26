@@ -25,8 +25,6 @@ import pw.ollie.politics.util.Position;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.PlotProtectionListener;
 
-import org.apache.commons.io.FileUtils;
-
 import org.bson.BSONEncoder;
 import org.bson.BSONObject;
 import org.bson.BasicBSONDecoder;
@@ -40,6 +38,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -114,7 +113,7 @@ public final class WorldManager {
 
             byte[] data;
             try {
-                data = FileUtils.readFileToByteArray(file);
+                data = Files.readAllBytes(file.toPath());;
             } catch (IOException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Could not read world file `" + fileName + "'!", ex);
                 continue;
@@ -146,7 +145,7 @@ public final class WorldManager {
 
             byte[] data = encoder.encode(world.toBSONObject());
             try {
-                FileUtils.writeByteArrayToFile(worldFile, data);
+                Files.write(worldFile.toPath(), data);
             } catch (IOException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Could not save universe file `" + fileName + "' due to error!", ex);
             }

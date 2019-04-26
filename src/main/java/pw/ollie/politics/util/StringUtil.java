@@ -71,6 +71,19 @@ public final class StringUtil {
         return p[n];
     }
 
+    public static String capitaliseFirst(String string) {
+        if (string == null) {
+            return null;
+        }
+        if (string.isEmpty()) {
+            return string;
+        }
+        char[] array = string.toCharArray();
+        char first = Character.toTitleCase(array[0]);
+        array[0] = first;
+        return String.valueOf(array);
+    }
+
     private StringUtil() {
         throw new UnsupportedOperationException();
     }

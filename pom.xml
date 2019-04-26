@@ -99,18 +99,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
@@ -262,18 +250,6 @@
                                     </includes>
                                 </filter>
                                 <filter>
-                                    <artifact>commons-io:commons-io</artifact>
-                                    <includes>
-                                        <include>org/apache/**</include>
-                                    </includes>
-                                </filter>
-                                <filter>
-                                    <artifact>commons-lang:commons-lang</artifact>
-                                    <includes>
-                                        <include>org/apache/**</include>
-                                    </includes>
-                                </filter>
-                                <filter>
                                     <artifact>org.bukkit:*</artifact>
                                     <excludes>
                                         <exclude>**</exclude>
@@ -284,10 +260,6 @@
                                 <relocation>
                                     <pattern>org.bson</pattern>
                                     <shadedPattern>politics.org.bson</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.apache</pattern>
-                                    <shadedPattern>politics.org.apache</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>gnu.trove</pattern>

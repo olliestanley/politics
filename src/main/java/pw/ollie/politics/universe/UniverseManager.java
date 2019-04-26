@@ -32,8 +32,6 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.world.PoliticsWorld;
 
-import org.apache.commons.io.FileUtils;
-
 import org.bson.BSONDecoder;
 import org.bson.BSONEncoder;
 import org.bson.BSONObject;
@@ -249,7 +247,7 @@ public final class UniverseManager {
 
             byte[] data;
             try {
-                data = FileUtils.readFileToByteArray(file);
+                data = Files.readAllBytes(file.toPath());
             } catch (IOException ex) {
                 new InvalidConfigurationException("Could not read universe file `" + fileName + "'!", ex).printStackTrace();
                 continue;
@@ -299,7 +297,7 @@ public final class UniverseManager {
 
             byte[] data = encoder.encode(universe.toBSONObject());
             try {
-                FileUtils.writeByteArrayToFile(universeFile, data);
+                Files.write(universeFile.toPath(), data);
             } catch (IOException ex) {
                 this.plugin.getLogger().log(Level.SEVERE, "Could not save universe file `" + fileName + "' due to error!", ex);
                 continue;

@@ -149,18 +149,6 @@
                   </includes>
                 </filter>
                 <filter>
-                  <artifact>commons-io:commons-io</artifact>
-                  <includes>
-                    <include>org/apache/**</include>
-                  </includes>
-                </filter>
-                <filter>
-                  <artifact>commons-lang:commons-lang</artifact>
-                  <includes>
-                    <include>org/apache/**</include>
-                  </includes>
-                </filter>
-                <filter>
                   <artifact>org.bukkit:*</artifact>
                   <excludes>
                     <exclude>**</exclude>
@@ -171,10 +159,6 @@
                 <relocation>
                   <pattern>org.bson</pattern>
                   <shadedPattern>politics.org.bson</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>org.apache</pattern>
-                  <shadedPattern>politics.org.apache</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>gnu.trove</pattern>
@@ -228,6 +212,10 @@
       <scope>provided</scope>
       <exclusions>
         <exclusion>
+          <artifactId>commons-lang</artifactId>
+          <groupId>commons-lang</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>guava</artifactId>
           <groupId>com.google.guava</groupId>
         </exclusion>
@@ -278,6 +266,10 @@
         <exclusion>
           <artifactId>hamcrest-library</artifactId>
           <groupId>org.hamcrest</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-io</artifactId>
+          <groupId>commons-io</groupId>
         </exclusion>
       </exclusions>
     </dependency>

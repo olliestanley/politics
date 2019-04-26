@@ -42,7 +42,7 @@ public final class WorldConfig {
      * @param plots    whether plots are enabled in the world
      * @param subplots whether subplots are enabled in the world
      */
-    public WorldConfig(String name, boolean plots, boolean subplots) {
+    WorldConfig(String name, boolean plots, boolean subplots) {
         this.name = name;
         this.plots = plots;
         this.subplots = subplots;

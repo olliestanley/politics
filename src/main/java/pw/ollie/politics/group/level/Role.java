@@ -21,8 +21,7 @@ package pw.ollie.politics.group.level;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.group.privilege.Privilege;
-
-import org.apache.commons.lang.StringUtils;
+import pw.ollie.politics.util.StringUtil;
 
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -69,7 +68,7 @@ public final class Role implements Comparable<Role> {
     }
 
     public static Role load(String id, ConfigurationSection node) {
-        String name = node.getString("name", StringUtils.capitalize(id));
+        String name = node.getString("name", StringUtil.capitaliseFirst(id));
         List<String> configuredPrivileges = node.getStringList("privileges");
         Set<Privilege> privileges = new HashSet<>();
         for (String privilegeName : configuredPrivileges) {
