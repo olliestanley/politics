@@ -30,7 +30,7 @@ import org.bukkit.event.HandlerList;
 import java.util.UUID;
 
 public class SubplotOwnerChangeEvent extends SubplotEvent implements Cancellable {
-    private static HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
     private final UUID oldOwner;
     private final UUID newOwner;

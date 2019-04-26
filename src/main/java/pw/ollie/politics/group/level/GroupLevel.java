@@ -238,8 +238,10 @@ public final class GroupLevel {
         if (rolesNode != null) {
             for (String roleId : rolesNode.getKeys(false)) {
                 ConfigurationSection roleNode = rolesNode.getConfigurationSection(roleId);
-                Role role = Role.load(roleId, roleNode);
-                rolesMap.put(roleId, role);
+                if (roleNode != null) {
+                    Role role = Role.load(roleId, roleNode);
+                    rolesMap.put(roleId, role);
+                }
             }
         }
 
@@ -249,10 +251,12 @@ public final class GroupLevel {
 
         if (!rolesMap.isEmpty()) {
             ConfigurationSection tracksNode = node.getConfigurationSection("tracks");
-            for (String trackKey : tracksNode.getKeys(false)) {
-                List<String> rolesNames = tracksNode.getStringList(trackKey);
-                RoleTrack track = RoleTrack.load(trackKey, rolesNames, rolesMap);
-                tracks.put(track.getId(), track);
+            if (tracksNode != null) {
+                for (String trackKey : tracksNode.getKeys(false)) {
+                    List<String> rolesNames = tracksNode.getStringList(trackKey);
+                    RoleTrack track = RoleTrack.load(trackKey, rolesNames, rolesMap);
+                    tracks.put(track.getId(), track);
+                }
             }
 
             if (!tracks.containsKey(DEFAULT_TRACK)) {
@@ -331,7 +335,7 @@ public final class GroupLevel {
         return theLevel;
     }
 
-    private static Set<String> configKeys = new THashSet<>();
+    private static final Set<String> configKeys = new THashSet<>();
 
     static {
         configKeys.add("name");

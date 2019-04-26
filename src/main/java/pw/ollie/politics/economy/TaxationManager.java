@@ -44,21 +44,21 @@ public final class TaxationManager {
         this.lastCollections = new HashMap<>();
     }
 
-    public TObjectIntMap<Universe> getLastCollections(UUID playerId) {
-        lastCollections.putIfAbsent(playerId, new TObjectIntHashMap<>());
-        return lastCollections.get(playerId);
-    }
-
     public int getLastCollection(UUID playerId, Universe universe) {
         return getLastCollections(playerId).get(universe);
     }
 
-    public void resetLastCollection(UUID playerId, Universe universe) {
+    TObjectIntMap<Universe> getLastCollections(UUID playerId) {
+        lastCollections.putIfAbsent(playerId, new TObjectIntHashMap<>());
+        return lastCollections.get(playerId);
+    }
+
+    void resetLastCollection(UUID playerId, Universe universe) {
         lastCollections.putIfAbsent(playerId, new TObjectIntHashMap<>());
         lastCollections.get(playerId).put(universe, 0);
     }
 
-    public void incrementLastCollection(UUID playerId, Universe universe) {
+    void incrementLastCollection(UUID playerId, Universe universe) {
         lastCollections.putIfAbsent(playerId, new TObjectIntHashMap<>());
         lastCollections.get(playerId).put(universe, getLastCollection(playerId, universe) + 1);
     }

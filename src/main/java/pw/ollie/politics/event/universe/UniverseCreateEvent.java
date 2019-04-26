@@ -24,7 +24,7 @@ import pw.ollie.politics.universe.Universe;
 import org.bukkit.event.HandlerList;
 
 public final class UniverseCreateEvent extends UniverseEvent {
-    private static HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
     public UniverseCreateEvent(Universe universe) {
         super(universe);

@@ -25,6 +25,8 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
 
+import org.bukkit.plugin.PluginManager;
+
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -39,7 +41,9 @@ public final class GroupManager {
     public GroupManager(PoliticsPlugin plugin) {
         this.plugin = plugin;
 
-        plugin.getServer().getPluginManager().registerEvents(new GroupProtectionListener(plugin), plugin);
+        PluginManager pluginManager = plugin.getServer().getPluginManager();
+        pluginManager.registerEvents(new GroupMessageListener(plugin), plugin);
+        pluginManager.registerEvents(new GroupProtectionListener(plugin), plugin);
     }
 
     public Set<Group> getAllCitizenGroups(UUID playerId) {

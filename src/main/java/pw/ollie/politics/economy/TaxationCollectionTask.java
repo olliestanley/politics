@@ -32,7 +32,7 @@ import java.util.UUID;
 /**
  * Collects taxation revenue from players depending on configured settings and Group properties.
  */
-public final class TaxationCollectionTask extends BukkitRunnable {
+final class TaxationCollectionTask extends BukkitRunnable {
     private final PoliticsPlugin plugin;
 
     TaxationCollectionTask(PoliticsPlugin plugin) {

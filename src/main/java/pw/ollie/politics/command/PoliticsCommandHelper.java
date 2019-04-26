@@ -51,11 +51,15 @@ public final class PoliticsCommandHelper {
         return source instanceof ConsoleCommandSender || source.hasPermission(GROUPS_ADMIN_PERMISSION);
     }
 
+    private static boolean can(CommandSender sender, String perm) {
+        return perm == null || sender.hasPermission(perm);
+    }
+
     // page counts from 1 (not an index)
     public static void sendCommandHelp(CommandSender sender, PoliticsBaseCommand baseCommand, int pageNumber) {
-        PagedList<PoliticsSubcommand> pages = new PagedArrayList<>(baseCommand.getSubCommands().stream()
-                .filter(cmd -> cmd.getPermission() == null || sender.hasPermission(cmd.getPermission()))
-                .collect(Collectors.toList()));
+        PagedList<PoliticsSubcommand> pages = baseCommand.getSubCommands().stream()
+                .filter(cmd -> can(sender, cmd.getPermission()))
+                .collect(Collectors.toCollection(PagedArrayList::new));
         if (pageNumber > pages.pages()) {
             MessageBuilder.beginError().append("There are only " + pages.pages() + " pages.").send(sender);
             return;
@@ -70,10 +74,12 @@ public final class PoliticsCommandHelper {
     }
 
     public static PoliticsSubcommand getClosestMatch(Collection<PoliticsSubcommand> subcommands, String label) {
-        return fuzzyLookup(subcommands, label, 2);
+        return fuzzyLookup(subcommands, label);
     }
 
-    private static PoliticsSubcommand fuzzyLookup(Collection<PoliticsSubcommand> collection, String name, int tolerance) {
+    private static final int fuzzyTolerance = 2;
+
+    private static PoliticsSubcommand fuzzyLookup(Collection<PoliticsSubcommand> collection, String name) {
         String adjName = name.replaceAll("[ _]", "").toLowerCase();
 
         PoliticsSubcommand result = collection.stream()
@@ -92,13 +98,13 @@ public final class PoliticsCommandHelper {
             }
 
             int dist = StringUtil.getLevenshteinDistance(cmd.getName(), adjName);
-            if (dist < tolerance && (dist < lowest || lowest == -1)) {
+            if (dist < fuzzyTolerance && (dist < lowest || lowest == -1)) {
                 lowest = dist;
                 best = cmd;
             } else {
                 for (String alias : cmd.getAliases()) {
                     dist = StringUtil.getLevenshteinDistance(alias, adjName);
-                    if (dist < tolerance && (dist < lowest || lowest == -1)) {
+                    if (dist < fuzzyTolerance && (dist < lowest || lowest == -1)) {
                         lowest = dist;
                         best = cmd;
                     }

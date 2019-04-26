@@ -27,7 +27,7 @@ import pw.ollie.politics.event.group.GroupMemberLeaveEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
-import pw.ollie.politics.util.TaskUtil;
+import pw.ollie.politics.util.PlayerUtil;
 import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.util.message.MessageUtil;
 
@@ -76,29 +76,25 @@ public class GroupKickCommand extends GroupSubcommand {
             return;
         }
 
-        TaskUtil.async(plugin, () -> {
-            final OfflinePlayer offlinePlayer = plugin.getServer().getOfflinePlayer(playerName);
-            final UUID offlinePlayerId = offlinePlayer.hasPlayedBefore() ? offlinePlayer.getUniqueId() : null;
+        OfflinePlayer offlinePlayer = PlayerUtil.getOfflinePlayer(playerName);
+        if (offlinePlayer == null) {
+            MessageUtil.error(sender, "That player does not exist.");
+            return;
+        }
 
-            TaskUtil.sync(plugin, () -> {
-                if (offlinePlayerId == null) {
-                    MessageBuilder.beginError().append("That player does not exist.").send(sender);
-                } else {
-                    if (group.isImmediateMember(offlinePlayerId)) {
-                        GroupMemberLeaveEvent leaveEvent = PoliticsEventFactory.callGroupMemberLeaveEvent(group, offlinePlayer, sender);
-                        if (leaveEvent.isCancelled()) {
-                            MessageBuilder.beginError().append("You cannot kick the player.").send(sender);
-                            return;
-                        }
+        UUID playerId = offlinePlayer.getUniqueId();
+        if (group.isImmediateMember(playerId)) {
+            GroupMemberLeaveEvent leaveEvent = PoliticsEventFactory.callGroupMemberLeaveEvent(group, offlinePlayer, sender);
+            if (leaveEvent.isCancelled()) {
+                MessageBuilder.beginError().append("You cannot kick the player.").send(sender);
+                return;
+            }
 
-                        group.removeRole(offlinePlayerId);
-                        MessageUtil.message(sender, "Successfully removed the player.");
-                    } else {
-                        MessageBuilder.beginError().append("That player is not a member of the " + level.getName() + ".").send(sender);
-                    }
-                }
-            });
-        });
+            group.removeRole(playerId);
+            MessageUtil.message(sender, "Successfully removed the player.");
+        } else {
+            MessageBuilder.beginError().append("That player is not a member of the " + level.getName() + ".").send(sender);
+        }
     }
 
     /**

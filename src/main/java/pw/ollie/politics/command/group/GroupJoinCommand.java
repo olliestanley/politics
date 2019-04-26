@@ -61,7 +61,7 @@ public class GroupJoinCommand extends GroupSubcommand {
         // safe cast as isPlayerOnly() returns true
         Player player = (Player) sender;
         if (!level.allowedMultiple()) {
-            Set<Group> playerGroups = plugin.getUniverseManager().getUniverse(player.getWorld(), level).getCitizenGroups(player);
+            Set<Group> playerGroups = plugin.getGroupManager().getAllCitizenGroups(player.getUniqueId());
             for (Group playerGroup : playerGroups) {
                 if (playerGroup.getLevel().equals(level)) {
                     throw new CommandException("You are already part of a " + level.getName() + ".");

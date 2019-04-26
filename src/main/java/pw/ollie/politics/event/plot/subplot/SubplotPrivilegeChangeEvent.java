@@ -29,7 +29,7 @@ import org.bukkit.event.HandlerList;
 import java.util.UUID;
 
 public class SubplotPrivilegeChangeEvent extends SubplotEvent implements Cancellable {
-    private static HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
     private final UUID subject;
     private final Privilege changed;

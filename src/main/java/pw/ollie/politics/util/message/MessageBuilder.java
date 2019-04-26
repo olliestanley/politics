@@ -35,7 +35,7 @@ public final class MessageBuilder {
      *
      * @param colourScheme the ColourScheme for the MessageBuilder to use
      */
-    public MessageBuilder(ColourScheme colourScheme) {
+    private MessageBuilder(ColourScheme colourScheme) {
         this.delegate = new StringBuilder();
         this.colourScheme = colourScheme;
 

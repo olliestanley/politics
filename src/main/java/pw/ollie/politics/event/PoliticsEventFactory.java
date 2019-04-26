@@ -183,7 +183,7 @@ public final class PoliticsEventFactory {
         return callEvent(new WarFinishEvent(war));
     }
 
-    public static <T extends Event> T callEvent(T event) {
+    private static <T extends Event> T callEvent(T event) {
         Politics.getServer().getPluginManager().callEvent(event);
         return event;
     }

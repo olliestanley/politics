@@ -33,7 +33,7 @@ public final class Citizen {
     private final UUID id;
     private final Universe universe;
 
-    private String name;
+    private final String name;
 
     public Citizen(UUID id, String name, Universe universe) {
         this.id = id;

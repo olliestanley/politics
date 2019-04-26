@@ -22,12 +22,11 @@ package pw.ollie.politics.util.serial;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
 
-import com.google.common.io.Files;
-
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.logging.Level;
 
 /**
@@ -49,7 +48,7 @@ public final class ConfigUtil {
         File savedPath = new File(plugin.getDataFolder(), "templates/" + name.toLowerCase() + ".yml");
         File toPath = new File(plugin.getFileSystem().getRulesDir(), as.toLowerCase() + ".yml");
         try {
-            Files.move(savedPath, toPath);
+            Files.move(savedPath.toPath(), toPath.toPath());
             File templatesDir = savedPath.getParentFile();
             if (templatesDir.isDirectory()) {
                 templatesDir.delete();

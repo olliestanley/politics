@@ -84,9 +84,9 @@ public class GroupManageCommand extends GroupSubcommand {
             this.name = name;
         }
 
-        public abstract void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args, Group group) throws CommandException;
+        protected abstract void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args, Group group) throws CommandException;
 
-        public String getName() {
+        String getName() {
             return name;
         }
     }
@@ -113,7 +113,7 @@ public class GroupManageCommand extends GroupSubcommand {
 
             Player player = (Player) sender;
             Universe universe = plugin.getUniverseManager().getUniverse(player.getWorld(), level);
-            if (!universe.getGroups().contains(invited)) {
+            if (universe == null || !universe.getGroups().contains(invited)) {
                 throw new CommandException(invited.getName() + " does not exist in the same universe as " + level.getPlural() + ".");
             }
             if (!(group.getLevel().getRank() > invited.getLevel().getRank())) {

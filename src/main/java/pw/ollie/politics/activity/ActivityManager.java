@@ -45,6 +45,10 @@ public final class ActivityManager {
         plugin.getServer().getPluginManager().registerEvents(new ActivityUpdateListener(plugin), plugin);
     }
 
+    public PoliticsPlugin getPlugin() {
+        return plugin;
+    }
+
     public boolean isActive(UUID playerId) {
         PoliticsActivity activity = getActivity(playerId);
         if (activity != null && activity.hasCompleted()) {
@@ -59,7 +63,7 @@ public final class ActivityManager {
     }
 
     public PoliticsActivity getActivity(UUID playerId) {
-        PoliticsActivity activity = getActivity(playerId);
+        PoliticsActivity activity = activities.get(playerId);
         if (activity != null && activity.hasCompleted()) {
             activities.remove(playerId);
             activity = null;

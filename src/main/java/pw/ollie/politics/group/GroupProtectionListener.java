@@ -39,10 +39,10 @@ import java.util.UUID;
 /**
  * Listens to events to apply relevant {@link Group}-related protections to players.
  */
-public final class GroupProtectionListener implements Listener {
+final class GroupProtectionListener implements Listener {
     private final PoliticsPlugin plugin;
 
-    public GroupProtectionListener(PoliticsPlugin plugin) {
+    GroupProtectionListener(PoliticsPlugin plugin) {
         this.plugin = plugin;
     }
 

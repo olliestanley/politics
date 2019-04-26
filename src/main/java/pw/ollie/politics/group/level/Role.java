@@ -70,13 +70,14 @@ public final class Role implements Comparable<Role> {
 
     public static Role load(String id, ConfigurationSection node) {
         String name = node.getString("name", StringUtils.capitalize(id));
-        List<String> privs = node.getStringList("privileges");
+        List<String> configuredPrivileges = node.getStringList("privileges");
         Set<Privilege> privileges = new HashSet<>();
-        for (String priv : privs) {
-            Privilege p = Politics.getPrivilegeManager().getPrivilege(priv);
-            if (p == null) {
+        for (String privilegeName : configuredPrivileges) {
+            Privilege privilege = Politics.getPrivilegeManager().getPrivilege(privilegeName);
+            if (privilege == null) {
                 continue;
             }
+            privileges.add(privilege);
         }
         int rank = node.getInt("rank", 1);
         return new Role(id, name, privileges, rank);

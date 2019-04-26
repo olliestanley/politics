@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 
 /**
@@ -82,7 +83,7 @@ public final class WorldManager {
         }
 
         configs = new HashMap<>();
-        for (File file : plugin.getFileSystem().getWorldConfigDir().listFiles()) {
+        for (File file : Objects.requireNonNull(plugin.getFileSystem().getWorldConfigDir().listFiles())) {
             String fileName = file.getName();
             if (!fileName.endsWith(".yml") || fileName.length() <= 4) {
                 continue;
@@ -103,7 +104,7 @@ public final class WorldManager {
         BasicBSONDecoder decoder = new BasicBSONDecoder();
         worlds = new HashMap<>();
 
-        for (File file : plugin.getFileSystem().getWorldsDir().listFiles()) {
+        for (File file : Objects.requireNonNull(plugin.getFileSystem().getWorldsDir().listFiles())) {
             String fileName = file.getName();
             if (!fileName.endsWith(".ptw") || fileName.length() <= 4) {
                 continue;
@@ -148,7 +149,6 @@ public final class WorldManager {
                 FileUtils.writeByteArrayToFile(worldFile, data);
             } catch (IOException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Could not save universe file `" + fileName + "' due to error!", ex);
-                continue;
             }
         }
     }

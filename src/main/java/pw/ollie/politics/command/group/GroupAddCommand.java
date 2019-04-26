@@ -27,6 +27,7 @@ import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.group.GroupMemberJoinEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.command.CommandSender;
@@ -66,7 +67,7 @@ public class GroupAddCommand extends GroupSubcommand {
         }
 
         if (!level.allowedMultiple()) {
-            Set<Group> playerGroups = plugin.getUniverseManager().getUniverse(player.getWorld(), level).getCitizenGroups(player);
+            Set<Group> playerGroups = plugin.getGroupManager().getAllCitizenGroups(player.getUniqueId());
             for (Group playerGroup : playerGroups) {
                 if (playerGroup.getLevel().equals(level)) {
                     throw new CommandException("The player is already part of a " + level.getName() + ".");

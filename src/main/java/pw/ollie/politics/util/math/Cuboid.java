@@ -47,7 +47,7 @@ public class Cuboid {
     }
 
     public Cuboid(Location base, Location opposite) {
-        if (!base.getWorld().equals(opposite.getWorld())) {
+        if (Objects.equals(base.getWorld(), opposite.getWorld())) {
             throw new IllegalArgumentException("cuboid cannot span multiple worlds");
         }
 

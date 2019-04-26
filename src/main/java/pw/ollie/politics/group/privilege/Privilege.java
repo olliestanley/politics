@@ -22,7 +22,6 @@ package pw.ollie.politics.group.privilege;
 import pw.ollie.politics.util.collect.CollectionUtil;
 
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -68,47 +67,5 @@ public final class Privilege {
             h *= Objects.hash(type);
         }
         return h;
-    }
-
-    public static Set<Privilege> all(Set<Privilege>... sets) {
-        Set<Privilege> result = new HashSet<>();
-        for (Set<Privilege> set : sets) {
-            result.addAll(set);
-        }
-
-        return result;
-    }
-
-    public static Set<Privilege> common(Set<Privilege>... sets) {
-        boolean first = true;
-        Set<Privilege> result = new HashSet<>();
-        for (Set<Privilege> set : sets) {
-            if (first) {
-                result.addAll(set);
-                first = false;
-                continue;
-            }
-
-            Set<Privilege> copy = new HashSet<>(result);
-            for (Privilege privilege : copy) {
-                if (!set.contains(privilege)) {
-                    result.remove(privilege);
-                }
-            }
-        }
-
-        return result;
-    }
-
-    public static Set<Privilege> filter(Set<Privilege> set, PrivilegeType... types) {
-        Set<Privilege> result = new HashSet<>();
-        Set<PrivilegeType> typesSet = EnumSet.of(types[0], types);
-        for (Privilege priv : set) {
-            if (priv.getTypes().containsAll(typesSet)) {
-                result.add(priv);
-            }
-        }
-
-        return result;
     }
 }

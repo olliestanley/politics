@@ -62,7 +62,7 @@ public class PoliticsEconomyVault extends PoliticsEconomy {
         }
 
         vaultEconomy = rsp.getProvider();
-        return vaultEconomy != null;
+        return true;
     }
 
     /**

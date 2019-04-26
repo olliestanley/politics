@@ -384,7 +384,7 @@ public final class Group implements Comparable<Group>, Storable {
         String levelName = bobject.getString("level");
         GroupLevel level = rules.getGroupLevel(levelName);
         if (level == null) {
-            throw new IllegalStateException("Unknown level type '" + level + "'! (Did the universe rules change?)");
+            throw new IllegalStateException("Unknown level type '" + levelName + "'! (Did the universe rules change?)");
         }
 
         // Properties

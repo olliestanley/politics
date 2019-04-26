@@ -34,10 +34,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 /**
  * Listens to events to send relevant {@link Group}-related informational messages to players.
  */
-public final class GroupMessageListener implements Listener {
+final class GroupMessageListener implements Listener {
     private final PoliticsPlugin plugin;
 
-    public GroupMessageListener(PoliticsPlugin plugin) {
+    GroupMessageListener(PoliticsPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -64,7 +64,7 @@ public final class GroupMessageListener implements Listener {
         if (newPlotOwner == null) {
             if (oldPlotOwner != null) {
                 String exitMessage = oldPlotOwner.getStringProperty(GroupProperty.EXIT_MESSAGE);
-                if (exitMessage == null) {
+                if (exitMessage != null) {
                     MessageUtil.message(player, exitMessage);
                 }
 
@@ -75,13 +75,13 @@ public final class GroupMessageListener implements Listener {
 
         if (!newPlotOwner.equals(oldPlotOwner)) {
             String entryMessage = newPlotOwner.getStringProperty(GroupProperty.ENTRY_MESSAGE);
-            if (entryMessage == null) {
+            if (entryMessage != null) {
                 MessageUtil.message(player, entryMessage);
             }
 
             if (oldPlotOwner != null) {
                 String exitMessage = oldPlotOwner.getStringProperty(GroupProperty.EXIT_MESSAGE);
-                if (exitMessage == null) {
+                if (exitMessage != null) {
                     MessageUtil.message(player, exitMessage);
                 }
             }

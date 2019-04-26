@@ -26,7 +26,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
 public class SubplotDestroyEvent extends SubplotEvent implements Cancellable {
-    private static HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
     private boolean cancelled;
 

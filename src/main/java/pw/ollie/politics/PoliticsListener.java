@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
  */
 // for block-based plot protection, see PlotBlockProtectionListener
 // for combat protection, see GroupCombatProtectionListener
-public final class PoliticsListener implements Listener {
+final class PoliticsListener implements Listener {
     private final PoliticsPlugin plugin;
     private final WorldManager worldManager;
 

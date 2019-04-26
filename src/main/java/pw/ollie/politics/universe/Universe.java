@@ -70,7 +70,7 @@ public final class Universe implements Storable {
         this(name, properties, worlds, new ArrayList<>(), new HashMap<>());
     }
 
-    public Universe(String name, UniverseRules rules, List<PoliticsWorld> worlds, List<Group> groups, Map<Group, Set<Group>> children) {
+    private Universe(String name, UniverseRules rules, List<PoliticsWorld> worlds, List<Group> groups, Map<Group, Set<Group>> children) {
         this.name = name;
         this.rules = rules;
         this.worlds = worlds;

@@ -38,6 +38,10 @@ public final class PrivilegeManager {
         loadDefaultPrivileges();
     }
 
+    public PoliticsPlugin getPlugin() {
+        return plugin;
+    }
+
     private void loadDefaultPrivileges() {
         registerPrivileges(Privileges.Group.ALL);
         registerPrivileges(Privileges.Plot.ALL);

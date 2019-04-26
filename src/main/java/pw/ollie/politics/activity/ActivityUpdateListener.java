@@ -36,7 +36,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 /**
  * Listens for events in order to update {@link PoliticsActivity} progress for relevant players.
  */
-public final class ActivityUpdateListener implements Listener {
+final class ActivityUpdateListener implements Listener {
     private final PoliticsPlugin plugin;
 
     ActivityUpdateListener(PoliticsPlugin plugin) {

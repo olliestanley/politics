@@ -29,7 +29,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
 public class SubplotProtectionTriggerEvent extends SubplotEvent implements Cancellable {
-    private static HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
     private final Block damaged;
     private final PlotDamageSource source;

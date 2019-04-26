@@ -26,10 +26,10 @@ import org.bukkit.event.Listener;
 /**
  * Listens to events in order to update {@link War} scores and eventually determine the winner and loser.
  */
-public final class WarScoringListener implements Listener {
+final class WarScoringListener implements Listener {
     private final PoliticsPlugin plugin;
 
-    public WarScoringListener(PoliticsPlugin plugin) {
+    WarScoringListener(PoliticsPlugin plugin) {
         this.plugin = plugin;
     }
 

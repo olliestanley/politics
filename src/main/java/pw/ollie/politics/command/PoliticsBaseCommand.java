@@ -46,7 +46,7 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         this.plugin = plugin;
     }
 
-    public void runCommand(CommandSender sender, Arguments args) {
+    protected void runCommand(CommandSender sender, Arguments args) {
         // this is a default implementation - can be overridden in subclasses
         // if there is no override then the base command implementation simply searches for subcommands
         // if there is no valid subcommand provided then a hopefully helpful error message is shown
