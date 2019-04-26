@@ -52,7 +52,6 @@ public class UniverseDestroyCommand extends PoliticsSubcommand {
         }
 
         plugin.getUniverseManager().destroyUniverse(universe);
-        PoliticsEventFactory.callUniverseDestroyEvent(universe);
         MessageBuilder.begin("Universe destroyed, sir.").send(sender);
     }
 

@@ -33,9 +33,12 @@ import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.visualise.Visualiser;
 import pw.ollie.politics.world.WorldManager;
 
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 
+import java.io.File;
 import java.util.logging.Level;
 
 /**
@@ -269,5 +272,14 @@ public final class PoliticsPlugin extends JavaPlugin {
      */
     public static PoliticsPlugin instance() {
         return instance;
+    }
+
+    // constructors for MockBukkit testing
+
+    public PoliticsPlugin() {
+    }
+
+    protected PoliticsPlugin(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+        super(loader, description, dataFolder, file);
     }
 }

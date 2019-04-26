@@ -15,9 +15,11 @@ levels:
     roles:
       Owner:
         name: Owner
+        plural: Owners
         privileges: [ALL]
       Member:
         name: Member
+        plural: Members
         privileges: [BUILD]
     tracks:
       Default: [Member, Owner]
@@ -34,7 +36,7 @@ levels:
     name: Town
     plural: Towns
     rank: 2
-    children: [household]
+    children: [Household]
     roles:
       Mayor:
         name: Mayor

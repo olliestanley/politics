@@ -222,15 +222,11 @@
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.13.2-R0.1-SNAPSHOT</version>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>1.14-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
-        <exclusion>
-          <artifactId>json-simple</artifactId>
-          <groupId>com.googlecode.json-simple</groupId>
-        </exclusion>
         <exclusion>
           <artifactId>guava</artifactId>
           <groupId>com.google.guava</groupId>
@@ -238,6 +234,10 @@
         <exclusion>
           <artifactId>gson</artifactId>
           <groupId>com.google.code.gson</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>bungeecord-chat</artifactId>
+          <groupId>net.md-5</groupId>
         </exclusion>
         <exclusion>
           <artifactId>snakeyaml</artifactId>
@@ -250,23 +250,19 @@
       <artifactId>VaultAPI</artifactId>
       <version>1.7</version>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>bukkit</artifactId>
+          <groupId>org.bukkit</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.4</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-module-junit4</artifactId>
-      <version>1.7.1</version>
+      <version>4.12</version>
       <scope>test</scope>
       <exclusions>
-        <exclusion>
-          <artifactId>powermock-module-junit4-common</artifactId>
-          <groupId>org.powermock</groupId>
-        </exclusion>
         <exclusion>
           <artifactId>hamcrest-core</artifactId>
           <groupId>org.hamcrest</groupId>
@@ -274,18 +270,14 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-api-mockito2</artifactId>
-      <version>1.7.1</version>
+      <groupId>com.github.seeseemelk</groupId>
+      <artifactId>MockBukkit-v1.13-spigot</artifactId>
+      <version>0.1.1</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
-          <artifactId>powermock-api-mockito-common</artifactId>
-          <groupId>org.powermock</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>mockito-core</artifactId>
-          <groupId>org.mockito</groupId>
+          <artifactId>hamcrest-library</artifactId>
+          <groupId>org.hamcrest</groupId>
         </exclusion>
       </exclusions>
     </dependency>

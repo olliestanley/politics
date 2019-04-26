@@ -27,6 +27,7 @@ import gnu.trove.set.hash.THashSet;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.data.InvalidConfigurationException;
+import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.world.PoliticsWorld;
@@ -149,7 +150,7 @@ public final class UniverseManager {
 
     public Universe createUniverse(String name, UniverseRules theRules, List<PoliticsWorld> worlds) {
         Universe universe = new Universe(name, theRules, worlds);
-        universes.put(name, universe);
+        universes.put(name.toLowerCase(), universe);
         for (PoliticsWorld world : worlds) {
             worldLevels.putIfAbsent(world, new HashMap<>());
             Map<GroupLevel, Universe> map = worldLevels.get(world);
@@ -157,6 +158,7 @@ public final class UniverseManager {
                 map.put(level, universe);
             }
         }
+        PoliticsEventFactory.callUniverseCreateEvent(universe);
         return universe;
     }
 
@@ -165,6 +167,7 @@ public final class UniverseManager {
         for (Group group : universe.getGroups()) {
             universe.destroyGroup(group);
         }
+        PoliticsEventFactory.callUniverseDestroyEvent(universe);
     }
 
     public int nextId() {
@@ -244,7 +247,7 @@ public final class UniverseManager {
 
             BSONObject object = decoder.readObject(data);
             Universe universe = Universe.fromBSONObject(object);
-            universes.put(universe.getName(), universe);
+            universes.put(universe.getName().toLowerCase(), universe);
 
             for (Group group : universe.getGroups()) {
                 if (groups.put(group.getUid(), group) != null) {
