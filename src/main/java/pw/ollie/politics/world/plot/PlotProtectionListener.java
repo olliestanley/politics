@@ -57,11 +57,9 @@ import java.util.List;
  * Applies {@link Plot} and {@link Subplot} region protections where applicable.
  */
 public final class PlotProtectionListener implements Listener {
-    private final PoliticsPlugin plugin;
     private final WorldManager worldManager;
 
     public PlotProtectionListener(PoliticsPlugin plugin) {
-        this.plugin = plugin;
         this.worldManager = plugin.getWorldManager();
     }
 
@@ -96,6 +94,45 @@ public final class PlotProtectionListener implements Listener {
             if (!triggerEvent.isCancelled()) {
                 event.setCancelled(true);
                 MessageUtil.error(player, "You can't do that in this plot.");
+            }
+        }
+    }
+
+    private void checkBlockProtection(Block sourceBlock, Plot sourcePlot, Subplot sourceSubplot, Block target, Cancellable event, PlotProtectionType type) {
+        Location targetLoc = target.getLocation();
+
+        Plot blockPlot = worldManager.getPlotAt(targetLoc);
+        if (!blockPlot.hasOwner()) {
+            return;
+        }
+
+        if (blockPlot.getOwnerId() != sourcePlot.getOwnerId()) {
+            // a block in an owned plot is being moved by a piston in a plot which either does not have an owner or
+            // is owned by a different group to the owner of the plot the moved block is within - get rid
+
+            PlotProtectionTriggerEvent protectEvent = PoliticsEventFactory.callPlotProtectionTriggerEvent(
+                    blockPlot, target, new PlotDamageSource(sourceBlock), type);
+            if (!protectEvent.isCancelled()) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+
+        // both piston and invaded blocks are in the same plot - time to check subplots
+
+        Subplot blockSubplot = blockPlot.getSubplotAt(targetLoc);
+        if (blockSubplot == null) {
+            return;
+        }
+
+        if (sourceSubplot == null || !sourceSubplot.getOwnerId().equals(blockSubplot.getOwnerId())) {
+            // a block in an owned subplot is being moved by a piston in a subplot which either does not have an
+            // owner or is owned by someone other than the other of the plot the moved block is within - cancel
+
+            SubplotProtectionTriggerEvent protectEvent = PoliticsEventFactory.callSubplotProtectionTriggerEvent(
+                    blockPlot, blockSubplot, target, new PlotDamageSource(sourceBlock), type);
+            if (!protectEvent.isCancelled()) {
+                event.setCancelled(true);
             }
         }
     }
@@ -148,9 +185,6 @@ public final class PlotProtectionListener implements Listener {
     // todo the below two methods might not be great on performance - need to look into whether this can be improved
     // possibly some form of caching whether a certain action is acceptable
 
-    // todo call relevant events in the below two methods
-    // todo abstract some of the code in the below two methods
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         Block pistonBlock = event.getBlock();
@@ -161,31 +195,9 @@ public final class PlotProtectionListener implements Listener {
 
         // prevent pulling blocks out of plots
         for (Block moved : event.getBlocks()) {
-            Location movedLoc = moved.getLocation();
+            checkBlockProtection(pistonBlock, pistonPlot, pistonSubplot, moved, event, PlotProtectionType.PISTON_PULL);
 
-            Plot blockPlot = worldManager.getPlotAt(movedLoc);
-            if (!blockPlot.hasOwner()) {
-                continue;
-            }
-
-            if (blockPlot.getOwnerId() != pistonPlot.getOwnerId()) {
-                // a block in an owned plot is being moved by a piston in a plot which either does not have an owner or
-                // is owned by a different group to the owner of the plot the moved block is within - get rid
-                event.setCancelled(true);
-                break;
-            }
-
-            // both piston and invaded blocks are in the same plot - time to check subplots
-
-            Subplot blockSubplot = blockPlot.getSubplotAt(movedLoc);
-            if (blockSubplot == null) {
-                continue;
-            }
-
-            if (pistonSubplot == null || !pistonSubplot.getOwnerId().equals(blockSubplot.getOwnerId())) {
-                // a block in an owned subplot is being moved by a piston in a subplot which either does not have an
-                // owner or is owned by someone other than the other of the plot the moved block is within - cancel
-                event.setCancelled(true);
+            if (event.isCancelled()) {
                 break;
             }
         }
@@ -209,80 +221,31 @@ public final class PlotProtectionListener implements Listener {
                 return;
             }
 
-            Location invadedLoc = invaded.getLocation();
-
-            Plot invadedPlot = worldManager.getPlotAt(invadedLoc);
-            if (!invadedPlot.hasOwner()) {
-                return;
-            }
-
-            if (pistonPlot.getOwnerId() != invadedPlot.getOwnerId()) {
-                // invaded block plot has an owner and piston plot either doesn't or has a different owner - rude
-                event.setCancelled(true);
-                return;
-            }
-
-            // both piston and invaded blocks are in the same plot - time to check subplots
-
-            Subplot invadedSubplot = invadedPlot.getSubplotAt(invadedLoc);
-            if (invadedSubplot == null) {
-                return;
-            }
-
-            if (pistonSubplot == null || !pistonSubplot.getOwnerId().equals(invadedSubplot.getOwnerId())) {
-                // pushing into someone else's subplot - nope
-                event.setCancelled(true);
-                return;
-            }
-
+            checkBlockProtection(pistonBlock, pistonPlot, pistonSubplot, invaded, event, PlotProtectionType.PISTON_PUSH);
             return;
         }
 
         // check if any pushed block is in a plot owned by a different group to the piston owner
         // also prevent blocks being pushed into a plot from outside
         for (Block moved : blocks) {
-            Location movedLoc = moved.getLocation();
-
             // first check for a block in one plot being pushed into another plot
-            Location destination = moved.getRelative(event.getDirection()).getLocation();
-            Plot destinationPlot = worldManager.getPlotAt(destination);
-            if (destinationPlot.hasOwner() && destinationPlot.getOwnerId() != pistonPlot.getOwnerId()) {
-                event.setCancelled(true);
+            checkBlockProtection(pistonBlock, pistonPlot, pistonSubplot, moved.getRelative(event.getDirection()), event, PlotProtectionType.PISTON_PUSH);
+            if (event.isCancelled()) {
                 break;
             }
 
-            Subplot destinationSubplot = destinationPlot.getSubplotAt(destination);
-            if (destinationSubplot != null && (pistonSubplot == null || !destinationSubplot.getOwnerId().equals(pistonSubplot.getOwnerId()))) {
-                event.setCancelled(true);
-                break;
-            }
-
-            Plot blockPlot = worldManager.getPlotAt(movedLoc);
-            if (!blockPlot.hasOwner()) {
-                continue;
-            }
-
-            if (blockPlot.getOwnerId() != pistonPlot.getOwnerId()) {
-                // a block in an owned plot is being moved by a piston in a plot which either does not have an owner or
-                // is owned by a different group to the owner of the plot the moved block is within - get rid
-                event.setCancelled(true);
-                break;
-            }
-
-            // both piston and pushed blocks are in the same plot - time to check subplots
-
-            Subplot blockSubplot = blockPlot.getSubplotAt(movedLoc);
-            if (blockSubplot == null) {
-                continue;
-            }
-
-            if (pistonSubplot == null || !pistonSubplot.getOwnerId().equals(blockSubplot.getOwnerId())) {
-                // a block in an owned subplot is being moved by a piston in a subplot which either does not have an
-                // owner or is owned by someone other than the other of the plot the moved block is within - cancel
-                event.setCancelled(true);
+            // then check for a block in another plot being pushed
+            checkBlockProtection(pistonBlock, pistonPlot, pistonSubplot, moved, event, PlotProtectionType.PISTON_PUSH);
+            if (event.isCancelled()) {
                 break;
             }
         }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    public void onBlockDispense(BlockDispenseEvent event) {
+        // stop dispensers being used to dispense blocks (e.g. lava) or item between (sub)plots
+        // todo cancel if from one plot to another or from outside plot into plot
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
@@ -323,12 +286,6 @@ public final class PlotProtectionListener implements Listener {
         }
 
         // todo check if in a plot
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onBlockDispense(BlockDispenseEvent event) {
-        // stop dispensers being used to dispense blocks (e.g. lava) or item between (sub)plots
-        // todo cancel if from one plot to another or from outside plot into plot
     }
 
     private PlotProtectionTriggerEvent callPlotProtectionEvent(Plot plot, Block damaged, PlotDamageSource source, PlotProtectionType type) {

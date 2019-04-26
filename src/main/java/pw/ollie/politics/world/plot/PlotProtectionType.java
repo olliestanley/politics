@@ -33,7 +33,15 @@ public enum PlotProtectionType {
     /**
      * A protection from a block being placed.
      */
-    BLOCK_PLACE(Privileges.GroupPlot.BUILD);
+    BLOCK_PLACE(Privileges.GroupPlot.BUILD),
+    /**
+     * A protection from a piston pulling a block.
+     */
+    PISTON_PULL(null),
+    /**
+     * A protection from a piston pushing a block.
+     */
+    PISTON_PUSH(null);
     // todo fill in all types
 
     private final Privilege permission;
@@ -48,8 +56,10 @@ public enum PlotProtectionType {
 
     /**
      * Gets the {@link Privilege} which would allow the protection to be bypassed.
+     * <p>
+     * If there isn't a relevant permission, this returns null.
      *
-     * @return the Privilege required to avoid this protection type
+     * @return the Privilege required to avoid this protection type, or {@code null} if there isn't one
      */
     public Privilege getPermission() {
         return permission;
