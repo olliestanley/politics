@@ -13,6 +13,8 @@ JavaDocs: https://dzineit.github.io/politics/apidocs
 
 Politics is currently not in a production-usable state and large swathes of the plugin are untested, so there is no stable version to download. If you'd like to acquire a developer build, they're available through a CI server kindly hosted by CodeMC.org.
 
+[![Build Status](https://ci.codemc.org/job/dzineit/job/politics/badge/icon)](https://ci.codemc.org/job/dzineit/job/politics/)
+
 - Latest Release: N/A
 - Developer Builds (CI): https://ci.codemc.org/job/dzineit/job/politics/
 
