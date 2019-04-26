@@ -31,6 +31,7 @@ import pw.ollie.politics.universe.Universe;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.PluginManager;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,8 +51,6 @@ public final class WarManager {
 
         this.plugin = plugin;
         this.activeWars = new THashSet<>();
-
-        plugin.getServer().getPluginManager().registerEvents(new WarProtectionListener(plugin), plugin);
     }
 
     public Set<War> getActiveWars() {
@@ -147,6 +146,10 @@ public final class WarManager {
 
     public void loadWars() {
         // todo save all wars to wars.pws file in data directory
+
+        PluginManager pluginManager = plugin.getServer().getPluginManager();
+        pluginManager.registerEvents(new WarProtectionListener(plugin), plugin);
+        pluginManager.registerEvents(new WarScoringListener(plugin), plugin);
     }
 
     public void saveWars() {
