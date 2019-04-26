@@ -58,6 +58,15 @@ public final class GroupManager {
         return plugin.getUniverseManager().getGroupLevels();
     }
 
+    public GroupLevel getGroupLevel(String name) {
+        for (GroupLevel level : getGroupLevels()) {
+            if (level.getName().equalsIgnoreCase(name)) {
+                return level;
+            }
+        }
+        return null;
+    }
+
     public Group getGroupById(int id) {
         return plugin.getUniverseManager().getGroupById(id);
     }

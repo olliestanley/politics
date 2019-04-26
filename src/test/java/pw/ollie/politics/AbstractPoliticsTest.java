@@ -20,26 +20,39 @@
 package pw.ollie.politics;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
+import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.WorldMock;
 
+import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.mock.PoliticsMockObjectFactory;
+import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.universe.UniverseRules;
 import pw.ollie.politics.util.PoliticsEventCounter;
 import pw.ollie.politics.world.PoliticsWorld;
+import pw.ollie.politics.world.WorldManager;
 
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.World;
 
 import java.util.Collections;
 
 public abstract class AbstractPoliticsTest {
-    protected Server server;
+    protected ServerMock server;
     protected PoliticsPlugin plugin;
+    protected UniverseManager universeManager;
+    protected GroupManager groupManager;
+    protected WorldManager worldManager;
 
     public void setUp() {
         server = MockBukkit.mock();
         plugin = MockBukkit.load(PoliticsPlugin.class);
+
+        // should be more than enough for the testing we'll be doing
+        server.setPlayers(20);
+
+        universeManager = plugin.getUniverseManager();
+        groupManager = plugin.getGroupManager();
+        worldManager = plugin.getWorldManager();
     }
 
     public abstract void runTest();
@@ -52,9 +65,9 @@ public abstract class AbstractPoliticsTest {
     protected void createDefaultUniverse() {
         // creates mock world with name 'World'
         World world = new WorldMock(Material.DIRT, 3);
-        PoliticsWorld politicsWorld = plugin.getWorldManager().getWorld(world);
+        PoliticsWorld politicsWorld = worldManager.getWorld(world);
         UniverseRules defaultRules = PoliticsMockObjectFactory.mockDefaultUniverseRules();
-        plugin.getUniverseManager().createUniverse("Default", defaultRules, Collections.singletonList(politicsWorld));
+        universeManager.createUniverse("Default", defaultRules, Collections.singletonList(politicsWorld));
     }
 
     protected PoliticsEventCounter registerEventCounter() {

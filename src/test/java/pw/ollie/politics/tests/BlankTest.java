@@ -25,7 +25,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class BlankTest extends AbstractPoliticsTest {
+public final class BlankTest extends AbstractPoliticsTest {
     @Override
     @Before
     public void setUp() {

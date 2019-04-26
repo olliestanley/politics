@@ -148,13 +148,15 @@ public final class UniverseManager {
         return new ArrayList<>(levelUniverses.keySet());
     }
 
-    public Universe createUniverse(String name, UniverseRules theRules, List<PoliticsWorld> worlds) {
-        Universe universe = new Universe(name, theRules, worlds);
+    public Universe createUniverse(String name, UniverseRules rules, List<PoliticsWorld> worlds) {
+        this.rules.putIfAbsent(rules.getName().toLowerCase(), rules);
+
+        Universe universe = new Universe(name, rules, worlds);
         universes.put(name.toLowerCase(), universe);
         for (PoliticsWorld world : worlds) {
             worldLevels.putIfAbsent(world, new HashMap<>());
             Map<GroupLevel, Universe> map = worldLevels.get(world);
-            for (GroupLevel level : theRules.getGroupLevels()) {
+            for (GroupLevel level : rules.getGroupLevels()) {
                 map.put(level, universe);
             }
         }
@@ -170,7 +172,15 @@ public final class UniverseManager {
         PoliticsEventFactory.callUniverseDestroyEvent(universe);
     }
 
-    public int nextId() {
+    void addGroup(Group group) {
+        groups.put(group.getUid(), group);
+    }
+
+    void removeGroup(int group) {
+        groups.remove(group);
+    }
+
+    int nextId() {
         while (getGroupById(nextId) != null) {
             nextId++;
         }

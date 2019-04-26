@@ -273,6 +273,7 @@ public final class Universe implements Storable {
         groups.add(group);
         getInternalGroups(level).add(group);
         group.initialize(this);
+        Politics.getUniverseManager().addGroup(group);
 
         return group;
     }
@@ -311,6 +312,8 @@ public final class Universe implements Storable {
                 destroyGroup(child, true);
             }
         }
+
+        Politics.getUniverseManager().removeGroup(group.getUid());
 
         children.remove(group);
 
