@@ -50,6 +50,7 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.material.Dispenser;
 
 import java.util.List;
 
@@ -83,9 +84,8 @@ public final class PlotProtectionListener implements Listener {
             if (!triggerEvent.isCancelled()) {
                 event.setCancelled(true);
                 MessageUtil.error(player, "You can't do that in this plot.");
+                return;
             }
-
-            return;
         }
 
         Pair<Plot, Boolean> plotCheck = canInPlot(player, location, privilege);
@@ -109,7 +109,6 @@ public final class PlotProtectionListener implements Listener {
         if (blockPlot.getOwnerId() != sourcePlot.getOwnerId()) {
             // a block in an owned plot is being moved by a piston in a plot which either does not have an owner or
             // is owned by a different group to the owner of the plot the moved block is within - get rid
-
             PlotProtectionTriggerEvent protectEvent = PoliticsEventFactory.callPlotProtectionTriggerEvent(
                     blockPlot, target, new PlotDamageSource(sourceBlock), type);
             if (!protectEvent.isCancelled()) {
@@ -128,7 +127,6 @@ public final class PlotProtectionListener implements Listener {
         if (sourceSubplot == null || !sourceSubplot.getOwnerId().equals(blockSubplot.getOwnerId())) {
             // a block in an owned subplot is being moved by a piston in a subplot which either does not have an
             // owner or is owned by someone other than the other of the plot the moved block is within - cancel
-
             SubplotProtectionTriggerEvent protectEvent = PoliticsEventFactory.callSubplotProtectionTriggerEvent(
                     blockPlot, blockSubplot, target, new PlotDamageSource(sourceBlock), type);
             if (!protectEvent.isCancelled()) {
@@ -245,7 +243,16 @@ public final class PlotProtectionListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onBlockDispense(BlockDispenseEvent event) {
         // stop dispensers being used to dispense blocks (e.g. lava) or item between (sub)plots
-        // todo cancel if from one plot to another or from outside plot into plot
+        Block dispenserBlock = event.getBlock();
+        Location dispenserLoc = dispenserBlock.getLocation();
+        Dispenser dispenser = new Dispenser(Material.DISPENSER, dispenserBlock.getData());
+
+        Plot sourcePlot = worldManager.getPlotAt(dispenserLoc);
+        Subplot sourceSubplot = sourcePlot.getSubplotAt(dispenserLoc);
+
+        Block targetBlock = dispenserBlock.getRelative(dispenser.getFacing());
+
+        checkBlockProtection(dispenserBlock, sourcePlot, sourceSubplot, targetBlock, event, PlotProtectionType.DISPENSER);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)

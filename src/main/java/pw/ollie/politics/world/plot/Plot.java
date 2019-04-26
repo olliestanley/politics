@@ -330,12 +330,18 @@ public final class Plot implements Storable {
     /**
      * Attempts to set the direct owner {@link Group} of this Plot to the Group with the given unique id.
      * <p>
-     * This method calls {@link PlotOwnerChangeEvent} and will fail if this event is cancelled.
+     * This method calls {@link PlotOwnerChangeEvent} and will fail if this event is cancelled. It will also fail if no
+     * Group with the given unique id exists.
      *
      * @param id the unique id of the Group to designate as this Plot's new owner
      * @return whether the owner of the Plot was successfully changed
      */
     public boolean setOwner(int id) {
+        Group group = Politics.getGroupById(id);
+        if (group == null) {
+            return false;
+        }
+
         PlotOwnerChangeEvent event = PoliticsEventFactory.callPlotOwnerChangeEvent(this, id, true);
         if (event.isCancelled()) {
             return false;
@@ -358,7 +364,8 @@ public final class Plot implements Storable {
     }
 
     /**
-     * Attempts to remove the direct owner {@link Group} of this Plot.
+     * Attempts to remove the direct owner {@link Group} of this Plot. This will also remove all Subplots from this Plot
+     * without calling events for their removal.
      * <p>
      * This method calls {@link PlotOwnerChangeEvent} and will fail if this event is cancelled.
      *
@@ -370,6 +377,7 @@ public final class Plot implements Storable {
             return false;
         }
 
+        subplots.clear();
         owner = -1;
         return true;
     }
