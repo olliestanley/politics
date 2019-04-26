@@ -127,18 +127,10 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>${powermock.version}</version>
+            <groupId>com.github.seeseemelk</groupId>
+            <artifactId>MockBukkit-v1.13-spigot</artifactId>
+            <version>0.1.1</version>
             <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito2</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-            <type>jar</type>
         </dependency>
     </dependencies>
 
