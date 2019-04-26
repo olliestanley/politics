@@ -28,15 +28,15 @@ import pw.ollie.politics.event.group.GroupBalanceChangeEvent;
 import pw.ollie.politics.event.group.GroupChildAddEvent;
 import pw.ollie.politics.event.group.GroupChildInviteEvent;
 import pw.ollie.politics.event.group.GroupChildRemoveEvent;
-import pw.ollie.politics.event.group.GroupClaimPlotEvent;
 import pw.ollie.politics.event.group.GroupCreateEvent;
 import pw.ollie.politics.event.group.GroupMemberJoinEvent;
 import pw.ollie.politics.event.group.GroupMemberLeaveEvent;
 import pw.ollie.politics.event.group.GroupMemberRoleChangeEvent;
 import pw.ollie.politics.event.group.GroupMemberSpawnEvent;
+import pw.ollie.politics.event.group.GroupPlotClaimEvent;
+import pw.ollie.politics.event.group.GroupPlotUnclaimEvent;
 import pw.ollie.politics.event.group.GroupPropertySetEvent;
 import pw.ollie.politics.event.group.GroupTaxImposeEvent;
-import pw.ollie.politics.event.group.GroupUnclaimPlotEvent;
 import pw.ollie.politics.event.player.PlayerPlotChangeEvent;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.event.plot.PlotProtectionTriggerEvent;
@@ -99,10 +99,6 @@ public final class PoliticsEventFactory {
         return callEvent(new GroupCreateEvent(group, creator));
     }
 
-    public static GroupClaimPlotEvent callGroupClaimPlotEvent(Group group, Plot plot, CommandSender claimer) {
-        return callEvent(new GroupClaimPlotEvent(group, plot, claimer));
-    }
-
     public static GroupMemberJoinEvent callGroupMemberJoinEvent(Group group, OfflinePlayer member, Role role) {
         return callEvent(new GroupMemberJoinEvent(group, member, role));
     }
@@ -131,8 +127,12 @@ public final class PoliticsEventFactory {
         return callEvent(new GroupTaxImposeEvent(group, taxedMember, amount));
     }
 
-    public static GroupUnclaimPlotEvent callGroupUnclaimPlotEvent(Group group, Plot plot, CommandSender unclaimer) {
-        return callEvent(new GroupUnclaimPlotEvent(group, plot, unclaimer));
+    public static GroupPlotClaimEvent callGroupPlotClaimEvent(Group group, Plot plot, CommandSender claimer) {
+        return callEvent(new GroupPlotClaimEvent(group, plot, claimer));
+    }
+
+    public static GroupPlotUnclaimEvent callGroupPlotUnclaimEvent(Group group, Plot plot, CommandSender unclaimer) {
+        return callEvent(new GroupPlotUnclaimEvent(group, plot, unclaimer));
     }
 
     public static PlayerPlotChangeEvent callPlayerPlotChangeEvent(Player player, Plot from, Plot to) {

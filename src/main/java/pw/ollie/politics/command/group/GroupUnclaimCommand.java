@@ -23,7 +23,7 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.event.PoliticsEventFactory;
-import pw.ollie.politics.event.group.GroupUnclaimPlotEvent;
+import pw.ollie.politics.event.group.GroupPlotUnclaimEvent;
 import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
@@ -64,7 +64,7 @@ public class GroupUnclaimCommand extends GroupSubcommand {
             throw new CommandException("The plot could not be unclaimed.");
         }
 
-        GroupUnclaimPlotEvent claimEvent = PoliticsEventFactory.callGroupUnclaimPlotEvent(group, plot, sender);
+        GroupPlotUnclaimEvent claimEvent = PoliticsEventFactory.callGroupPlotUnclaimEvent(group, plot, sender);
         if (claimEvent.isCancelled()) {
             throw new CommandException("You cannot unclaim this plot!");
         }

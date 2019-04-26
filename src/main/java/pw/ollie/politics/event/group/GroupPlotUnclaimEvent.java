@@ -27,22 +27,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-/**
- * Called when a group attempts to claim a plot.
- * <p>
- * Note: this event being called and not being cancelled does <b>not</b> confirm that the group has taken ownership of
- * the plot. It is always followed by a {@link pw.ollie.politics.event.plot.PlotOwnerChangeEvent}.
- */
-public class GroupClaimPlotEvent extends GroupPlotEvent implements Cancellable, Sourced {
+public class GroupPlotUnclaimEvent extends GroupPlotEvent implements Cancellable, Sourced {
     private static final HandlerList handlers = new HandlerList();
 
-    private final CommandSender claimer;
+    private final CommandSender unclaimer;
 
     private boolean cancelled;
 
-    public GroupClaimPlotEvent(Group group, Plot plot, CommandSender claimer) {
+    public GroupPlotUnclaimEvent(Group group, Plot plot, CommandSender unclaimer) {
         super(group, plot);
-        this.claimer = claimer;
+        this.unclaimer = unclaimer;
     }
 
     /**
@@ -50,7 +44,7 @@ public class GroupClaimPlotEvent extends GroupPlotEvent implements Cancellable, 
      */
     @Override
     public CommandSender getSource() {
-        return claimer;
+        return unclaimer;
     }
 
     /**
