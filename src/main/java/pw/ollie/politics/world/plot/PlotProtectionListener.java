@@ -27,6 +27,7 @@ import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
 import pw.ollie.politics.util.Pair;
 import pw.ollie.politics.util.message.MessageUtil;
+import pw.ollie.politics.world.WorldConfig;
 import pw.ollie.politics.world.WorldManager;
 
 import org.bukkit.Location;
@@ -67,6 +68,11 @@ public final class PlotProtectionListener implements Listener {
     // logic methods
 
     private void checkPlayerProtection(Player player, Block block, Cancellable event, PlotProtectionType type) {
+        WorldConfig worldConfig = worldManager.getWorld(block.getWorld()).getConfig();
+        if (!worldConfig.hasPlots()) {
+            return;
+        }
+
         Location location = block.getLocation();
         Privilege privilege = type.getPermission();
 
@@ -78,13 +84,15 @@ public final class PlotProtectionListener implements Listener {
 
         PlotDamageSource source = new PlotDamageSource(player);
 
-        Pair<Subplot, Boolean> subplotCheck = canInSubplot(player, location, privilege);
-        if (!subplotCheck.getSecond()) {
-            SubplotProtectionTriggerEvent triggerEvent = callSubplotProtectionEvent(subplotCheck.getFirst(), block, source, type);
-            if (!triggerEvent.isCancelled()) {
-                event.setCancelled(true);
-                MessageUtil.error(player, "You can't do that in this plot.");
-                return;
+        if (worldConfig.hasSubplots()) {
+            Pair<Subplot, Boolean> subplotCheck = canInSubplot(player, location, privilege);
+            if (!subplotCheck.getSecond()) {
+                SubplotProtectionTriggerEvent triggerEvent = callSubplotProtectionEvent(subplotCheck.getFirst(), block, source, type);
+                if (!triggerEvent.isCancelled()) {
+                    event.setCancelled(true);
+                    MessageUtil.error(player, "You can't do that in this subplot.");
+                    return;
+                }
             }
         }
 
@@ -99,6 +107,11 @@ public final class PlotProtectionListener implements Listener {
     }
 
     private void checkBlockProtection(Block sourceBlock, Plot sourcePlot, Subplot sourceSubplot, Block target, Cancellable event, PlotProtectionType type) {
+        WorldConfig worldConfig = worldManager.getWorld(target.getWorld()).getConfig();
+        if (!worldConfig.hasPlots()) {
+            return;
+        }
+
         Location targetLoc = target.getLocation();
 
         Plot blockPlot = worldManager.getPlotAt(targetLoc);
@@ -115,6 +128,10 @@ public final class PlotProtectionListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
+        }
+
+        if (!worldConfig.hasSubplots()) {
+            return;
         }
 
         // both piston and invaded blocks are in the same plot - time to check subplots

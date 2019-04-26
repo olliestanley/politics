@@ -19,6 +19,8 @@
  */
 package pw.ollie.politics.world;
 
+import pw.ollie.politics.util.serial.ConfigUtil;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -27,13 +29,23 @@ import org.bukkit.configuration.ConfigurationSection;
 public final class WorldConfig {
     private final String name;
 
+    // plot settings
+    private final boolean plots;
+
+    // subplot settings
+    private final boolean subplots;
+
     /**
      * Constructs a blank new configuration for a world with the given name.
      *
-     * @param name the world name for this configuration
+     * @param name     the world name for this configuration
+     * @param plots    whether plots are enabled in the world
+     * @param subplots whether subplots are enabled in the world
      */
-    public WorldConfig(String name) {
+    public WorldConfig(String name, boolean plots, boolean subplots) {
         this.name = name;
+        this.plots = plots;
+        this.subplots = subplots;
     }
 
     /**
@@ -45,12 +57,27 @@ public final class WorldConfig {
         return name;
     }
 
+    public boolean hasPlots() {
+        return plots;
+    }
+
+    public boolean hasSubplots() {
+        return subplots;
+    }
+
     /**
      * Saves configuration values to the given configuration node.
      *
      * @param config the node to save values to
      */
     public void save(ConfigurationSection config) {
+        ConfigurationSection plotsSection = ConfigUtil.getOrCreateSection(config, "plots");
+        plotsSection.set("enabled", plots);
+
+        {
+            ConfigurationSection subplotsSection = ConfigUtil.getOrCreateSection(plotsSection, "subplots");
+            plotsSection.set("enabled", subplots);
+        }
     }
 
     /**
@@ -61,7 +88,12 @@ public final class WorldConfig {
      * @return a world configuration for the given world name from the given configuration node
      */
     public static WorldConfig load(String name, ConfigurationSection config) {
-        WorldConfig wc = new WorldConfig(name);
-        return wc;
+        ConfigurationSection plotsSection = ConfigUtil.getOrCreateSection(config, "plots");
+        boolean plots = plotsSection.getBoolean("enabled", true);
+
+        ConfigurationSection subplotsSection = ConfigUtil.getOrCreateSection(plotsSection, "subplots");
+        boolean subplots = plots && subplotsSection.getBoolean("enabled", true);
+
+        return new WorldConfig(name, plots, subplots);
     }
 }

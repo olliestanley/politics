@@ -27,6 +27,7 @@ import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Citizen;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.world.WorldConfig;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.Subplot;
 
@@ -225,11 +226,19 @@ public abstract class PoliticsSubcommand {
                 throw new CommandException("The provided x or z coordinate was not an integer.");
             }
 
+            if (!Politics.getWorld(world).getConfig().hasPlots()) {
+                throw new CommandException("There are no plots in that world.");
+            }
+
             return Politics.getWorldManager().getPlotAtChunkPosition(world, (int) Math.floor((double) x / 16), (int) Math.floor((double) z / 16));
         }
 
         if (!(sender instanceof Player)) {
             throw new CommandException("You must specify plot coordinates in the format <-p world,x,z>.");
+        }
+
+        if (!Politics.getWorld(((Player) sender).getWorld()).getConfig().hasPlots()) {
+            throw new CommandException("There are no plots in that world.");
         }
 
         return Politics.getWorldManager().getPlotAt(((Player) sender).getLocation());
@@ -274,6 +283,12 @@ public abstract class PoliticsSubcommand {
                 }
 
                 Location location = new Location(world, x, y, z);
+
+                WorldConfig worldConfig = Politics.getWorld(world).getConfig();
+                if (!worldConfig.hasPlots() || !worldConfig.hasSubplots()) {
+                    throw new CommandException("There are no subplots in that world.");
+                }
+
                 Subplot subplot = Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
                 if (subplot == null) {
                     throw new CommandException("You are not situated inside a subplot and did not specify one.");
@@ -302,6 +317,11 @@ public abstract class PoliticsSubcommand {
             }
 
             Location location = ((Player) sender).getLocation();
+            WorldConfig worldConfig = Politics.getWorld(location.getWorld()).getConfig();
+            if (!worldConfig.hasPlots() || !worldConfig.hasSubplots()) {
+                throw new CommandException("There are no subplots in that world.");
+            }
+
             Subplot subplot = Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
             if (subplot == null) {
                 throw new CommandException("You are not situated inside a subplot and did not specify one.");

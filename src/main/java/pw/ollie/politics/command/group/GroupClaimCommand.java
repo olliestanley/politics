@@ -57,6 +57,10 @@ public class GroupClaimCommand extends GroupSubcommand {
         }
 
         Location location = findLocation(sender, args);
+        if (!plugin.getWorldManager().getWorld(location.getWorld()).getConfig().hasPlots()) {
+            throw new CommandException("There are no plots in that world.");
+        }
+
         Position position = Position.fromLocation(location);
         if (!group.getUniverse().getWorlds().contains(Politics.getWorld(position.getWorld()))) {
             throw new CommandException("You can't create a plot for that group in this world.");

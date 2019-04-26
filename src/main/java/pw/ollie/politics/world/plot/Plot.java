@@ -200,6 +200,10 @@ public final class Plot implements Storable {
      * @return the Subplot with the given id, or {@code null} if there isn't one with that id
      */
     public Subplot getSubplot(int id) {
+        if (!world.getConfig().hasSubplots()) {
+            return null;
+        }
+
         return subplots.get(id);
     }
 
@@ -243,6 +247,10 @@ public final class Plot implements Storable {
      * @return whether the Subplot was successfully removed
      */
     public boolean removeSubplot(Subplot subplot) {
+        if (!world.getConfig().hasSubplots()) {
+            return false;
+        }
+
         if (!subplots.containsKey(subplot.getId())) {
             return false;
         }
@@ -263,6 +271,10 @@ public final class Plot implements Storable {
      * @return the relevant Subplot, or {@code null} if there isn't one at the Location
      */
     public Subplot getSubplotAt(Location location) {
+        if (!world.getConfig().hasSubplots()) {
+            return null;
+        }
+
         for (Subplot subplot : subplots.valueCollection()) {
             if (subplot.contains(location)) {
                 return subplot;

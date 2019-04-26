@@ -120,6 +120,10 @@ public final class PoliticsWorld implements Storable {
      * @return the Plot at the given chunk position in this world
      */
     public Plot getPlotAtChunkPosition(int x, int z) {
+        if (!config.hasPlots()) {
+            return null;
+        }
+
         return new Plot(this, x, z);
     }
 

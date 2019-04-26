@@ -57,10 +57,30 @@ public final class WorldManager {
         this.plugin = plugin;
     }
 
+    private WorldConfig getDefaultConfig(String worldName) {
+        return new WorldConfig(worldName, true, true);
+    }
+
     /**
      * Loads world configurations from their configuration files.
      */
     public void loadWorldConfigs() {
+        for (World world : plugin.getServer().getWorlds()) {
+            File worldFile = new File(plugin.getFileSystem().getWorldConfigDir(), world.getName() + ".yml");
+            if (worldFile.exists()) {
+                continue;
+            }
+
+            YamlConfiguration worldConfig = YamlConfiguration.loadConfiguration(worldFile);
+            getDefaultConfig(world.getName()).save(worldConfig);
+
+            try {
+                worldConfig.save(worldFile);
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.WARNING, "Could not save default world config for world: " + world.getName(), e);
+            }
+        }
+
         configs = new HashMap<>();
         for (File file : plugin.getFileSystem().getWorldConfigDir().listFiles()) {
             String fileName = file.getName();
@@ -144,7 +164,7 @@ public final class WorldManager {
     public WorldConfig getWorldConfig(String name) {
         WorldConfig conf = configs.get(name);
         if (conf == null) {
-            conf = new WorldConfig(name);
+            conf = getDefaultConfig(name);
             Politics.getFileSystem().getWorldConfigDir().mkdirs();
             File toSave = new File(Politics.getFileSystem().getWorldConfigDir(), name + ".yml");
             YamlConfiguration tc = YamlConfiguration.loadConfiguration(toSave);

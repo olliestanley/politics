@@ -29,6 +29,7 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.world.WorldConfig;
 import pw.ollie.politics.world.WorldManager;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.Subplot;
@@ -52,6 +53,11 @@ public class SubplotCreateCommand extends SubplotSubcommand {
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         WorldManager worldManager = plugin.getWorldManager();
         Player player = (Player) sender;
+        WorldConfig worldConfig = worldManager.getWorld(player.getWorld()).getConfig();
+        if (!worldConfig.hasPlots() || !worldConfig.hasSubplots()) {
+            throw new CommandException("There are no subplots in this world.");
+        }
+
         Plot currentPlot = worldManager.getPlotAt(player.getLocation());
         Group ownerGroup = currentPlot.getOwner();
         if (ownerGroup == null || !(ownerGroup.can(player, Privileges.GroupPlot.MANAGE_SUBPLOTS) || hasPlotsAdmin(sender))) {

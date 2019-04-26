@@ -40,6 +40,9 @@ public class PlotViewCommand extends PoliticsSubcommand {
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Player player = (Player) sender;
+        if (!plugin.getWorldManager().getWorld(player.getWorld()).getConfig().hasPlots()) {
+            throw new CommandException("There are no plots in this world.");
+        }
         Plot plot = plugin.getWorldManager().getPlotAt(player.getLocation());
         Visualisation visualisation = plugin.getVisualiser().visualisePlot(plot);
         if (!visualisation.apply(plugin.getVisualiser(), player)) {

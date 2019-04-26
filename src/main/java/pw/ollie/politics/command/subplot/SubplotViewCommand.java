@@ -23,6 +23,7 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.util.visualise.Visualisation;
+import pw.ollie.politics.world.WorldConfig;
 import pw.ollie.politics.world.plot.Subplot;
 
 import org.bukkit.command.CommandSender;
@@ -40,6 +41,10 @@ public class SubplotViewCommand extends SubplotSubcommand {
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Subplot subplot = findSubplot(sender, args);
         Player player = (Player) sender;
+        WorldConfig worldConfig = plugin.getWorldManager().getWorld(player.getWorld()).getConfig();
+        if (!worldConfig.hasPlots() || !worldConfig.hasSubplots()) {
+            throw new CommandException("There are no subplots in this world.");
+        }
         Visualisation visualisation = plugin.getVisualiser().visualiseSubplot(subplot);
         if (!visualisation.apply(plugin.getVisualiser(), player)) {
             throw new CommandException("You must complete or cancel your current activity first.");

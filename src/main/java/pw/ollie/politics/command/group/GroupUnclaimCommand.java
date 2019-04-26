@@ -51,6 +51,9 @@ public class GroupUnclaimCommand extends GroupSubcommand {
         }
 
         Location location = findLocation(sender, args);
+        if (!plugin.getWorldManager().getWorld(location.getWorld()).getConfig().hasPlots()) {
+            throw new CommandException("There are no plots in that world.");
+        }
 
         Plot plot = plugin.getWorldManager().getPlotAt(location);
         if (!plot.isOwner(group)) {
