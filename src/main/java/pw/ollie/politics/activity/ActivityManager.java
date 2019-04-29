@@ -50,12 +50,7 @@ public final class ActivityManager {
     }
 
     public boolean isActive(UUID playerId) {
-        PoliticsActivity activity = getActivity(playerId);
-        if (activity != null && activity.hasCompleted()) {
-            activities.remove(playerId);
-            activity = null;
-        }
-        return activity == null;
+        return getActivity(playerId) != null;
     }
 
     public boolean isActive(Player player) {
