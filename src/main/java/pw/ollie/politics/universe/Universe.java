@@ -223,19 +223,19 @@ public final class Universe implements Storable {
         return this.levels.computeIfAbsent(level, k -> new ArrayList<>());
     }
 
-    public Set<Group> getChildGroups(final Group group) {
+    public Set<Group> getChildGroups(Group group) {
         return new HashSet<>(getInternalChildGroups(group));
     }
 
-    private Set<Group> getInternalChildGroups(final Group group) {
+    private Set<Group> getInternalChildGroups(Group group) {
         if (group == null) {
             return new HashSet<>();
         }
-        Set<Group> childs = this.children.get(group);
-        if (childs == null) {
+        Set<Group> groupChildren = children.get(group);
+        if (groupChildren == null) {
             return new HashSet<>();
         }
-        return childs;
+        return groupChildren;
     }
 
     public boolean addChildGroup(Group group, Group child) {
@@ -243,20 +243,17 @@ public final class Universe implements Storable {
             return false;
         }
 
-        Set<Group> childs = children.get(group);
-        if (childs == null) {
-            childs = new HashSet<>();
-        }
-        childs.add(child);
+        Set<Group> groupChildren = children.computeIfAbsent(group, k -> new HashSet<>());
+        groupChildren.add(child);
         return true;
     }
 
     public boolean removeChildGroup(Group group, Group child) {
-        final Set<Group> childs = this.children.get(group);
-        if (childs == null) {
+        Set<Group> groupChildren = children.get(group);
+        if (groupChildren == null) {
             return false;
         }
-        return childs.remove(child);
+        return groupChildren.remove(child);
     }
 
     /**

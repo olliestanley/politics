@@ -20,12 +20,16 @@
 package pw.ollie.politics.tests;
 
 import pw.ollie.politics.AbstractPoliticsTest;
+import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.PoliticsEventCounter;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public final class BlankTest extends AbstractPoliticsTest {
+public final class UniverseCreationTest extends AbstractPoliticsTest {
     @Override
     @Before
     public void setUp() {
@@ -35,6 +39,17 @@ public final class BlankTest extends AbstractPoliticsTest {
     @Override
     @Test
     public void runTest() {
+        PoliticsEventCounter eventCounter = this.registerEventCounter();
+        this.createDefaultUniverse();
+
+        Universe universe = universeManager.getUniverse("Default");
+        Assert.assertNotNull(universe);
+        Assert.assertEquals(1, eventCounter.getUniverseCreates());
+
+        GroupLevel householdLevel = groupManager.getGroupLevel("household");
+        Assert.assertNotNull(householdLevel);
+        GroupLevel townLevel = groupManager.getGroupLevel("town");
+        Assert.assertNotNull(townLevel);
     }
 
     @Override

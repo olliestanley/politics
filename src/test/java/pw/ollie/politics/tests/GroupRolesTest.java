@@ -24,10 +24,7 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.level.Role;
-import pw.ollie.politics.group.privilege.Privilege;
-import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.universe.Universe;
-import pw.ollie.politics.util.PoliticsEventCounter;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -36,7 +33,7 @@ import org.junit.Test;
 
 import org.bukkit.entity.Player;
 
-public final class GroupsTest extends AbstractPoliticsTest {
+public final class GroupRolesTest extends AbstractPoliticsTest {
     @Override
     @Before
     public void setUp() {
@@ -46,54 +43,29 @@ public final class GroupsTest extends AbstractPoliticsTest {
     @Override
     @Test
     public void runTest() {
-        PoliticsEventCounter eventCounter = this.registerEventCounter();
         this.createDefaultUniverse();
 
         Universe universe = universeManager.getUniverse("Default");
-        Assert.assertNotNull(universe);
-        Assert.assertEquals(1, eventCounter.getUniverseCreates());
-
         GroupLevel householdLevel = groupManager.getGroupLevel("household");
-        Assert.assertNotNull(householdLevel);
-        GroupLevel townLevel = groupManager.getGroupLevel("town");
-        Assert.assertNotNull(townLevel);
-
         Group household = universe.createGroup(householdLevel);
-        Assert.assertNotNull(household);
 
         String name = "Test Household";
         String tag = name.toLowerCase().replace(" ", "-");
 
         Player founder = server.getPlayer(0);
         household.setRole(founder.getUniqueId(), householdLevel.getFounder());
-
         household.setProperty(GroupProperty.NAME, name);
         household.setProperty(GroupProperty.TAG, tag);
-        Assert.assertEquals(2, eventCounter.getGroupPropertySets());
 
         Player member = server.getPlayer(1);
         household.setRole(member.getUniqueId(), householdLevel.getInitial());
-
-        Group lookupHousehold = groupManager.getGroupByTag(tag);
-        Assert.assertEquals(household, lookupHousehold);
 
         Role founderRole = household.getRole(founder.getUniqueId());
         Role memberRole = household.getRole(member.getUniqueId());
         Assert.assertEquals("owner", founderRole.getName().toLowerCase());
         Assert.assertEquals("member", memberRole.getName().toLowerCase());
-
         Assert.assertTrue(household.isImmediateMember(founder.getUniqueId()));
         Assert.assertTrue(household.isImmediateMember(member.getUniqueId()));
-
-        for (Privilege privilege : Privileges.all()) {
-            Assert.assertTrue(household.can(founder, privilege));
-
-            if (!privilege.equals(Privileges.GroupPlot.BUILD)) {
-                Assert.assertFalse(household.can(member, privilege));
-            } else {
-                Assert.assertTrue(household.can(member, privilege));
-            }
-        }
     }
 
     @Override
