@@ -25,6 +25,7 @@ import be.seeseemelk.mockbukkit.WorldMock;
 
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.mock.PoliticsMockObjectFactory;
+import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.universe.UniverseRules;
 import pw.ollie.politics.util.PoliticsEventCounter;
@@ -59,12 +60,12 @@ public abstract class AbstractPoliticsTest {
     }
 
     // creates a universe named Default, in a MockWorld called World, with the default testing UniverseRules
-    protected void createDefaultUniverse() {
+    protected Universe createDefaultUniverse() {
         // creates mock world with name 'World'
         WorldMock world = server.addSimpleWorld("World");
         PoliticsWorld politicsWorld = worldManager.getWorld(world);
         UniverseRules defaultRules = PoliticsMockObjectFactory.mockDefaultUniverseRules();
-        universeManager.createUniverse("Default", defaultRules, Collections.singletonList(politicsWorld));
+        return universeManager.createUniverse("Default", defaultRules, Collections.singletonList(politicsWorld));
     }
 
     protected PoliticsEventCounter registerEventCounter() {

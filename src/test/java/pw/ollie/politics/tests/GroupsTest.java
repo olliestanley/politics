@@ -48,11 +48,10 @@ public final class GroupsTest extends AbstractPoliticsTest {
     public void runTest() {
         // setup
         PoliticsEventCounter eventCounter = this.registerEventCounter();
-        this.createDefaultUniverse();
+        Universe universe = this.createDefaultUniverse();
 
         // group creation testing
-        Universe universe = universeManager.getUniverse("Default");
-        Assert.assertNotNull(universe);
+        Assert.assertEquals(universe, universeManager.getUniverse("Default"));
         Assert.assertEquals(1, eventCounter.getUniverseCreates());
         GroupLevel householdLevel = groupManager.getGroupLevel("household");
         Assert.assertNotNull(householdLevel);

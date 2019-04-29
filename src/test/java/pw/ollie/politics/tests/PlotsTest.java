@@ -27,7 +27,10 @@ import pw.ollie.politics.group.privilege.PrivilegeType;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.PoliticsEventCounter;
+import pw.ollie.politics.util.math.Cuboid;
+import pw.ollie.politics.util.math.Vector3i;
 import pw.ollie.politics.world.plot.Plot;
+import pw.ollie.politics.world.plot.Subplot;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -35,6 +38,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -50,9 +54,8 @@ public final class PlotsTest extends AbstractPoliticsTest {
     public void runTest() {
         // setup
         PoliticsEventCounter eventCounter = this.registerEventCounter();
-        this.createDefaultUniverse();
+        Universe universe = this.createDefaultUniverse();
         Player founder = server.getPlayer(0);
-        Universe universe = universeManager.getUniverse("Default");
         GroupLevel householdLevel = groupManager.getGroupLevel("household");
         Group household = universe.createGroup(householdLevel);
         household.setRole(founder.getUniqueId(), householdLevel.getFounder());
@@ -68,11 +71,29 @@ public final class PlotsTest extends AbstractPoliticsTest {
         Assert.assertTrue(plot.isIndirectOwner(household));
 
         // plot privilege testing
-        Player groupless = server.getPlayer(2);
+        Player groupless = server.getPlayer(1);
         for (Privilege privilege : Privileges.all()) {
             if (privilege.getTypes().contains(PrivilegeType.PLOT)) {
                 Assert.assertTrue(plot.can(founder, privilege));
                 Assert.assertFalse(plot.can(groupless, privilege));
+            }
+        }
+
+        // subplot creation testing
+        Player member = server.getPlayer(2);
+        household.setRole(member.getUniqueId(), householdLevel.getInitial());
+        Location subplotBase = plot.getBasePoint().add(1, 100, 1);
+        Cuboid subplotRegion = new Cuboid(subplotBase, new Vector3i(5, 50, 5));
+        Subplot subplot = plot.createSubplot(subplotRegion, member.getUniqueId());
+        Assert.assertNotNull(subplot);
+
+        // subplot privilege testing
+        // todo test adding subplot privileges to individuals
+        for (Privilege privilege : Privileges.all()) {
+            if (privilege.getTypes().contains(PrivilegeType.PLOT)) {
+                Assert.assertTrue(subplot.can(member, privilege));
+                Assert.assertFalse(subplot.can(founder, privilege));
+                Assert.assertFalse(subplot.can(groupless, privilege));
             }
         }
     }

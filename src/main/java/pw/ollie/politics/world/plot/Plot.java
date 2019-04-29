@@ -33,6 +33,7 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
 import pw.ollie.politics.util.Position;
+import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bson.BSONObject;
@@ -48,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -100,7 +102,7 @@ public final class Plot implements Storable {
         if (!(z instanceof Integer)) {
             throw new IllegalArgumentException("Z was not available.");
         }
-        World bukkitWorld = getPoliticsWorld().getWorld();
+        World bukkitWorld = getWorld().getWorld();
         chunk = bukkitWorld.getChunkAt((Integer) x, (Integer) z);
         baseX = chunk.getX() * 16;
         baseZ = chunk.getZ() * 16;
@@ -111,7 +113,7 @@ public final class Plot implements Storable {
      *
      * @return the PoliticsWorld this Plot is within
      */
-    public PoliticsWorld getPoliticsWorld() {
+    public PoliticsWorld getWorld() {
         return world;
     }
 
@@ -121,7 +123,7 @@ public final class Plot implements Storable {
      * @return this Plot's base point x coordinate
      */
     public int getBaseX() {
-        return getBasePoint().getBlockX();
+        return baseX;
     }
 
     /**
@@ -130,7 +132,7 @@ public final class Plot implements Storable {
      * @return this Plot's base point z coordinate
      */
     public int getBaseZ() {
-        return getBasePoint().getBlockZ();
+        return baseZ;
     }
 
     /**
@@ -167,8 +169,8 @@ public final class Plot implements Storable {
      * @return whether the given Location is inside this Plot
      */
     public boolean contains(Location location) {
-        return baseX <= location.getBlockX() && baseX + 16 <= location.getBlockX()
-                && baseZ <= location.getBlockZ() && baseZ + 16 <= location.getBlockZ();
+        return baseX <= location.getBlockX() && baseX + 16 >= location.getBlockX()
+                && baseZ <= location.getBlockZ() && baseZ + 16 >= location.getBlockZ();
     }
 
     /**
@@ -179,6 +181,16 @@ public final class Plot implements Storable {
      */
     public boolean contains(Position position) {
         return contains(position.toLocation());
+    }
+
+    /**
+     * Checks whether the given {@link Cuboid} is wholly contained within this Plot.
+     *
+     * @param cuboid the Cuboid to check
+     * @return whether the given Cuboid is entirely inside this Plot
+     */
+    public boolean contains(Cuboid cuboid) {
+        return contains(cuboid.getMaxPoint()) && contains(cuboid.getMinPoint());
     }
 
     /**
@@ -217,6 +229,24 @@ public final class Plot implements Storable {
     }
 
     /**
+     * Attempts to create a new {@link Subplot} for this Plot.
+     * <p>
+     * If the created Subplot is invalid or cannot be added to this Plot, returns null. If the Subplot is valid this
+     * method will call {@link SubplotCreateEvent} when the Subplot is added to the Plot.
+     *
+     * @param region  the physical area of the Subplot to create
+     * @param ownerId the unique id of the owner for the new Subplot
+     * @return the created Subplot, or null if it was not successfully added to the Plot
+     */
+    public Subplot createSubplot(Cuboid region, UUID ownerId) {
+        Subplot subplot = new Subplot(world, generateSubplotId(), chunk.getX(), chunk.getZ(), region, ownerId);
+        if (!addSubplot(subplot)) {
+            return null;
+        }
+        return subplot;
+    }
+
+    /**
      * Attempts to add the given {@link Subplot} to this Plot.
      * <p>
      * This method calls {@link SubplotCreateEvent}, and will fail if this event is cancelled.
@@ -226,6 +256,10 @@ public final class Plot implements Storable {
      */
     public boolean addSubplot(Subplot subplot) {
         if (subplots.containsKey(subplot.getId())) {
+            return false;
+        }
+
+        if (!contains(subplot.getCuboid())) {
             return false;
         }
 

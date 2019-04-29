@@ -133,6 +133,12 @@ public class Cuboid {
                 && base.getZ() <= location.getBlockZ() && location.getBlockZ() < max.getZ();
     }
 
+    public boolean contains(Cuboid o) {
+        return o.getMaxX() <= getMaxX() && o.getMinX() >= getMinX()
+                && o.getMaxY() <= getMaxY() && o.getMinY() >= getMinY()
+                && o.getMaxZ() <= getMaxZ() && o.getMinZ() >= getMinZ();
+    }
+
     public boolean intersects(Cuboid o) {
         return !notIntersects(o);
     }

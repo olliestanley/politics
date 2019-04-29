@@ -83,9 +83,9 @@ public final class Subplot implements Storable {
      * @param id      the id of the Subplot
      * @param parentX the chunk x coordinate of the parent Plot
      * @param parentZ the chunk z coordinate of the parent Plot
-     * @param baseX   the base x coordinate of the Subplot within the parent Plot's {@link Chunk}
+     * @param baseX   the base x coordinate of the Subplot
      * @param baseY   the base y coordinate of the Subplot
-     * @param baseZ   the base z coordinate of the Subplot within the parent Plot's Chunk
+     * @param baseZ   the base z coordinate of the Subplot
      * @param xSize   the distance the Subplot boundary extends from the base x coordinate in the x-direction
      * @param ySize   the distance the Subplot boundary extends from the base y coordinate in the y-direction
      * @param zSize   the distance the Subplot boundary extends from the base z coordinate in the z-direction
@@ -208,27 +208,27 @@ public final class Subplot implements Storable {
     }
 
     /**
-     * Gets the base x coordinate of this Subplot within the parent Plot's Chunk.
+     * Gets the base x coordinate of this Subplot.
      *
-     * @return the base x coordinate for the Subplot within the Chunk
+     * @return the base x coordinate for the Subplot
      */
     public int getBaseX() {
         return baseX;
     }
 
     /**
-     * Gets the base y coordinate of this Subplot within the parent Plot's Chunk.
+     * Gets the base y coordinate of this Subplot.
      *
-     * @return the base y coordinate for the Subplot within the Chunk
+     * @return the base y coordinate for the Subplot
      */
     public int getBaseY() {
         return baseY;
     }
 
     /**
-     * Gets the base z coordinate of this Subplot within the parent Plot's Chunk.
+     * Gets the base z coordinate of this Subplot.
      *
-     * @return the base z coordinate for the Subplot within the Chunk
+     * @return the base z coordinate for the Subplot
      */
     public int getBaseZ() {
         return baseZ;
@@ -240,7 +240,7 @@ public final class Subplot implements Storable {
      * @return the base Position of this Subplot
      */
     public Position getBasePosition() {
-        return new Position(world.getName(), (parentX * 16) + baseX, baseY, (parentZ * 16) + baseZ);
+        return new Position(world.getName(), baseX, baseY, baseZ);
     }
 
     /**
@@ -249,7 +249,7 @@ public final class Subplot implements Storable {
      * @return the base Location of this Subplot
      */
     public Location getBaseLocation() {
-        return new Location(world.getWorld(), (parentX * 16) + baseX, baseY, (parentZ * 16) + baseZ);
+        return new Location(world.getWorld(), baseX, baseY, baseZ);
     }
 
     /**
@@ -333,7 +333,7 @@ public final class Subplot implements Storable {
      * @return the Cuboid occupied by this Subplot
      */
     public Cuboid getCuboid() {
-        return new Cuboid(getBasePosition().toLocation(), getSize());
+        return new Cuboid(getBaseLocation(), getSize());
     }
 
     /**
