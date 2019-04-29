@@ -25,6 +25,7 @@ import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
 import pw.ollie.politics.group.privilege.Privileges;
+import pw.ollie.politics.group.privilege.Privileges.GroupPlot;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.PoliticsEventCounter;
 import pw.ollie.politics.util.math.Cuboid;
@@ -88,11 +89,11 @@ public final class PlotsTest extends AbstractPoliticsTest {
         Assert.assertNotNull(subplot);
 
         // subplot privilege testing
-        // todo test adding subplot privileges to individuals
+        subplot.givePrivilege(founder, GroupPlot.BUILD);
         for (Privilege privilege : Privileges.all()) {
             if (privilege.getTypes().contains(PrivilegeType.PLOT)) {
                 Assert.assertTrue(subplot.can(member, privilege));
-                Assert.assertFalse(subplot.can(founder, privilege));
+                Assert.assertEquals(privilege == GroupPlot.BUILD, subplot.can(founder, privilege));
                 Assert.assertFalse(subplot.can(groupless, privilege));
             }
         }
