@@ -31,9 +31,6 @@ import pw.ollie.politics.util.PoliticsEventCounter;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldManager;
 
-import org.bukkit.Material;
-import org.bukkit.World;
-
 import java.util.Collections;
 
 public abstract class AbstractPoliticsTest {
@@ -64,7 +61,7 @@ public abstract class AbstractPoliticsTest {
     // creates a universe named Default, in a MockWorld called World, with the default testing UniverseRules
     protected void createDefaultUniverse() {
         // creates mock world with name 'World'
-        World world = new WorldMock(Material.DIRT, 3);
+        WorldMock world = server.addSimpleWorld("World");
         PoliticsWorld politicsWorld = worldManager.getWorld(world);
         UniverseRules defaultRules = PoliticsMockObjectFactory.mockDefaultUniverseRules();
         universeManager.createUniverse("Default", defaultRules, Collections.singletonList(politicsWorld));

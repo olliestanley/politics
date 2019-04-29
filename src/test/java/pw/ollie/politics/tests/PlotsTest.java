@@ -21,19 +21,24 @@ package pw.ollie.politics.tests;
 
 import pw.ollie.politics.AbstractPoliticsTest;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.group.privilege.Privilege;
+import pw.ollie.politics.group.privilege.PrivilegeType;
+import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.PoliticsEventCounter;
+import pw.ollie.politics.world.plot.Plot;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-public final class GroupChildrenTest extends AbstractPoliticsTest {
+public final class PlotsTest extends AbstractPoliticsTest {
     @Override
     @Before
     public void setUp() {
@@ -43,31 +48,33 @@ public final class GroupChildrenTest extends AbstractPoliticsTest {
     @Override
     @Test
     public void runTest() {
+        // setup
         PoliticsEventCounter eventCounter = this.registerEventCounter();
         this.createDefaultUniverse();
-
-        Universe universe = universeManager.getUniverse("Default");
         Player founder = server.getPlayer(0);
-
+        Universe universe = universeManager.getUniverse("Default");
         GroupLevel householdLevel = groupManager.getGroupLevel("household");
         Group household = universe.createGroup(householdLevel);
-        String hName = "Test Household";
-        String hTag = hName.toLowerCase().replace(" ", "-");
         household.setRole(founder.getUniqueId(), householdLevel.getFounder());
-        household.setProperty(GroupProperty.NAME, hName);
-        household.setProperty(GroupProperty.TAG, hTag);
+        World world = server.getWorld("World");
 
-        GroupLevel townLevel = groupManager.getGroupLevel("town");
-        Group town = universe.createGroup(townLevel);
-        String tName = "Test Town";
-        String tTag = tName.toLowerCase().replace(" ", "-");
-        town.setRole(founder.getUniqueId(), townLevel.getFounder());
-        town.setProperty(GroupProperty.NAME, tName);
-        town.setProperty(GroupProperty.TAG, tTag);
+        // plot creation testing
+        Chunk chunk11 = world.getChunkAt(1, 1);
+        Plot plot = worldManager.getPlotAtChunk(chunk11);
+        Assert.assertNull(plot.getOwner());
+        plot.setOwner(household);
+        Assert.assertEquals(1, eventCounter.getPlotOwnerChanges());
+        Assert.assertTrue(plot.isOwner(household));
+        Assert.assertTrue(plot.isIndirectOwner(household));
 
-        Assert.assertTrue(town.addChildGroup(household));
-        Assert.assertEquals(1, eventCounter.getGroupChildAdds());
-        Assert.assertTrue(universe.getChildGroups(town).contains(household));
+        // plot privilege testing
+        Player groupless = server.getPlayer(2);
+        for (Privilege privilege : Privileges.all()) {
+            if (privilege.getTypes().contains(PrivilegeType.PLOT)) {
+                Assert.assertTrue(plot.can(founder, privilege));
+                Assert.assertFalse(plot.can(groupless, privilege));
+            }
+        }
     }
 
     @Override

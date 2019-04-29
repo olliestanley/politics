@@ -25,7 +25,6 @@ import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.group.GroupPlotClaimEvent;
-import pw.ollie.politics.event.plot.PlotOwnerChangeEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
@@ -76,18 +75,13 @@ public class GroupClaimCommand extends GroupSubcommand {
             throw new CommandException("Sorry, this plot is already owned by " + owner.getName() + ".");
         }
 
-        if (!plot.setOwner(group)) {
-            throw new CommandException("You cannot claim this plot!");
-        }
-
         GroupPlotClaimEvent claimEvent = PoliticsEventFactory.callGroupPlotClaimEvent(group, plot, sender);
         if (claimEvent.isCancelled()) {
             throw new CommandException("You cannot claim this plot!");
         }
 
-        PlotOwnerChangeEvent ownerChangeEvent = PoliticsEventFactory.callPlotOwnerChangeEvent(plot, group.getUid(), true);
-        if (ownerChangeEvent.isCancelled()) {
-            throw new CommandException("Your group cannot own this plot!");
+        if (!plot.setOwner(group)) {
+            throw new CommandException("You cannot claim this plot!");
         }
 
         MessageUtil.message(sender, "The plot was claimed successfully");
