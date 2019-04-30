@@ -23,9 +23,12 @@ import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.serial.PropertySerializer;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
+
+import java.time.LocalDateTime;
 
 /**
  * Represents and holds data for a war between two different {@link Group}s, with one aggressor and one defender.
@@ -35,6 +38,7 @@ public final class War implements Storable {
     private final int aggressor;
     private final int defender;
 
+    private LocalDateTime startTime = null;
     private int aggressorScore = 0;
     private int defenderScore = 0;
 
@@ -58,6 +62,9 @@ public final class War implements Storable {
         defender = bObj.getInt("defender");
         aggressorScore = bObj.getInt("aggressor-score");
         defenderScore = bObj.getInt("defender-score");
+        if (bObj.containsField("start-time")) {
+            startTime = PropertySerializer.deserializeLocalDateTime(bObj.getString("start-time"));
+        }
     }
 
     public Universe getUniverse() {
@@ -117,6 +124,13 @@ public final class War implements Storable {
     }
 
     void setActive(boolean active) {
+        if (active) {
+            if (startTime != null) {
+                throw new IllegalStateException("cannot activate a war which has already started");
+            }
+
+            startTime = LocalDateTime.now();
+        }
         this.active = active;
     }
 
@@ -127,6 +141,9 @@ public final class War implements Storable {
         result.put("defender", defender);
         result.put("aggressor-score", aggressorScore);
         result.put("defender-score", defenderScore);
+        if (startTime != null) {
+            result.put("start-time", PropertySerializer.serializeLocalDateTime(startTime));
+        }
         return result;
     }
 

@@ -25,6 +25,9 @@ import pw.ollie.politics.util.math.Vector2f;
 
 import org.bukkit.Bukkit;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Serializes and deserializes certain types which Politics stores.
  */
@@ -97,6 +100,16 @@ public class PropertySerializer {
         }
 
         return new RotatedPosition(new Position(world, x, y, z), new Vector2f(qx, qy));
+    }
+
+    private static final DateTimeFormatter localDateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
+    public static String serializeLocalDateTime(LocalDateTime object) {
+        return object.format(localDateTimeFormatter);
+    }
+
+    public static LocalDateTime deserializeLocalDateTime(String serial) {
+        return LocalDateTime.from(localDateTimeFormatter.parse(serial));
     }
 
     private PropertySerializer() {
