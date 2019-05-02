@@ -26,9 +26,6 @@ import pw.ollie.politics.universe.UniverseRules;
 import pw.ollie.politics.util.PoliticsTestReflection;
 import pw.ollie.politics.world.WorldConfig;
 
-import be.seeseemelk.mockbukkit.ServerMock;
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
-
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
@@ -40,18 +37,6 @@ import java.util.List;
 public final class PoliticsMockObjectFactory {
     public static WorldConfig mockDefaultWorldConfig() {
         return PoliticsTestReflection.instantiateWorldConfig(AbstractPoliticsTest.TEST_WORLD_NAME, true, true);
-    }
-
-    public static PlayerMock mockAdminPlayer(ServerMock server, String name) {
-        AdminPlayerMock result = new AdminPlayerMock(server, name);
-        server.addPlayer(result);
-        return result;
-    }
-
-    public static PlayerMock mockPermissionlessPlayer(ServerMock server, String name) {
-        NoPermissionPlayerMock result = new NoPermissionPlayerMock(server, name);
-        server.addPlayer(result);
-        return result;
     }
 
     public static UniverseRules mockDefaultUniverseRules() {
