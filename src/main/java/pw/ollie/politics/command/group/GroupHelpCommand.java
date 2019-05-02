@@ -46,7 +46,7 @@ public class GroupHelpCommand extends GroupSubcommand {
             }
         }
 
-        PoliticsCommandHelper.sendCommandHelp(sender, plugin.getCommandManager().getRegisteredCommand(level.getId()), pageNumber);
+        PoliticsCommandHelper.sendCommandHelp(sender, plugin.getCommandManager().getPoliticsCommand(level.getId()), pageNumber);
     }
 
     /**

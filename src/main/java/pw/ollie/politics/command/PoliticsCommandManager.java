@@ -50,7 +50,7 @@ public final class PoliticsCommandManager {
         this.registered = new THashMap<>();
     }
 
-    public PoliticsBaseCommand getRegisteredCommand(String name) {
+    public PoliticsBaseCommand getPoliticsCommand(String name) {
         return registered.get(name.toLowerCase());
     }
 
@@ -65,17 +65,25 @@ public final class PoliticsCommandManager {
         this.registerCommand(new WarCommand(plugin));
 
         for (GroupLevel groupLevel : plugin.getUniverseManager().getGroupLevels()) {
-            this.registerCommand(new GroupCommand(plugin, groupLevel));
+            this.registerGroupCommand(groupLevel);
         }
 
         PoliticsCommandHelper.registerPermission(PoliticsCommandHelper.GROUPS_ADMIN_PERMISSION, "Allows performing functions, like land claiming, for groups you're not a member of");
         PoliticsCommandHelper.registerPermission(PoliticsCommandHelper.PLOTS_ADMIN_PERMISSION, "Allows performing functions for plots you don't own");
     }
 
+    public void registerGroupCommand(GroupLevel level) {
+        this.registerCommand(new GroupCommand(plugin, level));
+    }
+
     private Object commandMap;
     private Method registerMethod;
 
     private void registerCommand(Command command) {
+        if (command instanceof PoliticsBaseCommand) {
+            registered.put(command.getName().toLowerCase(), (PoliticsBaseCommand) command);
+        }
+
         if (commandMap == null) {
             try {
                 Method commandMapGetter = plugin.getServer().getClass().getMethod("getCommandMap");
@@ -102,12 +110,6 @@ public final class PoliticsCommandManager {
             registerMethod.invoke(commandMap, command.getName(), command);
         } catch (IllegalAccessException | InvocationTargetException e) {
             plugin.getLogger().log(Level.SEVERE, "Politics failed to register command '" + command.getName() + "'. Command will not function.", e);
-            return;
-        }
-
-        if (command instanceof PoliticsBaseCommand) {
-            PoliticsBaseCommand politicsCmd = (PoliticsBaseCommand) command;
-            registered.put(politicsCmd.getName().toLowerCase(), politicsCmd);
         }
     }
 }

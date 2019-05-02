@@ -46,7 +46,7 @@ public class UniverseHelpCommand extends PoliticsSubcommand {
             }
         }
 
-        PoliticsCommandHelper.sendCommandHelp(sender, plugin.getCommandManager().getRegisteredCommand("universe"), pageNumber);
+        PoliticsCommandHelper.sendCommandHelp(sender, plugin.getCommandManager().getPoliticsCommand("universe"), pageNumber);
     }
 
     /**

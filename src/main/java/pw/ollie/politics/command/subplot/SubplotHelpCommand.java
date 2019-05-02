@@ -45,7 +45,7 @@ public class SubplotHelpCommand extends SubplotSubcommand {
             }
         }
 
-        PoliticsCommandHelper.sendCommandHelp(sender, plugin.getCommandManager().getRegisteredCommand("subplot"), pageNumber);
+        PoliticsCommandHelper.sendCommandHelp(sender, plugin.getCommandManager().getPoliticsCommand("subplot"), pageNumber);
     }
 
     /**

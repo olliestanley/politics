@@ -147,7 +147,11 @@ public final class UniverseManager {
     }
 
     public Universe createUniverse(String name, UniverseRules rules, List<PoliticsWorld> worlds) {
-        this.rules.putIfAbsent(rules.getName().toLowerCase(), rules);
+        if (this.rules.putIfAbsent(rules.getName().toLowerCase(), rules) == null) {
+            for (GroupLevel level : rules.getGroupLevels()) {
+                plugin.getCommandManager().registerGroupCommand(level);
+            }
+        }
 
         Universe universe = new Universe(name, rules, worlds);
         universes.put(name.toLowerCase(), universe);
@@ -158,6 +162,7 @@ public final class UniverseManager {
                 map.put(level, universe);
             }
         }
+
         PoliticsEventFactory.callUniverseCreateEvent(universe);
         return universe;
     }

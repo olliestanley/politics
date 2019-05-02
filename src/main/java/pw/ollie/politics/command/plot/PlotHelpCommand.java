@@ -46,7 +46,7 @@ public class PlotHelpCommand extends PoliticsSubcommand {
             }
         }
 
-        PoliticsCommandHelper.sendCommandHelp(sender, plugin.getCommandManager().getRegisteredCommand("plot"), pageNumber);
+        PoliticsCommandHelper.sendCommandHelp(sender, plugin.getCommandManager().getPoliticsCommand("plot"), pageNumber);
     }
 
     /**
