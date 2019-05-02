@@ -59,13 +59,17 @@ public abstract class AbstractPoliticsTest {
         MockBukkit.unload();
     }
 
-    // creates a universe named Default, in a MockWorld called World, with the default testing UniverseRules
+    // creates a universe named Default, in a MockWorld called world, with the default testing UniverseRules
     protected Universe createDefaultUniverse() {
         // creates mock world with name 'World'
-        WorldMock world = server.addSimpleWorld("world");
+        WorldMock world = server.addSimpleWorld(getTestWorldName());
         PoliticsWorld politicsWorld = worldManager.getWorld(world);
         UniverseRules defaultRules = PoliticsMockObjectFactory.mockDefaultUniverseRules();
         return universeManager.createUniverse("Default", defaultRules, Collections.singletonList(politicsWorld));
+    }
+
+    protected String getTestWorldName() {
+        return "world";
     }
 
     protected PoliticsEventCounter registerEventCounter() {

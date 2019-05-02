@@ -47,7 +47,7 @@ public final class PropertySerializerTest extends AbstractPoliticsTest {
 
         // test serialization and deserialization of RotatedPosition objects
         try {
-            RotatedPosition rotatedPosition = new RotatedPosition(new Position("world", 0, 0, 0), new Vector2f(0, 0));
+            RotatedPosition rotatedPosition = new RotatedPosition(new Position(getTestWorldName(), 0, 0, 0), new Vector2f(0, 0));
             String serial = PropertySerializer.serializeRotatedPosition(rotatedPosition);
             RotatedPosition deserial = PropertySerializer.deserializeRotatedPosition(serial);
             Assert.assertEquals(deserial, rotatedPosition);
