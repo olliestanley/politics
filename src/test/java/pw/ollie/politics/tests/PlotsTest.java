@@ -60,7 +60,7 @@ public final class PlotsTest extends AbstractPoliticsTest {
         GroupLevel householdLevel = groupManager.getGroupLevel("household");
         Group household = universe.createGroup(householdLevel);
         household.setRole(founder.getUniqueId(), householdLevel.getFounder());
-        World world = server.getWorld(getTestWorldName());
+        World world = server.getWorld(TEST_WORLD_NAME);
 
         // plot creation testing
         Chunk chunk11 = world.getChunkAt(1, 1);

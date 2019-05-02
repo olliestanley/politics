@@ -19,9 +19,14 @@
  */
 package pw.ollie.politics.mock;
 
+import be.seeseemelk.mockbukkit.ServerMock;
+import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import pw.ollie.politics.AbstractPoliticsTest;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.universe.UniverseRules;
+import pw.ollie.politics.util.PoliticsTestReflection;
+import pw.ollie.politics.world.WorldConfig;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -32,6 +37,22 @@ import java.util.Collections;
 import java.util.List;
 
 public final class PoliticsMockObjectFactory {
+    public static WorldConfig mockDefaultWorldConfig() {
+        return PoliticsTestReflection.instantiateWorldConfig(AbstractPoliticsTest.TEST_WORLD_NAME, true, true);
+    }
+
+    public static PlayerMock mockAdminPlayer(ServerMock server, String name) {
+        AdminPlayerMock result = new AdminPlayerMock(server, name);
+        server.addPlayer(result);
+        return result;
+    }
+
+    public static PlayerMock mockPermissionlessPlayer(ServerMock server, String name) {
+        NoPermissionPlayerMock result = new NoPermissionPlayerMock(server, name);
+        server.addPlayer(result);
+        return result;
+    }
+
     public static UniverseRules mockDefaultUniverseRules() {
         ConfigurationSection config = new MemoryConfiguration();
         config.set("description", "Testing configuration for Politics");

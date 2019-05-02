@@ -19,18 +19,12 @@
  */
 package pw.ollie.politics.tests.command;
 
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import pw.ollie.politics.AbstractPoliticsTest;
-import pw.ollie.politics.command.PoliticsBaseCommand;
+import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsCommandManager;
-import pw.ollie.politics.mock.AdminPlayerMock;
-
-import org.junit.Assert;
-
-import java.util.List;
 
 public abstract class AbstractPoliticsCommandTest extends AbstractPoliticsTest {
-    private PoliticsCommandManager commandManager;
+    protected PoliticsCommandManager commandManager;
 
     @Override
     public void setUp() {
@@ -42,24 +36,21 @@ public abstract class AbstractPoliticsCommandTest extends AbstractPoliticsTest {
     }
 
     @Override
-    public void runTest() {
-        PoliticsBaseCommand baseCommand = this.commandManager.getPoliticsCommand(getBaseCommand().toLowerCase());
-        Assert.assertNotNull(baseCommand);
-
-        PlayerMock admin = new AdminPlayerMock(server, "admin");
-        server.addPlayer(admin);
-        for (String args : getTestingArguments()) {
-            baseCommand.execute(admin, getBaseCommand(), args.split(" "));
-        }
-    }
-
-    @Override
     public void tearDown() {
         super.tearDown();
     }
 
-    public abstract String getBaseCommand();
+    @FunctionalInterface
+    protected interface CommandTestRunner {
+        void run() throws CommandException;
+    }
 
-    // get a List of the sets of arguments to run the command with for the test, in order
-    public abstract List<String> getTestingArguments();
+    protected boolean throwsCommandException(CommandTestRunner runnable) {
+        try {
+            runnable.run();
+            return false;
+        } catch (CommandException e) {
+            return true;
+        }
+    }
 }

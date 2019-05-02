@@ -275,11 +275,11 @@
     </dependency>
   </dependencies>
   <properties>
-    <apiVersion>dev-SNAPSHOT</apiVersion>
-    <mainClass>pw.ollie.politics.PoliticsPlugin</mainClass>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <powermock.version>1.7.1</powermock.version>
     <buildNumber>0</buildNumber>
+    <mainClass>pw.ollie.politics.PoliticsPlugin</mainClass>
     <github.global.server>github</github.global.server>
+    <powermock.version>1.7.1</powermock.version>
+    <apiVersion>dev-SNAPSHOT</apiVersion>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

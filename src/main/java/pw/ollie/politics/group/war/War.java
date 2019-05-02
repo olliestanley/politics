@@ -65,6 +65,7 @@ public final class War implements Storable {
         if (bObj.containsField("start-time")) {
             startTime = PropertySerializer.deserializeLocalDateTime(bObj.getString("start-time"));
         }
+        active = bObj.getBoolean("active");
     }
 
     public Universe getUniverse() {
@@ -123,6 +124,10 @@ public final class War implements Storable {
         return active;
     }
 
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
     void setActive(boolean active) {
         if (active) {
             if (startTime != null) {
@@ -144,6 +149,7 @@ public final class War implements Storable {
         if (startTime != null) {
             result.put("start-time", PropertySerializer.serializeLocalDateTime(startTime));
         }
+        result.put("active", active);
         return result;
     }
 

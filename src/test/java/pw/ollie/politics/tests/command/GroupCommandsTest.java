@@ -23,9 +23,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class GroupCommandsTest extends AbstractPoliticsCommandTest {
     @Before
     @Override
@@ -33,24 +30,15 @@ public class GroupCommandsTest extends AbstractPoliticsCommandTest {
         super.setUp();
     }
 
+    @Override
     @Test
-    public void testGroupCommands() {
-        super.runTest();
+    public void runTest() {
+        // todo
     }
 
     @After
     @Override
     public void tearDown() {
         super.tearDown();
-    }
-
-    @Override
-    public String getBaseCommand() {
-        return plugin.getGroupManager().getGroupLevels().get(0).getId().toLowerCase();
-    }
-
-    @Override
-    public List<String> getTestingArguments() {
-        return Arrays.asList(); // todo
     }
 }

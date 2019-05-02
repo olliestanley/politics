@@ -23,7 +23,10 @@ import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.WorldMock;
 
+import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupManager;
+import pw.ollie.politics.group.GroupProperty;
+import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.mock.PoliticsMockObjectFactory;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.universe.UniverseManager;
@@ -35,6 +38,8 @@ import pw.ollie.politics.world.WorldManager;
 import java.util.Collections;
 
 public abstract class AbstractPoliticsTest {
+    public static final String TEST_WORLD_NAME = "world";
+
     protected ServerMock server;
     protected PoliticsPlugin plugin;
     protected UniverseManager universeManager;
@@ -61,15 +66,43 @@ public abstract class AbstractPoliticsTest {
 
     // creates a universe named Default, in a MockWorld called world, with the default testing UniverseRules
     protected Universe createDefaultUniverse() {
+        Universe existing = universeManager.getUniverse("Default");
+        if (existing != null) {
+            return existing;
+        }
         // creates mock world with name 'World'
-        WorldMock world = server.addSimpleWorld(getTestWorldName());
+        WorldMock world = server.addSimpleWorld(TEST_WORLD_NAME);
         PoliticsWorld politicsWorld = worldManager.getWorld(world);
         UniverseRules defaultRules = PoliticsMockObjectFactory.mockDefaultUniverseRules();
         return universeManager.createUniverse("Default", defaultRules, Collections.singletonList(politicsWorld));
     }
 
-    protected String getTestWorldName() {
-        return "world";
+    protected Group createTestHousehold() {
+        return createTestHousehold("Test Household");
+    }
+
+    protected Group createTestHousehold(String hName) {
+        Universe universe = createDefaultUniverse();
+        GroupLevel householdLevel = groupManager.getGroupLevel("household");
+        Group household = universe.createGroup(householdLevel);
+        String hTag = hName.toLowerCase().replace(" ", "-");
+        household.setProperty(GroupProperty.NAME, hName);
+        household.setProperty(GroupProperty.TAG, hTag);
+        return household;
+    }
+
+    protected Group createTestTown() {
+        return createTestTown("Test Town");
+    }
+
+    protected Group createTestTown(String tName) {
+        Universe universe = createDefaultUniverse();
+        GroupLevel townLevel = groupManager.getGroupLevel("town");
+        Group town = universe.createGroup(townLevel);
+        String tTag = tName.toLowerCase().replace(" ", "-");
+        town.setProperty(GroupProperty.NAME, tName);
+        town.setProperty(GroupProperty.TAG, tTag);
+        return town;
     }
 
     protected PoliticsEventCounter registerEventCounter() {
