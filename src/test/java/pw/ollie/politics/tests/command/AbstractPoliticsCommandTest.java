@@ -19,14 +19,13 @@
  */
 package pw.ollie.politics.tests.command;
 
+import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import pw.ollie.politics.AbstractPoliticsTest;
 import pw.ollie.politics.command.PoliticsBaseCommand;
 import pw.ollie.politics.command.PoliticsCommandManager;
 import pw.ollie.politics.mock.AdminPlayerMock;
 
 import org.junit.Assert;
-
-import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
@@ -47,7 +46,8 @@ public abstract class AbstractPoliticsCommandTest extends AbstractPoliticsTest {
         PoliticsBaseCommand baseCommand = this.commandManager.getPoliticsCommand(getBaseCommand().toLowerCase());
         Assert.assertNotNull(baseCommand);
 
-        CommandSender admin = new AdminPlayerMock(server, "admin");
+        PlayerMock admin = new AdminPlayerMock(server, "admin");
+        server.addPlayer(admin);
         for (String args : getTestingArguments()) {
             baseCommand.execute(admin, getBaseCommand(), args.split(" "));
         }
