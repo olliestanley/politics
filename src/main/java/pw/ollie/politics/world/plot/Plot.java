@@ -36,14 +36,14 @@ import pw.ollie.politics.util.Position;
 import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.world.PoliticsWorld;
 
-import org.bson.BSONObject;
-import org.bson.BasicBSONObject;
-import org.bson.types.BasicBSONList;
-
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+
+import org.bson.BSONObject;
+import org.bson.BasicBSONObject;
+import org.bson.types.BasicBSONList;
 
 import java.util.ArrayList;
 import java.util.List;

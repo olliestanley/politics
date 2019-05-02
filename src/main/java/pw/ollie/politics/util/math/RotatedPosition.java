@@ -21,10 +21,10 @@ package pw.ollie.politics.util.math;
 
 import pw.ollie.politics.util.Position;
 
-import com.google.common.base.MoreObjects;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+
+import com.google.common.base.MoreObjects;
 
 import java.util.Objects;
 

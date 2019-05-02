@@ -25,16 +25,16 @@ import pw.ollie.politics.util.Position;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.PlotProtectionListener;
 
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import org.bson.BSONEncoder;
 import org.bson.BSONObject;
 import org.bson.BasicBSONDecoder;
 import org.bson.BasicBSONEncoder;
 import org.bson.BasicBSONObject;
-
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -113,7 +113,7 @@ public final class WorldManager {
 
             byte[] data;
             try {
-                data = Files.readAllBytes(file.toPath());;
+                data = Files.readAllBytes(file.toPath());
             } catch (IOException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Could not read world file `" + fileName + "'!", ex);
                 continue;

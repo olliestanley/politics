@@ -19,14 +19,15 @@
  */
 package pw.ollie.politics.mock;
 
-import be.seeseemelk.mockbukkit.ServerMock;
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import pw.ollie.politics.AbstractPoliticsTest;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.universe.UniverseRules;
 import pw.ollie.politics.util.PoliticsTestReflection;
 import pw.ollie.politics.world.WorldConfig;
+
+import be.seeseemelk.mockbukkit.ServerMock;
+import be.seeseemelk.mockbukkit.entity.PlayerMock;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;

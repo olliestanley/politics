@@ -19,10 +19,6 @@
  */
 package pw.ollie.politics;
 
-import be.seeseemelk.mockbukkit.MockBukkit;
-import be.seeseemelk.mockbukkit.ServerMock;
-import be.seeseemelk.mockbukkit.WorldMock;
-
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.GroupProperty;
@@ -34,6 +30,10 @@ import pw.ollie.politics.universe.UniverseRules;
 import pw.ollie.politics.util.PoliticsEventCounter;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldManager;
+
+import be.seeseemelk.mockbukkit.MockBukkit;
+import be.seeseemelk.mockbukkit.ServerMock;
+import be.seeseemelk.mockbukkit.WorldMock;
 
 import java.util.Collections;
 

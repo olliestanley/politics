@@ -23,7 +23,6 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.PoliticsSubcommand;
 import pw.ollie.politics.command.args.Arguments;
-import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.message.MessageBuilder;
 

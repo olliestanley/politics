@@ -26,11 +26,11 @@ import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.math.IntPair;
 import pw.ollie.politics.world.plot.Plot;
 
+import org.bukkit.World;
+
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
-
-import org.bukkit.World;
 
 import java.util.HashMap;
 import java.util.List;
