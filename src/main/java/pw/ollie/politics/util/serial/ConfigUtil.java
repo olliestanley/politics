@@ -33,7 +33,14 @@ import java.util.logging.Level;
  * Configuration-related utility methods for Politics.
  */
 public final class ConfigUtil {
-    // todo docs
+    /**
+     * Gets the {@link ConfigurationSection} with the given name from the given parent ConfigurationSection. If there is
+     * not a corresponding section, a new one is created, added to the given parent section and returned.
+     *
+     * @param parent the parent ConfigurationSection to get a subsection of
+     * @param name   the name of the section to get or create
+     * @return a ConfigurationSection with the given name, as a child of the given parent
+     */
     public static ConfigurationSection getOrCreateSection(ConfigurationSection parent, String name) {
         ConfigurationSection result = parent.getConfigurationSection(name);
         if (result == null) {
@@ -42,6 +49,13 @@ public final class ConfigUtil {
         return result;
     }
 
+    /**
+     * Copies a universe rules template from the running plugin's JAR to the rules directory.
+     *
+     * @param name the file name of the template to copy, as saved
+     * @param as   the file name to save the copied template as inside the rules directory
+     * @return whether the template was successfully copied
+     */
     public static boolean copyUniverseRulesTemplate(String name, String as) {
         PoliticsPlugin plugin = Politics.getPlugin();
         plugin.saveResource("templates/" + name.toLowerCase() + ".yml", false);

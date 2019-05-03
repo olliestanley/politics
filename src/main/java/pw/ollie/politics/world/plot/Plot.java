@@ -65,13 +65,9 @@ public final class Plot implements Storable {
     private int owner;
 
     public Plot(PoliticsWorld world, int x, int z) {
-        this(world, -1, x, z, new TIntObjectHashMap<>());
-    }
-
-    public Plot(PoliticsWorld world, int owner, int x, int z, TIntObjectMap<Subplot> subplots) {
         this.world = world;
-        this.owner = owner;
-        this.subplots = new TIntObjectHashMap<>(subplots);
+        this.owner = -1;
+        this.subplots = new TIntObjectHashMap<>();
 
         World bukkitWorld = world.getWorld();
         chunk = bukkitWorld.getChunkAt(x, z);

@@ -19,6 +19,11 @@
  */
 package pw.ollie.politics.util.math;
 
+import java.util.Objects;
+
+/**
+ * A vector of two floating point values.
+ */
 public class Vector2f {
     private final float x, y;
 
@@ -35,6 +40,7 @@ public class Vector2f {
         return y;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -45,5 +51,10 @@ public class Vector2f {
 
         Vector2f other = (Vector2f) obj;
         return x == other.x && y == other.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

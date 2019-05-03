@@ -71,6 +71,12 @@ public final class StringUtil {
         return p[n];
     }
 
+    /**
+     * Capitalises the first character of the given {@link String}, using {@link Character#toTitleCase(char)}.
+     *
+     * @param string the String to capitalise the first character of
+     * @return the given String but with the first character capitalised
+     */
     public static String capitaliseFirst(String string) {
         if (string == null) {
             return null;

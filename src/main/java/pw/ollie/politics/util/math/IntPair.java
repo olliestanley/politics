@@ -25,7 +25,13 @@ import java.util.Objects;
  * Holds a pair of integers.
  */
 public class IntPair {
-    // todo docs
+    /**
+     * Creates a new int pair of the given integers.
+     *
+     * @param x the first int
+     * @param z the second int
+     * @return an int pair of the given integers
+     */
     public static IntPair of(int x, int z) {
         return new IntPair(x, z);
     }
@@ -37,10 +43,20 @@ public class IntPair {
         this.z = z;
     }
 
+    /**
+     * Gets the x integer, or the first integer.
+     *
+     * @return the first integer in the pair
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Gets the z integer, or the second integer.
+     *
+     * @return the second integer in the pair
+     */
     public int getZ() {
         return z;
     }

@@ -104,10 +104,24 @@ public class PropertySerializer {
 
     private static final DateTimeFormatter localDateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
+    /**
+     * Transforms the given {@link LocalDateTime} object to a {@link String}, using as a formatter
+     * {@link DateTimeFormatter#ISO_LOCAL_DATE_TIME}.
+     *
+     * @param object the LocalDateTime object to serialize
+     * @return the serial String representing the given LocalDateTime
+     */
     public static String serializeLocalDateTime(LocalDateTime object) {
         return object.format(localDateTimeFormatter);
     }
 
+    /**
+     * Deserializes a {@link LocalDateTime} object from the given serial {@link String}. The given String must be of the
+     * format produced by {@link DateTimeFormatter#ISO_LOCAL_DATE_TIME}.
+     *
+     * @param serial the serial String to deserialize
+     * @return the deserialized LocalDateTime object
+     */
     public static LocalDateTime deserializeLocalDateTime(String serial) {
         return LocalDateTime.from(localDateTimeFormatter.parse(serial));
     }

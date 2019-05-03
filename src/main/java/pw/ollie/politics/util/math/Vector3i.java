@@ -21,6 +21,9 @@ package pw.ollie.politics.util.math;
 
 import java.util.Objects;
 
+/**
+ * A vector of three integer values.
+ */
 public class Vector3i {
     private final int x, y, z;
 

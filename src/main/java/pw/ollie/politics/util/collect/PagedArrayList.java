@@ -33,7 +33,6 @@ import java.util.Map;
  * @param <E> the type of the contained elements
  */
 public class PagedArrayList<E> implements PagedList<E> {
-    // todo docs
     private final List<E> delegate;
     private final Map<Integer, List<E>> pages;
 
@@ -125,6 +124,10 @@ public class PagedArrayList<E> implements PagedList<E> {
         this.refreshOnGet = refreshOnGet;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void recalculatePages() {
         calculatePages();
     }

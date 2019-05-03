@@ -57,10 +57,20 @@ public final class WorldConfig {
         return name;
     }
 
+    /**
+     * Gets whether this world config allows plots.
+     *
+     * @return whether this config allows plots
+     */
     public boolean hasPlots() {
         return plots;
     }
 
+    /**
+     * Gets whether this world config allows subplots.
+     *
+     * @return whether this config allows subplots
+     */
     public boolean hasSubplots() {
         return subplots;
     }
@@ -76,7 +86,7 @@ public final class WorldConfig {
 
         {
             ConfigurationSection subplotsSection = ConfigUtil.getOrCreateSection(plotsSection, "subplots");
-            plotsSection.set("enabled", subplots);
+            subplotsSection.set("enabled", subplots);
         }
     }
 

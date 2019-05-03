@@ -64,6 +64,11 @@ public class RotatedPosition {
         return rotation;
     }
 
+    /**
+     * Creates a new {@link Location} with the position and rotation of this object.
+     *
+     * @return a Location equivalent to this RotatedPosition
+     */
     public Location toLocation() {
         return new Location(Bukkit.getWorld(position.getWorld()), position.getX(), position.getY(), position.getZ(), rotation.getX(), rotation.getY());
     }

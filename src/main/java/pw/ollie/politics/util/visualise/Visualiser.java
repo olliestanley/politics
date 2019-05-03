@@ -40,7 +40,6 @@ import java.util.UUID;
  * Used to generate {@link Visualisation}s to display to players.
  */
 public final class Visualiser {
-    // todo docs
     private final PoliticsPlugin plugin;
     private final Map<UUID, Visualisation> current;
 
@@ -58,14 +57,36 @@ public final class Visualiser {
         return plugin;
     }
 
+    /**
+     * Creates a new {@link Visualisation} showing the boundaries of the given {@link Plot}, using blue stained glass
+     * as a fake block marker.
+     *
+     * @param plot the Plot to visualise the boundaries of
+     * @return a Visualisation of the given Plot
+     */
     public Visualisation visualisePlot(Plot plot) {
         return visualiseCuboid(Cuboid.fromChunk(plot.getChunk()), Material.BLUE_STAINED_GLASS.createBlockData());
     }
 
+    /**
+     * Creates a new {@link Visualisation} showing the boundaries of the given {@link Subplot}, using yellow stained
+     * glass as a fake block marker.
+     *
+     * @param subplot the Subplot to visualise the boundaries of
+     * @return a Visualisation of the given Subplot
+     */
     public Visualisation visualiseSubplot(Subplot subplot) {
         return visualiseCuboid(subplot.getCuboid(), Material.YELLOW_STAINED_GLASS.createBlockData());
     }
 
+    /**
+     * Creates a new {@link Visualisation} showing the boundaries of the given {@link Cuboid}, using the given block
+     * data as a fake block marker.
+     *
+     * @param cuboid the Cuboid to visualise the boundaries of
+     * @param fake   the {@link BlockData} to use as a fake block marker
+     * @return a Visualisation of the given Cuboid
+     */
     public Visualisation visualiseCuboid(Cuboid cuboid, BlockData fake) {
         Set<VisualisedBlock> blocks = new HashSet<>();
         World world = cuboid.getWorld();
@@ -88,10 +109,22 @@ public final class Visualiser {
         return new Visualisation(blocks);
     }
 
+    /**
+     * Gets the current {@link Visualisation} for the {@link Player} with the given unique id.
+     *
+     * @param playerId the unique id of the Player to get the current Visualisation for
+     * @return the current Visualisation of the Player with the given unique id
+     */
     public Visualisation getCurrentVisualisation(UUID playerId) {
         return current.get(playerId);
     }
 
+    /**
+     * Gets the current {@link Visualisation} for the given {@link Player}.
+     *
+     * @param player the Player to get the current Visualisation for
+     * @return the current Visualisation of the given Player
+     */
     public Visualisation getCurrentVisualisation(Player player) {
         return getCurrentVisualisation(player.getUniqueId());
     }

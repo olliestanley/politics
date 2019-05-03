@@ -27,20 +27,67 @@ import java.util.List;
  * @param <E> the type of the elements
  */
 public interface PagedList<E> extends List<E> {
-    // todo docs
+    /**
+     * Gets the sub-{@link List} of this PagedList which is comprised of the elements on the given page.
+     *
+     * @param page the page number of the page to get
+     * @return the given page
+     */
     List<E> getPage(int page);
 
+    /**
+     * Gets the number of pages this PagedList has with the current elements per page setting.
+     *
+     * @return this list's current number of pages
+     */
     int pages();
 
+    /**
+     * Gets the currently set number of elements per page.
+     *
+     * @return the elements per page for this PagedList
+     */
     int getElementsPerPage();
 
+    /**
+     * Gets whether the pages of this PagedList will automatically update when changes are made to the List. When many
+     * changes are about to be made at once it is recommended to disable this until the end, then call
+     * {@link #recalculatePages()}.
+     *
+     * @return whether this PagedList automatically updates pages when changes are made
+     */
     boolean isAutoRefresh();
 
+    /**
+     * Gets whether this PagedList will refresh pages when accessed. Usually recommended to be disabled.
+     *
+     * @return whether pages are refreshed whenever the PagedList is accessed
+     */
     boolean isRefreshOnGet();
 
+    /**
+     * Sets the number of elements per page.
+     *
+     * @param elementsPerPage the new number of elements per page
+     */
     void setElementsPerPage(int elementsPerPage);
 
+    /**
+     * Sets whether the PagedList should refresh pages whenever written to.
+     *
+     * @param autoRefresh whether to refresh pages on write
+     */
     void setAutoRefresh(boolean autoRefresh);
 
+    /**
+     * Sets whether the PagedList should refresh pages whenever read.
+     *
+     * @param refreshOnGet whether to refresh pages on read
+     */
     void setRefreshOnGet(boolean refreshOnGet);
+
+    /**
+     * Force refresh the pages in this PagedList.
+     */
+    void recalculatePages();
 }

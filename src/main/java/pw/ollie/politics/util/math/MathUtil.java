@@ -25,7 +25,6 @@ import org.bukkit.Location;
  * Utilities for mathematical methods in Politics.
  */
 public final class MathUtil {
-    // todo docs
     public static Vector3i add(Location one, Vector3i two) {
         return new Vector3i(one.getBlockX() + two.getX(), one.getBlockY() + two.getY(), one.getBlockZ() + two.getZ());
     }
