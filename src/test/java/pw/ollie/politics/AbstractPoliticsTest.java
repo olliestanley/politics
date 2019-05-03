@@ -23,7 +23,7 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
-import pw.ollie.politics.mock.PoliticsMockObjectFactory;
+import pw.ollie.politics.util.PoliticsTestObjectFactory;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.universe.UniverseRules;
@@ -73,7 +73,7 @@ public abstract class AbstractPoliticsTest {
         // creates mock world with name 'World'
         WorldMock world = server.addSimpleWorld(TEST_WORLD_NAME);
         PoliticsWorld politicsWorld = worldManager.getWorld(world);
-        UniverseRules defaultRules = PoliticsMockObjectFactory.mockDefaultUniverseRules();
+        UniverseRules defaultRules = PoliticsTestObjectFactory.newDefaultUniverseRules();
         return universeManager.createUniverse("Default", defaultRules, Collections.singletonList(politicsWorld));
     }
 

@@ -24,7 +24,11 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.war.War;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.PoliticsTestReflection;
+import pw.ollie.politics.util.math.Cuboid;
+import pw.ollie.politics.util.math.Vector3i;
 import pw.ollie.politics.world.PoliticsWorld;
+import pw.ollie.politics.world.plot.Plot;
+import pw.ollie.politics.world.plot.Subplot;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -32,11 +36,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public final class StorablesTest extends AbstractPoliticsTest {
     @Override
@@ -76,12 +82,27 @@ public final class StorablesTest extends AbstractPoliticsTest {
         Assert.assertTrue(restoredWar.isActive());
 
         // test politics world storage
+        int testPlotX = 1, testPlotY = 1;
         World world = server.getWorld(TEST_WORLD_NAME);
+        Group ownerHousehold = createTestHousehold("PlotLovers");
+        int ownerGroupId = ownerHousehold.getUid();
+        Player ownerMember = server.getPlayer(0);
+        UUID memberId = ownerMember.getUniqueId();
+        ownerHousehold.setRole(memberId, ownerHousehold.getLevel().getFounder());
+
         PoliticsWorld politicsWorld = plugin.getWorldManager().getWorld(world);
-        // todo add a plot and subplot to verify it's storing them correctly
+        Plot plot = politicsWorld.getPlotAtChunkPosition(testPlotX, testPlotY);
+        plot.setOwner(ownerHousehold);
+        plot.createSubplot(new Cuboid(plot.getBasePoint(), new Vector3i(1, 1, 1)), memberId);
         BasicBSONObject worldBson = (BasicBSONObject) politicsWorld.toBSONObject();
         PoliticsWorld restoredWorld = PoliticsTestReflection.instantiateDefaultWorld(worldBson);
-        // todo check the restored world is correct
+        Assert.assertEquals(TEST_WORLD_NAME, restoredWorld.getName());
+        Plot restoredPlot = restoredWorld.getPlotAtChunkPosition(testPlotX, testPlotY);
+        Assert.assertEquals(ownerGroupId, restoredPlot.getOwnerId());
+        Assert.assertEquals(1, restoredPlot.getSubplotQuantity());
+        Subplot subplot = restoredPlot.getSubplot(0);
+        Assert.assertNotNull(subplot);
+        Assert.assertEquals(memberId, subplot.getOwnerId());
     }
 
     @Override

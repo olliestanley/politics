@@ -17,13 +17,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.mock;
+package pw.ollie.politics.util;
 
 import pw.ollie.politics.AbstractPoliticsTest;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.universe.UniverseRules;
-import pw.ollie.politics.util.PoliticsTestReflection;
 import pw.ollie.politics.world.WorldConfig;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -34,12 +33,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public final class PoliticsMockObjectFactory {
-    public static WorldConfig mockDefaultWorldConfig() {
+public final class PoliticsTestObjectFactory {
+    public static WorldConfig newDefaultWorldConfig() {
         return PoliticsTestReflection.instantiateWorldConfig(AbstractPoliticsTest.TEST_WORLD_NAME, true, true);
     }
 
-    public static UniverseRules mockDefaultUniverseRules() {
+    public static UniverseRules newDefaultUniverseRules() {
         ConfigurationSection config = new MemoryConfiguration();
         config.set("description", "Testing configuration for Politics");
         config.set("wilderness-message", "Wilderness");
@@ -123,7 +122,7 @@ public final class PoliticsMockObjectFactory {
         return result;
     }
 
-    private PoliticsMockObjectFactory() {
+    private PoliticsTestObjectFactory() {
         throw new UnsupportedOperationException();
     }
 }

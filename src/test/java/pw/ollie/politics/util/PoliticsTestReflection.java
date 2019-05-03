@@ -21,7 +21,6 @@ package pw.ollie.politics.util;
 
 import pw.ollie.politics.AbstractPoliticsTest;
 import pw.ollie.politics.group.war.War;
-import pw.ollie.politics.mock.PoliticsMockObjectFactory;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldConfig;
 
@@ -50,7 +49,7 @@ public final class PoliticsTestReflection {
     public static PoliticsWorld instantiateDefaultWorld(BasicBSONObject bson) {
         try {
             String name = AbstractPoliticsTest.TEST_WORLD_NAME;
-            WorldConfig defaultConfig = PoliticsMockObjectFactory.mockDefaultWorldConfig();
+            WorldConfig defaultConfig = PoliticsTestObjectFactory.newDefaultWorldConfig();
             Constructor pwConstructor = PoliticsWorld.class.getDeclaredConstructor(String.class, WorldConfig.class, BasicBSONObject.class);
             pwConstructor.setAccessible(true);
             MethodHandle newPwHandle = lookup.unreflectConstructor(pwConstructor);

@@ -64,13 +64,8 @@ public final class PoliticsWorld implements Storable {
                 throw new IllegalArgumentException("List must only contain more objects!");
             }
             BasicBSONObject plotObj = (BasicBSONObject) o;
-            String string = plotObj.getString("type", null);
-            if (string == null) {
-                throw new IllegalArgumentException("Type is not a recognized string");
-            }
-
             Plot p = new Plot(plotObj);
-            chunkPlots.put(IntPair.of(p.getBaseX(), p.getBaseZ()), p);
+            chunkPlots.put(IntPair.of(p.getChunk().getX(), p.getChunk().getZ()), p);
         }
         this.config = config;
     }
@@ -124,7 +119,8 @@ public final class PoliticsWorld implements Storable {
             return null;
         }
 
-        return new Plot(this, x, z);
+        chunkPlots.putIfAbsent(IntPair.of(x, z), new Plot(this, x, z));
+        return chunkPlots.get(IntPair.of(x, z));
     }
 
     /**
@@ -155,7 +151,7 @@ public final class PoliticsWorld implements Storable {
         bson.put("name", name);
         BasicBSONList chunkPlotList = new BasicBSONList();
         for (Plot plot : chunkPlots.values()) {
-            if (!plot.canStore()) {
+            if (!plot.canStore() || !(plot.hasOwner() || plot.getSubplotQuantity() > 0)) {
                 continue;
             }
             chunkPlotList.add(plot.toBSONObject());

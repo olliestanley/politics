@@ -523,8 +523,8 @@ public final class Plot implements Storable {
         BasicBSONObject obj = new BasicBSONObject();
         obj.put("world", world.getName());
         obj.put("owner", owner);
-        obj.put("x", getBaseX());
-        obj.put("z", getBaseZ());
+        obj.put("x", getChunk().getX());
+        obj.put("z", getChunk().getZ());
         if (!subplots.isEmpty()) {
             BasicBSONList subplotList = new BasicBSONList();
             for (Subplot subplot : subplots.valueCollection()) {

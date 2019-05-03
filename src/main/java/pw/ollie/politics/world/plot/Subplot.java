@@ -129,7 +129,7 @@ public final class Subplot implements Storable {
         parentZ = bObj.getInt("parent-z");
         baseX = bObj.getInt("base-x");
         baseY = bObj.getInt("base-y");
-        baseZ = bObj.getInt("base-Z");
+        baseZ = bObj.getInt("base-z");
         xSize = bObj.getInt("x-size");
         ySize = bObj.getInt("y-size");
         zSize = bObj.getInt("z-size");
