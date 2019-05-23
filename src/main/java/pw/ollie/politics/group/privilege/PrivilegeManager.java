@@ -23,6 +23,7 @@ import pw.ollie.politics.PoliticsPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Stores and provides access to {@link Privilege}s in Politics.
@@ -49,17 +50,12 @@ public final class PrivilegeManager {
     }
 
     public boolean registerPrivilege(Privilege privilege) {
-        return privileges.put(privilege.getName(), privilege) == null;
+        // putIfAbsent as we don't want other plugins overriding default Politics privileges
+        return privileges.putIfAbsent(privilege.getName(), privilege) == null;
     }
 
     public boolean registerPrivileges(Privilege... privileges) {
-        boolean retVal = true;
-        for (Privilege p : privileges) {
-            if (!registerPrivilege(p)) {
-                retVal = false;
-            }
-        }
-        return retVal;
+        return Stream.of(privileges).allMatch(this::registerPrivilege);
     }
 
     public Privilege getPrivilege(String name) {

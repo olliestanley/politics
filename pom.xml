@@ -99,6 +99,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.google.mug</groupId>
+            <artifactId>mug</artifactId>
+            <version>2.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
@@ -250,6 +256,12 @@
                                     </includes>
                                 </filter>
                                 <filter>
+                                    <artifact>com.google.mug:mug</artifact>
+                                    <includes>
+                                        <include>com/google/mu/**</include>
+                                    </includes>
+                                </filter>
+                                <filter>
                                     <artifact>org.bukkit:*</artifact>
                                     <excludes>
                                         <exclude>**</exclude>
@@ -259,11 +271,15 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.bson</pattern>
-                                    <shadedPattern>politics.org.bson</shadedPattern>
+                                    <shadedPattern>politics.bson</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>gnu.trove</pattern>
-                                    <shadedPattern>politics.gnu.trove</shadedPattern>
+                                    <shadedPattern>politics.trove</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google.mu</pattern>
+                                    <shadedPattern>politics.mu</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

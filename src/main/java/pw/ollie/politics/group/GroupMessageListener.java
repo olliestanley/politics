@@ -21,9 +21,12 @@ package pw.ollie.politics.group;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.event.player.PlayerPlotChangeEvent;
-import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.StringUtil;
+import pw.ollie.politics.util.collect.stream.StreamUtil;
 import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.util.message.MessageUtil;
+
+import com.google.mu.util.stream.BiStream;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -45,14 +48,10 @@ final class GroupMessageListener implements Listener {
     public void sendJoinMessage(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        for (Universe universe : plugin.getUniverseManager().getUniverses(player.getWorld())) {
-            for (Group group : universe.getCitizenGroups(player.getUniqueId())) {
-                String groupMotd = group.getStringProperty(GroupProperty.MOTD, null);
-                if (groupMotd != null) {
-                    MessageBuilder.begin().highlight(group.getName() + " MOTD: ").normal(groupMotd).send(player);
-                }
-            }
-        }
+        StreamUtil.biStream(plugin.getGroupManager().getAllCitizenGroups(player.getUniqueId()).stream(), group -> group.getStringProperty(GroupProperty.MOTD, ""))
+                .filterValues(StringUtil::notEmpty)
+                .mapValues((group, motd) -> MessageBuilder.beginHighlight(group.getName() + " MOTD: ").normal(motd))
+                .forEach((group, builder) -> builder.send(player));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

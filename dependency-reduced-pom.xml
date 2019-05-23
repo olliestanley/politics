@@ -149,6 +149,12 @@
                   </includes>
                 </filter>
                 <filter>
+                  <artifact>com.google.mug:mug</artifact>
+                  <includes>
+                    <include>com/google/mu/**</include>
+                  </includes>
+                </filter>
+                <filter>
                   <artifact>org.bukkit:*</artifact>
                   <excludes>
                     <exclude>**</exclude>
@@ -158,11 +164,15 @@
               <relocations>
                 <relocation>
                   <pattern>org.bson</pattern>
-                  <shadedPattern>politics.org.bson</shadedPattern>
+                  <shadedPattern>politics.bson</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>gnu.trove</pattern>
-                  <shadedPattern>politics.gnu.trove</shadedPattern>
+                  <shadedPattern>politics.trove</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>com.google.mu</pattern>
+                  <shadedPattern>politics.mu</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>
@@ -275,11 +285,11 @@
     </dependency>
   </dependencies>
   <properties>
-    <buildNumber>0</buildNumber>
-    <mainClass>pw.ollie.politics.PoliticsPlugin</mainClass>
-    <github.global.server>github</github.global.server>
-    <powermock.version>1.7.1</powermock.version>
     <apiVersion>dev-SNAPSHOT</apiVersion>
+    <mainClass>pw.ollie.politics.PoliticsPlugin</mainClass>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <powermock.version>1.7.1</powermock.version>
+    <buildNumber>0</buildNumber>
+    <github.global.server>github</github.global.server>
   </properties>
 </project>

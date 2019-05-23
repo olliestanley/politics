@@ -23,6 +23,10 @@ package pw.ollie.politics.util;
  * General utilities relating to {@link String}s.
  */
 public final class StringUtil {
+    public static boolean notEmpty(String string) {
+        return !string.isEmpty();
+    }
+
     /**
      * Find Levenshtein distance between two Strings.
      * <p>

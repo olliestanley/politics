@@ -36,14 +36,14 @@ import pw.ollie.politics.util.Position;
 import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.world.PoliticsWorld;
 
+import org.bson.BSONObject;
+import org.bson.BasicBSONObject;
+import org.bson.types.BasicBSONList;
+
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-
-import org.bson.BSONObject;
-import org.bson.BasicBSONObject;
-import org.bson.types.BasicBSONList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -521,16 +521,8 @@ public final class Plot implements Storable {
         obj.put("owner", owner);
         obj.put("x", getChunk().getX());
         obj.put("z", getChunk().getZ());
-        if (!subplots.isEmpty()) {
-            BasicBSONList subplotList = new BasicBSONList();
-            for (Subplot subplot : subplots.valueCollection()) {
-                if (!subplot.canStore()) {
-                    continue;
-                }
-                subplotList.add(subplot.toBSONObject());
-            }
-            obj.put("subplots", subplotList);
-        }
+        obj.put("subplots", subplots.valueCollection().stream().filter(Subplot::canStore)
+                .map(Subplot::toBSONObject).collect(Collectors.toCollection(BasicBSONList::new)));
         return obj;
     }
 

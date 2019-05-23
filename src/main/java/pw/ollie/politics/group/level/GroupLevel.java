@@ -24,12 +24,16 @@ import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.group.privilege.Privilege;
+import pw.ollie.politics.util.collect.stream.StreamUtil;
 import pw.ollie.politics.util.serial.ConfigUtil;
+
+import com.google.mu.util.stream.BiStream;
 
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -38,6 +42,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * A configured type of Group, with a name, rank, roles, role tracks and configuration settings.
@@ -188,27 +193,16 @@ public final class GroupLevel {
         node.set("plural", plural);
 
         ConfigurationSection rolesNode = ConfigUtil.getOrCreateSection(node, "roles");
-        for (Map.Entry<String, Role> role : roles.entrySet()) {
-            String roleName = role.getKey();
-            Role value = role.getValue();
-            List<String> privNames = new ArrayList<>();
-            for (Privilege priv : value.getPrivileges()) {
-                privNames.add(priv.getName());
-            }
-
-            rolesNode.set(roleName + ".name", value.getName());
-            rolesNode.set(roleName + ".privileges", privNames);
-        }
+        BiStream.from(roles).forEach((roleName, role) -> {
+            rolesNode.set(roleName + ".name", role.getName());
+            rolesNode.set(roleName + ".privileges", role.getPrivileges().stream()
+                    .map(Privilege::getName).collect(Collectors.toList()));
+        });
 
         ConfigurationSection tracksNode = ConfigUtil.getOrCreateSection(node, "tracks");
-        for (Map.Entry<String, RoleTrack> trackEntry : tracks.entrySet()) {
-            List<String> roleNames = new LinkedList<>();
-            for (Role role : trackEntry.getValue().getRoles()) {
-                roleNames.add(role.getName());
-            }
-
-            tracksNode.set(trackEntry.getKey(), roleNames);
-        }
+        BiStream.from(tracks)
+                .mapValues(track -> track.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                .forEach(tracksNode::set);
 
         node.set("initial", initial.getId());
         node.set("founder", founder.getId());
@@ -219,9 +213,7 @@ public final class GroupLevel {
         node.set("can-war", canWar);
         node.set("may-be-peaceful", mayBePeaceful);
 
-        for (Map.Entry<String, String> setting : otherSettings.entrySet()) {
-            node.set(setting.getKey(), setting.getValue());
-        }
+        BiStream.from(otherSettings).forEach(node::set);
     }
 
     public static GroupLevel load(String id, ConfigurationSection node, Map<GroupLevel, List<String>> levels) {
@@ -236,13 +228,8 @@ public final class GroupLevel {
         Map<String, Role> rolesMap = new HashMap<>();
         ConfigurationSection rolesNode = node.getConfigurationSection("roles");
         if (rolesNode != null) {
-            for (String roleId : rolesNode.getKeys(false)) {
-                ConfigurationSection roleNode = rolesNode.getConfigurationSection(roleId);
-                if (roleNode != null) {
-                    Role role = Role.load(roleId, roleNode);
-                    rolesMap.put(roleId, role);
-                }
-            }
+            StreamUtil.biStream(rolesNode.getKeys(false).stream(), rolesNode::getConfigurationSection)
+                    .filterValues(Objects::nonNull).mapValues(Role::load).forEach(rolesMap::put);
         }
 
         Map<String, RoleTrack> tracks = new HashMap<>();
@@ -252,11 +239,9 @@ public final class GroupLevel {
         if (!rolesMap.isEmpty()) {
             ConfigurationSection tracksNode = node.getConfigurationSection("tracks");
             if (tracksNode != null) {
-                for (String trackKey : tracksNode.getKeys(false)) {
-                    List<String> rolesNames = tracksNode.getStringList(trackKey);
-                    RoleTrack track = RoleTrack.load(trackKey, rolesNames, rolesMap);
-                    tracks.put(track.getId(), track);
-                }
+                StreamUtil.biStream(tracksNode.getKeys(false).stream(), tracksNode::getStringList)
+                        .mapValues((trackKey, roleNames) -> RoleTrack.load(trackKey, roleNames, rolesMap))
+                        .forEach(tracks::put);
             }
 
             if (!tracks.containsKey(DEFAULT_TRACK)) {
@@ -277,16 +262,9 @@ public final class GroupLevel {
             if (initialName != null) {
                 initial = rolesMap.get(initialName);
             }
+
             if (initial == null) {
-                int lowest = Integer.MAX_VALUE;
-                Role lowestRole = null;
-                for (Role role : rolesMap.values()) {
-                    if (role.getRank() <= lowest) {
-                        lowest = role.getRank();
-                        lowestRole = role;
-                    }
-                }
-                initial = lowestRole;
+                initial = rolesMap.values().stream().min(Comparator.comparing(Role::getRank)).get();
                 Politics.getLogger().log(Level.WARNING, "No initial role specified in configuration, defaulting to lowest rank...");
             }
 
@@ -296,18 +274,9 @@ public final class GroupLevel {
                 founder = rolesMap.get(founderName);
             }
 
-            if (founderName == null) {
-                int highest = 0;
-                Role highestRole = null;
-                for (Role role : rolesMap.values()) {
-                    if (role.getRank() > highest) {
-                        highest = role.getRank();
-                        highestRole = role;
-                    }
-                }
-
-                founder = highestRole;
-                Politics.getLogger().log(Level.WARNING, "No initial role specified in configuration, defaulting to lowest rank...");
+            if (founder == null) {
+                founder = rolesMap.values().stream().max(Comparator.comparing(Role::getRank)).get();
+                Politics.getLogger().log(Level.WARNING, "No founder role specified in configuration, defaulting to highest rank...");
             }
         }
 
@@ -320,12 +289,8 @@ public final class GroupLevel {
         boolean canTax = node.getBoolean("can-tax", false);
 
         Map<String, String> otherSettings = new THashMap<>();
-        node.getKeys(false).stream().filter(GroupLevel::notUsedKey).forEach(key -> {
-            String value = node.getString(key);
-            if (value != null) {
-                otherSettings.put(key, value);
-            }
-        });
+        StreamUtil.biStream(node.getKeys(false).stream().filter(GroupLevel::notUsedKey), node::getString)
+                .filterValues(Objects::nonNull).forEach(otherSettings::put);
 
         GroupLevel theLevel = new GroupLevel(id.toLowerCase(), levelName, rank, rolesMap, plural, tracks, initial,
                 founder, friendlyFire, immediateMembers, ownsLand, allowedMultiple, canWar, mayBePeaceful, canTax,

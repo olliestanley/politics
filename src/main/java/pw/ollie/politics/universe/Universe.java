@@ -29,16 +29,16 @@ import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.war.War;
 import pw.ollie.politics.world.PoliticsWorld;
 
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +50,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * A Universe is a collection of {@link PoliticsWorld}s which are subject to a particular set of {@link UniverseRules}
@@ -199,12 +200,10 @@ public final class Universe implements Storable {
     public boolean addWorld(PoliticsWorld world) {
         List<GroupLevel> levels = rules.getGroupLevels();
         // Check if the rules are already there
-        for (GroupLevel level : world.getLevels()) {
-            if (levels.contains(level)) {
-                return false;
-            }
+        if (world.getLevels().stream().anyMatch(levels::contains)) {
+            return false;
         }
-        return true;
+        return worlds.add(world);
     }
 
     public List<PoliticsWorld> getWorlds() {
@@ -295,29 +294,20 @@ public final class Universe implements Storable {
      * @param deep  whether to destroy the children of the group as well
      */
     public void destroyGroup(Group group, boolean deep) {
-        for (War war : Politics.getWarManager().getInvolvedWars(group)) {
-            Politics.getWarManager().finishWar(war, true);
-        }
+        Politics.getWarManager().getInvolvedWars(group).forEach(war -> Politics.getWarManager().finishWar(war, true));
 
         groups.remove(group);
         getInternalGroups(group.getLevel()).remove(group);
-        for (UUID member : group.getPlayers()) {
-            invalidateCitizenGroups(member);
-        }
+        group.getPlayers().forEach(this::invalidateCitizenGroups);
         if (deep) {
-            for (Group child : group.getGroups()) {
-                destroyGroup(child, true);
-            }
+            group.getGroups().forEach(child -> destroyGroup(child, true));
         }
 
         Politics.getUniverseManager().removeGroup(group.getUid());
 
         children.remove(group);
-
         // This can be expensive
-        for (Set<Group> childrenOfAGroup : children.values()) {
-            childrenOfAGroup.remove(group);
-        }
+        children.values().forEach(set -> set.remove(group));
     }
 
     public Citizen getCitizen(UUID playerId, String name) {
@@ -346,7 +336,7 @@ public final class Universe implements Storable {
         return getCitizenGroups(player.getUniqueId());
     }
 
-    public void invalidateCitizenGroups(UUID citizen) {
+    void invalidateCitizenGroups(UUID citizen) {
         citizenGroupCache.invalidate(citizen);
     }
 
@@ -368,22 +358,14 @@ public final class Universe implements Storable {
             groupsBson.add(group.toBSONObject());
 
             // children
-            BasicBSONList children = new BasicBSONList();
-            for (Group child : group.getGroups()) {
-                children.add(child.getUid());
-            }
-            childrenBson.put(Integer.toString(group.getUid()), children);
+            childrenBson.put(Integer.toString(group.getUid()),
+                    group.getGroups().stream().map(Group::getUid).collect(Collectors.toCollection(BasicBSONList::new)));
         }
 
         bson.put("groups", groupsBson);
         bson.put("children", childrenBson);
-
-        BasicBSONList worldsBson = new BasicBSONList();
-        for (PoliticsWorld world : worlds) {
-            worldsBson.add(world.getName());
-        }
-
-        bson.put("worlds", worldsBson);
+        bson.put("worlds", worlds.stream().map(PoliticsWorld::getName)
+                .collect(Collectors.toCollection(BasicBSONList::new)));
 
         return bson;
     }
@@ -427,13 +409,13 @@ public final class Universe implements Storable {
 
         BasicBSONList groupsBson = (BasicBSONList) groupsObj;
 
-        TLongObjectMap<Group> groups = new TLongObjectHashMap<>();
+        TLongObjectMap<Group> groupMap = new TLongObjectHashMap<>();
         for (Object groupBson : groupsBson) {
             if (!(groupBson instanceof BasicBSONObject)) {
                 throw new IllegalStateException("Invalid group!");
             }
             Group c = Group.fromBSONObject(rules, (BasicBSONObject) groupBson);
-            groups.put(c.getUid(), c);
+            groupMap.put(c.getUid(), c);
         }
 
         Map<Group, Set<Group>> children = new HashMap<>();
@@ -446,7 +428,7 @@ public final class Universe implements Storable {
         for (Map.Entry<String, Object> childEntry : childrenBson.entrySet()) {
             String groupId = childEntry.getKey();
             int uid = Integer.parseInt(groupId);
-            Group c = groups.get(uid);
+            Group c = groupMap.get(uid);
             if (c == null) {
                 throw new IllegalStateException("Unknown group id " + uid);
             }
@@ -461,18 +443,16 @@ public final class Universe implements Storable {
 
             for (Object childN : childs) {
                 long theuid = (Long) childN;
-                Group ch = groups.get(theuid);
+                Group ch = groupMap.get(theuid);
                 childrenn.add(ch);
             }
 
             children.put(c, childrenn);
         }
 
-        List<Group> groupz = new ArrayList<>(groups.valueCollection());
-        Universe universe = new Universe(aname, rules, worlds, groupz, children);
-        for (Group group : groupz) {
-            group.initialize(universe);
-        }
+        List<Group> groupList = new ArrayList<>(groupMap.valueCollection());
+        Universe universe = new Universe(aname, rules, worlds, groupList, children);
+        groupList.forEach(group -> group.initialize(universe));
         return universe;
     }
 

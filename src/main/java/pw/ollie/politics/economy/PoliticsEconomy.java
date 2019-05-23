@@ -125,4 +125,16 @@ public abstract class PoliticsEconomy {
      * @return the result of the attempt to tax the member
      */
     public abstract PoliticsEconomyResult taxMember(Group group, UUID member, double amount);
+
+    /**
+     * Taxes the given member of the given group by the Group's fixed tax amount.
+     *
+     * @param group  the group to tax the member of
+     * @param member the member to tax
+     * @return the result of the attempt to tax the member
+     */
+    public final PoliticsEconomyResult applyFixedTax(Group group, UUID member) {
+        return taxMember(group, member, Math.min(group.getDoubleProperty(
+                GroupProperty.FIXED_TAX, 0.0), plugin.getPoliticsConfig().getMaxFixedTax()));
+    }
 }

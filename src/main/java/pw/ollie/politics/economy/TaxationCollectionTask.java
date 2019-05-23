@@ -21,7 +21,6 @@ package pw.ollie.politics.economy;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.universe.Universe;
 
 import org.bukkit.entity.Player;
@@ -59,25 +58,17 @@ final class TaxationCollectionTask extends BukkitRunnable {
                 int lastCollection = taxationManager.getLastCollection(playerId, universe);
 
                 if (lastCollection >= collectionPeriod) {
-                    for (Group group : universe.getCitizenGroups(playerId)) {
-                        if (!group.getLevel().canTax()) {
-                            continue;
-                        }
-
-                        double taxAmount = Math.min(group.getDoubleProperty(GroupProperty.FIXED_TAX, 0.0),
-                                plugin.getPoliticsConfig().getMaxFixedTax());
-                        if (!(taxAmount > 0)) {
-                            continue;
-                        }
-
-                        economy.taxMember(group, playerId, taxAmount);
-                    }
-
+                    universe.getCitizenGroups(player).stream()
+                            .filter(this::canTax).forEach(group -> economy.applyFixedTax(group, playerId));
                     taxationManager.resetLastCollection(playerId, universe);
                 } else {
                     taxationManager.incrementLastCollection(playerId, universe);
                 }
             }
         }
+    }
+
+    private boolean canTax(Group group) {
+        return group.getLevel().canTax();
     }
 }

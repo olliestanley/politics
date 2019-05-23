@@ -19,6 +19,9 @@
  */
 package pw.ollie.politics.economy.vault;
 
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
+
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.economy.PoliticsEconomy;
 import pw.ollie.politics.economy.PoliticsEconomyResult;
@@ -26,9 +29,6 @@ import pw.ollie.politics.economy.PoliticsTransferReason;
 import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.group.GroupTaxImposeEvent;
 import pw.ollie.politics.group.Group;
-
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
@@ -70,6 +70,10 @@ public class PoliticsEconomyVault extends PoliticsEconomy {
      */
     @Override
     public PoliticsEconomyResult taxMember(Group group, UUID member, double amount) {
+        if (amount <= 0) {
+            return PoliticsEconomyResult.FAILURE;
+        }
+
         OfflinePlayer offlinePlayer = getPlugin().getServer().getOfflinePlayer(member);
         if (!vaultEconomy.has(offlinePlayer, amount)) {
             return PoliticsEconomyResult.INSUFFICIENT_BALANCE;

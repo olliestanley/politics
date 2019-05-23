@@ -26,16 +26,17 @@ import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.math.IntPair;
 import pw.ollie.politics.world.plot.Plot;
 
-import org.bukkit.World;
-
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
+
+import org.bukkit.World;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Holds Politics data specific to a single world.
@@ -149,14 +150,9 @@ public final class PoliticsWorld implements Storable {
     public BSONObject toBSONObject() {
         BasicBSONObject bson = new BasicBSONObject();
         bson.put("name", name);
-        BasicBSONList chunkPlotList = new BasicBSONList();
-        for (Plot plot : chunkPlots.values()) {
-            if (!plot.canStore() || !(plot.hasOwner() || plot.getSubplotQuantity() > 0)) {
-                continue;
-            }
-            chunkPlotList.add(plot.toBSONObject());
-        }
-        bson.put("plots", chunkPlotList);
+        bson.put("plots", chunkPlots.values().stream()
+                .filter(plot -> plot.canStore() && (plot.hasOwner() || plot.getSubplotQuantity() > 0))
+                .map(Plot::toBSONObject).collect(Collectors.toCollection(BasicBSONList::new)));
         return bson;
     }
 

@@ -75,6 +75,7 @@ final class ActivityUpdateListener implements Listener {
                 plugin.getActivityManager().endActivity(player);
                 return;
             }
+
             selectionActivity.setSecondPoint(position);
             selectionActivity.complete();
             plugin.getActivityManager().endActivity(player);

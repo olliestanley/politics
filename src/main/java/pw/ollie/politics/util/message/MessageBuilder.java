@@ -209,4 +209,33 @@ public final class MessageBuilder {
     public static MessageBuilder beginError() {
         return begin().error();
     }
+
+    /**
+     * Begins a new message in error colour of the default Politics {@link ColourScheme}, with given initial text.
+     *
+     * @param initial the initial text to append to the MessageBuilder
+     * @return a new MessageBuilder set to the default error colour
+     */
+    public static MessageBuilder beginError(String initial) {
+        return begin().error(initial);
+    }
+
+    /**
+     * Begins a new message in highlight colour of the default Politics {@link ColourScheme}.
+     *
+     * @return a new MessageBuilder set to the default highlight colour
+     */
+    public static MessageBuilder beginHighlight() {
+        return begin().highlight();
+    }
+
+    /**
+     * Begins a new message in highlight colour of the default Politics {@link ColourScheme}, with given initial text.
+     *
+     * @param initial the initial text to append to the MessageBuilder
+     * @return a new MessageBuilder set to the default highlight colour
+     */
+    public static MessageBuilder beginHighlight(String initial) {
+        return begin().highlight(initial);
+    }
 }
