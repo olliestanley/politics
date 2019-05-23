@@ -25,7 +25,6 @@ import pw.ollie.politics.event.plot.PlotProtectionTriggerEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotProtectionTriggerEvent;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
-import pw.ollie.politics.util.Pair;
 import pw.ollie.politics.util.message.MessageUtil;
 import pw.ollie.politics.world.WorldConfig;
 import pw.ollie.politics.world.WorldManager;
@@ -103,9 +102,9 @@ public final class PlotProtectionListener implements Listener {
         PlotDamageSource source = new PlotDamageSource(player);
 
         if (worldConfig.hasSubplots()) {
-            Pair<Subplot, Boolean> subplotCheck = canInSubplot(player, location, privilege);
-            if (!subplotCheck.getSecond()) {
-                SubplotProtectionTriggerEvent triggerEvent = callSubplotProtectionEvent(subplotCheck.getFirst(), block, source, type);
+            ProtectionCheck<Subplot> subplotCheck = canInSubplot(player, location, privilege);
+            if (!subplotCheck.getResult()) {
+                SubplotProtectionTriggerEvent triggerEvent = callSubplotProtectionEvent(subplotCheck.getChecked(), block, source, type);
                 if (!triggerEvent.isCancelled()) {
                     event.setCancelled(true);
                     MessageUtil.error(player, "You can't do that in this subplot.");
@@ -114,9 +113,9 @@ public final class PlotProtectionListener implements Listener {
             }
         }
 
-        Pair<Plot, Boolean> plotCheck = canInPlot(player, location, privilege);
-        if (!plotCheck.getSecond()) {
-            PlotProtectionTriggerEvent triggerEvent = callPlotProtectionEvent(plotCheck.getFirst(), block, source, type);
+        ProtectionCheck<Plot> plotCheck = canInPlot(player, location, privilege);
+        if (!plotCheck.getResult()) {
+            PlotProtectionTriggerEvent triggerEvent = callPlotProtectionEvent(plotCheck.getChecked(), block, source, type);
             if (!triggerEvent.isCancelled()) {
                 event.setCancelled(true);
                 MessageUtil.error(player, "You can't do that in this plot.");
@@ -170,16 +169,16 @@ public final class PlotProtectionListener implements Listener {
         }
     }
 
-    private Pair<Plot, Boolean> canInPlot(Player player, Location location, Privilege privilege) {
+    private ProtectionCheck<Plot> canInPlot(Player player, Location location, Privilege privilege) {
         if (!(privilege.getTypes().contains(PrivilegeType.PLOT))) {
             throw new IllegalArgumentException("Must be a plot-type privilege");
         }
 
         Plot plot = worldManager.getPlotAt(location);
-        return new Pair<>(plot, plot.can(player, privilege));
+        return new ProtectionCheck<>(plot, plot.can(player, privilege));
     }
 
-    private Pair<Subplot, Boolean> canInSubplot(Player player, Location location, Privilege privilege) {
+    private ProtectionCheck<Subplot> canInSubplot(Player player, Location location, Privilege privilege) {
         if (!(privilege.getTypes().contains(PrivilegeType.PLOT))) {
             throw new IllegalArgumentException("Must be a plot-type privilege");
         }
@@ -187,9 +186,9 @@ public final class PlotProtectionListener implements Listener {
         Plot plot = worldManager.getPlotAt(location);
         Subplot subplot = plot.getSubplotAt(location);
         if (subplot == null) {
-            return new Pair<>(null, true);
+            return new ProtectionCheck<>(null, true);
         }
-        return new Pair<>(subplot, subplot.can(player, privilege));
+        return new ProtectionCheck<>(subplot, subplot.can(player, privilege));
     }
 
     // listener methods which mostly simply make appropriate calls to above logic methods
@@ -438,5 +437,23 @@ public final class PlotProtectionListener implements Listener {
 
     private SubplotProtectionTriggerEvent callSubplotProtectionEvent(Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionType type) {
         return PoliticsEventFactory.callSubplotProtectionTriggerEvent(subplot.getParent(), subplot, damaged, source, type);
+    }
+
+    public static final class ProtectionCheck<T extends Protected> {
+        private final T checked;
+        private final boolean result;
+
+        ProtectionCheck(T checked, boolean result) {
+            this.checked = checked;
+            this.result = result;
+        }
+
+        public T getChecked() {
+            return checked;
+        }
+
+        public boolean getResult() {
+            return result;
+        }
     }
 }

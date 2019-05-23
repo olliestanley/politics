@@ -32,8 +32,6 @@ import pw.ollie.politics.util.message.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
-
 // note: admin command for force adding a player to a group
 public class GroupAddCommand extends GroupSubcommand {
     GroupAddCommand(GroupLevel groupLevel) {
@@ -65,13 +63,8 @@ public class GroupAddCommand extends GroupSubcommand {
             throw new CommandException("That player is not online.");
         }
 
-        if (!level.allowedMultiple()) {
-            Set<Group> playerGroups = plugin.getGroupManager().getAllCitizenGroups(player.getUniqueId());
-            for (Group playerGroup : playerGroups) {
-                if (playerGroup.getLevel().equals(level)) {
-                    throw new CommandException("The player is already part of a " + level.getName() + ".");
-                }
-            }
+        if (!level.allowedMultiple() && plugin.getGroupManager().hasGroupOfLevel(player, level)) {
+            throw new CommandException("The player is already part of a " + level.getName() + ".");
         }
 
         GroupMemberJoinEvent joinEvent = PoliticsEventFactory.callGroupMemberJoinEvent(group, player, level.getInitial());

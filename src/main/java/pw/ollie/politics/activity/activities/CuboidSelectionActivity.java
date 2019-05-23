@@ -21,7 +21,7 @@ package pw.ollie.politics.activity.activities;
 
 import pw.ollie.politics.activity.PoliticsActivity;
 import pw.ollie.politics.util.Position;
-import pw.ollie.politics.util.math.Cuboid;
+import pw.ollie.politics.util.math.geo.Cuboid;
 
 import java.util.UUID;
 import java.util.function.Consumer;

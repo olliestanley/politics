@@ -38,17 +38,17 @@ import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.universe.UniverseRules;
-import pw.ollie.politics.util.math.RotatedPosition;
+import pw.ollie.politics.util.math.geo.RotatedPosition;
 import pw.ollie.politics.util.serial.PropertyDeserializationException;
 import pw.ollie.politics.util.serial.PropertySerializer;
 import pw.ollie.politics.world.plot.Plot;
 
+import org.bson.BSONObject;
+import org.bson.BasicBSONObject;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import org.bson.BSONObject;
-import org.bson.BasicBSONObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;

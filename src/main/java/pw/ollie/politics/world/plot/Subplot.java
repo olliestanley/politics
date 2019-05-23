@@ -30,18 +30,18 @@ import pw.ollie.politics.event.plot.subplot.SubplotPrivilegeChangeEvent;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
 import pw.ollie.politics.util.Position;
-import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.util.math.Vector3i;
+import pw.ollie.politics.util.math.geo.Cuboid;
 import pw.ollie.politics.world.PoliticsWorld;
+
+import org.bson.BSONObject;
+import org.bson.BasicBSONObject;
+import org.bson.types.BasicBSONList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-
-import org.bson.BSONObject;
-import org.bson.BasicBSONObject;
-import org.bson.types.BasicBSONList;
 
 import java.util.Map;
 import java.util.Set;
@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
  * <p>
  * A subplot may have different privilege settings to its parent plot. Subplot privileges override plot privileges.
  */
-public final class Subplot implements Storable {
+public final class Subplot implements Storable, Protected {
     private final PoliticsWorld world;
     private final int id;
     private final int parentX;

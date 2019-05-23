@@ -29,16 +29,16 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.universe.Universe;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.PluginManager;
-
 import org.bson.BSONDecoder;
 import org.bson.BSONEncoder;
 import org.bson.BSONObject;
 import org.bson.BasicBSONDecoder;
 import org.bson.BasicBSONEncoder;
 import org.bson.BasicBSONObject;
+
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.PluginManager;
 
 import java.io.File;
 import java.io.IOException;

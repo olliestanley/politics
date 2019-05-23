@@ -28,8 +28,8 @@ import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.group.privilege.Privileges.GroupPlot;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.PoliticsEventCounter;
-import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.util.math.Vector3i;
+import pw.ollie.politics.util.math.geo.Cuboid;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.Subplot;
 

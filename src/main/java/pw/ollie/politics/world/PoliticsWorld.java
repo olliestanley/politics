@@ -23,8 +23,10 @@ import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
-import pw.ollie.politics.util.math.IntPair;
 import pw.ollie.politics.world.plot.Plot;
+
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
@@ -32,9 +34,7 @@ import org.bson.types.BasicBSONList;
 
 import org.bukkit.World;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -44,13 +44,13 @@ import java.util.stream.Collectors;
 public final class PoliticsWorld implements Storable {
     private final String name;
     private final WorldConfig config;
-    private final Map<IntPair, Plot> chunkPlots;
+    private final Table<Integer, Integer, Plot> chunkPlots;
 
     PoliticsWorld(String name, WorldConfig config) {
-        this(name, config, new HashMap<>());
+        this(name, config, HashBasedTable.create());
     }
 
-    private PoliticsWorld(String name, WorldConfig config, Map<IntPair, Plot> chunkPlots) {
+    private PoliticsWorld(String name, WorldConfig config, Table<Integer, Integer, Plot> chunkPlots) {
         this.name = name;
         this.config = config;
         this.chunkPlots = chunkPlots;
@@ -58,7 +58,7 @@ public final class PoliticsWorld implements Storable {
 
     PoliticsWorld(String name, WorldConfig config, BasicBSONObject object) {
         this.name = object.getString("name", name);
-        chunkPlots = new HashMap<>();
+        chunkPlots = HashBasedTable.create();
         BasicBSONList list = (BasicBSONList) object.get("plots");
         for (Object o : list) {
             if (!(o instanceof BasicBSONObject)) {
@@ -66,7 +66,7 @@ public final class PoliticsWorld implements Storable {
             }
             BasicBSONObject plotObj = (BasicBSONObject) o;
             Plot p = new Plot(plotObj);
-            chunkPlots.put(IntPair.of(p.getChunk().getX(), p.getChunk().getZ()), p);
+            chunkPlots.put(p.getChunk().getX(), p.getChunk().getZ(), p);
         }
         this.config = config;
     }
@@ -120,8 +120,12 @@ public final class PoliticsWorld implements Storable {
             return null;
         }
 
-        chunkPlots.putIfAbsent(IntPair.of(x, z), new Plot(this, x, z));
-        return chunkPlots.get(IntPair.of(x, z));
+        Plot result = chunkPlots.get(x, z);
+        if (result == null) {
+            result = new Plot(this, x, z);
+            chunkPlots.put(x, z, result);
+        }
+        return result;
     }
 
     /**

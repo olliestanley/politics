@@ -24,8 +24,8 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.war.War;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.PoliticsTestReflection;
-import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.util.math.Vector3i;
+import pw.ollie.politics.util.math.geo.Cuboid;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.Subplot;
@@ -35,11 +35,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
+
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

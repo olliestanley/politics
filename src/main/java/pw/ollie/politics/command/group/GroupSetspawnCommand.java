@@ -27,8 +27,8 @@ import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.Position;
-import pw.ollie.politics.util.math.RotatedPosition;
 import pw.ollie.politics.util.math.Vector2f;
+import pw.ollie.politics.util.math.geo.RotatedPosition;
 import pw.ollie.politics.util.message.MessageUtil;
 import pw.ollie.politics.world.plot.Plot;
 

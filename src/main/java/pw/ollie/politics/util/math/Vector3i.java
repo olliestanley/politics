@@ -45,6 +45,10 @@ public class Vector3i {
         return z;
     }
 
+    public Vector3i add(Vector3i other) {
+        return new Vector3i(x + other.x, y + other.y, z + other.z);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

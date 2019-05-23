@@ -32,14 +32,14 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.world.PoliticsWorld;
 
-import org.bukkit.World;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import org.bson.BSONDecoder;
 import org.bson.BSONEncoder;
 import org.bson.BSONObject;
 import org.bson.BasicBSONDecoder;
 import org.bson.BasicBSONEncoder;
+
+import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;

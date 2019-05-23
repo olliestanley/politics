@@ -37,19 +37,19 @@ public enum PlotProtectionType {
     /**
      * A protection from a piston pulling a block.
      */
-    PISTON_PULL(null),
+    PISTON_PULL(),
     /**
      * A protection from a piston pushing a block.
      */
-    PISTON_PUSH(null),
+    PISTON_PUSH(),
     /**
      * A protection from a dispenser releasing a block.
      */
-    DISPENSER(null),
+    DISPENSER(),
     /**
      * A protection from a block flowing naturally.
      */
-    BLOCK_FLOW(null);
+    BLOCK_FLOW();
     // todo fill in all types
 
     private final Privilege permission;

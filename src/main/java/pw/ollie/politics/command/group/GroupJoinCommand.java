@@ -32,7 +32,6 @@ import pw.ollie.politics.util.message.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
 import java.util.UUID;
 
 public class GroupJoinCommand extends GroupSubcommand {
@@ -60,13 +59,8 @@ public class GroupJoinCommand extends GroupSubcommand {
 
         // safe cast as isPlayerOnly() returns true
         Player player = (Player) sender;
-        if (!level.allowedMultiple()) {
-            Set<Group> playerGroups = plugin.getGroupManager().getAllCitizenGroups(player.getUniqueId());
-            for (Group playerGroup : playerGroups) {
-                if (playerGroup.getLevel().equals(level)) {
-                    throw new CommandException("You are already part of a " + level.getName() + ".");
-                }
-            }
+        if (!level.allowedMultiple() && plugin.getGroupManager().hasGroupOfLevel(player, level)) {
+            throw new CommandException("You are already part of a " + level.getName() + ".");
         }
 
         if (!group.getBooleanProperty(GroupProperty.OPEN, false) && !group.isInvited(player)) {

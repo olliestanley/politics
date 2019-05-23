@@ -17,29 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.util.math;
+package pw.ollie.politics.world.plot;
 
-import org.bukkit.Location;
-
-import java.util.concurrent.ThreadLocalRandom;
-
-/**
- * Utilities for mathematical methods in Politics.
- */
-public final class MathUtil {
-    public static Vector3i add(Location one, Vector3i two) {
-        return new Vector3i(one.getBlockX() + two.getX(), one.getBlockY() + two.getY(), one.getBlockZ() + two.getZ());
-    }
-
-    public static Location add(Vector3i one, Location two) {
-        return new Location(two.getWorld(), two.getBlockX() + one.getX(), two.getBlockY() + one.getY(), two.getBlockZ() + one.getZ());
-    }
-
-    public static int randomInt() {
-        return ThreadLocalRandom.current().nextInt();
-    }
-
-    private MathUtil() {
-        throw new UnsupportedOperationException();
-    }
+interface Protected {
 }

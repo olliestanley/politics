@@ -23,8 +23,8 @@ import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.level.GroupLevel;
-import pw.ollie.politics.universe.Universe;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.List;
@@ -48,9 +48,9 @@ public final class GroupManager {
 
     public Set<Group> getAllCitizenGroups(UUID playerId) {
         Set<Group> result = new THashSet<>();
-        for (Universe universe : plugin.getUniverseManager().getUniverses()) {
-            result.addAll(universe.getCitizenGroups(playerId));
-        }
+        plugin.getUniverseManager().getUniverses().stream()
+                .map(universe -> universe.getCitizenGroups(playerId))
+                .forEach(result::addAll);
         return result;
     }
 
@@ -73,6 +73,10 @@ public final class GroupManager {
 
     public Group getGroupByTag(String tag) {
         return plugin.getUniverseManager().getGroupByTag(tag);
+    }
+
+    public boolean hasGroupOfLevel(Player player, GroupLevel level) {
+        return getAllCitizenGroups(player.getUniqueId()).stream().map(Group::getLevel).anyMatch(level::equals);
     }
 
     public PoliticsPlugin getPlugin() {

@@ -25,16 +25,16 @@ import pw.ollie.politics.util.Position;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.PlotProtectionListener;
 
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import org.bson.BSONEncoder;
 import org.bson.BSONObject;
 import org.bson.BasicBSONDecoder;
 import org.bson.BasicBSONEncoder;
 import org.bson.BasicBSONObject;
+
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;

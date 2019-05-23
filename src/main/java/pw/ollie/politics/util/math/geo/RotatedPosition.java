@@ -17,14 +17,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.util.math;
+package pw.ollie.politics.util.math.geo;
 
 import pw.ollie.politics.util.Position;
+import pw.ollie.politics.util.math.Vector2f;
+
+import com.google.common.base.MoreObjects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-
-import com.google.common.base.MoreObjects;
 
 import java.util.Objects;
 

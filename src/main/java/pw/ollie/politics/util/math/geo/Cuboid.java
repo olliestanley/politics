@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.util.math;
+package pw.ollie.politics.util.math.geo;
 
 import pw.ollie.politics.util.Position;
+import pw.ollie.politics.util.math.Vector3i;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -99,7 +100,7 @@ public class Cuboid {
      * @return the Cuboid's maximum point
      */
     public Location getMaxPoint() {
-        return MathUtil.add(size, base);
+        return GeometryUtil.toLocation(base.getWorld(), GeometryUtil.toVector3i(base).add(size));
     }
 
     /**
@@ -209,7 +210,7 @@ public class Cuboid {
      * @return whether the given point is contained within this Cuboid
      */
     public boolean contains(Vector3i vec) {
-        Vector3i max = MathUtil.add(base, size);
+        Vector3i max = GeometryUtil.toVector3i(base).add(size);
         return base.getX() <= vec.getX() && vec.getX() <= max.getX()
                 && base.getY() <= vec.getY() && vec.getY() <= max.getY()
                 && base.getZ() <= vec.getZ() && vec.getZ() <= max.getZ();
@@ -236,7 +237,7 @@ public class Cuboid {
             return false;
         }
 
-        Vector3i max = MathUtil.add(base, size);
+        Vector3i max = GeometryUtil.toVector3i(base).add(size);
         return base.getX() <= location.getBlockX() && location.getBlockX() < max.getX()
                 && base.getY() <= location.getBlockY() && location.getBlockY() < max.getY()
                 && base.getZ() <= location.getBlockZ() && location.getBlockZ() < max.getZ();

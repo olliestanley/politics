@@ -25,8 +25,6 @@ import gnu.trove.map.hash.TObjectIntHashMap;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.universe.Universe;
 
-import org.bukkit.entity.Player;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

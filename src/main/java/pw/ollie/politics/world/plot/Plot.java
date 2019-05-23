@@ -33,7 +33,7 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
 import pw.ollie.politics.util.Position;
-import pw.ollie.politics.util.math.Cuboid;
+import pw.ollie.politics.util.math.geo.Cuboid;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bson.BSONObject;
@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
 /**
  * A plot in Politics is made up of exactly one chunk, and may have sub-plots.
  */
-public final class Plot implements Storable {
+public final class Plot implements Storable, Protected {
     private final PoliticsWorld world;
     private final Chunk chunk;
     private final int baseX;

@@ -27,7 +27,7 @@ import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.privilege.Privileges;
-import pw.ollie.politics.util.math.Cuboid;
+import pw.ollie.politics.util.math.geo.Cuboid;
 import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.world.WorldConfig;
 import pw.ollie.politics.world.WorldManager;

@@ -20,8 +20,8 @@
 package pw.ollie.politics.util.serial;
 
 import pw.ollie.politics.util.Position;
-import pw.ollie.politics.util.math.RotatedPosition;
 import pw.ollie.politics.util.math.Vector2f;
+import pw.ollie.politics.util.math.geo.RotatedPosition;
 
 import org.bukkit.Bukkit;
 

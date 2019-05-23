@@ -19,11 +19,11 @@
  */
 package pw.ollie.politics.util;
 
+import com.google.common.base.MoreObjects;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-
-import com.google.common.base.MoreObjects;
 
 import java.util.Objects;
 

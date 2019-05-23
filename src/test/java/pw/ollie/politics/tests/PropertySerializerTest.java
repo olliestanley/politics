@@ -21,8 +21,8 @@ package pw.ollie.politics.tests;
 
 import pw.ollie.politics.AbstractPoliticsTest;
 import pw.ollie.politics.util.Position;
-import pw.ollie.politics.util.math.RotatedPosition;
 import pw.ollie.politics.util.math.Vector2f;
+import pw.ollie.politics.util.math.geo.RotatedPosition;
 import pw.ollie.politics.util.serial.PropertyDeserializationException;
 import pw.ollie.politics.util.serial.PropertySerializer;
 
