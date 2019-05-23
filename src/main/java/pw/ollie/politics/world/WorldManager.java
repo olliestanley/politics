@@ -143,6 +143,7 @@ public final class WorldManager {
             String fileName = world.getName() + ".ptw";
             File worldFile = new File(Politics.getFileSystem().getWorldsDir(), fileName);
 
+            // todo backups
             byte[] data = encoder.encode(world.toBSONObject());
             try {
                 Files.write(worldFile.toPath(), data);

@@ -33,7 +33,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 
+import org.bson.BSONDecoder;
+import org.bson.BSONEncoder;
+import org.bson.BSONObject;
+import org.bson.BasicBSONDecoder;
+import org.bson.BasicBSONEncoder;
+import org.bson.BasicBSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -145,7 +158,33 @@ public final class WarManager {
     }
 
     public void loadWars() {
-        // todo save all wars to wars.pws file in data directory
+        File dataDir = plugin.getFileSystem().getDataDir();
+        File warsDataDir = new File(dataDir, "wars");
+        BSONDecoder decoder = new BasicBSONDecoder();
+
+        for (File file : Objects.requireNonNull(warsDataDir.listFiles())) {
+            String fileName = file.getName();
+            if (!fileName.endsWith(".pws") || fileName.length() <= 4) {
+                continue;
+            }
+
+            byte[] data;
+            try {
+                data = Files.readAllBytes(file.toPath());
+            } catch (IOException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Could not read war file `" + fileName + "'!", ex);
+                continue;
+            }
+
+            BSONObject bson = decoder.readObject(data);
+            if (!(bson instanceof BasicBSONObject)) {
+                plugin.getLogger().log(Level.SEVERE, "Could not read war file + '" + fileName + "'!");
+                continue;
+            }
+
+            War war = new War((BasicBSONObject) bson);
+            activeWars.add(war);
+        }
 
         PluginManager pluginManager = plugin.getServer().getPluginManager();
         pluginManager.registerEvents(new WarProtectionListener(plugin), plugin);
@@ -153,6 +192,34 @@ public final class WarManager {
     }
 
     public void saveWars() {
-        // todo
+        File dataDir = plugin.getFileSystem().getDataDir();
+        File warsDataDir = new File(dataDir, "wars");
+        BSONEncoder encoder = new BasicBSONEncoder();
+
+        // todo backups
+        Set<String> storedWarFiles = new HashSet<>();
+
+        for (War war : activeWars) {
+            if (!war.canStore()) {
+                continue;
+            }
+
+            String fileName = war.getAggressorId() + "_" + war.getDefenderId() + ".pws";
+            File warFile = new File(warsDataDir, fileName);
+            storedWarFiles.add(warFile.getAbsolutePath());
+
+            byte[] data = encoder.encode(war.toBSONObject());
+            try {
+                Files.write(warFile.toPath(), data);
+            } catch (IOException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Could not save war file due to error!", ex);
+            }
+        }
+
+        for (File file : Objects.requireNonNull(warsDataDir.listFiles())) {
+            if (!storedWarFiles.contains(file.getAbsolutePath())) {
+                file.delete();
+            }
+        }
     }
 }

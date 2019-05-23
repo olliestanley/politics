@@ -21,6 +21,8 @@ package pw.ollie.politics.util.math;
 
 import org.bukkit.Location;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * Utilities for mathematical methods in Politics.
  */
@@ -31,6 +33,10 @@ public final class MathUtil {
 
     public static Location add(Vector3i one, Location two) {
         return new Location(two.getWorld(), two.getBlockX() + one.getX(), two.getBlockY() + one.getY(), two.getBlockZ() + one.getZ());
+    }
+
+    public static int randomInt() {
+        return ThreadLocalRandom.current().nextInt();
     }
 
     private MathUtil() {

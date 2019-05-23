@@ -126,7 +126,6 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
      */
     @Override
     public List<String> tabComplete(CommandSender sender, String name, String[] args, Location location) {
-        // todo check if this is the right check - only tab complete if they haven't typed beyond the first argument
         if (args.length < 2) {
             List<String> names = subcommands.stream().map(PoliticsSubcommand::getName).collect(Collectors.toList());
             List<String> completions = new ArrayList<>();
@@ -135,7 +134,6 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
             return completions;
         }
 
-        // todo completion for arguments beyond the subcommand?
         return new ArrayList<>();
     }
 
