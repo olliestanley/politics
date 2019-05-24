@@ -39,6 +39,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Generic subcommand of any command in Politics.
@@ -181,10 +182,14 @@ public abstract class PoliticsSubcommand {
         }
 
         if (sender instanceof Player) {
-            group = getCitizen(level, (Player) sender).getGroup(level);
-            if (group == null) {
+            Set<Group> groups = getCitizen(level, (Player) sender).getGroups(level);
+            if (groups == null || groups.isEmpty()) {
                 throw new CommandException("You aren't currently in a " + level.getName() + ".");
             }
+            if (groups.size() > 1) {
+                throw new CommandException("You are part of multiple " + level.getPlural() + ". Please specify one.");
+            }
+            group = groups.iterator().next();
         } else {
             throw new CommandException("You must specify a " + level.getName() + ".");
         }

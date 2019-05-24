@@ -199,7 +199,7 @@ public final class Universe implements Storable {
     public boolean addWorld(PoliticsWorld world) {
         List<GroupLevel> levels = rules.getGroupLevels();
         // Check if the rules are already there
-        if (world.getLevels().stream().anyMatch(levels::contains)) {
+        if (world.getGroupLevels().stream().anyMatch(levels::contains)) {
             return false;
         }
         return worlds.add(world);

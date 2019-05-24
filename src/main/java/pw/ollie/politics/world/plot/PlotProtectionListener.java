@@ -217,16 +217,6 @@ public final class PlotProtectionListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onHangingBreak(HangingBreakEvent event) {
-        // todo prevent breaks in plots or subplots by non-owners just like normal blocks
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onHangingPlace(HangingPlaceEvent event) {
-        // todo prevent placement in plots or subplots by non-owners just like normal blocks
-    }
-
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         Block pistonBlock = event.getBlock();
@@ -299,6 +289,42 @@ public final class PlotProtectionListener implements Listener {
         checkBlockProtection(dispenserBlock, sourcePlot, sourceSubplot, targetBlock, event, PlotProtectionType.DISPENSER);
     }
 
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onBlockFromTo(BlockFromToEvent event) {
+        // protect from things like lava spreading into a plot or subplot from outside
+        Block sourceBlock = event.getBlock();
+        Location sourceLoc = sourceBlock.getLocation();
+
+        Plot sourcePlot = worldManager.getPlotAt(sourceLoc);
+        Subplot sourceSubplot = sourcePlot.getSubplotAt(sourceLoc);
+
+        Block targetBlock = event.getToBlock();
+
+        checkBlockProtection(sourceBlock, sourcePlot, sourceSubplot, targetBlock, event, PlotProtectionType.BLOCK_FLOW);
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
+        // placing a liquid (from a bucket) is effectively placing a block
+        checkPlayerProtection(event.getPlayer(), event.getBlockClicked(), event, PlotProtectionType.BLOCK_PLACE);
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onPlayerBucketFill(PlayerBucketFillEvent event) {
+        // removing a block (into a bucket) is effectively breaking a block
+        checkPlayerProtection(event.getPlayer(), event.getBlockClicked(), event, PlotProtectionType.BLOCK_BREAK);
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onHangingBreak(HangingBreakEvent event) {
+        // todo prevent breaks in plots or subplots by non-owners just like normal blocks
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onHangingPlace(HangingPlaceEvent event) {
+        // todo prevent placement in plots or subplots by non-owners just like normal blocks
+    }
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onBlockForm(BlockFormEvent event) {
         // todo check if in a plot
@@ -324,20 +350,6 @@ public final class PlotProtectionListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
         // todo check plot of burning block
-    }
-
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onBlockFromTo(BlockFromToEvent event) {
-        // protect from things like lava spreading into a plot or subplot from outside
-        Block sourceBlock = event.getBlock();
-        Location sourceLoc = sourceBlock.getLocation();
-
-        Plot sourcePlot = worldManager.getPlotAt(sourceLoc);
-        Subplot sourceSubplot = sourcePlot.getSubplotAt(sourceLoc);
-
-        Block targetBlock = event.getToBlock();
-
-        checkBlockProtection(sourceBlock, sourcePlot, sourceSubplot, targetBlock, event, PlotProtectionType.BLOCK_FLOW);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -422,16 +434,6 @@ public final class PlotProtectionListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         // todo prevent taking items from armor stands, item frames etc in someone else's plot/subplot
-    }
-
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-        // todo prevent emptying buckets in someone else's plot/subplot
-    }
-
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-        // todo prevent filling buckets in someone else's plot/subplot
     }
 
     public static final class ProtectionCheck<T extends ProtectedRegion> {

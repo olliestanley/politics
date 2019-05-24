@@ -67,7 +67,10 @@
         </repository>
         <repository>
             <id>snapshot-repo</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>vault-repo</id>

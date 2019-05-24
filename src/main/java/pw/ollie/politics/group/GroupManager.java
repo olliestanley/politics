@@ -23,13 +23,16 @@ import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.universe.Universe;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Provides helper methods for accessing {@link Group}s and related features.
@@ -46,12 +49,26 @@ public final class GroupManager {
         pluginManager.registerEvents(new GroupProtectionListener(plugin), plugin);
     }
 
+    public Set<Group> getAllGroups() {
+        Set<Group> result = new THashSet<>();
+        plugin.getUniverseManager().getUniverses().stream()
+                .map(Universe::getGroups).forEach(result::addAll);
+        return result;
+    }
+
     public Set<Group> getAllCitizenGroups(UUID playerId) {
         Set<Group> result = new THashSet<>();
         plugin.getUniverseManager().getUniverses().stream()
                 .map(universe -> universe.getCitizenGroups(playerId))
                 .forEach(result::addAll);
         return result;
+    }
+
+    public Set<Group> getCitizenGroups(UUID playerId, Collection<Universe> universes) {
+        return getAllGroups().stream()
+                .filter(group -> universes.contains(group.getUniverse()))
+                .filter(group -> group.isMember(playerId))
+                .collect(Collectors.toSet());
     }
 
     public List<GroupLevel> getGroupLevels() {

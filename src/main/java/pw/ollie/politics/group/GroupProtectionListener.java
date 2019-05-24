@@ -20,10 +20,6 @@
 package pw.ollie.politics.group;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.group.level.GroupLevel;
-import pw.ollie.politics.universe.Universe;
-import pw.ollie.politics.universe.UniverseManager;
-import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -33,8 +29,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
-
-import java.util.UUID;
 
 /**
  * Listens to events to apply relevant {@link Group}-related protections to players.
@@ -46,6 +40,15 @@ final class GroupProtectionListener implements Listener {
         this.plugin = plugin;
     }
 
+    private boolean shouldPrevent(Player attacker, Player attacked) {
+        return plugin.getGroupManager().getCitizenGroups(attacked.getUniqueId(), plugin.getWorldManager().getWorld(attacked.getWorld()).getUniverses())
+                .stream().filter(this::noFriendlyFire).anyMatch(group -> group.isMember(attacker.getUniqueId()));
+    }
+
+    private boolean noFriendlyFire(Group group) {
+        return !group.getLevel().isFriendlyFire();
+    }
+
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Entity damaged = event.getEntity();
@@ -54,25 +57,8 @@ final class GroupProtectionListener implements Listener {
             return;
         }
 
-        PoliticsWorld world = plugin.getWorldManager().getWorld(damaged.getWorld());
-        UniverseManager universeManager = plugin.getUniverseManager();
-        UUID damagedId = damaged.getUniqueId();
-        UUID damagerId = damager.getUniqueId();
-
-        for (GroupLevel groupLevel : plugin.getGroupManager().getGroupLevels()) {
-            if (groupLevel.isFriendlyFire()) {
-                continue;
-            }
-
-            Universe universe = universeManager.getUniverse(world, groupLevel);
-            if (universe == null) {
-                continue;
-            }
-
-            if (universe.getCitizenGroups(damagedId).stream().anyMatch(group -> group.isMember(damagerId))) {
-                event.setCancelled(true);
-                return;
-            }
+        if (shouldPrevent((Player) damager, (Player) damaged)) {
+            event.setCancelled(true);
         }
     }
 
@@ -83,6 +69,14 @@ final class GroupProtectionListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityCombustByEntity(EntityCombustByEntityEvent event) {
-        // todo prevent friendlies setting each other on fire
+        Entity damaged = event.getEntity();
+        Entity damager = event.getCombuster();
+        if (!(damaged instanceof Player && damager instanceof Player)) {
+            return;
+        }
+
+        if (shouldPrevent((Player) damager, (Player) damaged)) {
+            event.setCancelled(true);
+        }
     }
 }

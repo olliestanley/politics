@@ -36,6 +36,7 @@ import org.bukkit.World;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -109,6 +110,17 @@ public final class PoliticsWorld implements Storable {
     }
 
     /**
+     * Gets a {@link Set} of all {@link Universe}s this {@link PoliticsWorld} is part of.
+     *
+     * @return all Universes this world is contained by
+     */
+    public Set<Universe> getUniverses() {
+        return Politics.getUniverseManager().getUniverses().stream()
+                .filter(universe -> universe.containsWorld(this))
+                .collect(Collectors.toSet());
+    }
+
+    /**
      * Gets the {@link Plot} at the given chunk position in this world.
      *
      * @param x chunk x coordinate
@@ -133,7 +145,7 @@ public final class PoliticsWorld implements Storable {
      *
      * @return all present GroupLevels in this world
      */
-    public List<GroupLevel> getLevels() {
+    public List<GroupLevel> getGroupLevels() {
         return Politics.getUniverseManager().getLevelsOfWorld(this);
     }
 
