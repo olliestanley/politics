@@ -26,6 +26,7 @@ import pw.ollie.politics.world.plot.Subplot;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public class SubplotProtectionTriggerEvent extends SubplotEvent implements Cancellable {
@@ -34,14 +35,16 @@ public class SubplotProtectionTriggerEvent extends SubplotEvent implements Cance
     private final Block damaged;
     private final PlotDamageSource source;
     private final PlotProtectionType type;
+    private final Event cause;
 
     private boolean cancelled;
 
-    public SubplotProtectionTriggerEvent(Plot plot, Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionType type) {
+    public SubplotProtectionTriggerEvent(Plot plot, Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionType type, Event cause) {
         super(plot, subplot);
         this.damaged = damaged;
         this.source = source;
         this.type = type;
+        this.cause = cause;
     }
 
     public Block getDamaged() {
@@ -54,6 +57,10 @@ public class SubplotProtectionTriggerEvent extends SubplotEvent implements Cance
 
     public PlotProtectionType getProtectionType() {
         return type;
+    }
+
+    public Event getCause() {
+        return cause;
     }
 
     /**

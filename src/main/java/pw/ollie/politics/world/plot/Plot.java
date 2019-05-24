@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
 /**
  * A plot in Politics is made up of exactly one chunk, and may have sub-plots.
  */
-public final class Plot implements Storable, Protected {
+public final class Plot implements Storable, ProtectedRegion {
     private final PoliticsWorld world;
     private final Chunk chunk;
     private final int baseX;
@@ -102,6 +102,14 @@ public final class Plot implements Storable, Protected {
         chunk = bukkitWorld.getChunkAt((Integer) x, (Integer) z);
         baseX = chunk.getX() * 16;
         baseZ = chunk.getZ() * 16;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Cuboid getCuboid() {
+        return Cuboid.fromChunk(chunk);
     }
 
     /**

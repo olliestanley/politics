@@ -22,6 +22,7 @@ package pw.ollie.politics.world;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.util.Position;
+import pw.ollie.politics.util.serial.FileUtil;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.PlotProtectionListener;
 
@@ -143,12 +144,18 @@ public final class WorldManager {
             String fileName = world.getName() + ".ptw";
             File worldFile = new File(Politics.getFileSystem().getWorldsDir(), fileName);
 
-            // todo backups
+            try {
+                FileUtil.createBackup(worldFile);
+            } catch (IOException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Could not back up world file for world '" + world.getName() + "'. Data will not be saved...", ex);
+                continue;
+            }
+
             byte[] data = encoder.encode(world.toBSONObject());
             try {
                 Files.write(worldFile.toPath(), data);
             } catch (IOException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Could not save universe file `" + fileName + "' due to error!", ex);
+                plugin.getLogger().log(Level.SEVERE, "Could not save world file `" + fileName + "' due to error! Please restore backup...", ex);
             }
         }
     }

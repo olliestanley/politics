@@ -25,6 +25,7 @@ import gnu.trove.map.hash.TObjectIntHashMap;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.universe.Universe;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -75,6 +76,8 @@ public final class TaxationManager {
             this.collectionTask.cancel();
         }
 
-        // todo save to file
+        File dataDir = plugin.getFileSystem().getDataDir();
+        File taxFile = new File(dataDir, "taxdata.ptx");
+        // todo
     }
 }

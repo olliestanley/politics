@@ -36,6 +36,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -84,7 +85,7 @@ public final class PlotProtectionListener implements Listener {
 
     // logic methods
 
-    private void checkPlayerProtection(Player player, Block block, Cancellable event, PlotProtectionType type) {
+    private <T extends Event & Cancellable> void checkPlayerProtection(Player player, Block block, T event, PlotProtectionType type) {
         WorldConfig worldConfig = worldManager.getWorld(block.getWorld()).getConfig();
         if (!worldConfig.hasPlots()) {
             return;
@@ -102,9 +103,10 @@ public final class PlotProtectionListener implements Listener {
         PlotDamageSource source = new PlotDamageSource(player);
 
         if (worldConfig.hasSubplots()) {
-            ProtectionCheck<Subplot> subplotCheck = canInSubplot(player, location, privilege);
+            ProtectionCheck<Subplot> subplotCheck = checkSubplotPrivileges(player, location, privilege);
             if (!subplotCheck.getResult()) {
-                SubplotProtectionTriggerEvent triggerEvent = callSubplotProtectionEvent(subplotCheck.getChecked(), block, source, type);
+                SubplotProtectionTriggerEvent triggerEvent = PoliticsEventFactory.callSubplotProtectionTriggerEvent(
+                        subplotCheck.getChecked().getParent(), subplotCheck.getChecked(), block, source, type, (Event) event);
                 if (!triggerEvent.isCancelled()) {
                     event.setCancelled(true);
                     MessageUtil.error(player, "You can't do that in this subplot.");
@@ -113,9 +115,10 @@ public final class PlotProtectionListener implements Listener {
             }
         }
 
-        ProtectionCheck<Plot> plotCheck = canInPlot(player, location, privilege);
+        ProtectionCheck<Plot> plotCheck = checkPlotPrivileges(player, location, privilege);
         if (!plotCheck.getResult()) {
-            PlotProtectionTriggerEvent triggerEvent = callPlotProtectionEvent(plotCheck.getChecked(), block, source, type);
+            PlotProtectionTriggerEvent triggerEvent = PoliticsEventFactory.callPlotProtectionTriggerEvent(
+                    plotCheck.getChecked(), block, source, type, (Event) event);
             if (!triggerEvent.isCancelled()) {
                 event.setCancelled(true);
                 MessageUtil.error(player, "You can't do that in this plot.");
@@ -123,7 +126,7 @@ public final class PlotProtectionListener implements Listener {
         }
     }
 
-    private void checkBlockProtection(Block sourceBlock, Plot sourcePlot, Subplot sourceSubplot, Block target, Cancellable event, PlotProtectionType type) {
+    private <T extends Event & Cancellable> void checkBlockProtection(Block sourceBlock, Plot sourcePlot, Subplot sourceSubplot, Block target, T event, PlotProtectionType type) {
         WorldConfig worldConfig = worldManager.getWorld(target.getWorld()).getConfig();
         if (!worldConfig.hasPlots()) {
             return;
@@ -140,7 +143,7 @@ public final class PlotProtectionListener implements Listener {
             // a block in an owned plot is being moved by a piston in a plot which either does not have an owner or
             // is owned by a different group to the owner of the plot the moved block is within - get rid
             PlotProtectionTriggerEvent protectEvent = PoliticsEventFactory.callPlotProtectionTriggerEvent(
-                    blockPlot, target, new PlotDamageSource(sourceBlock), type);
+                    blockPlot, target, new PlotDamageSource(sourceBlock), type, (Event) event);
             if (!protectEvent.isCancelled()) {
                 event.setCancelled(true);
                 return;
@@ -162,14 +165,14 @@ public final class PlotProtectionListener implements Listener {
             // a block in an owned subplot is being moved by a piston in a subplot which either does not have an
             // owner or is owned by someone other than the other of the plot the moved block is within - cancel
             SubplotProtectionTriggerEvent protectEvent = PoliticsEventFactory.callSubplotProtectionTriggerEvent(
-                    blockPlot, blockSubplot, target, new PlotDamageSource(sourceBlock), type);
+                    blockPlot, blockSubplot, target, new PlotDamageSource(sourceBlock), type, (Event) event);
             if (!protectEvent.isCancelled()) {
                 event.setCancelled(true);
             }
         }
     }
 
-    private ProtectionCheck<Plot> canInPlot(Player player, Location location, Privilege privilege) {
+    private ProtectionCheck<Plot> checkPlotPrivileges(Player player, Location location, Privilege privilege) {
         if (!(privilege.getTypes().contains(PrivilegeType.PLOT))) {
             throw new IllegalArgumentException("Must be a plot-type privilege");
         }
@@ -178,7 +181,7 @@ public final class PlotProtectionListener implements Listener {
         return new ProtectionCheck<>(plot, plot.can(player, privilege));
     }
 
-    private ProtectionCheck<Subplot> canInSubplot(Player player, Location location, Privilege privilege) {
+    private ProtectionCheck<Subplot> checkSubplotPrivileges(Player player, Location location, Privilege privilege) {
         if (!(privilege.getTypes().contains(PrivilegeType.PLOT))) {
             throw new IllegalArgumentException("Must be a plot-type privilege");
         }
@@ -431,15 +434,7 @@ public final class PlotProtectionListener implements Listener {
         // todo prevent filling buckets in someone else's plot/subplot
     }
 
-    private PlotProtectionTriggerEvent callPlotProtectionEvent(Plot plot, Block damaged, PlotDamageSource source, PlotProtectionType type) {
-        return PoliticsEventFactory.callPlotProtectionTriggerEvent(plot, damaged, source, type);
-    }
-
-    private SubplotProtectionTriggerEvent callSubplotProtectionEvent(Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionType type) {
-        return PoliticsEventFactory.callSubplotProtectionTriggerEvent(subplot.getParent(), subplot, damaged, source, type);
-    }
-
-    public static final class ProtectionCheck<T extends Protected> {
+    public static final class ProtectionCheck<T extends ProtectedRegion> {
         private final T checked;
         private final boolean result;
 

@@ -143,8 +143,8 @@ public final class PoliticsEventFactory {
         return callEvent(new PlotOwnerChangeEvent(plot, groupId, add));
     }
 
-    public static PlotProtectionTriggerEvent callPlotProtectionTriggerEvent(Plot plot, Block damaged, PlotDamageSource source, PlotProtectionType type) {
-        return callEvent(new PlotProtectionTriggerEvent(plot, damaged, source, type));
+    public static PlotProtectionTriggerEvent callPlotProtectionTriggerEvent(Plot plot, Block damaged, PlotDamageSource source, PlotProtectionType type, Event cause) {
+        return callEvent(new PlotProtectionTriggerEvent(plot, damaged, source, type, cause));
     }
 
     public static SubplotCreateEvent callSubplotCreateEvent(Plot plot, Subplot subplot) {
@@ -163,8 +163,8 @@ public final class PoliticsEventFactory {
         return callEvent(new SubplotPrivilegeChangeEvent(plot, subplot, subject, privilege, granted));
     }
 
-    public static SubplotProtectionTriggerEvent callSubplotProtectionTriggerEvent(Plot plot, Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionType type) {
-        return callEvent(new SubplotProtectionTriggerEvent(plot, subplot, damaged, source, type));
+    public static SubplotProtectionTriggerEvent callSubplotProtectionTriggerEvent(Plot plot, Subplot subplot, Block damaged, PlotDamageSource source, PlotProtectionType type, Event cause) {
+        return callEvent(new SubplotProtectionTriggerEvent(plot, subplot, damaged, source, type, cause));
     }
 
     public static UniverseCreateEvent callUniverseCreateEvent(Universe universe) {

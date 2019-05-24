@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
  * <p>
  * A subplot may have different privilege settings to its parent plot. Subplot privileges override plot privileges.
  */
-public final class Subplot implements Storable, Protected {
+public final class Subplot implements Storable, ProtectedRegion {
     private final PoliticsWorld world;
     private final int id;
     private final int parentX;
@@ -148,6 +148,16 @@ public final class Subplot implements Storable, Protected {
                 }
             }
         }
+    }
+
+    /**
+     * Gets the {@link Cuboid} representing the physical space occupied by this Subplot.
+     *
+     * @return the Cuboid occupied by this Subplot
+     */
+    @Override
+    public Cuboid getCuboid() {
+        return new Cuboid(getBaseLocation(), getSize());
     }
 
     /**
@@ -325,15 +335,6 @@ public final class Subplot implements Storable, Protected {
 
         this.owner = ownerId;
         return true;
-    }
-
-    /**
-     * Gets the {@link Cuboid} representing the physical space occupied by this Subplot.
-     *
-     * @return the Cuboid occupied by this Subplot
-     */
-    public Cuboid getCuboid() {
-        return new Cuboid(getBaseLocation(), getSize());
     }
 
     /**

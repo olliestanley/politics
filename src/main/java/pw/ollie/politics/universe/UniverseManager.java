@@ -30,6 +30,7 @@ import pw.ollie.politics.data.InvalidConfigurationException;
 import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.util.serial.FileUtil;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bson.BSONDecoder;
@@ -300,14 +301,19 @@ public final class UniverseManager {
             String fileName = universe.getName() + ".ptu";
             File universeFile = new File(universesDir, fileName);
 
+            try {
+                FileUtil.createBackup(universeFile);
+            } catch (IOException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Could not back up world file for universe '" + universe.getName() + "'. Data will not be saved...", ex);
+                continue;
+            }
+
             byte[] data = encoder.encode(universe.toBSONObject());
             try {
                 Files.write(universeFile.toPath(), data);
             } catch (IOException ex) {
-                this.plugin.getLogger().log(Level.SEVERE, "Could not save universe file `" + fileName + "' due to error!", ex);
-                continue;
+                this.plugin.getLogger().log(Level.SEVERE, "Could not save universe file `" + fileName + "' due to error! Please restore backup...", ex);
             }
-            // TODO make backups
         }
     }
 }

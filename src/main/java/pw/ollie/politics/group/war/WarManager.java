@@ -28,6 +28,7 @@ import pw.ollie.politics.event.war.WarFinishEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.serial.FileUtil;
 
 import org.bson.BSONDecoder;
 import org.bson.BSONEncoder;
@@ -196,7 +197,6 @@ public final class WarManager {
         File warsDataDir = new File(dataDir, "wars");
         BSONEncoder encoder = new BasicBSONEncoder();
 
-        // todo backups
         Set<String> storedWarFiles = new HashSet<>();
 
         for (War war : activeWars) {
@@ -208,11 +208,18 @@ public final class WarManager {
             File warFile = new File(warsDataDir, fileName);
             storedWarFiles.add(warFile.getAbsolutePath());
 
+            try {
+                FileUtil.createBackup(warFile);
+            } catch (IOException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Could not back up world file for war. Data will not be saved...", ex);
+                continue;
+            }
+
             byte[] data = encoder.encode(war.toBSONObject());
             try {
                 Files.write(warFile.toPath(), data);
             } catch (IOException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Could not save war file due to error!", ex);
+                plugin.getLogger().log(Level.SEVERE, "Could not save war file due to error! Please restore backup...", ex);
             }
         }
 
