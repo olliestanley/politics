@@ -22,7 +22,6 @@ package pw.ollie.politicswar.war;
 import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
-import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.universe.Universe;
@@ -61,10 +60,6 @@ public final class WarManager {
     private final Set<War> activeWars;
 
     public WarManager(PoliticsWarPlugin plugin) {
-        if (!Politics.getConfig().areWarsEnabled()) {
-            throw new IllegalStateException("attempt to create war manager when wars are not enabled");
-        }
-
         this.plugin = plugin;
         this.activeWars = new THashSet<>();
     }

@@ -19,6 +19,9 @@
  */
 package pw.ollie.politicstax;
 
+import pw.ollie.politics.Politics;
+import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politicstax.command.GroupSettaxCommand;
 import pw.ollie.politicstax.tax.TaxationManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,19 +30,31 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Core plugin class for PoliticsTax.
  */
 public final class PoliticsTaxPlugin extends JavaPlugin {
+    private PoliticsTaxConfig config;
     private TaxationManager taxationManager;
 
     @Override
     public void onEnable() {
+        this.config = new PoliticsTaxConfig(this);
+        this.config.loadConfig();
+
         this.taxationManager = new TaxationManager(this);
         this.taxationManager.loadTaxData();
 
         // todo data save task
+
+        for (GroupLevel groupLevel : Politics.getGroupManager().getGroupLevels()) {
+            Politics.getCommandManager().getPoliticsCommand(groupLevel.getId()).registerSubCommand(new GroupSettaxCommand(groupLevel));
+        }
     }
 
     @Override
     public void onDisable() {
         this.taxationManager.saveTaxData(true);
+    }
+
+    public PoliticsTaxConfig getTaxConfig() {
+        return config;
     }
 
     public TaxationManager getTaxationManager() {

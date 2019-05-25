@@ -43,15 +43,9 @@ public final class PoliticsConfig {
     // colour scheme
     private ColourScheme colourScheme;
 
-    // wars
-    private boolean warsEnabled;
-
     // economy
     private boolean economyEnabled;
     private String economyType;
-    private boolean taxEnabled;
-    private double maxFixedTax;
-    private int taxPeriod;
 
     PoliticsConfig(PoliticsPlugin plugin) {
         this.plugin = plugin;
@@ -65,15 +59,6 @@ public final class PoliticsConfig {
      */
     public ColourScheme getColourScheme() {
         return colourScheme;
-    }
-
-    /**
-     * Returns whether wars are configured to be enabled.
-     *
-     * @return whether wars are allowed
-     */
-    public boolean areWarsEnabled() {
-        return warsEnabled;
     }
 
     /**
@@ -94,33 +79,6 @@ public final class PoliticsConfig {
         return economyType;
     }
 
-    /**
-     * Returns whether taxation is configured to be enabled.
-     *
-     * @return whether taxation is allowed
-     */
-    public boolean isTaxEnabled() {
-        return taxEnabled;
-    }
-
-    /**
-     * Gets the configured maximum value for fixed-amount taxation by groups.
-     *
-     * @return the maximum taxation amount
-     */
-    public double getMaxFixedTax() {
-        return maxFixedTax;
-    }
-
-    /**
-     * Gets the period between taxation collection, measured in minutes.
-     *
-     * @return the time between tax collections
-     */
-    public int getTaxPeriod() {
-        return taxPeriod;
-    }
-
     void loadConfig() {
         // save the default config file without overwriting an existing one
         plugin.saveResource("config.yml", false);
@@ -135,14 +93,8 @@ public final class PoliticsConfig {
         ChatColor prefix = ChatColor.valueOf(colourSchemeSection.getString("prefix", "dark_green").toUpperCase());
         colourScheme = new ColourScheme(normal, error, highlight, prefix);
 
-        ConfigurationSection warsSection = ConfigUtil.getOrCreateSection(config, "wars");
-        warsEnabled = warsSection.getBoolean("enabled", false);
-
         ConfigurationSection economicSection = ConfigUtil.getOrCreateSection(config, "economic");
         economyEnabled = economicSection.getBoolean("enabled", true);
         economyType = economicSection.getString("economy-type", "vault").toLowerCase();
-        taxEnabled = economicSection.getBoolean("tax", false);
-        maxFixedTax = economicSection.getDouble("max-fixed-tax", 10);
-        taxPeriod = economicSection.getInt("tax-period", 1440);
     }
 }

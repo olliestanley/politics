@@ -17,22 +17,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.command.group;
+package pw.ollie.politicstax.command;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Argument;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.command.group.GroupSubcommand;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.message.MessageUtil;
+import pw.ollie.politicstax.PoliticsTaxConfig;
+import pw.ollie.politicstax.PoliticsTaxPlugin;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class GroupSettaxCommand extends GroupSubcommand {
-    GroupSettaxCommand(GroupLevel groupLevel) {
+    public GroupSettaxCommand(GroupLevel groupLevel) {
         super("settax", groupLevel);
     }
 
@@ -41,6 +45,8 @@ public class GroupSettaxCommand extends GroupSubcommand {
      */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
+        PoliticsTaxConfig taxConfig = JavaPlugin.getPlugin(PoliticsTaxPlugin.class).getTaxConfig();
+
         Group group = findGroup(sender, args);
 
         if (args.length(false) > 0) {
@@ -54,8 +60,8 @@ public class GroupSettaxCommand extends GroupSubcommand {
             }
 
             double amount = taxArg.asDouble();
-            if (amount > plugin.getPoliticsConfig().getMaxFixedTax()) {
-                throw new CommandException("Tha maximum tax is " + plugin.getPoliticsConfig().getMaxFixedTax() + ".");
+            if (amount > taxConfig.getMaxFixedTax()) {
+                throw new CommandException("Tha maximum tax is " + taxConfig.getMaxFixedTax() + ".");
             }
 
             group.setProperty(GroupProperty.FIXED_TAX, amount);

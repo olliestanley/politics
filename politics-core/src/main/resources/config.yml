@@ -7,14 +7,7 @@ colour-scheme:
   highlight: yellow
   prefix: dark_green
 
-# wars configuration
-wars:
-  enabled: false
-
 # politics economy functions configuration
 economic:
   enabled: true
   economy-type: vault
-  tax: false
-  max-fixed-tax: 10
-  tax-period: 1440 # minutes

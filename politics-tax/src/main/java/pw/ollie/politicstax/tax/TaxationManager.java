@@ -23,6 +23,10 @@ import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
 import pw.ollie.politics.Politics;
+import pw.ollie.politics.economy.PoliticsEconomy;
+import pw.ollie.politics.economy.PoliticsEconomyResult;
+import pw.ollie.politics.group.Group;
+import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politicstax.PoliticsTaxPlugin;
 
@@ -48,6 +52,18 @@ public final class TaxationManager {
 
     public int getLastCollection(UUID playerId, Universe universe) {
         return getLastCollections(playerId).get(universe);
+    }
+
+    /**
+     * Taxes the given member of the given group by the Group's fixed tax amount.
+     *
+     * @param group    the group to tax the member of
+     * @param playerId the player id of the member to tax
+     * @return the result of the attempt to tax the member
+     */
+    public PoliticsEconomyResult applyFixedTax(Group group, UUID playerId) {
+        PoliticsEconomy economy = Politics.getPoliticsEconomy();
+        return economy.taxMember(group, playerId, Math.min(group.getDoubleProperty(GroupProperty.FIXED_TAX, 0.0), plugin.getTaxConfig().getMaxFixedTax()));
     }
 
     TObjectIntMap<Universe> getLastCollections(UUID playerId) {

@@ -51,7 +51,7 @@ final class TaxationCollectionTask extends BukkitRunnable {
             return;
         }
 
-        int collectionPeriod = Politics.getConfig().getTaxPeriod();
+        int collectionPeriod = plugin.getTaxConfig().getTaxPeriod();
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             UUID playerId = player.getUniqueId();
@@ -61,7 +61,7 @@ final class TaxationCollectionTask extends BukkitRunnable {
 
                 if (lastCollection >= collectionPeriod) {
                     universe.getCitizenGroups(player).stream()
-                            .filter(this::canTax).forEach(group -> economy.applyFixedTax(group, playerId));
+                            .filter(this::canTax).forEach(group -> taxationManager.applyFixedTax(group, playerId));
                     taxationManager.resetLastCollection(playerId, universe);
                 } else {
                     taxationManager.incrementLastCollection(playerId, universe);
