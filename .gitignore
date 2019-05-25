@@ -1,3 +1,5 @@
+politics-core/target/
+
 .idea/
 *.iml
 target/

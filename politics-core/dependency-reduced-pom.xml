@@ -1,113 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>politics</artifactId>
+    <groupId>pw.ollie</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>pw.ollie</groupId>
-  <artifactId>politics</artifactId>
-  <name>Politics</name>
-  <version>0.0.1-SNAPSHOT</version>
-  <description>${project.name} is a self-service community management system, built for Bukkit.</description>
-  <url>http://dzineit.github.io/politics</url>
-  <issueManagement>
-    <system>github</system>
-    <url>http://github.com/DziNeIT/${project.name}/issues</url>
-  </issueManagement>
-  <ciManagement>
-    <system>jenkins-ci</system>
-    <url>https://ci.codemc.org/job/dzineit/job/politics/</url>
-  </ciManagement>
-  <inceptionYear>2019</inceptionYear>
-  <developers>
-    <developer>
-      <id>DziNeIT</id>
-      <name>Oliver Stanley</name>
-      <email>oliver@stanley.pm</email>
-    </developer>
-  </developers>
-  <licenses>
-    <license>
-      <name>Affero General Public License Version 3</name>
-      <url>http://www.gnu.org/licenses/agpl-3.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  <scm>
-    <connection>scm:git:git://github.com/DziNeIT/${project.name}.git</connection>
-    <developerConnection>scm:git:git@github.com:DziNeIT/${project.name}.git</developerConnection>
-    <url>https://github.com/DziNeIT/${project.name}</url>
-  </scm>
+  <artifactId>politics-core</artifactId>
   <build>
-    <defaultGoal>clean install</defaultGoal>
-    <resources>
-      <resource>
-        <targetPath>.</targetPath>
-        <directory>${basedir}</directory>
-        <includes>
-          <include>LICENSE</include>
-        </includes>
-      </resource>
-      <resource>
-        <targetPath>.</targetPath>
-        <filtering>true</filtering>
-        <directory>${basedir}/src/main/resources</directory>
-        <includes>
-          <include>plugin.yml</include>
-          <include>config.yml</include>
-          <include>templates/*</include>
-        </includes>
-      </resource>
-    </resources>
     <plugins>
-      <plugin>
-        <groupId>com.mycila.maven-license-plugin</groupId>
-        <artifactId>maven-license-plugin</artifactId>
-        <version>1.10.b1</version>
-        <executions>
-          <execution>
-            <phase>clean</phase>
-            <goals>
-              <goal>format</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <quiet>true</quiet>
-          <encoding>UTF-8</encoding>
-          <strictCheck>true</strictCheck>
-          <header>${basedir}/HEADER</header>
-          <keywords>
-            <keyword>${project.name}</keyword>
-            <keyword>license</keyword>
-          </keywords>
-          <mapping>
-            <java>SLASHSTAR_STYLE</java>
-          </mapping>
-          <properties>
-            <name>${project.name}</name>
-            <url>${project.organization.url}</url>
-            <license>Affero General Public License Version 3</license>
-            <licenseUrl>http://www.gnu.org/licenses/agpl-3.0.txt</licenseUrl>
-            <copyright>Copyright (c) ${project.inceptionYear}</copyright>
-          </properties>
-          <includes>
-            <include>src/main/java/**</include>
-            <include>src/test/java/**</include>
-          </includes>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-          <compilerArguments>
-            <O>-Xlint:all</O>
-            <O>-Xlint:-path</O>
-          </compilerArguments>
-          <showWarnings>true</showWarnings>
-          <showDeprecation>true</showDeprecation>
-        </configuration>
-      </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.3.2</version>
@@ -200,21 +101,6 @@
       </plugin>
     </plugins>
   </build>
-  <repositories>
-    <repository>
-      <id>spigot-repo</id>
-      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-    </repository>
-    <repository>
-      <snapshots />
-      <id>snapshot-repo</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
-    <repository>
-      <id>vault-repo</id>
-      <url>http://nexus.hc.to/content/repositories/pub_releases</url>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <groupId>org.spigotmc</groupId>
@@ -285,12 +171,4 @@
       </exclusions>
     </dependency>
   </dependencies>
-  <properties>
-    <apiVersion>dev-SNAPSHOT</apiVersion>
-    <mainClass>pw.ollie.politics.PoliticsPlugin</mainClass>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <powermock.version>1.7.1</powermock.version>
-    <buildNumber>0</buildNumber>
-    <github.global.server>github</github.global.server>
-  </properties>
 </project>
