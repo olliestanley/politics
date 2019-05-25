@@ -11,6 +11,7 @@
     <modules>
         <module>politics-core</module>
         <module>politics-war</module>
+        <module>politics-tax</module>
     </modules>
 
     <!-- Description -->

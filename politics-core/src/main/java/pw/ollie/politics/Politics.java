@@ -23,7 +23,6 @@ import pw.ollie.politics.activity.ActivityManager;
 import pw.ollie.politics.command.PoliticsCommandManager;
 import pw.ollie.politics.data.PoliticsFileSystem;
 import pw.ollie.politics.economy.PoliticsEconomy;
-import pw.ollie.politics.economy.TaxationManager;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
@@ -145,17 +144,6 @@ public final class Politics {
      */
     public static PoliticsEconomy getPoliticsEconomy() {
         return Politics.getPlugin().getEconomy();
-    }
-
-    /**
-     * Gets the {@link TaxationManager} associated with the current plugin instance.
-     * <p>
-     * Will return null if the plugin is not configured to enable taxation features.
-     *
-     * @return current plugin TaxationManager instance, or {@code null} if taxation features are disabled
-     */
-    public static TaxationManager getTaxationManager() {
-        return Politics.getPlugin().getTaxationManager();
     }
 
     /**

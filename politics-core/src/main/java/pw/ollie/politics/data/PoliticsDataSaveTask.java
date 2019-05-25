@@ -35,10 +35,6 @@ public final class PoliticsDataSaveTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (plugin.getTaxationManager() != null) {
-            plugin.getTaxationManager().saveTaxData(false);
-        }
-
         plugin.getWorldManager().saveWorlds();
         plugin.getUniverseManager().saveRules();
         plugin.getUniverseManager().saveUniverses();

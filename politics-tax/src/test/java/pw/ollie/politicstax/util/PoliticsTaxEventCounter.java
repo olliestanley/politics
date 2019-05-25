@@ -17,37 +17,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politicswar;
+package pw.ollie.politicstax.util;
 
-import pw.ollie.politicswar.war.WarManager;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
-/**
- * Core plugin class for PoliticsWar.
- */
-public final class PoliticsWarPlugin extends JavaPlugin {
-    private WarManager warManager;
-
-    @Override
-    public void onEnable() {
-        this.warManager = new WarManager(this);
-        this.warManager.loadWars();
-
-        // todo data save task
-    }
-
-    @Override
-    public void onDisable() {
-        this.warManager.saveWars();
-    }
-
-    /**
-     * Gets the {@link WarManager} associated with this plugin instance.
-     *
-     * @return the plugin WarManager instance
-     */
-    public WarManager getWarManager() {
-        return warManager;
+public class PoliticsTaxEventCounter implements Listener {
+    @EventHandler
+    public void event(Event event) {
     }
 }

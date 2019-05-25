@@ -24,7 +24,6 @@ import pw.ollie.politics.command.PoliticsCommandManager;
 import pw.ollie.politics.data.PoliticsDataSaveTask;
 import pw.ollie.politics.data.PoliticsFileSystem;
 import pw.ollie.politics.economy.PoliticsEconomy;
-import pw.ollie.politics.economy.TaxationManager;
 import pw.ollie.politics.economy.vault.PoliticsEconomyVault;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
@@ -58,7 +57,6 @@ public final class PoliticsPlugin extends JavaPlugin {
     private GroupManager groupManager;
     private ActivityManager activityManager;
     private PoliticsEconomy politicsEconomy;
-    private TaxationManager taxationManager;
 
     private PoliticsCommandManager commandManager;
 
@@ -105,11 +103,6 @@ public final class PoliticsPlugin extends JavaPlugin {
                 this.getLogger().log(Level.SEVERE, "Economy features are set to enabled but the economy type could not load. Economic features will not be enabled.");
                 this.politicsEconomy = null;
             }
-
-            if (this.config.isTaxEnabled() && this.politicsEconomy != null) {
-                this.taxationManager = new TaxationManager(this);
-                this.taxationManager.loadTaxData();
-            }
         }
 
         this.commandManager = new PoliticsCommandManager(this);
@@ -129,10 +122,6 @@ public final class PoliticsPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         this.saveTask.cancel();
-
-        if (this.taxationManager != null) {
-            this.taxationManager.saveTaxData(true);
-        }
 
         this.worldManager.saveWorlds();
         this.universeManager.saveRules();
@@ -214,17 +203,6 @@ public final class PoliticsPlugin extends JavaPlugin {
      */
     public PoliticsEconomy getEconomy() {
         return politicsEconomy;
-    }
-
-    /**
-     * Gets the {@link TaxationManager} associated with this plugin instance.
-     * <p>
-     * Will return null if the plugin is not configured to enable economy features.
-     *
-     * @return the plugin TaxationManager instance, or {@code null} if economy features are disabled
-     */
-    public TaxationManager getTaxationManager() {
-        return taxationManager;
     }
 
     /**

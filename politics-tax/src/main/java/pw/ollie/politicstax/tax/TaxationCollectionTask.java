@@ -17,11 +17,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.economy;
+package pw.ollie.politicstax.tax;
 
-import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.Politics;
+import pw.ollie.politics.economy.PoliticsEconomy;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politicstax.PoliticsTaxPlugin;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -32,9 +34,9 @@ import java.util.UUID;
  * Collects taxation revenue from players depending on configured settings and Group properties.
  */
 final class TaxationCollectionTask extends BukkitRunnable {
-    private final PoliticsPlugin plugin;
+    private final PoliticsTaxPlugin plugin;
 
-    TaxationCollectionTask(PoliticsPlugin plugin) {
+    TaxationCollectionTask(PoliticsTaxPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -43,18 +45,18 @@ final class TaxationCollectionTask extends BukkitRunnable {
      */
     @Override
     public void run() {
-        PoliticsEconomy economy = plugin.getEconomy();
+        PoliticsEconomy economy = Politics.getPoliticsEconomy();
         TaxationManager taxationManager = plugin.getTaxationManager();
         if (economy == null || taxationManager == null) {
             return;
         }
 
-        int collectionPeriod = plugin.getPoliticsConfig().getTaxPeriod();
+        int collectionPeriod = Politics.getConfig().getTaxPeriod();
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             UUID playerId = player.getUniqueId();
 
-            for (Universe universe : plugin.getUniverseManager().getUniverses(player.getWorld())) {
+            for (Universe universe : Politics.getUniverseManager().getUniverses(player.getWorld())) {
                 int lastCollection = taxationManager.getLastCollection(playerId, universe);
 
                 if (lastCollection >= collectionPeriod) {

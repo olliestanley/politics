@@ -17,13 +17,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.economy;
+package pw.ollie.politicstax.tax;
 
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
-import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.Politics;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politicstax.PoliticsTaxPlugin;
 
 import java.io.File;
 import java.util.HashMap;
@@ -35,12 +36,12 @@ public final class TaxationManager {
     // run the collection update task once a minute
     private static final long TASK_PERIOD = 20 * 60;
 
-    private final PoliticsPlugin plugin;
+    private final PoliticsTaxPlugin plugin;
     private final Map<UUID, TObjectIntMap<Universe>> lastCollections;
 
     private TaxationCollectionTask collectionTask;
 
-    public TaxationManager(PoliticsPlugin plugin) {
+    public TaxationManager(PoliticsTaxPlugin plugin) {
         this.plugin = plugin;
         this.lastCollections = new HashMap<>();
     }
@@ -76,7 +77,7 @@ public final class TaxationManager {
             this.collectionTask.cancel();
         }
 
-        File dataDir = plugin.getFileSystem().getDataDir();
+        File dataDir = Politics.getFileSystem().getDataDir();
         File taxFile = new File(dataDir, "taxdata.ptx");
         // todo
     }

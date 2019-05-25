@@ -17,37 +17,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politicswar;
+package pw.ollie.politicstax;
 
-import pw.ollie.politicswar.war.WarManager;
+import pw.ollie.politicstax.tax.TaxationManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Core plugin class for PoliticsWar.
+ * Core plugin class for PoliticsTax.
  */
-public final class PoliticsWarPlugin extends JavaPlugin {
-    private WarManager warManager;
+public final class PoliticsTaxPlugin extends JavaPlugin {
+    private TaxationManager taxationManager;
 
     @Override
     public void onEnable() {
-        this.warManager = new WarManager(this);
-        this.warManager.loadWars();
+        this.taxationManager = new TaxationManager(this);
+        this.taxationManager.loadTaxData();
 
         // todo data save task
     }
 
     @Override
     public void onDisable() {
-        this.warManager.saveWars();
+        this.taxationManager.saveTaxData(true);
     }
 
-    /**
-     * Gets the {@link WarManager} associated with this plugin instance.
-     *
-     * @return the plugin WarManager instance
-     */
-    public WarManager getWarManager() {
-        return warManager;
+    public TaxationManager getTaxationManager() {
+        return taxationManager;
     }
 }
