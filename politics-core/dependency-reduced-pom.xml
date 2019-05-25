@@ -62,20 +62,6 @@
                   </excludes>
                 </filter>
               </filters>
-              <relocations>
-                <relocation>
-                  <pattern>org.bson</pattern>
-                  <shadedPattern>politics.bson</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>gnu.trove</pattern>
-                  <shadedPattern>politics.trove</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>com.google.mu</pattern>
-                  <shadedPattern>politics.mu</shadedPattern>
-                </relocation>
-              </relocations>
             </configuration>
           </execution>
         </executions>
@@ -103,6 +89,18 @@
   </build>
   <dependencies>
     <dependency>
+      <groupId>net.milkbowl.vault</groupId>
+      <artifactId>VaultAPI</artifactId>
+      <version>1.7</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>bukkit</artifactId>
+          <groupId>org.bukkit</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
       <version>1.14-R0.1-SNAPSHOT</version>
@@ -127,18 +125,6 @@
         <exclusion>
           <artifactId>snakeyaml</artifactId>
           <groupId>org.yaml</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>net.milkbowl.vault</groupId>
-      <artifactId>VaultAPI</artifactId>
-      <version>1.7</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>bukkit</artifactId>
-          <groupId>org.bukkit</groupId>
         </exclusion>
       </exclusions>
     </dependency>

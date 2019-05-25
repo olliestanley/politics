@@ -17,15 +17,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.command.war;
+package pw.ollie.politicswar.event.war;
 
-import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.command.PoliticsBaseCommand;
+import pw.ollie.politicswar.war.War;
 
-public final class WarCommand extends PoliticsBaseCommand {
-    public WarCommand(PoliticsPlugin plugin) {
-        super(plugin, "war", "Base war management command");
+import org.bukkit.event.Event;
 
-        this.registerSubCommand(new WarDeclareCommand());
+public abstract class WarEvent extends Event {
+    private final War war;
+
+    protected WarEvent(War war) {
+        this.war = war;
+    }
+
+    public War getWar() {
+        return war;
     }
 }

@@ -17,30 +17,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.data;
+package pw.ollie.politicswar.event;
 
-import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.Politics;
+import pw.ollie.politicswar.event.war.WarBeginEvent;
+import pw.ollie.politicswar.event.war.WarFinishEvent;
+import pw.ollie.politicswar.war.War;
 
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.command.CommandSender;
+import org.bukkit.event.Event;
 
-/**
- * Regularly saves all stored data in Politics.
- */
-public final class PoliticsDataSaveTask extends BukkitRunnable {
-    private final PoliticsPlugin plugin;
-
-    public PoliticsDataSaveTask(PoliticsPlugin plugin) {
-        this.plugin = plugin;
+public final class PoliticsWarEventFactory {
+    public static WarBeginEvent callWarBeginEvent(War war, CommandSender source) {
+        return callEvent(new WarBeginEvent(war, source));
     }
 
-    @Override
-    public void run() {
-        if (plugin.getTaxationManager() != null) {
-            plugin.getTaxationManager().saveTaxData(false);
-        }
+    public static WarFinishEvent callWarFinishEvent(War war) {
+        return callEvent(new WarFinishEvent(war));
+    }
 
-        plugin.getWorldManager().saveWorlds();
-        plugin.getUniverseManager().saveRules();
-        plugin.getUniverseManager().saveUniverses();
+    private static <T extends Event> T callEvent(T event) {
+        Politics.getServer().getPluginManager().callEvent(event);
+        return event;
+    }
+
+    private PoliticsWarEventFactory() {
+        throw new UnsupportedOperationException();
     }
 }

@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.event.war;
+package pw.ollie.politicswar.event.war;
 
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.war.War;
+import pw.ollie.politicswar.war.War;
 
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;

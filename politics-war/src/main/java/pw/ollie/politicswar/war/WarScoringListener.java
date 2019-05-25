@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.group.war;
+package pw.ollie.politicswar.war;
 
-import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politicswar.PoliticsWarPlugin;
 
 import org.bukkit.event.Listener;
 
@@ -27,9 +27,9 @@ import org.bukkit.event.Listener;
  * Listens to events in order to update {@link War} scores and eventually determine the winner and loser.
  */
 final class WarScoringListener implements Listener {
-    private final PoliticsPlugin plugin;
+    private final PoliticsWarPlugin plugin;
 
-    WarScoringListener(PoliticsPlugin plugin) {
+    WarScoringListener(PoliticsWarPlugin plugin) {
         this.plugin = plugin;
     }
 

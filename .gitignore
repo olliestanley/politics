@@ -1,4 +1,5 @@
 politics-core/target/
+politics-war/target/
 
 .idea/
 *.iml

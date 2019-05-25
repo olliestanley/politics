@@ -27,7 +27,6 @@ import pw.ollie.politics.economy.TaxationManager;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
-import pw.ollie.politics.group.war.WarManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.message.ColourScheme;
 import pw.ollie.politics.util.visualise.Visualiser;
@@ -135,15 +134,6 @@ public final class Politics {
      */
     public static ActivityManager getActivityManager() {
         return Politics.getPlugin().getActivityManager();
-    }
-
-    /**
-     * Gets the {@link WarManager} associated with the current plugin instance.
-     *
-     * @return current plugin WarManager instance
-     */
-    public static WarManager getWarManager() {
-        return Politics.getPlugin().getWarManager();
     }
 
     /**

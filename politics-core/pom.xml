@@ -14,13 +14,6 @@
 
     <dependencies>
         <!-- Compile -->
-        <!-- Bukkit API -->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.14-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
         <!-- BSON support -->
         <dependency>
             <groupId>org.mongodb</groupId>
@@ -108,20 +101,6 @@
                                     </excludes>
                                 </filter>
                             </filters>
-                            <relocations>
-                                <relocation>
-                                    <pattern>org.bson</pattern>
-                                    <shadedPattern>politics.bson</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>gnu.trove</pattern>
-                                    <shadedPattern>politics.trove</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>com.google.mu</pattern>
-                                    <shadedPattern>politics.mu</shadedPattern>
-                                </relocation>
-                            </relocations>
                         </configuration>
                     </execution>
                 </executions>

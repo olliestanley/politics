@@ -21,7 +21,6 @@ package pw.ollie.politics.tests;
 
 import pw.ollie.politics.AbstractPoliticsTest;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.group.war.War;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.PoliticsTestReflection;
 import pw.ollie.politics.util.math.Vector3i;
@@ -41,7 +40,6 @@ import org.bson.BasicBSONObject;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public final class StorablesTest extends AbstractPoliticsTest {
@@ -71,15 +69,15 @@ public final class StorablesTest extends AbstractPoliticsTest {
         Assert.assertEquals(group.getTag(), restoredGroup.getTag());
 
         // test war storage
-        Group aggressor = createTestTown("Aggressor");
-        Group defender = createTestTown("Defender");
-        War war = new War(aggressor, defender);
-        PoliticsTestReflection.setWarActive(war, true);
-        LocalDateTime startTime = war.getStartTime();
-        BasicBSONObject warBson = (BasicBSONObject) war.toBSONObject();
-        War restoredWar = PoliticsTestReflection.instantiateWar(warBson);
-        Assert.assertEquals(startTime, restoredWar.getStartTime());
-        Assert.assertTrue(restoredWar.isActive());
+//        Group aggressor = createTestTown("Aggressor");
+//        Group defender = createTestTown("Defender");
+//        War war = new War(aggressor, defender);
+//        PoliticsTestReflection.setWarActive(war, true);
+//        LocalDateTime startTime = war.getStartTime();
+//        BasicBSONObject warBson = (BasicBSONObject) war.toBSONObject();
+//        War restoredWar = PoliticsTestReflection.instantiateWar(warBson);
+//        Assert.assertEquals(startTime, restoredWar.getStartTime());
+//        Assert.assertTrue(restoredWar.isActive());
 
         // test politics world storage
         int testPlotX = 1, testPlotY = 1;

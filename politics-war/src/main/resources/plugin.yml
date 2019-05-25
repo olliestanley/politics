@@ -1,0 +1,5 @@
+name: PoliticsWar
+version: ${project.version}
+main: pw.ollie.politicswar.PoliticsWarPlugin
+
+depend: [Politics]

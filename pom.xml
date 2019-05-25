@@ -10,6 +10,7 @@
     <inceptionYear>2019</inceptionYear>
     <modules>
         <module>politics-core</module>
+        <module>politics-war</module>
     </modules>
 
     <!-- Description -->
@@ -83,6 +84,14 @@
 
     <!-- Dependencies -->
     <dependencies>
+        <!-- Bukkit API -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.14-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Test -->
         <!-- JUnit - Unit Testing -->
         <dependency>

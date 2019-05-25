@@ -28,7 +28,6 @@ import pw.ollie.politics.economy.TaxationManager;
 import pw.ollie.politics.economy.vault.PoliticsEconomyVault;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
-import pw.ollie.politics.group.war.WarManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.visualise.Visualiser;
 import pw.ollie.politics.world.WorldManager;
@@ -58,7 +57,6 @@ public final class PoliticsPlugin extends JavaPlugin {
     private UniverseManager universeManager;
     private GroupManager groupManager;
     private ActivityManager activityManager;
-    private WarManager warManager;
     private PoliticsEconomy politicsEconomy;
     private TaxationManager taxationManager;
 
@@ -93,11 +91,6 @@ public final class PoliticsPlugin extends JavaPlugin {
         this.universeManager.loadUniverses();
 
         this.activityManager = new ActivityManager(this);
-
-        if (config.areWarsEnabled()) {
-            this.warManager = new WarManager(this);
-            this.warManager.loadWars();
-        }
 
         PluginManager pluginManager = this.getServer().getPluginManager();
 
@@ -136,10 +129,6 @@ public final class PoliticsPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         this.saveTask.cancel();
-
-        if (this.config.areWarsEnabled()) {
-            this.warManager.saveWars();
-        }
 
         if (this.taxationManager != null) {
             this.taxationManager.saveTaxData(true);
@@ -214,15 +203,6 @@ public final class PoliticsPlugin extends JavaPlugin {
      */
     public ActivityManager getActivityManager() {
         return activityManager;
-    }
-
-    /**
-     * Gets the {@link WarManager} associated with this plugin instance.
-     *
-     * @return the plugin WarManager instance
-     */
-    public WarManager getWarManager() {
-        return warManager;
     }
 
     /**

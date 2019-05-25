@@ -17,20 +17,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.event.war;
+package pw.ollie.politicswar;
 
-import pw.ollie.politics.group.war.War;
+import pw.ollie.politicswar.war.WarManager;
 
-import org.bukkit.event.Event;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public abstract class WarEvent extends Event {
-    private final War war;
+public class PoliticsWarPlugin extends JavaPlugin {
+    private WarManager warManager;
 
-    protected WarEvent(War war) {
-        this.war = war;
+    @Override
+    public void onEnable() {
+        this.warManager = new WarManager(this);
+        this.warManager.loadWars();
     }
 
-    public War getWar() {
-        return war;
+    @Override
+    public void onDisable() {
+        this.warManager.saveWars();
+    }
+
+    /**
+     * Gets the {@link WarManager} associated with this plugin instance.
+     *
+     * @return the plugin WarManager instance
+     */
+    public WarManager getWarManager() {
+        return warManager;
     }
 }

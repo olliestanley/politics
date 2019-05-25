@@ -19,7 +19,6 @@
  */
 package pw.ollie.politics.command.group;
 
-import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
@@ -70,7 +69,7 @@ public class GroupToggleCommand extends GroupSubcommand {
     private boolean canToggleNow(Group group, int propertyId) {
         switch (propertyId) {
             case GroupProperty.PEACEFUL:
-                return group.getLevel().canBePeaceful() && Politics.getWarManager().getInvolvedWars(group).isEmpty();
+                return group.getLevel().canBePeaceful();
             default:
                 return true;
         }

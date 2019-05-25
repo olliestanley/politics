@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.group.war;
+package pw.ollie.politicswar.war;
 
-import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.event.plot.PlotProtectionTriggerEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotProtectionTriggerEvent;
+import pw.ollie.politicswar.PoliticsWarPlugin;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,9 +31,9 @@ import org.bukkit.event.Listener;
  * Listens to Politics' protection trigger events and cancels them if necessary due to ongoing {@link War}s.
  */
 final class WarProtectionListener implements Listener {
-    private final PoliticsPlugin plugin;
+    private final PoliticsWarPlugin plugin;
 
-    WarProtectionListener(PoliticsPlugin plugin) {
+    WarProtectionListener(PoliticsWarPlugin plugin) {
         this.plugin = plugin;
     }
 

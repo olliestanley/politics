@@ -60,7 +60,7 @@ public final class CombatProtectionsTest extends AbstractPoliticsTest {
         Bukkit.getPluginManager().callEvent(event);
         Assert.assertTrue(event.isCancelled());
 
-        // todo add more test cases, including for wars when implemented
+        // todo add more test cases
     }
 
     @Override

@@ -17,30 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.data;
+package pw.ollie.politicswar.command;
 
-import pw.ollie.politics.PoliticsPlugin;
-
-import org.bukkit.scheduler.BukkitRunnable;
-
-/**
- * Regularly saves all stored data in Politics.
- */
-public final class PoliticsDataSaveTask extends BukkitRunnable {
-    private final PoliticsPlugin plugin;
-
-    public PoliticsDataSaveTask(PoliticsPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    @Override
-    public void run() {
-        if (plugin.getTaxationManager() != null) {
-            plugin.getTaxationManager().saveTaxData(false);
-        }
-
-        plugin.getWorldManager().saveWorlds();
-        plugin.getUniverseManager().saveRules();
-        plugin.getUniverseManager().saveUniverses();
-    }
+public class WarCommand {
 }

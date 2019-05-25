@@ -44,8 +44,6 @@ import pw.ollie.politics.event.plot.subplot.SubplotPrivilegeChangeEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotProtectionTriggerEvent;
 import pw.ollie.politics.event.universe.UniverseCreateEvent;
 import pw.ollie.politics.event.universe.UniverseDestroyEvent;
-import pw.ollie.politics.event.war.WarBeginEvent;
-import pw.ollie.politics.event.war.WarFinishEvent;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -77,8 +75,6 @@ public class PoliticsEventCounter implements Listener {
     private int subplotProtectionTrigger = 0;
     private int universeCreate = 0;
     private int universeDestroy = 0;
-    private int warBegin = 0;
-    private int warFinish = 0;
 
     @EventHandler
     public void event(Event event) {
@@ -132,10 +128,6 @@ public class PoliticsEventCounter implements Listener {
             universeCreate++;
         } else if (event instanceof UniverseDestroyEvent) {
             universeDestroy++;
-        } else if (event instanceof WarBeginEvent) {
-            warBegin++;
-        } else if (event instanceof WarFinishEvent) {
-            warFinish++;
         }
     }
 
@@ -237,13 +229,5 @@ public class PoliticsEventCounter implements Listener {
 
     public int getUniverseDestroys() {
         return universeDestroy;
-    }
-
-    public int getWarBegins() {
-        return warBegin;
-    }
-
-    public int getWarFinishes() {
-        return warFinish;
     }
 }

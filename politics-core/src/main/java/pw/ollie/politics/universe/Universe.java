@@ -293,8 +293,6 @@ public final class Universe implements Storable {
      * @param deep  whether to destroy the children of the group as well
      */
     public void destroyGroup(Group group, boolean deep) {
-        Politics.getWarManager().getInvolvedWars(group).forEach(war -> Politics.getWarManager().finishWar(war, true));
-
         groups.remove(group);
         getInternalGroups(group.getLevel()).remove(group);
         group.getPlayers().forEach(this::invalidateCitizenGroups);

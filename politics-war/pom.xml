@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>politics</artifactId>
+        <groupId>pw.ollie</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>politics-war</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>pw.ollie</groupId>
+            <artifactId>politics-core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- JAR creation plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Implementation-Title>${project.name}</Implementation-Title>
+                            <Implementation-Version>${project.version} b${buildNumber}</Implementation-Version>
+                            <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+
+                            <Specification-Title>${project.name}</Specification-Title>
+                            <Specification-Version>${project.version}</Specification-Version>
+                            <Specification-Vendor>${project.organization.name}</Specification-Vendor>
+                            <Sealed>true</Sealed>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

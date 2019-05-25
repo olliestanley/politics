@@ -17,18 +17,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.group.war;
+package pw.ollie.politicswar.war;
 
 import gnu.trove.set.hash.THashSet;
 
+import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.event.PoliticsEventFactory;
-import pw.ollie.politics.event.war.WarBeginEvent;
-import pw.ollie.politics.event.war.WarFinishEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.serial.FileUtil;
+import pw.ollie.politicswar.PoliticsWarPlugin;
+import pw.ollie.politicswar.event.PoliticsWarEventFactory;
+import pw.ollie.politicswar.event.war.WarBeginEvent;
+import pw.ollie.politicswar.event.war.WarFinishEvent;
 
 import org.bson.BSONDecoder;
 import org.bson.BSONEncoder;
@@ -55,11 +57,11 @@ import java.util.stream.Collectors;
  */
 public final class WarManager {
     // todo docs
-    private final PoliticsPlugin plugin;
+    private final PoliticsWarPlugin plugin;
     private final Set<War> activeWars;
 
-    public WarManager(PoliticsPlugin plugin) {
-        if (!plugin.getPoliticsConfig().areWarsEnabled()) {
+    public WarManager(PoliticsWarPlugin plugin) {
+        if (!Politics.getConfig().areWarsEnabled()) {
             throw new IllegalStateException("attempt to create war manager when wars are not enabled");
         }
 
@@ -123,7 +125,7 @@ public final class WarManager {
             return false;
         }
 
-        WarBeginEvent event = PoliticsEventFactory.callWarBeginEvent(war, source);
+        WarBeginEvent event = PoliticsWarEventFactory.callWarBeginEvent(war, source);
         if (event.isCancelled()) {
             return false;
         }
@@ -142,7 +144,7 @@ public final class WarManager {
             return false;
         }
 
-        WarFinishEvent event = PoliticsEventFactory.callWarFinishEvent(war);
+        WarFinishEvent event = PoliticsWarEventFactory.callWarFinishEvent(war);
         if (!force && event.isCancelled()) {
             return false;
         }
@@ -159,7 +161,7 @@ public final class WarManager {
     }
 
     public void loadWars() {
-        File dataDir = plugin.getFileSystem().getDataDir();
+        File dataDir = Politics.getFileSystem().getDataDir();
         File warsDataDir = new File(dataDir, "wars");
         BSONDecoder decoder = new BasicBSONDecoder();
 
@@ -193,7 +195,7 @@ public final class WarManager {
     }
 
     public void saveWars() {
-        File dataDir = plugin.getFileSystem().getDataDir();
+        File dataDir = Politics.getFileSystem().getDataDir();
         File warsDataDir = new File(dataDir, "wars");
         BSONEncoder encoder = new BasicBSONEncoder();
 
