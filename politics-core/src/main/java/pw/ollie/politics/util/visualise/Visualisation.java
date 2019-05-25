@@ -20,8 +20,6 @@
 package pw.ollie.politics.util.visualise;
 
 import pw.ollie.politics.Politics;
-import pw.ollie.politics.activity.activities.VisualisationActivity;
-import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -71,9 +69,7 @@ public class Visualisation {
             player.sendBlockChange(block.getLocation(), block.getFakeBlock());
         }
 
-        Politics.getActivityManager().beginActivity(new VisualisationActivity(player.getUniqueId(), () -> revert(visualiser, player)));
         visualiser.setCurrentVisualisation(player, this);
-        MessageBuilder.begin("Type ").highlight("/politics cancel").normal(" at any time to exit the visualisation.").send(player);
         return true;
     }
 
