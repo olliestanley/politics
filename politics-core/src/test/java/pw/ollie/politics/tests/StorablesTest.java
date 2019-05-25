@@ -68,17 +68,6 @@ public final class StorablesTest extends AbstractPoliticsTest {
         Assert.assertEquals(group.getName(), restoredGroup.getName());
         Assert.assertEquals(group.getTag(), restoredGroup.getTag());
 
-        // test war storage
-//        Group aggressor = createTestTown("Aggressor");
-//        Group defender = createTestTown("Defender");
-//        War war = new War(aggressor, defender);
-//        PoliticsTestReflection.setWarActive(war, true);
-//        LocalDateTime startTime = war.getStartTime();
-//        BasicBSONObject warBson = (BasicBSONObject) war.toBSONObject();
-//        War restoredWar = PoliticsTestReflection.instantiateWar(warBson);
-//        Assert.assertEquals(startTime, restoredWar.getStartTime());
-//        Assert.assertTrue(restoredWar.isActive());
-
         // test politics world storage
         int testPlotX = 1, testPlotY = 1;
         World world = server.getWorld(TEST_WORLD_NAME);
