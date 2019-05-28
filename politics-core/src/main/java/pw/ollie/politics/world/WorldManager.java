@@ -59,7 +59,7 @@ public final class WorldManager {
     }
 
     private WorldConfig getDefaultConfig(String worldName) {
-        return new WorldConfig(worldName, true, true);
+        return new WorldConfig(worldName, true, true, new HashMap<>(), new HashMap<>());
     }
 
     /**

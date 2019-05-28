@@ -22,8 +22,6 @@ package pw.ollie.politicstax.util;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.universe.UniverseRules;
-import pw.ollie.politics.world.WorldConfig;
-import pw.ollie.politicstax.AbstractPoliticsTaxTest;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -34,10 +32,6 @@ import java.util.Collections;
 import java.util.List;
 
 public final class PoliticsTaxTestObjectFactory {
-    public static WorldConfig newDefaultWorldConfig() {
-        return PoliticsTaxTestReflection.instantiateWorldConfig(AbstractPoliticsTaxTest.TEST_WORLD_NAME, true, true);
-    }
-
     public static UniverseRules newDefaultUniverseRules() {
         ConfigurationSection config = new MemoryConfiguration();
         config.set("description", "Testing configuration for Politics");

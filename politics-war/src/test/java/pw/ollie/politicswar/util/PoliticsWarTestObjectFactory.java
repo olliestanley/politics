@@ -34,10 +34,6 @@ import java.util.Collections;
 import java.util.List;
 
 public final class PoliticsWarTestObjectFactory {
-    public static WorldConfig newDefaultWorldConfig() {
-        return PoliticsWarTestReflection.instantiateWorldConfig(AbstractPoliticsWarTest.TEST_WORLD_NAME, true, true);
-    }
-
     public static UniverseRules newDefaultUniverseRules() {
         ConfigurationSection config = new MemoryConfiguration();
         config.set("description", "Testing configuration for Politics");

@@ -23,6 +23,10 @@ import pw.ollie.politics.util.serial.ConfigUtil;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Stores Politics configuration values specific to a single world.
  */
@@ -35,17 +39,23 @@ public final class WorldConfig {
     // subplot settings
     private final boolean subplots;
 
+    // other settings
+    private final Map<String, String> stringSettings;
+    private final Map<String, List<String>> listSettings;
+
     /**
-     * Constructs a blank new configuration for a world with the given name.
+     * Constructs a new configuration for a world with the given name.
      *
      * @param name     the world name for this configuration
      * @param plots    whether plots are enabled in the world
      * @param subplots whether subplots are enabled in the world
      */
-    WorldConfig(String name, boolean plots, boolean subplots) {
+    WorldConfig(String name, boolean plots, boolean subplots, Map<String, String> stringSettings, Map<String, List<String>> listSettings) {
         this.name = name;
         this.plots = plots;
         this.subplots = subplots;
+        this.stringSettings = stringSettings;
+        this.listSettings = listSettings;
     }
 
     /**
@@ -76,7 +86,27 @@ public final class WorldConfig {
     }
 
     /**
-     * Saves configuration values to the given configuration node.
+     * Get a raw setting from the world config. Can be used by add-on plugins to add per-world settings easily.
+     *
+     * @param path the config path to get the setting for
+     * @return the setting of the given node, or null if it is not set
+     */
+    public String getRawSetting(String path) {
+        return stringSettings.get(path);
+    }
+
+    /**
+     * Get a {@link List} setting from the world config. Can be used by add-on plugins to add per-world settings easily.
+     *
+     * @param path the config path to get the setting for
+     * @return the setting of the given node, or null if it is not set
+     */
+    public List<String> getListSetting(String path) {
+        return listSettings.get(path);
+    }
+
+    /**
+     * Saves configuration values to the given configuration node. Only saves settings used by core Politics.
      *
      * @param config the node to save values to
      */
@@ -104,6 +134,48 @@ public final class WorldConfig {
         ConfigurationSection subplotsSection = ConfigUtil.getOrCreateSection(plotsSection, "subplots");
         boolean subplots = plots && subplotsSection.getBoolean("enabled", true);
 
-        return new WorldConfig(name, plots, subplots);
+        Map<String, String> stringSettings = searchSectionRecursiveStrings("", config);
+        Map<String, List<String>> listSettings = searchSectionRecursiveLists("", config);
+
+        return new WorldConfig(name, plots, subplots, stringSettings, listSettings);
+    }
+
+    private static Map<String, String> searchSectionRecursiveStrings(String nodePrefix, ConfigurationSection section) {
+        String adjPrefix = (nodePrefix.endsWith(".") || nodePrefix.isEmpty()) ? nodePrefix : nodePrefix + ".";
+
+        Map<String, String> result = new HashMap<>();
+        for (String key : section.getKeys(false)) {
+            ConfigurationSection subsection = section.getConfigurationSection(key);
+            if (subsection != null) {
+                result.putAll(searchSectionRecursiveStrings(adjPrefix + key, subsection));
+            }
+
+            if (section.isList(key) || section.isSet(key)) {
+                continue;
+            }
+
+            result.put(adjPrefix + key, section.getString(key));
+        }
+
+        return result;
+    }
+
+    private static Map<String, List<String>> searchSectionRecursiveLists(String nodePrefix, ConfigurationSection section) {
+        String adjPrefix = (nodePrefix.endsWith(".") || nodePrefix.isEmpty()) ? nodePrefix : nodePrefix + ".";
+
+        Map<String, List<String>> result = new HashMap<>();
+        for (String key : section.getKeys(false)) {
+            ConfigurationSection subsection = section.getConfigurationSection(key);
+            if (subsection != null) {
+                result.putAll(searchSectionRecursiveLists(adjPrefix + key, subsection));
+            }
+
+            List<String> stringList = section.getStringList(key);
+            if (stringList != null && !stringList.isEmpty()) {
+                result.put(adjPrefix + key, stringList);
+            }
+        }
+
+        return result;
     }
 }
