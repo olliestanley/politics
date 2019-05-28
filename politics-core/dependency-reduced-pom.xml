@@ -137,5 +137,11 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>com.carrotsearch</groupId>
+      <artifactId>junit-benchmarks</artifactId>
+      <version>0.7.2</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

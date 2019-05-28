@@ -57,7 +57,7 @@ public final class PoliticsWorld implements Storable {
         this.chunkPlots = chunkPlots;
     }
 
-    PoliticsWorld(String name, WorldConfig config, BasicBSONObject object) {
+    public PoliticsWorld(String name, WorldConfig config, BasicBSONObject object) {
         this.name = object.getString("name", name);
         chunkPlots = HashBasedTable.create();
         BasicBSONList list = (BasicBSONList) object.get("plots");
