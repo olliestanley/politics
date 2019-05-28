@@ -19,6 +19,7 @@
  */
 package pw.ollie.politicswar;
 
+import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politicswar.war.WarManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,6 +28,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Core plugin class for PoliticsWar.
  */
 public final class PoliticsWarPlugin extends JavaPlugin {
+    private PoliticsWarDataSaveTask saveTask;
     private WarManager warManager;
 
     @Override
@@ -34,11 +36,14 @@ public final class PoliticsWarPlugin extends JavaPlugin {
         this.warManager = new WarManager(this);
         this.warManager.loadWars();
 
-        // todo data save task
+        this.saveTask = new PoliticsWarDataSaveTask(this);
+        this.saveTask.runTaskTimer(this, PoliticsPlugin.DATA_SAVE_INTERVAL, PoliticsPlugin.DATA_SAVE_INTERVAL);
     }
 
     @Override
     public void onDisable() {
+        this.saveTask.cancel();
+
         this.warManager.saveWars();
     }
 
