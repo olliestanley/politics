@@ -20,6 +20,7 @@
 package pw.ollie.politicstax;
 
 import pw.ollie.politics.Politics;
+import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politicstax.command.GroupSettaxCommand;
 import pw.ollie.politicstax.tax.TaxationManager;
@@ -31,6 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class PoliticsTaxPlugin extends JavaPlugin {
     private PoliticsTaxConfig config;
+    private PoliticsTaxDataSaveTask saveTask;
     private TaxationManager taxationManager;
 
     @Override
@@ -41,7 +43,8 @@ public final class PoliticsTaxPlugin extends JavaPlugin {
         this.taxationManager = new TaxationManager(this);
         this.taxationManager.loadTaxData();
 
-        // todo data save task
+        this.saveTask = new PoliticsTaxDataSaveTask(this);
+        this.saveTask.runTaskTimer(this, PoliticsPlugin.DATA_SAVE_INTERVAL, PoliticsPlugin.DATA_SAVE_INTERVAL);
 
         for (GroupLevel groupLevel : Politics.getGroupManager().getGroupLevels()) {
             Politics.getCommandManager().getPoliticsCommand(groupLevel.getId()).registerSubCommand(new GroupSettaxCommand(groupLevel));
@@ -50,6 +53,8 @@ public final class PoliticsTaxPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        this.saveTask.cancel();
+
         this.taxationManager.saveTaxData(true);
     }
 

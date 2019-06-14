@@ -31,11 +31,12 @@ import org.bukkit.configuration.MemoryConfiguration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public final class PoliticsTestObjectFactory {
     public static WorldConfig newDefaultWorldConfig() {
-        return PoliticsTestReflection.instantiateWorldConfig(AbstractPoliticsTest.TEST_WORLD_NAME, true, true);
+        return PoliticsTestReflection.instantiateWorldConfig(AbstractPoliticsTest.TEST_WORLD_NAME, true, true, new HashMap<>(), new HashMap<>());
     }
 
     public static UniverseRules newDefaultUniverseRules() {

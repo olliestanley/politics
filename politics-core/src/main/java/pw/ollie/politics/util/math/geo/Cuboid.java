@@ -67,7 +67,7 @@ public class Cuboid {
      * @param opposite the opposite corner of the Cuboid
      */
     public Cuboid(Location base, Location opposite) {
-        if (Objects.equals(base.getWorld(), opposite.getWorld())) {
+        if (!Objects.equals(base.getWorld(), opposite.getWorld())) {
             throw new IllegalArgumentException("cuboid cannot span multiple worlds");
         }
 

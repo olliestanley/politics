@@ -46,6 +46,8 @@ import java.util.logging.Level;
  * Contains access methods to each branch of the plugin.
  */
 public final class PoliticsPlugin extends JavaPlugin {
+    public static final long DATA_SAVE_INTERVAL = 5 * 60 * 20;
+
     private static PoliticsPlugin instance;
 
     private PoliticsFileSystem fileSystem;
@@ -113,7 +115,7 @@ public final class PoliticsPlugin extends JavaPlugin {
         this.commandManager.registerCommands();
 
         this.saveTask = new PoliticsDataSaveTask(this);
-        this.saveTask.runTaskTimer(this, 5 * 60 * 20, 5 * 60 * 20);
+        this.saveTask.runTaskTimer(this, DATA_SAVE_INTERVAL, DATA_SAVE_INTERVAL);
 
         this.visualiser = new Visualiser(this);
 

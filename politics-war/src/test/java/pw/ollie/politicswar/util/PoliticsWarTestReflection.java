@@ -19,9 +19,6 @@
  */
 package pw.ollie.politicswar.util;
 
-import pw.ollie.politics.world.PoliticsWorld;
-import pw.ollie.politics.world.WorldConfig;
-import pw.ollie.politicswar.AbstractPoliticsWarTest;
 import pw.ollie.politicswar.war.War;
 
 import org.bson.BasicBSONObject;
@@ -34,30 +31,6 @@ import java.lang.reflect.Method;
 
 public final class PoliticsWarTestReflection {
     private static final Lookup lookup = MethodHandles.lookup();
-
-    public static WorldConfig instantiateWorldConfig(String name, boolean plots, boolean subplots) {
-        try {
-            Constructor wcConstructor = WorldConfig.class.getDeclaredConstructor(String.class, boolean.class, boolean.class);
-            wcConstructor.setAccessible(true);
-            MethodHandle newWcHandle = lookup.unreflectConstructor(wcConstructor);
-            return (WorldConfig) newWcHandle.invoke(name, plots, subplots);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static PoliticsWorld instantiateDefaultWorld(BasicBSONObject bson) {
-        try {
-            String name = AbstractPoliticsWarTest.TEST_WORLD_NAME;
-            WorldConfig defaultConfig = PoliticsWarTestObjectFactory.newDefaultWorldConfig();
-            Constructor pwConstructor = PoliticsWorld.class.getDeclaredConstructor(String.class, WorldConfig.class, BasicBSONObject.class);
-            pwConstructor.setAccessible(true);
-            MethodHandle newPwHandle = lookup.unreflectConstructor(pwConstructor);
-            return (PoliticsWorld) newPwHandle.invoke(name, defaultConfig, bson);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public static War instantiateWar(BasicBSONObject bson) {
         try {
