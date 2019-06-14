@@ -28,6 +28,7 @@ import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.message.ColourScheme;
+import pw.ollie.politics.util.message.Notifier;
 import pw.ollie.politics.util.visualise.Visualiser;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldManager;
@@ -79,6 +80,15 @@ public final class Politics {
      */
     public static PoliticsConfig getConfig() {
         return Politics.getPlugin().getPoliticsConfig();
+    }
+
+    /**
+     * Gets the {@link Notifier} instance.
+     *
+     * @return the plugin Notifier instance
+     */
+    public static Notifier getNotifier() {
+        return Politics.getPlugin().getNotifier();
     }
 
     /**

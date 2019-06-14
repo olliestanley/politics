@@ -70,8 +70,9 @@ final class PoliticsListener implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         UUID playerId = event.getPlayer().getUniqueId();
         PoliticsWorld world = worldManager.getWorld(event.getRespawnLocation().getWorld());
-        Set<Group> playerGroups = plugin.getGroupManager().getAllCitizenGroups(playerId)
-                .stream().filter(g -> g.getUniverse().containsWorld(world)).collect(Collectors.toSet());
+        Set<Group> playerGroups = plugin.getGroupManager().getAllCitizenGroups(playerId).stream()
+                .filter(g -> g.getUniverse().containsWorld(world))
+                .collect(Collectors.toSet());
         Group best = getHighestPrioritySpawn(playerGroups);
         if (best != null) {
             event.setRespawnLocation(best.getRotatedPositionProperty(GroupProperty.SPAWN).toLocation());

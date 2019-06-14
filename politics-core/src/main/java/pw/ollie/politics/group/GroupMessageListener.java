@@ -21,10 +21,7 @@ package pw.ollie.politics.group;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.event.player.PlayerPlotChangeEvent;
-import pw.ollie.politics.util.StringUtil;
-import pw.ollie.politics.util.collect.stream.StreamUtil;
-import pw.ollie.politics.util.message.MessageBuilder;
-import pw.ollie.politics.util.message.MessageUtil;
+import pw.ollie.politics.util.message.Notifier;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,19 +34,19 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 final class GroupMessageListener implements Listener {
     private final PoliticsPlugin plugin;
+    private final Notifier notifier;
 
     GroupMessageListener(PoliticsPlugin plugin) {
         this.plugin = plugin;
+        this.notifier = plugin.getNotifier();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void sendJoinMessage(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        StreamUtil.biStream(plugin.getGroupManager().getAllCitizenGroups(player.getUniqueId()).stream(), group -> group.getStringProperty(GroupProperty.MOTD, ""))
-                .filterValues(StringUtil::notEmpty)
-                .mapValues((group, motd) -> MessageBuilder.beginHighlight(group.getName() + " MOTD: ").normal(motd))
-                .forEach((group, builder) -> builder.send(player));
+        plugin.getGroupManager().getAllCitizenGroups(player.getUniqueId())
+                .forEach(group -> notifier.notifyPlayerGroupMotd(player, group));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -60,27 +57,14 @@ final class GroupMessageListener implements Listener {
 
         if (newPlotOwner == null) {
             if (oldPlotOwner != null) {
-                String exitMessage = oldPlotOwner.getStringProperty(GroupProperty.EXIT_MESSAGE);
-                if (exitMessage != null) {
-                    MessageUtil.message(player, exitMessage);
-                }
-
-                MessageUtil.message(player, oldPlotOwner.getUniverse().getRules().getWildernessMessage());
+                notifier.notifyPlayerTerritoryExit(player, oldPlotOwner);
+                notifier.notifyPlayerWilderness(player, oldPlotOwner.getUniverse());
             }
-            return;
-        }
-
-        if (!newPlotOwner.equals(oldPlotOwner)) {
-            String entryMessage = newPlotOwner.getStringProperty(GroupProperty.ENTRY_MESSAGE);
-            if (entryMessage != null) {
-                MessageUtil.message(player, entryMessage);
-            }
+        } else if (!newPlotOwner.equals(oldPlotOwner)) {
+            notifier.notifyPlayerTerritoryEntry(player, newPlotOwner);
 
             if (oldPlotOwner != null) {
-                String exitMessage = oldPlotOwner.getStringProperty(GroupProperty.EXIT_MESSAGE);
-                if (exitMessage != null) {
-                    MessageUtil.message(player, exitMessage);
-                }
+                notifier.notifyPlayerTerritoryExit(player, oldPlotOwner);
             }
         }
     }

@@ -28,6 +28,7 @@ import pw.ollie.politics.economy.vault.PoliticsEconomyVault;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
+import pw.ollie.politics.util.message.Notifier;
 import pw.ollie.politics.util.visualise.Visualiser;
 import pw.ollie.politics.world.WorldManager;
 
@@ -51,6 +52,7 @@ public final class PoliticsPlugin extends JavaPlugin {
 
     private PoliticsConfig config;
 
+    private Notifier notifier;
     private PrivilegeManager privilegeManager;
     private WorldManager worldManager;
     private UniverseManager universeManager;
@@ -75,6 +77,8 @@ public final class PoliticsPlugin extends JavaPlugin {
 
         this.config = new PoliticsConfig(this);
         this.config.loadConfig();
+
+        this.notifier = new Notifier(this);
 
         this.privilegeManager = new PrivilegeManager(this);
 
@@ -147,6 +151,15 @@ public final class PoliticsPlugin extends JavaPlugin {
      */
     public PoliticsConfig getPoliticsConfig() {
         return config;
+    }
+
+    /**
+     * Gets the {@link Notifier} instance.
+     *
+     * @return the plugin Notifier instance
+     */
+    public Notifier getNotifier() {
+        return notifier;
     }
 
     /**
