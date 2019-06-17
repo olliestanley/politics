@@ -489,7 +489,7 @@ public final class Subplot implements Storable, ProtectedRegion {
         for (UUID individualId : individualPrivileges.keySet()) {
             BasicBSONList privilegeList = new BasicBSONList();
             Set<Privilege> privileges = individualPrivileges.get(individualId);
-            privilegeList.addAll(privileges.stream().map(Privilege::getName).collect(CollectorUtil.toMutableSet()));
+            privilegeList.addAll(privileges.stream().map(Privilege::getName).collect(CollectorUtil.toTHashSet()));
             privilegesObj.put(individualId.toString(), privilegeList);
         }
         result.put("privileges", privilegesObj);

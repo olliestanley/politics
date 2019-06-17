@@ -25,7 +25,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public final class CollectorUtil {
-    public static <T> Collector<T, ?, THashSet<T>> toMutableSet() {
+    public static <T> Collector<T, ?, THashSet<T>> toTHashSet() {
         return Collectors.toCollection(THashSet::new);
     }
 

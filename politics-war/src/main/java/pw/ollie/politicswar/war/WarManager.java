@@ -71,7 +71,7 @@ public final class WarManager {
     public Set<War> getActiveWars(Universe universe) {
         return activeWars.stream()
                 .filter(war -> war.getUniverse().equals(universe))
-                .collect(CollectorUtil.toMutableSet());
+                .collect(CollectorUtil.toTHashSet());
     }
 
     public War getWarBetween(int one, int two) {
@@ -87,7 +87,7 @@ public final class WarManager {
     public Set<War> getInvolvedWars(int groupId) {
         return activeWars.stream()
                 .filter(war -> war.involves(groupId))
-                .collect(CollectorUtil.toMutableSet());
+                .collect(CollectorUtil.toTHashSet());
     }
 
     public Set<War> getInvolvedWars(Group group) {

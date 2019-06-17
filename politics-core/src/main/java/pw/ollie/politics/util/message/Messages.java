@@ -75,19 +75,17 @@ public final class Messages {
         return Arrays.stream(keyHolders)
                 .map(Class::getDeclaredFields)
                 .flatMap(Arrays::stream)
+                .filter(isKeyHolder)
                 .map(this::loadValue)
                 .filter(Objects::nonNull)
-                .collect(CollectorUtil.toMutableSet());
+                .collect(CollectorUtil.toTHashSet());
     }
 
     private String loadValue(Field field) {
-        if (isKeyHolder.test(field)) {
-            String key = getStringFieldValue(field);
-            Optional<String> val = getSourceValue(key);
-            val.ifPresent(v -> messages.put(key, v));
-            return val.isPresent() ? null : key;
-        }
-        return null;
+        String key = getStringFieldValue(field);
+        Optional<String> val = getSourceValue(key);
+        val.ifPresent(v -> messages.put(key, v));
+        return val.isPresent() ? null : key;
     }
 
     private Optional<String> getSourceValue(String key) {

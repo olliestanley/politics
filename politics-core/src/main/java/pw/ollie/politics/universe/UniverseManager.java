@@ -121,7 +121,7 @@ public final class UniverseManager {
     public Set<Universe> getUniverses(PoliticsWorld world) {
         return universes.values().stream()
                 .filter(universe -> universe.containsWorld(world))
-                .collect(CollectorUtil.toMutableSet());
+                .collect(CollectorUtil.toTHashSet());
     }
 
     public Set<Universe> getUniverses(World world) {

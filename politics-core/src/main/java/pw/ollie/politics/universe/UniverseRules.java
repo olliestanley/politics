@@ -119,7 +119,7 @@ public final class UniverseRules {
 
         // Turn these levels into only objects
         BiStream.from(levels).forEach((level, list) -> level.setAllowedChildren(
-                list.stream().map(String::toLowerCase).map(levelMap::get).collect(CollectorUtil.toMutableSet())));
+                list.stream().map(String::toLowerCase).map(levelMap::get).collect(CollectorUtil.toTHashSet())));
         return new UniverseRules(name, description, wildernessMessage, warsEnabled, levelMap);
     }
 }

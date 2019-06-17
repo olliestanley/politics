@@ -78,7 +78,7 @@ public final class Citizen {
      * @return the player's Groups of the given level in this Citizen's particular Universe
      */
     public Set<Group> getGroups(GroupLevel level) {
-        return getGroups().stream().filter(group -> group.getLevel().equals(level)).collect(CollectorUtil.toMutableSet());
+        return getGroups().stream().filter(group -> group.getLevel().equals(level)).collect(CollectorUtil.toTHashSet());
     }
 
     /**

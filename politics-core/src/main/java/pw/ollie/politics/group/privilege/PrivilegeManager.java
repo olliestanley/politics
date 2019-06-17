@@ -71,7 +71,7 @@ public final class PrivilegeManager {
      * @return a Set of any Privileges not successfully registered
      */
     public Set<Privilege> registerPrivileges(Privilege... privileges) {
-        return Arrays.stream(privileges).filter(FunctionalUtil.negate(this::registerPrivilege)).collect(CollectorUtil.toMutableSet());
+        return Arrays.stream(privileges).filter(FunctionalUtil.negate(this::registerPrivilege)).collect(CollectorUtil.toTHashSet());
     }
 
     public Privilege getPrivilege(String name) {

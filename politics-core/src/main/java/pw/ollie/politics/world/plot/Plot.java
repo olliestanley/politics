@@ -489,7 +489,7 @@ public final class Plot implements Storable, ProtectedRegion {
         }
         return owner.getPrivileges(player).stream()
                 .filter(privilege -> privilege.getTypes().contains(PrivilegeType.PLOT))
-                .collect(CollectorUtil.toMutableSet());
+                .collect(CollectorUtil.toTHashSet());
     }
 
     /**

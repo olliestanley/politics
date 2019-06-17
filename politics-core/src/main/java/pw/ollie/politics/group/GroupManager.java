@@ -53,21 +53,21 @@ public final class GroupManager {
 
     public Set<Group> getAllGroups() {
         return getUniverses().stream()
-                .map(Universe::getGroups).flatMap(List::stream).collect(CollectorUtil.toMutableSet());
+                .map(Universe::getGroups).flatMap(List::stream).collect(CollectorUtil.toTHashSet());
     }
 
     public Set<Group> getAllCitizenGroups(UUID playerId) {
         return getUniverses().stream()
                 .map(universe -> universe.getCitizenGroups(playerId))
                 .flatMap(Set::stream)
-                .collect(CollectorUtil.toMutableSet());
+                .collect(CollectorUtil.toTHashSet());
     }
 
     public Set<Group> getCitizenGroups(UUID playerId, Collection<Universe> universes) {
         return getAllGroups().stream()
                 .filter(group -> universes.contains(group.getUniverse()))
                 .filter(group -> group.isMember(playerId))
-                .collect(CollectorUtil.toMutableSet());
+                .collect(CollectorUtil.toTHashSet());
     }
 
     public List<GroupLevel> getGroupLevels() {

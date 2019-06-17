@@ -118,7 +118,7 @@ public final class PoliticsWorld implements Storable {
     public Set<Universe> getUniverses() {
         return Politics.getUniverseManager().getUniverses().stream()
                 .filter(universe -> universe.containsWorld(this))
-                .collect(CollectorUtil.toMutableSet());
+                .collect(CollectorUtil.toTHashSet());
     }
 
     /**
