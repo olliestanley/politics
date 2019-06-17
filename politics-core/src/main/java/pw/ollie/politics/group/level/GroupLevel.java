@@ -24,7 +24,7 @@ import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.group.privilege.Privilege;
-import pw.ollie.politics.util.collect.stream.StreamUtil;
+import pw.ollie.politics.util.stream.StreamUtil;
 import pw.ollie.politics.util.serial.ConfigUtil;
 
 import com.google.mu.util.stream.BiStream;

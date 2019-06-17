@@ -28,6 +28,7 @@ import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.message.ColourScheme;
+import pw.ollie.politics.util.message.Messages;
 import pw.ollie.politics.util.message.Notifier;
 import pw.ollie.politics.util.visualise.Visualiser;
 import pw.ollie.politics.world.PoliticsWorld;
@@ -80,6 +81,25 @@ public final class Politics {
      */
     public static PoliticsConfig getConfig() {
         return Politics.getPlugin().getPoliticsConfig();
+    }
+
+    /**
+     * Gets the {@link Messages} instance which is used for handling configurable messages in Politics.
+     *
+     * @return the plugin Messages instance
+     */
+    public static Messages getMessageConfig() {
+        return Politics.getPlugin().getMessageConfig();
+    }
+
+    /**
+     * Gets the configured message for the given key, or the default if none has been configured.
+     *
+     * @param key the key to get the configured message for
+     * @return configured message associated with given key
+     */
+    public static String getConfiguredMessage(String key) {
+        return Politics.getMessageConfig().getMessage(key);
     }
 
     /**

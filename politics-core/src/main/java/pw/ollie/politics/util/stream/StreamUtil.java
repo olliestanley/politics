@@ -17,17 +17,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.util.collect.stream;
+package pw.ollie.politics.util.stream;
 
 import com.google.mu.util.stream.BiStream;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public final class StreamUtil {
     // todo doc
     public static <K, V> BiStream<K, V> biStream(Stream<K> stream, Function<? super K, ? extends V> toValue) {
         return BiStream.biStream(stream, key -> key, toValue);
+    }
+
+    public static <L, R> BiStream<L, R> zipStreams(Supplier<Stream<L>> streamSupplier, Function<? super L, R> valueMapper) {
+        return BiStream.zip(streamSupplier.get(), streamSupplier.get().map(valueMapper));
     }
 
     private StreamUtil() {

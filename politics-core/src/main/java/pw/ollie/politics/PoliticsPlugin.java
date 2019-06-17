@@ -28,10 +28,12 @@ import pw.ollie.politics.economy.vault.PoliticsEconomyVault;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
+import pw.ollie.politics.util.message.Messages;
 import pw.ollie.politics.util.message.Notifier;
 import pw.ollie.politics.util.visualise.Visualiser;
 import pw.ollie.politics.world.WorldManager;
 
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,6 +56,7 @@ public final class PoliticsPlugin extends JavaPlugin {
 
     private PoliticsConfig config;
 
+    private Messages messages;
     private Notifier notifier;
     private PrivilegeManager privilegeManager;
     private WorldManager worldManager;
@@ -79,6 +82,8 @@ public final class PoliticsPlugin extends JavaPlugin {
 
         this.config = new PoliticsConfig(this);
         this.config.loadConfig();
+
+        this.messages = new Messages(YamlConfiguration.loadConfiguration(new File(this.fileSystem.getBaseDir(), "messages.yml")));
 
         this.notifier = new Notifier(this);
 
@@ -153,6 +158,25 @@ public final class PoliticsPlugin extends JavaPlugin {
      */
     public PoliticsConfig getPoliticsConfig() {
         return config;
+    }
+
+    /**
+     * Gets the {@link Messages} instance which is used for handling configurable messages in Politics.
+     *
+     * @return the plugin Messages instance
+     */
+    public Messages getMessageConfig() {
+        return messages;
+    }
+
+    /**
+     * Gets the configured message for the given key, or the default if none has been configured.
+     *
+     * @param key the key to get the configured message for
+     * @return configured message associated with given key
+     */
+    public String getConfiguredMessage(String key) {
+        return messages.getMessage(key);
     }
 
     /**
