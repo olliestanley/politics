@@ -28,7 +28,7 @@ import pw.ollie.politics.event.group.GroupPlotClaimEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
-import pw.ollie.politics.util.Position;
+import pw.ollie.politics.util.math.Position;
 import pw.ollie.politics.util.message.MessageUtil;
 import pw.ollie.politics.world.plot.Plot;
 

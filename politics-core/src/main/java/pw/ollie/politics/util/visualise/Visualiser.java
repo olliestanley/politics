@@ -20,7 +20,7 @@
 package pw.ollie.politics.util.visualise;
 
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.util.math.geo.Cuboid;
+import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.Subplot;
 

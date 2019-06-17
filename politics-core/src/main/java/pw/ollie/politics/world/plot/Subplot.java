@@ -29,9 +29,9 @@ import pw.ollie.politics.event.plot.subplot.SubplotOwnerChangeEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotPrivilegeChangeEvent;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
-import pw.ollie.politics.util.Position;
+import pw.ollie.politics.util.math.Position;
 import pw.ollie.politics.util.math.Vector3i;
-import pw.ollie.politics.util.math.geo.Cuboid;
+import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bson.BSONObject;

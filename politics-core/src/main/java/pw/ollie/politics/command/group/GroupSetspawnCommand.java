@@ -26,9 +26,6 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
-import pw.ollie.politics.util.Position;
-import pw.ollie.politics.util.math.Vector2f;
-import pw.ollie.politics.util.math.geo.RotatedPosition;
 import pw.ollie.politics.util.message.MessageUtil;
 import pw.ollie.politics.world.plot.Plot;
 
@@ -66,10 +63,7 @@ public class GroupSetspawnCommand extends GroupSubcommand {
         }
 
         Location location = player.getLocation();
-        Position position = Position.fromLocation(location);
-        RotatedPosition rotatedPosition = new RotatedPosition(position, new Vector2f(location.getPitch(), location.getYaw()));
-
-        Plot plot = plugin.getWorldManager().getPlotAt(rotatedPosition.getPosition().toLocation());
+        Plot plot = plugin.getWorldManager().getPlotAt(location);
         if (plot == null) {
             throw new CommandException("There is no plot here!");
         }
@@ -77,7 +71,7 @@ public class GroupSetspawnCommand extends GroupSubcommand {
             throw new CommandException("Sorry, the plot you are in must be owned by " + group.getName() + " to set your spawn in it!");
         }
 
-        group.setProperty(GroupProperty.SPAWN, rotatedPosition);
+        group.setProperty(GroupProperty.SPAWN, location);
         MessageUtil.message(sender, "The spawn of your " + level.getName() + " was set successfully!");
     }
 

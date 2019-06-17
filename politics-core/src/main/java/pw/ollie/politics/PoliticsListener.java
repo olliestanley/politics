@@ -75,7 +75,7 @@ final class PoliticsListener implements Listener {
                 .collect(Collectors.toSet());
         Group best = getHighestPrioritySpawn(playerGroups);
         if (best != null) {
-            event.setRespawnLocation(best.getRotatedPositionProperty(GroupProperty.SPAWN).toLocation());
+            event.setRespawnLocation(best.getLocationProperty(GroupProperty.SPAWN));
         }
     }
 
@@ -83,7 +83,7 @@ final class PoliticsListener implements Listener {
         Group best = null;
 
         for (Group group : groups) {
-            if (group.getRotatedPositionProperty(GroupProperty.SPAWN) == null) {
+            if (group.getLocationProperty(GroupProperty.SPAWN) == null) {
                 continue;
             }
 

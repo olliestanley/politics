@@ -19,11 +19,9 @@
  */
 package pw.ollie.politics.util.serial;
 
-import pw.ollie.politics.util.Position;
-import pw.ollie.politics.util.math.Vector2f;
-import pw.ollie.politics.util.math.geo.RotatedPosition;
-
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,23 +31,23 @@ import java.time.format.DateTimeFormatter;
  */
 public class PropertySerializer {
     /**
-     * Converts a {@link RotatedPosition} to a storable {@link String}.
+     * Converts a {@link Location} to a storable {@link String}.
      *
-     * @param rotatedPosition the RotatedPosition to serialize
+     * @param loc the Location to serialize
      * @return serialized representation of the given object
      */
-    public static String serializeRotatedPosition(RotatedPosition rotatedPosition) {
-        return "t/" + rotatedPosition.getPosition().getWorld() + "," + rotatedPosition.getPosition().getX() + "," + rotatedPosition.getPosition().getY() + "," + rotatedPosition.getPosition().getZ() + "," + rotatedPosition.getRotation().getX() + "," + rotatedPosition.getRotation().getY() + "," + rotatedPosition.getRotation().getY();
+    public static String serializeLocation(Location loc) {
+        return "t/" + loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + "," + loc.getPitch() + "," + loc.getYaw();
     }
 
     /**
-     * Deserializes the given serial {@link String} into a {@link RotatedPosition}.
+     * Deserializes the given serial {@link String} into a {@link Location}.
      *
      * @param serialized the serial String to read data from
-     * @return deserialized RotatedPosition based on the given serial String
+     * @return deserialized Location based on the given serial String
      * @throws PropertyDeserializationException if the serialized string is invalid
      */
-    public static RotatedPosition deserializeRotatedPosition(String serialized) throws PropertyDeserializationException {
+    public static Location deserializeLocation(String serialized) throws PropertyDeserializationException {
         String[] parts1 = serialized.split("/");
         if (parts1.length != 2) {
             throw new PropertyDeserializationException("Not a serialized property!");
@@ -63,30 +61,30 @@ public class PropertySerializer {
             throw new PropertyDeserializationException("Not enough transform data!");
         }
 
-        String world = whatMatters[0];
-        if (Bukkit.getWorld(world) == null) {
-            throw new PropertyDeserializationException("The world '" + world + "' no longer exists!");
+        World world = Bukkit.getWorld(whatMatters[0]);
+        if (world == null) {
+            throw new PropertyDeserializationException("The world '" + whatMatters[0] + "' no longer exists!");
         }
 
-        float x;
-        float y;
-        float z;
+        int x;
+        int y;
+        int z;
         float qx;
         float qy;
         try {
-            x = Float.parseFloat(whatMatters[1]);
+            x = Integer.parseInt(whatMatters[1]);
         } catch (NumberFormatException ex) {
-            throw new PropertyDeserializationException("The x is not a float!", ex);
+            throw new PropertyDeserializationException("The x is not an int!", ex);
         }
         try {
-            y = Float.parseFloat(whatMatters[2]);
+            y = Integer.parseInt(whatMatters[2]);
         } catch (NumberFormatException ex) {
-            throw new PropertyDeserializationException("The y is not a float!", ex);
+            throw new PropertyDeserializationException("The y is not an int!", ex);
         }
         try {
-            z = Float.parseFloat(whatMatters[3]);
+            z = Integer.parseInt(whatMatters[3]);
         } catch (NumberFormatException ex) {
-            throw new PropertyDeserializationException("The z is not a float!", ex);
+            throw new PropertyDeserializationException("The z is not an int!", ex);
         }
         try {
             qx = Float.parseFloat(whatMatters[4]);
@@ -99,7 +97,7 @@ public class PropertySerializer {
             throw new PropertyDeserializationException("The qy is not a float!", ex);
         }
 
-        return new RotatedPosition(new Position(world, x, y, z), new Vector2f(qx, qy));
+        return new Location(world, x, y, z, qx, qy);
     }
 
     private static final DateTimeFormatter localDateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;

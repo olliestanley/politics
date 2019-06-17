@@ -19,7 +19,7 @@
  */
 package pw.ollie.politics.world.plot;
 
-import pw.ollie.politics.util.math.geo.Cuboid;
+import pw.ollie.politics.util.math.Cuboid;
 
 /**
  * Represents a physical region which can be subject to protections in Politics.

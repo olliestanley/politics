@@ -20,10 +20,6 @@
 package pw.ollie.politics.tests;
 
 import pw.ollie.politics.AbstractPoliticsTest;
-import pw.ollie.politics.util.Position;
-import pw.ollie.politics.util.math.Vector2f;
-import pw.ollie.politics.util.math.geo.RotatedPosition;
-import pw.ollie.politics.util.serial.PropertyDeserializationException;
 import pw.ollie.politics.util.serial.PropertySerializer;
 
 import org.junit.After;
@@ -45,15 +41,7 @@ public final class PropertySerializerTest extends AbstractPoliticsTest {
     public void runTest() {
         super.createDefaultUniverse();
 
-        // test serialization and deserialization of RotatedPosition objects
-        try {
-            RotatedPosition rotatedPosition = new RotatedPosition(new Position(TEST_WORLD_NAME, 0, 0, 0), new Vector2f(0, 0));
-            String serial = PropertySerializer.serializeRotatedPosition(rotatedPosition);
-            RotatedPosition deserial = PropertySerializer.deserializeRotatedPosition(serial);
-            Assert.assertEquals(deserial, rotatedPosition);
-        } catch (PropertyDeserializationException e) {
-            throw new RuntimeException(e);
-        }
+        // todo add test for location serialization
 
         // test serialization and deserialization of LocalDateTime objects
         {

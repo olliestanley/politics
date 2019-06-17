@@ -28,14 +28,10 @@ import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
-import pw.ollie.politics.util.Position;
-import pw.ollie.politics.util.math.Vector2f;
-import pw.ollie.politics.util.math.geo.RotatedPosition;
 import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.util.message.MessageUtil;
 
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -55,7 +51,7 @@ public class GroupSpawnCommand extends GroupSubcommand {
             throw new CommandException("You don't have permissions to spawn to that " + level.getName() + ".");
         }
 
-        RotatedPosition spawn = group.getRotatedPositionProperty(GroupProperty.SPAWN);
+        Location spawn = group.getLocationProperty(GroupProperty.SPAWN);
         if (spawn == null) {
             throw new CommandException("The " + level.getName() + " doesn't have a spawn!");
         }
@@ -84,10 +80,7 @@ public class GroupSpawnCommand extends GroupSubcommand {
             throw new CommandException("Cannot teleport to spawn now.");
         }
 
-        Position spawnPos = spawn.getPosition();
-        Vector2f spawnRot = spawn.getRotation();
-        World world = plugin.getServer().getWorld(spawnPos.getWorld());
-        player.teleport(new Location(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), spawnRot.getX(), spawnRot.getY()));
+        player.teleport(spawn);
 
         if (playerName != null) {
             MessageBuilder.begin().highlight(playerName).normal(" was teleported to the " + level.getName() + " spawn.")

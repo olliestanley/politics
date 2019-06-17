@@ -38,7 +38,6 @@ import pw.ollie.politics.group.level.Role;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.universe.UniverseRules;
-import pw.ollie.politics.util.math.geo.RotatedPosition;
 import pw.ollie.politics.util.serial.PropertyDeserializationException;
 import pw.ollie.politics.util.serial.PropertySerializer;
 import pw.ollie.politics.world.plot.Plot;
@@ -47,6 +46,7 @@ import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -214,26 +214,26 @@ public final class Group implements Comparable<Group>, Storable {
         return def;
     }
 
-    public RotatedPosition getRotatedPositionProperty(int property) {
-        return getRotatedPositionProperty(property, null);
+    public Location getLocationProperty(int property) {
+        return getLocationProperty(property, null);
     }
 
-    public RotatedPosition getRotatedPositionProperty(int property, RotatedPosition def) {
+    public Location getLocationProperty(int property, Location def) {
         String s = getStringProperty(property);
         if (s == null) {
             return def;
         }
 
         try {
-            return PropertySerializer.deserializeRotatedPosition(s);
+            return PropertySerializer.deserializeLocation(s);
         } catch (PropertyDeserializationException ex) {
             Politics.getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a transform!", ex);
             return def;
         }
     }
 
-    public void setProperty(int property, RotatedPosition value) {
-        setProperty(property, PropertySerializer.serializeRotatedPosition(value));
+    public void setProperty(int property, Location value) {
+        setProperty(property, PropertySerializer.serializeLocation(value));
     }
 
     public void setProperty(int property, Object value) {

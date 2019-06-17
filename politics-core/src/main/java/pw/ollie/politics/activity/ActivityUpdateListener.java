@@ -21,7 +21,7 @@ package pw.ollie.politics.activity;
 
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.activity.activities.CuboidSelectionActivity;
-import pw.ollie.politics.util.Position;
+import pw.ollie.politics.util.math.Position;
 import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.Location;
