@@ -32,8 +32,9 @@ import pw.ollie.politics.event.plot.subplot.SubplotDestroyEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
-import pw.ollie.politics.util.math.Position;
 import pw.ollie.politics.util.math.Cuboid;
+import pw.ollie.politics.util.math.Position;
+import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bson.BSONObject;
@@ -488,7 +489,7 @@ public final class Plot implements Storable, ProtectedRegion {
         }
         return owner.getPrivileges(player).stream()
                 .filter(privilege -> privilege.getTypes().contains(PrivilegeType.PLOT))
-                .collect(Collectors.toSet());
+                .collect(CollectorUtil.toMutableSet());
     }
 
     /**

@@ -20,6 +20,8 @@
 package pw.ollie.politics.util.collect;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Utilities relating to {@link Collection}s used by Politics.
@@ -39,6 +41,11 @@ public final class CollectionUtil {
         }
 
         return collection2.containsAll(collection); // inverse check not needed due to size comparison
+    }
+
+    public static <E extends Comparable<E>> List<E> sorted(List<E> collection) {
+        Collections.sort(collection);
+        return collection;
     }
 
     private CollectionUtil() {

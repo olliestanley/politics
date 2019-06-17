@@ -25,7 +25,8 @@ import pw.ollie.politics.Politics;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.universe.Universe;
-import pw.ollie.politics.util.serial.FileUtil;
+import pw.ollie.politics.util.FileUtil;
+import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politicswar.PoliticsWarPlugin;
 import pw.ollie.politicswar.event.PoliticsWarEventFactory;
 import pw.ollie.politicswar.event.war.WarBeginEvent;
@@ -49,7 +50,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 /**
  * Stores data on and provides access to {@link War}s in Politics.
@@ -71,7 +71,7 @@ public final class WarManager {
     public Set<War> getActiveWars(Universe universe) {
         return activeWars.stream()
                 .filter(war -> war.getUniverse().equals(universe))
-                .collect(Collectors.toSet());
+                .collect(CollectorUtil.toMutableSet());
     }
 
     public War getWarBetween(int one, int two) {
@@ -87,7 +87,7 @@ public final class WarManager {
     public Set<War> getInvolvedWars(int groupId) {
         return activeWars.stream()
                 .filter(war -> war.involves(groupId))
-                .collect(Collectors.toSet());
+                .collect(CollectorUtil.toMutableSet());
     }
 
     public Set<War> getInvolvedWars(Group group) {

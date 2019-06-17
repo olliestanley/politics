@@ -24,15 +24,15 @@ import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.group.privilege.Privilege;
-import pw.ollie.politics.util.stream.StreamUtil;
+import pw.ollie.politics.util.collect.CollectionUtil;
 import pw.ollie.politics.util.serial.ConfigUtil;
+import pw.ollie.politics.util.stream.StreamUtil;
 
 import com.google.mu.util.stream.BiStream;
 
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -244,36 +244,19 @@ public final class GroupLevel {
                         .forEach(tracks::put);
             }
 
-            if (!tracks.containsKey(DEFAULT_TRACK)) {
-                RoleTrack def;
-                if (tracks.isEmpty()) {
-                    List<Role> rolesSorted = new LinkedList<>(rolesMap.values());
-                    Collections.sort(rolesSorted);
-                    def = new RoleTrack(DEFAULT_TRACK, rolesSorted);
-                } else {
-                    def = tracks.entrySet().iterator().next().getValue();
-                }
-
-                tracks.put(DEFAULT_TRACK, def);
-            }
+            tracks.putIfAbsent(DEFAULT_TRACK, tracks.isEmpty()
+                    ? new RoleTrack(DEFAULT_TRACK, CollectionUtil.sorted(new LinkedList<>(rolesMap.values())))
+                    : tracks.entrySet().iterator().next().getValue());
 
             // initial = starting role
-            String initialName = node.getString("initial");
-            if (initialName != null) {
-                initial = rolesMap.get(initialName);
-            }
-
+            initial = rolesMap.get(node.getString("initial", "UNSPECIFIED ROLE NAME"));
             if (initial == null) {
                 initial = rolesMap.values().stream().min(Comparator.comparing(Role::getRank)).get();
                 Politics.getLogger().log(Level.WARNING, "No initial role specified in configuration, defaulting to lowest rank...");
             }
 
             // founder role
-            String founderName = node.getString("founder");
-            if (founderName != null) {
-                founder = rolesMap.get(founderName);
-            }
-
+            founder = rolesMap.get(node.getString("founder", "UNSPECIFIED ROLE NAME"));
             if (founder == null) {
                 founder = rolesMap.values().stream().max(Comparator.comparing(Role::getRank)).get();
                 Politics.getLogger().log(Level.WARNING, "No founder role specified in configuration, defaulting to highest rank...");
@@ -333,8 +316,7 @@ public final class GroupLevel {
             return false;
         }
         GroupLevel that = (GroupLevel) o;
-        return id.equals(that.id) &&
-                name.equals(that.name);
+        return id.equals(that.id) && name.equals(that.name);
     }
 
     @Override

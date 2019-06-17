@@ -20,10 +20,9 @@
 package pw.ollie.politics.util.message;
 
 import gnu.trove.map.hash.THashMap;
-import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
-import pw.ollie.politics.util.stream.StreamUtil;
+import pw.ollie.politics.util.stream.CollectorUtil;
 
 import org.bukkit.configuration.Configuration;
 
@@ -36,7 +35,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 public final class Messages {
     // todo docs
@@ -74,20 +72,26 @@ public final class Messages {
     }
 
     public Set<String> loadValues(Class<?>... keyHolders) {
-        return Arrays.stream(keyHolders).map(this::doLoadValues).flatMap(Set::stream).collect(Collectors.toSet());
+        return Arrays.stream(keyHolders)
+                .map(Class::getDeclaredFields)
+                .flatMap(Arrays::stream)
+                .map(this::loadValue)
+                .filter(Objects::nonNull)
+                .collect(CollectorUtil.toMutableSet());
     }
 
-    private Set<String> doLoadValues(Class<?> keyHolder) {
-        Set<String> missing = new THashSet<>();
-        StreamUtil.zipStreams(
-                () -> Arrays.stream(keyHolder.getDeclaredFields()).filter(isKeyHolder).map(Messages::getStringFieldValue).filter(Objects::nonNull),
-                this::getSourceValue)
-                .forEach((key, val) -> val.ifPresentOrElse(v -> setMessage(key, v), () -> missing.add(key)));
-        return missing;
+    private String loadValue(Field field) {
+        if (isKeyHolder.test(field)) {
+            String key = getStringFieldValue(field);
+            Optional<String> val = getSourceValue(key);
+            val.ifPresent(v -> messages.put(key, v));
+            return val.isPresent() ? null : key;
+        }
+        return null;
     }
 
     private Optional<String> getSourceValue(String key) {
-        String raw = source.getString(key, null);
+        String raw = key == null ? null : source.getString(key, null);
         if (raw == null) {
             return Optional.empty();
         }

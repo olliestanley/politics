@@ -22,7 +22,7 @@ package pw.ollie.politics.world;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.util.math.Position;
-import pw.ollie.politics.util.serial.FileUtil;
+import pw.ollie.politics.util.FileUtil;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.PlotProtectionListener;
 

@@ -21,10 +21,10 @@ package pw.ollie.politics.universe;
 
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.util.stream.CollectorUtil;
 
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * A Citizen is a player's representation in a single Universe in Politics.
@@ -78,7 +78,7 @@ public final class Citizen {
      * @return the player's Groups of the given level in this Citizen's particular Universe
      */
     public Set<Group> getGroups(GroupLevel level) {
-        return getGroups().stream().filter(group -> group.getLevel().equals(level)).collect(Collectors.toSet());
+        return getGroups().stream().filter(group -> group.getLevel().equals(level)).collect(CollectorUtil.toMutableSet());
     }
 
     /**

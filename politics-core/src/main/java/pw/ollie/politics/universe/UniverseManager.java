@@ -26,11 +26,13 @@ import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
+import pw.ollie.politics.command.PoliticsCommandManager;
 import pw.ollie.politics.data.InvalidConfigurationException;
 import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
-import pw.ollie.politics.util.serial.FileUtil;
+import pw.ollie.politics.util.FileUtil;
+import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bson.BSONDecoder;
@@ -46,7 +48,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -97,11 +98,10 @@ public final class UniverseManager {
     }
 
     public List<GroupLevel> getGroupLevels() {
-        List<GroupLevel> ret = new ArrayList<>();
-        for (UniverseRules rules : this.rules.values()) {
-            ret.addAll(rules.getGroupLevels());
-        }
-        return ret;
+        return rules.values().stream()
+                .map(UniverseRules::getGroupLevels)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     public Group getGroupById(int id) {
@@ -109,12 +109,9 @@ public final class UniverseManager {
     }
 
     public Group getGroupByTag(String tag) {
-        for (Group g : groups.valueCollection()) {
-            if (g.getTag().equalsIgnoreCase(tag)) {
-                return g;
-            }
-        }
-        return null;
+        return groups.valueCollection().stream()
+                .filter(g -> g.getTag().equalsIgnoreCase(tag))
+                .findAny().orElse(null);
     }
 
     public Set<Universe> getUniverses() {
@@ -124,7 +121,7 @@ public final class UniverseManager {
     public Set<Universe> getUniverses(PoliticsWorld world) {
         return universes.values().stream()
                 .filter(universe -> universe.containsWorld(world))
-                .collect(Collectors.toSet());
+                .collect(CollectorUtil.toMutableSet());
     }
 
     public Set<Universe> getUniverses(World world) {
@@ -149,20 +146,18 @@ public final class UniverseManager {
 
     public Universe createUniverse(String name, UniverseRules rules, List<PoliticsWorld> worlds) {
         if (this.rules.putIfAbsent(rules.getName().toLowerCase(), rules) == null) {
-            for (GroupLevel level : rules.getGroupLevels()) {
-                plugin.getCommandManager().registerGroupCommand(level);
-            }
+            PoliticsCommandManager commandManager = plugin.getCommandManager();
+            rules.getGroupLevels().forEach(commandManager::registerGroupCommand);
         }
 
         Universe universe = new Universe(name, rules, worlds);
         universes.put(name.toLowerCase(), universe);
-        for (PoliticsWorld world : worlds) {
-            worldLevels.putIfAbsent(world, new HashMap<>());
+
+        worlds.forEach(world -> {
+            worldLevels.putIfAbsent(world, new THashMap<>());
             Map<GroupLevel, Universe> map = worldLevels.get(world);
-            for (GroupLevel level : rules.getGroupLevels()) {
-                map.put(level, universe);
-            }
-        }
+            rules.getGroupLevels().forEach(level -> map.put(level, universe));
+        });
 
         PoliticsEventFactory.callUniverseCreateEvent(universe);
         return universe;
@@ -170,9 +165,7 @@ public final class UniverseManager {
 
     public void destroyUniverse(Universe universe) {
         universes.remove(universe.getName());
-        for (Group group : universe.getGroups()) {
-            universe.destroyGroup(group);
-        }
+        universe.getGroups().forEach(universe::destroyGroup);
         PoliticsEventFactory.callUniverseDestroyEvent(universe);
     }
 
@@ -275,11 +268,12 @@ public final class UniverseManager {
 
         // Populate World levels
         worldLevels = new THashMap<>();
+
         for (Universe universe : universes.values()) {
             for (GroupLevel level : universe.getRules().getGroupLevels()) {
                 for (PoliticsWorld world : universe.getWorlds()) {
-                    Map<GroupLevel, Universe> levelMap = worldLevels.computeIfAbsent(world, k -> new HashMap<>());
-                    Universe prev = levelMap.put(level, universe);
+                    Map<GroupLevel, Universe> levelMap = worldLevels.computeIfAbsent(world, k -> new THashMap<>());
+                    Universe prev = levelMap.putIfAbsent(level, universe);
                     if (prev != null) {
                         new InvalidConfigurationException("Multiple universes are conflicting on the same world! Universe name: "
                                 + universe.getName() + "; Rules name: " + universe.getRules().getName()).printStackTrace();

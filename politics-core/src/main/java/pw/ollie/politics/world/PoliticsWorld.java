@@ -23,6 +23,7 @@ import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.plot.Plot;
 
 import com.google.common.collect.HashBasedTable;
@@ -117,7 +118,7 @@ public final class PoliticsWorld implements Storable {
     public Set<Universe> getUniverses() {
         return Politics.getUniverseManager().getUniverses().stream()
                 .filter(universe -> universe.containsWorld(this))
-                .collect(Collectors.toSet());
+                .collect(CollectorUtil.toMutableSet());
     }
 
     /**

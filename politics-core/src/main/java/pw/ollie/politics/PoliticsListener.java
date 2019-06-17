@@ -23,6 +23,7 @@ import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.player.PlayerPlotChangeEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
+import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldManager;
 import pw.ollie.politics.world.plot.Plot;
@@ -36,7 +37,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Listener for general/simple purposes.
@@ -72,7 +72,7 @@ final class PoliticsListener implements Listener {
         PoliticsWorld world = worldManager.getWorld(event.getRespawnLocation().getWorld());
         Set<Group> playerGroups = plugin.getGroupManager().getAllCitizenGroups(playerId).stream()
                 .filter(g -> g.getUniverse().containsWorld(world))
-                .collect(Collectors.toSet());
+                .collect(CollectorUtil.toMutableSet());
         Group best = getHighestPrioritySpawn(playerGroups);
         if (best != null) {
             event.setRespawnLocation(best.getLocationProperty(GroupProperty.SPAWN));

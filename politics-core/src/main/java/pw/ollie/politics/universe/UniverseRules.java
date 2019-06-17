@@ -22,16 +22,18 @@ package pw.ollie.politics.universe;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.util.serial.ConfigUtil;
+import pw.ollie.politics.util.stream.CollectorUtil;
+import pw.ollie.politics.util.stream.StreamUtil;
+
+import com.google.mu.util.stream.BiStream;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 
 /**
@@ -91,7 +93,6 @@ public final class UniverseRules {
 
     public static UniverseRules load(String name, ConfigurationSection config) {
         String description = config.getString("description", "No description given.");
-
         String wildernessMessage = config.getString("wilderness-message", "Wilderness");
 
         ConfigurationSection warsSection = ConfigUtil.getOrCreateSection(config, "wars");
@@ -102,40 +103,23 @@ public final class UniverseRules {
         Map<GroupLevel, List<String>> levels = new HashMap<>();
 
         ConfigurationSection levelsNode = ConfigUtil.getOrCreateSection(config, "levels");
-        for (String levelKey : levelsNode.getKeys(false)) {
-            ConfigurationSection levelNode = levelsNode.getConfigurationSection(levelKey);
+        StreamUtil.biStream(levelsNode.getKeys(false), levelsNode::getConfigurationSection).forEach((levelKey, levelNode) -> {
             if (levelNode == null) {
                 Politics.getLogger().log(Level.SEVERE, "Failed to load a level for a universe ruleset",
                         new InvalidConfigurationException("Error in universe ruleset '" + name + "': node '" + levelKey + "' formatted badly."));
-                continue;
+                return;
             }
 
-            ConfigurationSection levelSection = levelsNode.getConfigurationSection(levelKey);
-            if (levelSection == null) {
-                Politics.getLogger().log(Level.SEVERE, "Failed to load a level for a universe ruleset",
-                        new InvalidConfigurationException("Error in universe ruleset '" + name + "': node '" + levelKey + "' formatted badly."));
-                continue;
-            }
-
-            GroupLevel level = GroupLevel.load(levelKey, levelSection, levels);
-            if (levelMap.containsKey(level.getId())) {
+            GroupLevel level = GroupLevel.load(levelKey, levelNode, levels);
+            if (levelMap.putIfAbsent(level.getId(), level) != null) {
                 Politics.getLogger().log(Level.SEVERE, "Duplicate ids for universe rules: " + level.getId());
                 Politics.getLogger().log(Level.SEVERE, "Only the first universe rules will be loaded...");
-                continue;
             }
-            levelMap.put(level.getId(), level);
-        }
+        });
 
         // Turn these levels into only objects
-        for (Map.Entry<GroupLevel, List<String>> levelEntry : levels.entrySet()) {
-            Set<GroupLevel> allowed = new HashSet<>();
-            for (String ln : levelEntry.getValue()) {
-                GroupLevel level = levelMap.get(ln.toLowerCase());
-                allowed.add(level);
-            }
-            levelEntry.getKey().setAllowedChildren(allowed);
-        }
-
+        BiStream.from(levels).forEach((level, list) -> level.setAllowedChildren(
+                list.stream().map(String::toLowerCase).map(levelMap::get).collect(CollectorUtil.toMutableSet())));
         return new UniverseRules(name, description, wildernessMessage, warsEnabled, levelMap);
     }
 }

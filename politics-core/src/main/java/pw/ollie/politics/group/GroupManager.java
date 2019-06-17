@@ -19,11 +19,10 @@
  */
 package pw.ollie.politics.group;
 
-import gnu.trove.set.hash.THashSet;
-
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.stream.CollectorUtil;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -32,7 +31,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Provides helper methods for accessing {@link Group}s and related features.
@@ -49,26 +47,27 @@ public final class GroupManager {
         pluginManager.registerEvents(new GroupProtectionListener(plugin), plugin);
     }
 
+    public Set<Universe> getUniverses() {
+        return plugin.getUniverseManager().getUniverses();
+    }
+
     public Set<Group> getAllGroups() {
-        Set<Group> result = new THashSet<>();
-        plugin.getUniverseManager().getUniverses().stream()
-                .map(Universe::getGroups).forEach(result::addAll);
-        return result;
+        return getUniverses().stream()
+                .map(Universe::getGroups).flatMap(List::stream).collect(CollectorUtil.toMutableSet());
     }
 
     public Set<Group> getAllCitizenGroups(UUID playerId) {
-        Set<Group> result = new THashSet<>();
-        plugin.getUniverseManager().getUniverses().stream()
+        return getUniverses().stream()
                 .map(universe -> universe.getCitizenGroups(playerId))
-                .forEach(result::addAll);
-        return result;
+                .flatMap(Set::stream)
+                .collect(CollectorUtil.toMutableSet());
     }
 
     public Set<Group> getCitizenGroups(UUID playerId, Collection<Universe> universes) {
         return getAllGroups().stream()
                 .filter(group -> universes.contains(group.getUniverse()))
                 .filter(group -> group.isMember(playerId))
-                .collect(Collectors.toSet());
+                .collect(CollectorUtil.toMutableSet());
     }
 
     public List<GroupLevel> getGroupLevels() {
@@ -76,12 +75,8 @@ public final class GroupManager {
     }
 
     public GroupLevel getGroupLevel(String name) {
-        for (GroupLevel level : getGroupLevels()) {
-            if (level.getName().equalsIgnoreCase(name)) {
-                return level;
-            }
-        }
-        return null;
+        return getGroupLevels().stream()
+                .filter(l -> l.getName().equalsIgnoreCase(name)).findAny().orElse(null);
     }
 
     public Group getGroupById(int id) {

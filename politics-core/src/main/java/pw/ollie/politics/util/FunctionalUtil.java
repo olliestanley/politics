@@ -17,25 +17,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.util.serial;
+package pw.ollie.politics.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import java.util.function.Predicate;
 
-public final class FileUtil {
-    public static File createBackup(File file) throws IOException {
-        String backupName = file.getName() + ".bck";
-        File backupFile = new File(file.getParentFile(), backupName);
-        if (backupFile.exists()) {
-            backupFile.delete();
-            backupFile.createNewFile();
-        }
-        Files.copy(file.toPath(), backupFile.toPath());
-        return backupFile;
+public final class FunctionalUtil {
+    public static <T> Predicate<T> negate(Predicate<T> original) {
+        return original.negate();
     }
 
-    private FileUtil() {
+    private FunctionalUtil() {
         throw new UnsupportedOperationException();
     }
 }

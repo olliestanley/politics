@@ -17,25 +17,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.util.stream;
+package pw.ollie.politics.util;
 
-import com.google.mu.util.stream.BiStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
-import java.util.Collection;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-public final class StreamUtil {
-    // todo doc
-    public static <K, V> BiStream<K, V> biStream(Stream<K> stream, Function<? super K, ? extends V> toValue) {
-        return BiStream.biStream(stream, key -> key, toValue);
+public final class FileUtil {
+    public static File createBackup(File file) throws IOException {
+        String backupName = file.getName() + ".bck";
+        File backupFile = new File(file.getParentFile(), backupName);
+        if (backupFile.exists()) {
+            backupFile.delete();
+            backupFile.createNewFile();
+        }
+        Files.copy(file.toPath(), backupFile.toPath());
+        return backupFile;
     }
 
-    public static <K, V> BiStream<K, V> biStream(Collection<K> collection, Function<? super K, ? extends V> toValue) {
-        return BiStream.biStream(collection.stream(), key -> key, toValue);
-    }
-
-    private StreamUtil() {
+    private FileUtil() {
         throw new UnsupportedOperationException();
     }
 }

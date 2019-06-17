@@ -29,9 +29,10 @@ import pw.ollie.politics.event.plot.subplot.SubplotOwnerChangeEvent;
 import pw.ollie.politics.event.plot.subplot.SubplotPrivilegeChangeEvent;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
+import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.util.math.Position;
 import pw.ollie.politics.util.math.Vector3i;
-import pw.ollie.politics.util.math.Cuboid;
+import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bson.BSONObject;
@@ -46,7 +47,6 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * A subplot must be wholly contained within a single plot. Subplots do not have owner groups as normal plots, as they
@@ -489,7 +489,7 @@ public final class Subplot implements Storable, ProtectedRegion {
         for (UUID individualId : individualPrivileges.keySet()) {
             BasicBSONList privilegeList = new BasicBSONList();
             Set<Privilege> privileges = individualPrivileges.get(individualId);
-            privilegeList.addAll(privileges.stream().map(Privilege::getName).collect(Collectors.toSet()));
+            privilegeList.addAll(privileges.stream().map(Privilege::getName).collect(CollectorUtil.toMutableSet()));
             privilegesObj.put(individualId.toString(), privilegeList);
         }
         result.put("privileges", privilegesObj);

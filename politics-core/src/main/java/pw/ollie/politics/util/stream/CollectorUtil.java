@@ -19,23 +19,17 @@
  */
 package pw.ollie.politics.util.stream;
 
-import com.google.mu.util.stream.BiStream;
+import gnu.trove.set.hash.THashSet;
 
-import java.util.Collection;
-import java.util.function.Function;
-import java.util.stream.Stream;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
-public final class StreamUtil {
-    // todo doc
-    public static <K, V> BiStream<K, V> biStream(Stream<K> stream, Function<? super K, ? extends V> toValue) {
-        return BiStream.biStream(stream, key -> key, toValue);
+public final class CollectorUtil {
+    public static <T> Collector<T, ?, THashSet<T>> toMutableSet() {
+        return Collectors.toCollection(THashSet::new);
     }
 
-    public static <K, V> BiStream<K, V> biStream(Collection<K> collection, Function<? super K, ? extends V> toValue) {
-        return BiStream.biStream(collection.stream(), key -> key, toValue);
-    }
-
-    private StreamUtil() {
+    private CollectorUtil() {
         throw new UnsupportedOperationException();
     }
 }
