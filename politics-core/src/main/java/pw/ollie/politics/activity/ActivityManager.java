@@ -45,18 +45,6 @@ public final class ActivityManager {
         plugin.getServer().getPluginManager().registerEvents(new ActivityUpdateListener(plugin), plugin);
     }
 
-    public PoliticsPlugin getPlugin() {
-        return plugin;
-    }
-
-    public boolean isActive(UUID playerId) {
-        return getActivity(playerId) != null;
-    }
-
-    public boolean isActive(Player player) {
-        return isActive(player.getUniqueId());
-    }
-
     public PoliticsActivity getActivity(UUID playerId) {
         PoliticsActivity activity = activities.get(playerId);
         if (activity != null && activity.hasCompleted()) {
@@ -68,6 +56,14 @@ public final class ActivityManager {
 
     public PoliticsActivity getActivity(Player player) {
         return getActivity(player.getUniqueId());
+    }
+
+    public boolean isActive(UUID playerId) {
+        return getActivity(playerId) != null;
+    }
+
+    public boolean isActive(Player player) {
+        return isActive(player.getUniqueId());
     }
 
     public boolean beginActivity(PoliticsActivity activity) {
@@ -94,5 +90,9 @@ public final class ActivityManager {
 
     public boolean endActivity(Player player) {
         return endActivity(player.getUniqueId());
+    }
+
+    public PoliticsPlugin getPlugin() {
+        return plugin;
     }
 }

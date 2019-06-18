@@ -46,10 +46,6 @@ public abstract class PoliticsEconomy {
      */
     public abstract boolean loadEconomy();
 
-    public PoliticsPlugin getPlugin() {
-        return plugin;
-    }
-
     /**
      * Gets the current balance of a group.
      * <p>
@@ -125,4 +121,8 @@ public abstract class PoliticsEconomy {
      * @return the result of the attempt to tax the member
      */
     public abstract PoliticsEconomyResult taxMember(Group group, UUID member, double amount);
+
+    public PoliticsPlugin getPlugin() {
+        return plugin;
+    }
 }

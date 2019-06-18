@@ -93,17 +93,15 @@ public final class GroupLevel {
         this.otherSettings = otherSettings;
     }
 
-    public Stream<GroupLevel> streamAllowedChildren() {
-        return allowedChildren.stream();
-    }
-
     public Stream<Role> streamRoles() {
         return roles.values().stream();
     }
 
-    public void setAllowedChildren(Set<GroupLevel> allowedChildren) {
-        this.allowedChildren = allowedChildren;
+    public Stream<GroupLevel> streamAllowedChildren() {
+        return allowedChildren.stream();
     }
+
+    // configured value getters
 
     public String getId() {
         return id;
@@ -181,8 +179,16 @@ public final class GroupLevel {
         return otherSettings.get(key);
     }
 
+    // utility
+
     public boolean contains(Group group) {
         return equals(group.getLevel());
+    }
+
+    // loading and storage
+
+    public void setAllowedChildren(Set<GroupLevel> allowedChildren) {
+        this.allowedChildren = allowedChildren;
     }
 
     public void save(ConfigurationSection node) {

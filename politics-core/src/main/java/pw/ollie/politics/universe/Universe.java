@@ -89,55 +89,8 @@ public final class Universe implements Storable {
         groups.forEach(this::initialize);
     }
 
-    /**
-     * Builds the citizen cache for this Universe.
-     */
-    private void buildCitizenCache() {
-        CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
-
-        builder.maximumSize(Politics.getServer().getMaxPlayers());
-        builder.expireAfterAccess(5L, TimeUnit.MINUTES);
-
-        citizenGroupCache = builder.build(new CacheLoader<UUID, Set<Group>>() {
-            @Override
-            public Set<Group> load(UUID id) {
-                Set<Group> myGroups = new THashSet<>();
-                for (Group group : groups) {
-                    if (group.isImmediateMember(id)) {
-                        myGroups.add(group);
-                    }
-                }
-                return myGroups;
-            }
-        });
-    }
-
-    /**
-     * Gets the name of this Universe.
-     * <p>
-     * Note: no two Universes may have the same name.
-     *
-     * @return this Universe's name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Gets the configured {@link UniverseRules} of this universe.
-     *
-     * @return this Universe's configured rule set
-     */
-    public UniverseRules getRules() {
-        return rules;
-    }
-
-    public boolean hasGroup(Group group) {
-        return groups.contains(group);
-    }
-
-    public int getNumGroups() {
-        return groups.size();
+    public Stream<PoliticsWorld> streamWorlds() {
+        return worlds.stream();
     }
 
     public Stream<Group> streamGroups() {
@@ -179,6 +132,50 @@ public final class Universe implements Storable {
     }
 
     /**
+     * Gets the name of this Universe.
+     * <p>
+     * Note: no two Universes may have the same name.
+     *
+     * @return this Universe's name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets the configured {@link UniverseRules} of this universe.
+     *
+     * @return this Universe's configured rule set
+     */
+    public UniverseRules getRules() {
+        return rules;
+    }
+
+    public boolean containsWorld(PoliticsWorld world) {
+        return worlds.contains(world);
+    }
+
+    /**
+     * Attempts to add the given {@link PoliticsWorld} to this Universe, meaning that {@link Group}s present in this
+     * Universe will exist in the world and it will be subject to this Universe's {@link UniverseRules}.
+     *
+     * @param world the world to add to the universe
+     * @return whether the world was successfully added
+     */
+    public boolean addWorld(PoliticsWorld world) {
+        // Check if the rules are already there first
+        return world.streamWorldLevels().noneMatch(rules::hasGroupLevel) && worlds.add(world);
+    }
+
+    public int getNumGroups() {
+        return groups.size();
+    }
+
+    public boolean hasGroup(Group group) {
+        return groups.contains(group);
+    }
+
+    /**
      * Gets the first {@link Group} in this Universe found with the given property set to the given value.
      *
      * @param property the id of the property to check
@@ -201,22 +198,6 @@ public final class Universe implements Storable {
     public Group getFirstGroupByProperty(GroupLevel level, int property, Object value) {
         return groups.stream().filter(level::contains).filter(group -> group.getProperty(property).equals(value))
                 .findFirst().orElse(null);
-    }
-
-    public Stream<PoliticsWorld> streamWorlds() {
-        return worlds.stream();
-    }
-
-    /**
-     * Attempts to add the given {@link PoliticsWorld} to this Universe, meaning that {@link Group}s present in this
-     * Universe will exist in the world and it will be subject to this Universe's {@link UniverseRules}.
-     *
-     * @param world the world to add to the universe
-     * @return whether the world was successfully added
-     */
-    public boolean addWorld(PoliticsWorld world) {
-        // Check if the rules are already there first
-        return world.streamWorldLevels().noneMatch(rules::hasGroupLevel) && worlds.add(world);
     }
 
     public boolean addChildGroup(Group group, Group child) {
@@ -298,33 +279,6 @@ public final class Universe implements Storable {
         return getCitizen(player.getUniqueId(), player.getName());
     }
 
-    public boolean containsWorld(PoliticsWorld world) {
-        return worlds.contains(world);
-    }
-
-    private List<Group> getInternalGroups(GroupLevel level) {
-        return levels.computeIfAbsent(level, k -> new ArrayList<>());
-    }
-
-    private Set<Group> getInternalChildGroups(Group group) {
-        if (group == null) {
-            return new THashSet<>();
-        }
-        Set<Group> groupChildren = children.get(group);
-        if (groupChildren == null) {
-            return new THashSet<>();
-        }
-        return groupChildren;
-    }
-
-    private void invalidateCitizenGroups(UUID citizen) {
-        citizenGroupCache.invalidate(citizen);
-    }
-
-    private void initialize(Group group) {
-        group.initialize(this);
-    }
-
     @Override
     public BasicBSONObject toBSONObject() {
         BasicBSONObject bson = new BasicBSONObject();
@@ -354,17 +308,17 @@ public final class Universe implements Storable {
             throw new IllegalStateException("object is not a BasicBSONObject! ERROR!");
         }
 
-        BasicBSONObject bobject = (BasicBSONObject) object;
+        BasicBSONObject bObj = (BasicBSONObject) object;
 
-        String aname = bobject.getString("name");
-        String rulesName = bobject.getString("rules");
+        String aname = bObj.getString("name");
+        String rulesName = bObj.getString("rules");
         UniverseRules rules = Politics.getUniverseManager().getRules(rulesName);
 
         if (rules == null) {
             throw new IllegalStateException("Rules do not exist!");
         }
 
-        Object worldsObj = bobject.get("worlds");
+        Object worldsObj = bObj.get("worlds");
         if (!(worldsObj instanceof BasicBSONList)) {
             throw new IllegalStateException("GroupWorlds object is not a list!");
         }
@@ -380,7 +334,7 @@ public final class Universe implements Storable {
             }
         });
 
-        Object groupsObj = bobject.get("groups");
+        Object groupsObj = bObj.get("groups");
         if (!(groupsObj instanceof BasicBSONList)) {
             throw new IllegalStateException("groups isn't a list!");
         }
@@ -395,7 +349,7 @@ public final class Universe implements Storable {
             groupMap.put(c.getUid(), c);
         }
 
-        Object childrenObj = bobject.get("children");
+        Object childrenObj = bObj.get("children");
         if (!(childrenObj instanceof BasicBSONObject)) {
             throw new IllegalStateException("Missing children report!");
         }
@@ -421,5 +375,53 @@ public final class Universe implements Storable {
     @Override
     public boolean canStore() {
         return true;
+    }
+
+    // internal
+
+    private List<Group> getInternalGroups(GroupLevel level) {
+        return levels.computeIfAbsent(level, k -> new ArrayList<>());
+    }
+
+    private Set<Group> getInternalChildGroups(Group group) {
+        if (group == null) {
+            return new THashSet<>();
+        }
+        Set<Group> groupChildren = children.get(group);
+        if (groupChildren == null) {
+            return new THashSet<>();
+        }
+        return groupChildren;
+    }
+
+    /**
+     * Builds the citizen cache for this Universe.
+     */
+    private void buildCitizenCache() {
+        CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
+
+        builder.maximumSize(Politics.getServer().getMaxPlayers());
+        builder.expireAfterAccess(5L, TimeUnit.MINUTES);
+
+        citizenGroupCache = builder.build(new CacheLoader<UUID, Set<Group>>() {
+            @Override
+            public Set<Group> load(UUID id) {
+                Set<Group> myGroups = new THashSet<>();
+                for (Group group : groups) {
+                    if (group.isImmediateMember(id)) {
+                        myGroups.add(group);
+                    }
+                }
+                return myGroups;
+            }
+        });
+    }
+
+    private void invalidateCitizenGroups(UUID citizen) {
+        citizenGroupCache.invalidate(citizen);
+    }
+
+    private void initialize(Group group) {
+        group.initialize(this);
     }
 }

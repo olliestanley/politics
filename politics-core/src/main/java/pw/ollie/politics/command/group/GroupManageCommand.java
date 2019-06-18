@@ -157,7 +157,7 @@ public class GroupManageCommand extends GroupSubcommand {
             }
 
             if (parent.addChild(group)) {
-                parent.uninviteChild(group);
+                parent.disinviteChild(group);
                 MessageBuilder.begin().highlight(parent.getName()).normal(" has successfully joined ")
                         .highlight(group.getName()).normal(" as a sub-organisation.").send(sender);
             } else {

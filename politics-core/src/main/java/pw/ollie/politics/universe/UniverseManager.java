@@ -22,7 +22,6 @@ package pw.ollie.politics.universe;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
@@ -32,7 +31,6 @@ import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.util.FileUtil;
-import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bson.BSONDecoder;
@@ -51,9 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -74,20 +70,8 @@ public final class UniverseManager {
         this.plugin = plugin;
     }
 
-    public PoliticsPlugin getPlugin() {
-        return this.plugin;
-    }
-
-    public List<UniverseRules> listRules() {
-        return new ArrayList<>(rules.values());
-    }
-
     public Stream<GroupLevel> streamGroupLevels() {
         return rules.values().stream().flatMap(UniverseRules::streamGroupLevels);
-    }
-
-    public List<GroupLevel> listGroupLevels() {
-        return streamGroupLevels().collect(Collectors.toList());
     }
 
     public Stream<GroupLevel> streamWorldLevels(PoliticsWorld world) {
@@ -98,40 +82,20 @@ public final class UniverseManager {
         return levelUniverses.keySet().stream();
     }
 
-    public List<GroupLevel> listWorldLevels(PoliticsWorld world) {
-        return streamWorldLevels(world).collect(Collectors.toList());
-    }
-
     public Stream<Universe> streamUniverses() {
         return universes.values().stream();
-    }
-
-    public Set<Universe> getUniverses() {
-        return new THashSet<>(universes.values());
     }
 
     public Stream<Universe> streamUniverses(PoliticsWorld world) {
         return universes.values().stream().filter(universe -> universe.containsWorld(world));
     }
 
-    public Set<Universe> getUniverses(PoliticsWorld world) {
-        return streamUniverses(world).collect(CollectorUtil.toTHashSet());
-    }
-
     public Stream<Universe> streamUniverses(World world) {
         return streamUniverses(plugin.getWorldManager().getWorld(world));
     }
 
-    public Set<Universe> getUniverses(World world) {
-        return streamUniverses(world).collect(CollectorUtil.toTHashSet());
-    }
-
-    public int getNumUniverses() {
-        return universes.size();
-    }
-
-    public UniverseRules getRules(String rulesName) {
-        return rules.get(rulesName);
+    public List<UniverseRules> listRules() {
+        return new ArrayList<>(rules.values());
     }
 
     public Universe getUniverse(String name) {
@@ -154,14 +118,8 @@ public final class UniverseManager {
         return levelUniverses.get(level);
     }
 
-    public Group getGroupById(int id) {
-        return groups.get(id);
-    }
-
-    public Group getGroupByTag(String tag) {
-        return groups.valueCollection().stream()
-                .filter(g -> g.getTag().equalsIgnoreCase(tag))
-                .findAny().orElse(null);
+    public int getNumUniverses() {
+        return universes.size();
     }
 
     public Universe createUniverse(String name, UniverseRules rules, List<PoliticsWorld> worlds) {
@@ -189,20 +147,25 @@ public final class UniverseManager {
         PoliticsEventFactory.callUniverseDestroyEvent(universe);
     }
 
-    void addGroup(Group group) {
-        groups.put(group.getUid(), group);
+    public UniverseRules getRules(String rulesName) {
+        return rules.get(rulesName);
     }
 
-    void removeGroup(int group) {
-        groups.remove(group);
+    public Group getGroupById(int id) {
+        return groups.get(id);
     }
 
-    int nextId() {
-        while (getGroupById(nextId) != null) {
-            nextId++;
-        }
-        return nextId;
+    public Group getGroupByTag(String tag) {
+        return groups.valueCollection().stream()
+                .filter(g -> g.getTag().equalsIgnoreCase(tag))
+                .findAny().orElse(null);
     }
+
+    public PoliticsPlugin getPlugin() {
+        return this.plugin;
+    }
+
+    // loading and storage
 
     public void loadRules() {
         File rulesDir = this.plugin.getFileSystem().getRulesDir();
@@ -327,5 +290,22 @@ public final class UniverseManager {
                 this.plugin.getLogger().log(Level.SEVERE, "Could not save universe file `" + fileName + "' due to error! Please restore backup...", ex);
             }
         }
+    }
+
+    // internal
+
+    void addGroup(Group group) {
+        groups.put(group.getUid(), group);
+    }
+
+    void removeGroup(int group) {
+        groups.remove(group);
+    }
+
+    int nextId() {
+        while (getGroupById(nextId) != null) {
+            nextId++;
+        }
+        return nextId;
     }
 }

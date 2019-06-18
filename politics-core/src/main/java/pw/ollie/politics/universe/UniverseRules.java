@@ -56,18 +56,6 @@ public final class UniverseRules {
         this.groupLevels = groupLevels;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getWildernessMessage() {
-        return wildernessMessage;
-    }
-
     public Stream<GroupLevel> streamGroupLevels() {
         return groupLevels.values().stream();
     }
@@ -80,9 +68,25 @@ public final class UniverseRules {
         return groupLevels.containsValue(level);
     }
 
+    // configured value access
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getWildernessMessage() {
+        return wildernessMessage;
+    }
+
     public boolean areWarsEnabled() {
         return warsEnabled;
     }
+
+    // loading and storage
 
     public void save(ConfigurationSection config) {
         config.set("description", description);

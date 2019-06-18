@@ -21,9 +21,9 @@ package pw.ollie.politics.world;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
+import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
-import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.plot.Plot;
 
 import com.google.common.collect.HashBasedTable;
@@ -36,7 +36,6 @@ import org.bson.types.BasicBSONList;
 import org.bukkit.World;
 
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -71,6 +70,19 @@ public final class PoliticsWorld implements Storable {
             chunkPlots.put(p.getChunk().getX(), p.getChunk().getZ(), p);
         }
         this.config = config;
+    }
+
+    public Stream<Universe> streamUniverses() {
+        return Politics.getUniverseManager().streamUniverses().filter(universe -> universe.containsWorld(this));
+    }
+
+    /**
+     * Gets a {@link Stream} of all {@link GroupLevel}s present in this world.
+     *
+     * @return all present GroupLevels in this world
+     */
+    public Stream<GroupLevel> streamWorldLevels() {
+        return Politics.getUniverseManager().streamWorldLevels(this);
     }
 
     /**
@@ -110,17 +122,8 @@ public final class PoliticsWorld implements Storable {
         return Politics.getUniverseManager().getUniverse(this, level);
     }
 
-    /**
-     * Gets a {@link Set} of all {@link Universe}s this {@link PoliticsWorld} is part of.
-     *
-     * @return all Universes this world is contained by
-     */
-    public Set<Universe> getUniverses() {
-        return streamUniverses().collect(CollectorUtil.toTHashSet());
-    }
-
-    public Stream<Universe> streamUniverses() {
-        return Politics.getUniverseManager().streamUniverses().filter(universe -> universe.containsWorld(this));
+    public boolean hasGroup(Group group) {
+        return streamUniverses().anyMatch(universe -> universe.hasGroup(group));
     }
 
     /**
@@ -141,15 +144,6 @@ public final class PoliticsWorld implements Storable {
             chunkPlots.put(x, z, result);
         }
         return result;
-    }
-
-    /**
-     * Gets a {@link Stream} of all {@link GroupLevel}s present in this world.
-     *
-     * @return all present GroupLevels in this world
-     */
-    public Stream<GroupLevel> streamWorldLevels() {
-        return Politics.getUniverseManager().streamWorldLevels(this);
     }
 
     @Override

@@ -41,24 +41,6 @@ public final class Citizen {
     }
 
     /**
-     * Gets the unique identifier of the player represented by this {@link Citizen}.
-     *
-     * @return the player's unique id
-     */
-    public UUID getUniqueId() {
-        return id;
-    }
-
-    /**
-     * Gets the in-game name of the player represented by this {@link Citizen}/
-     *
-     * @return the player's in-game name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
      * Gets a {@link Stream} of all {@link Group}s of the {@link Citizen} - that is, all Groups the player is part of in
      * the {@link Universe} this Citizen is active in. Groups the player is part of, but which are not present in the
      * particular universe, are not included.
@@ -77,7 +59,25 @@ public final class Citizen {
      * @return the player's Groups of the given level in this Citizen's particular Universe
      */
     public Stream<Group> streamGroups(GroupLevel level) {
-        return streamGroups().filter(group -> group.getLevel().equals(level));
+        return streamGroups().filter(level::contains);
+    }
+
+    /**
+     * Gets the unique identifier of the player represented by this {@link Citizen}.
+     *
+     * @return the player's unique id
+     */
+    public UUID getUniqueId() {
+        return id;
+    }
+
+    /**
+     * Gets the in-game name of the player represented by this {@link Citizen}.
+     *
+     * @return the player's in-game name
+     */
+    public String getName() {
+        return name;
     }
 
     /**

@@ -60,6 +60,32 @@ public abstract class PoliticsSubcommand {
     }
 
     /**
+     * Gets list of aliases. If there are none this should return an empty list, *not* {@code null}.
+     * <p>
+     * All entries in this list should be *lower case*.
+     *
+     * @return string list of aliases
+     */
+    public List<String> getAliases() {
+        return new ArrayList<>();
+    }
+
+    /**
+     * Whether command is player-only. Should be overridden by subcommands which are.
+     *
+     * @return true if command is only for players, else false
+     */
+    public boolean isPlayerOnly() {
+        return false;
+    }
+
+    public abstract String getPermission();
+
+    public abstract String getUsage();
+
+    public abstract String getDescription();
+
+    /**
      * Finds a location from the given context, first checking to see if one was specified by flag, then falling back on
      * the location of the command sender if they are a player.
      *
@@ -335,31 +361,5 @@ public abstract class PoliticsSubcommand {
 
             return subplot;
         }
-    }
-
-    public abstract String getPermission();
-
-    /**
-     * Gets list of aliases. If there are none this should return an empty list, *not* {@code null}.
-     * <p>
-     * All entries in this list should be *lower case*.
-     *
-     * @return string list of aliases
-     */
-    public List<String> getAliases() {
-        return new ArrayList<>();
-    }
-
-    public abstract String getUsage();
-
-    public abstract String getDescription();
-
-    /**
-     * Whether command is player-only. Should be overridden by subcommands which are.
-     *
-     * @return true if command is only for players, else false
-     */
-    public boolean isPlayerOnly() {
-        return false;
     }
 }

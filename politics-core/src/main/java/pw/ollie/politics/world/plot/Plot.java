@@ -104,6 +104,30 @@ public final class Plot implements Storable, ProtectedRegion {
     }
 
     /**
+     * Gets a {@link Stream} of all {@link Subplot}s contained within this Plot.
+     *
+     * @return a Stream of all this Plot's Subplots
+     */
+    public Stream<Subplot> streamSubplots() {
+        return subplots.valueCollection().stream();
+    }
+
+    /**
+     * Gets a {@link Stream} of all plot-type {@link Privilege}s the given {@link Player} is afforded by the
+     * {@link Group} which owns this Plot.
+     * <p>
+     * If the Plot has no owner, null is returned.
+     *
+     * @param playerId the unique id of the Player to check the privileges of
+     * @return the plot-type Privileges the given Player has in this Plot
+     */
+    public Stream<Privilege> streamPrivileges(UUID playerId) {
+        Group owner = getOwner();
+        return owner == null ? Stream.empty() : owner.streamPrivileges(playerId)
+                .filter(privilege -> privilege.isOfType(PrivilegeType.PLOT));
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -197,15 +221,6 @@ public final class Plot implements Storable, ProtectedRegion {
     }
 
     /**
-     * Gets a {@link Stream} of all {@link Subplot}s contained within this Plot.
-     *
-     * @return a Stream of all this Plot's Subplots
-     */
-    public Stream<Subplot> streamSubplots() {
-        return subplots.valueCollection().stream();
-    }
-
-    /**
      * Gets the {@link Subplot} within this Plot with the given id.
      * <p>
      * Note that Subplot ids are unique within a Plot but multiple Subplots in different Plots may have the same id. If
@@ -220,6 +235,35 @@ public final class Plot implements Storable, ProtectedRegion {
         }
 
         return subplots.get(id);
+    }
+
+    /**
+     * Gets the {@link Subplot} of this Plot at the given {@link Location}, if there is one.
+     *
+     * @param location the Location to get the Subplot at
+     * @return the relevant Subplot, or {@code null} if there isn't one at the Location
+     */
+    public Subplot getSubplotAt(Location location) {
+        if (!world.getConfig().hasSubplots()) {
+            return null;
+        }
+
+        for (Subplot subplot : subplots.valueCollection()) {
+            if (subplot.contains(location)) {
+                return subplot;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Gets the {@link Subplot} of this Plot at the given {@link Position}, if there is one.
+     *
+     * @param position the Position to get the Subplot at
+     * @return the relevant Subplot, or {@code null} if there isn't one at the Position
+     */
+    public Subplot getSubplotAt(Position position) {
+        return getSubplotAt(position.toLocation());
     }
 
     /**
@@ -299,35 +343,6 @@ public final class Plot implements Storable, ProtectedRegion {
 
         subplots.remove(subplot.getId());
         return true;
-    }
-
-    /**
-     * Gets the {@link Subplot} of this Plot at the given {@link Location}, if there is one.
-     *
-     * @param location the Location to get the Subplot at
-     * @return the relevant Subplot, or {@code null} if there isn't one at the Location
-     */
-    public Subplot getSubplotAt(Location location) {
-        if (!world.getConfig().hasSubplots()) {
-            return null;
-        }
-
-        for (Subplot subplot : subplots.valueCollection()) {
-            if (subplot.contains(location)) {
-                return subplot;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets the {@link Subplot} of this Plot at the given {@link Position}, if there is one.
-     *
-     * @param position the Position to get the Subplot at
-     * @return the relevant Subplot, or {@code null} if there isn't one at the Position
-     */
-    public Subplot getSubplotAt(Position position) {
-        return getSubplotAt(position.toLocation());
     }
 
     /**
@@ -469,21 +484,6 @@ public final class Plot implements Storable, ProtectedRegion {
      */
     public boolean isIndirectOwner(Group group) {
         return isIndirectOwner(group.getUid());
-    }
-
-    /**
-     * Gets a {@link Stream} of all plot-type {@link Privilege}s the given {@link Player} is afforded by the
-     * {@link Group} which owns this Plot.
-     * <p>
-     * If the Plot has no owner, null is returned.
-     *
-     * @param playerId the unique id of the Player to check the privileges of
-     * @return the plot-type Privileges the given Player has in this Plot
-     */
-    public Stream<Privilege> streamPrivileges(UUID playerId) {
-        Group owner = getOwner();
-        return owner == null ? Stream.empty() : owner.streamPrivileges(playerId)
-                .filter(privilege -> privilege.isOfType(PrivilegeType.PLOT));
     }
 
     /**

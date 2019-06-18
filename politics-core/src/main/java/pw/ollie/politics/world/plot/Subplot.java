@@ -49,6 +49,7 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * A subplot must be wholly contained within a single plot. Subplots do not have owner groups as normal plots, as they
@@ -150,6 +151,10 @@ public final class Subplot implements Storable, ProtectedRegion {
                 }
             }
         }
+    }
+
+    public Stream<Privilege> streamPrivileges(UUID playerId) {
+        return individualPrivileges.getOrDefault(playerId, new THashSet<>()).stream();
     }
 
     /**

@@ -88,11 +88,26 @@ public final class Group implements Comparable<Group>, Storable {
         this.invitedChildren = new TIntHashSet();
     }
 
-    public void initialize(Universe universe) {
-        if (universe == null || this.universe != null) {
-            throw new IllegalStateException("Someone is trying to screw with the plugin!");
-        }
-        this.universe = universe;
+    public Stream<Group> streamChildren() {
+        return universe.streamChildGroups(this);
+    }
+
+    public Stream<UUID> streamImmediatePlayers() {
+        return players.keySet().stream();
+    }
+
+    public Stream<Player> streamImmediateOnlinePlayers() {
+        return streamImmediatePlayers().map(Politics.getServer()::getPlayer).filter(Objects::nonNull);
+    }
+
+    public Stream<UUID> streamPlayers() {
+        return Stream.concat(streamImmediatePlayers(), streamChildren().flatMap(Group::streamImmediatePlayers))
+                .distinct();
+    }
+
+    public Stream<Privilege> streamPrivileges(UUID playerId) {
+        Role role = getRole(playerId);
+        return role == null ? Stream.empty() : role.streamPrivileges();
     }
 
     public Universe getUniverse() {
@@ -103,15 +118,15 @@ public final class Group implements Comparable<Group>, Storable {
         return uid;
     }
 
-    public Stream<Group> streamChildren() {
-        return universe.streamChildGroups(this);
+    public GroupLevel getLevel() {
+        return level;
     }
 
     public Group getParent() {
-        return universe.streamGroups().filter(this::hasParent).findAny().orElse(null);
+        return universe.streamGroups().filter(this::isParent).findAny().orElse(null);
     }
 
-    public boolean hasParent(Group other) {
+    public boolean isParent(Group other) {
         return other.hasChild(this);
     }
 
@@ -155,7 +170,7 @@ public final class Group implements Comparable<Group>, Storable {
         return true;
     }
 
-    public boolean uninviteChild(Group group) {
+    public boolean disinviteChild(Group group) {
         return group != null && invitedChildren.remove(group.getUid());
     }
 
@@ -163,16 +178,60 @@ public final class Group implements Comparable<Group>, Storable {
         return group != null && invitedChildren.contains(group.getUid());
     }
 
-    public GroupLevel getLevel() {
-        return level;
+    public boolean isImmediateMember(UUID player) {
+        return players.containsKey(player);
+    }
+
+    public boolean isMember(UUID player) {
+        return isImmediateMember(player) || streamChildren().anyMatch(child -> child.isMember(player));
+    }
+
+    public int getNumPlayers() {
+        return (int) streamPlayers().count();
+    }
+
+    public void addInvitation(UUID player) {
+        invitedPlayers.add(player);
+    }
+
+    public void removeInvitation(UUID player) {
+        invitedPlayers.remove(player);
+    }
+
+    public boolean isInvited(UUID player) {
+        return invitedPlayers.contains(player);
+    }
+
+    public boolean isInvited(Player player) {
+        return isInvited(player.getUniqueId());
+    }
+
+    public Role getRole(UUID player) {
+        return players.get(player);
+    }
+
+    public void setRole(UUID player, Role role) {
+        players.put(player, role);
+    }
+
+    public void removeRole(UUID player) {
+        players.remove(player);
+
+        if (level.hasImmediateMembers() && players.isEmpty()) {
+            universe.destroyGroup(this);
+        }
+    }
+
+    public boolean can(CommandSender source, Privilege privilege) {
+        if (source instanceof Player) {
+            Role role = getRole(((Player) source).getUniqueId());
+            return role != null && role.can(privilege);
+        }
+        return true;
     }
 
     public Object getProperty(int property) {
         return properties.get(property);
-    }
-
-    public boolean hasProperty(int property) {
-        return properties.containsKey(property);
     }
 
     public String getName() {
@@ -181,6 +240,10 @@ public final class Group implements Comparable<Group>, Storable {
 
     public String getTag() {
         return getStringProperty(GroupProperty.TAG);
+    }
+
+    public boolean hasProperty(int property) {
+        return properties.containsKey(property);
     }
 
     public String getStringProperty(int property) {
@@ -258,76 +321,6 @@ public final class Group implements Comparable<Group>, Storable {
         properties.put(property, event.getValue());
     }
 
-    public Stream<UUID> streamImmediatePlayers() {
-        return players.keySet().stream();
-    }
-
-    public Stream<Player> streamImmediateOnlinePlayers() {
-        return streamImmediatePlayers().map(Politics.getServer()::getPlayer).filter(Objects::nonNull);
-    }
-
-    public Stream<UUID> streamPlayers() {
-        return Stream.concat(streamImmediatePlayers(), streamChildren().flatMap(Group::streamImmediatePlayers))
-                .distinct();
-    }
-
-    public int getNumPlayers() {
-        return (int) streamPlayers().count();
-    }
-
-    public boolean isImmediateMember(UUID player) {
-        return players.containsKey(player);
-    }
-
-    public boolean isMember(UUID player) {
-        return isImmediateMember(player) || streamChildren().anyMatch(child -> child.isMember(player));
-    }
-
-    public void addInvitation(UUID player) {
-        invitedPlayers.add(player);
-    }
-
-    public void removeInvitation(UUID player) {
-        invitedPlayers.remove(player);
-    }
-
-    public boolean isInvited(UUID player) {
-        return invitedPlayers.contains(player);
-    }
-
-    public boolean isInvited(Player player) {
-        return isInvited(player.getUniqueId());
-    }
-
-    public Role getRole(UUID player) {
-        return players.get(player);
-    }
-
-    public void setRole(UUID player, Role role) {
-        players.put(player, role);
-    }
-
-    public void removeRole(UUID player) {
-        players.remove(player);
-
-        if (level.hasImmediateMembers() && players.isEmpty()) {
-            universe.destroyGroup(this);
-        }
-    }
-
-    public Stream<Privilege> streamPrivileges(UUID playerId) {
-        Role role = getRole(playerId);
-        return role == null ? Stream.empty() : role.streamPrivileges();
-    }
-
-    public boolean can(CommandSender source, Privilege privilege) {
-        if (source instanceof Player) {
-            Role role = getRole(((Player) source).getUniqueId());
-            return role != null && role.can(privilege);
-        }
-        return true;
-    }
-
     @Override
     public int compareTo(Group o) {
         return getProperty(GroupProperty.TAG).toString().compareTo(o.getProperty(GroupProperty.TAG).toString());
@@ -386,9 +379,8 @@ public final class Group implements Comparable<Group>, Storable {
             throw new IllegalStateException("Stupid server admin... don't mess with the data!");
         }
 
-        BasicBSONObject playersBson = (BasicBSONObject) playersObj;
-        Map<UUID, Role> players = new THashMap<>();
-        BiStream.from(playersBson).forEach((key, val) -> players.put(UUID.fromString(key), level.getRole(val.toString())));
+        Map<UUID, Role> players = new THashMap<>(BiStream.from((BasicBSONObject) playersObj).mapKeys(UUID::fromString)
+                .mapValues(Object::toString).mapValues(level::getRole).toMap());
 
         return new Group(uid, level, properties, players);
     }
@@ -396,5 +388,12 @@ public final class Group implements Comparable<Group>, Storable {
     @Override
     public boolean canStore() {
         return true;
+    }
+
+    public void initialize(Universe universe) {
+        if (universe == null || this.universe != null) {
+            throw new IllegalStateException("attempt to initialize a group twice!");
+        }
+        this.universe = universe;
     }
 }

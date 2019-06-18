@@ -41,8 +41,8 @@ final class GroupProtectionListener implements Listener {
     }
 
     private boolean shouldPrevent(Player attacker, Player attacked) {
-        return plugin.getGroupManager()
-                .streamCitizenGroups(attacked.getUniqueId(), plugin.getWorldManager().getWorld(attacked.getWorld()).getUniverses())
+        return plugin.getGroupManager().streamCitizenGroups(attacked.getUniqueId())
+                .filter(plugin.getWorldManager().getWorld(attacked.getWorld())::hasGroup)
                 .filter(this::noFriendlyFire).anyMatch(group -> group.isMember(attacker.getUniqueId()));
     }
 

@@ -48,16 +48,12 @@ public final class Role implements Comparable<Role> {
         this.rank = rank;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public Stream<Privilege> streamPrivileges() {
         return privileges.stream();
     }
 
-    public boolean can(Privilege privilege) {
-        return privileges.contains(privilege);
+    public String getId() {
+        return id;
     }
 
     public int getRank() {
@@ -66,6 +62,10 @@ public final class Role implements Comparable<Role> {
 
     public String getName() {
         return name;
+    }
+
+    public boolean can(Privilege privilege) {
+        return privileges.contains(privilege);
     }
 
     public static Role load(String id, ConfigurationSection node) {

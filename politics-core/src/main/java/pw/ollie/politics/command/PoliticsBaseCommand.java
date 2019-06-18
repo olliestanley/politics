@@ -41,11 +41,26 @@ import java.util.stream.Stream;
 public abstract class PoliticsBaseCommand extends BukkitCommand {
     // todo docs
     private final PoliticsPlugin plugin;
-    private final List<PoliticsSubcommand> subcommands = new ArrayList<>();
+    private final List<PoliticsSubcommand> subcommands;
 
     protected PoliticsBaseCommand(PoliticsPlugin plugin, String name, String description) {
         super(name.toLowerCase(), description, "Type '/" + name + " help' for usage help!", new ArrayList<>());
         this.plugin = plugin;
+        this.subcommands = new ArrayList<>();
+    }
+
+    // streamSubcommands, getPermission, isPlayerOnly, runCommand and registerSubcommand are default implementations which can be overridden
+
+    public Stream<PoliticsSubcommand> streamSubcommands() {
+        return subcommands.stream();
+    }
+
+    public String getPermission() {
+        return null;
+    }
+
+    public boolean isPlayerOnly() {
+        return false;
     }
 
     protected void runCommand(CommandSender sender, Arguments args) {
@@ -78,10 +93,6 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
 
             PoliticsCommandHelper.sendCommandHelp(sender, this);
         }
-    }
-
-    public Stream<PoliticsSubcommand> streamSubcommands() {
-        return subcommands.stream();
     }
 
     public boolean registerSubCommand(PoliticsSubcommand subcommand) {
@@ -158,13 +169,5 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         }
 
         return true;
-    }
-
-    public String getPermission() {
-        return null;
-    }
-
-    public boolean isPlayerOnly() {
-        return false;
     }
 }

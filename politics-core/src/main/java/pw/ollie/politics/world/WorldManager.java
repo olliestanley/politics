@@ -155,6 +155,8 @@ public final class WorldManager {
         return getPlotAt(position.toLocation());
     }
 
+    // loading and storage
+
     /**
      * Loads world configurations from their configuration files.
      */
@@ -246,6 +248,8 @@ public final class WorldManager {
             }
         });
     }
+
+    // internal
 
     private PoliticsWorld createWorld(String name) {
         PoliticsWorld world = new PoliticsWorld(name, getWorldConfig(name));

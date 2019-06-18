@@ -29,6 +29,7 @@ import org.bukkit.plugin.PluginManager;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -54,11 +55,6 @@ public final class GroupManager {
         return plugin.getUniverseManager().streamUniverses()
                 .map(universe -> universe.streamCitizenGroups(playerId))
                 .flatMap(Function.identity());
-    }
-
-    public Stream<Group> streamCitizenGroups(UUID playerId, Collection<Universe> universes) {
-        return streamGroups().filter(group -> universes.contains(group.getUniverse()))
-                .filter(group -> group.isMember(playerId));
     }
 
     public Stream<GroupLevel> streamGroupLevels() {

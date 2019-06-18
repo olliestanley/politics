@@ -39,20 +39,10 @@ public final class PoliticsCommandHelper {
     public static final String GROUPS_ADMIN_PERMISSION = "politics.group.admin";
     public static final String PLOTS_ADMIN_PERMISSION = "politics.plot.admin";
 
+    private static final int fuzzyTolerance = 2;
+
     public static void sendCommandHelp(CommandSender sender, PoliticsBaseCommand baseCommand) {
         PoliticsCommandHelper.sendCommandHelp(sender, baseCommand, 1);
-    }
-
-    public static boolean hasPlotsAdmin(CommandSender source) {
-        return source instanceof ConsoleCommandSender || source.hasPermission(PLOTS_ADMIN_PERMISSION);
-    }
-
-    public static boolean hasGroupsAdmin(CommandSender source) {
-        return source instanceof ConsoleCommandSender || source.hasPermission(GROUPS_ADMIN_PERMISSION);
-    }
-
-    private static boolean can(CommandSender sender, String perm) {
-        return perm == null || sender.hasPermission(perm);
     }
 
     // page counts from 1 (not an index)
@@ -70,11 +60,30 @@ public final class PoliticsCommandHelper {
         message.send(sender);
     }
 
+    public static boolean hasPlotsAdmin(CommandSender source) {
+        return source instanceof ConsoleCommandSender || source.hasPermission(PLOTS_ADMIN_PERMISSION);
+    }
+
+    public static boolean hasGroupsAdmin(CommandSender source) {
+        return source instanceof ConsoleCommandSender || source.hasPermission(GROUPS_ADMIN_PERMISSION);
+    }
+
+    public static void registerPermission(String node) {
+        PoliticsCommandHelper.registerPermission(node, "");
+    }
+
+    public static void registerPermission(String node, String description) {
+        try {
+            Permission permission = new Permission(node, description);
+            Bukkit.getPluginManager().addPermission(permission);
+        } catch (Exception ignore) {
+            // ignore, this just means the permission is already registered
+        }
+    }
+
     public static PoliticsSubcommand getClosestMatch(Collection<PoliticsSubcommand> subcommands, String label) {
         return fuzzyLookup(subcommands, label);
     }
-
-    private static final int fuzzyTolerance = 2;
 
     private static PoliticsSubcommand fuzzyLookup(Collection<PoliticsSubcommand> collection, String name) {
         String adjName = name.replaceAll("[ _]", "").toLowerCase();
@@ -111,17 +120,8 @@ public final class PoliticsCommandHelper {
         return best;
     }
 
-    public static void registerPermission(String node) {
-        PoliticsCommandHelper.registerPermission(node, "");
-    }
-
-    public static void registerPermission(String node, String description) {
-        try {
-            Permission permission = new Permission(node, description);
-            Bukkit.getPluginManager().addPermission(permission);
-        } catch (Exception ignore) {
-            // ignore, this just means the permission is already registered
-        }
+    private static boolean can(CommandSender sender, String perm) {
+        return perm == null || sender.hasPermission(perm);
     }
 
     private PoliticsCommandHelper() {

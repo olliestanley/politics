@@ -41,12 +41,12 @@ public class RoleTrack implements Iterable<Role> {
         this.roles = roles;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public Stream<Role> streamRoles() {
         return roles.stream();
+    }
+
+    public String getId() {
+        return id;
     }
 
     public Role getPreviousRole(Role role) {
