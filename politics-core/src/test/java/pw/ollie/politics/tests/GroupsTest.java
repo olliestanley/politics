@@ -97,7 +97,7 @@ public final class GroupsTest extends AbstractPoliticsTest {
         town.setRole(founder.getUniqueId(), townLevel.getFounder());
         town.setProperty(GroupProperty.NAME, tName);
         town.setProperty(GroupProperty.TAG, tTag);
-        Assert.assertTrue(town.addChildGroup(household));
+        Assert.assertTrue(town.addChild(household));
         Assert.assertEquals(1, eventCounter.getGroupChildAdds());
         Assert.assertTrue(universe.getChildGroups(town).contains(household));
     }

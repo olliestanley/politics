@@ -34,7 +34,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class GroupCreateCommand extends GroupSubcommand {
     GroupCreateCommand(GroupLevel groupLevel) {
@@ -72,13 +71,8 @@ public class GroupCreateCommand extends GroupSubcommand {
 
         Universe universe = findUniverse(sender, args);
 
-        if (!level.allowedMultiple()) {
-            Set<Group> founderGroups = universe.getCitizenGroups(founder);
-            for (Group group : founderGroups) {
-                if (group.getLevel().equals(level)) {
-                    throw new CommandException("A " + level.getName() + " may not be founded by somebody already in one.");
-                }
-            }
+        if (!level.allowedMultiple() && universe.streamCitizenGroups(founder).map(Group::getLevel).anyMatch(level::equals)) {
+            throw new CommandException("A " + level.getName() + " may not be founded by somebody already in one.");
         }
 
         StringBuilder nameBuilder = new StringBuilder();

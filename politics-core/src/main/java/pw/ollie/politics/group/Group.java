@@ -42,6 +42,8 @@ import pw.ollie.politics.util.serial.PropertyDeserializationException;
 import pw.ollie.politics.util.serial.PropertySerializer;
 import pw.ollie.politics.world.plot.Plot;
 
+import com.google.mu.util.stream.BiStream;
+
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
 
@@ -50,13 +52,14 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Represents a group of a certain {@link GroupLevel} in Politics which exists in a single {@link Universe}. A Group may
@@ -102,11 +105,15 @@ public final class Group implements Comparable<Group>, Storable {
         return uid;
     }
 
-    public Set<Group> getGroups() {
+    public Set<Group> getChildren() {
         return universe.getChildGroups(this);
     }
 
-    public boolean addChildGroup(Group group) {
+    public Stream<Group> streamChildren() {
+        return universe.streamChildGroups(this);
+    }
+
+    public boolean addChild(Group group) {
         GroupChildAddEvent event = PoliticsEventFactory.callGroupChildAddEvent(this, group);
         if (event.isCancelled()) {
             return false;
@@ -115,11 +122,11 @@ public final class Group implements Comparable<Group>, Storable {
         return universe.addChildGroup(this, group);
     }
 
-    public boolean removeChildGroup(Group group) {
-        return removeChildGroup(group, Bukkit.getConsoleSender());
+    public boolean removeChild(Group group) {
+        return removeChild(group, Bukkit.getConsoleSender());
     }
 
-    public boolean removeChildGroup(Group group, CommandSender source) {
+    public boolean removeChild(Group group, CommandSender source) {
         GroupChildRemoveEvent event = PoliticsEventFactory.callGroupChildRemoveEvent(this, group, source);
         if (event.isCancelled()) {
             return false;
@@ -156,6 +163,10 @@ public final class Group implements Comparable<Group>, Storable {
 
     public Object getProperty(int property) {
         return properties.get(property);
+    }
+
+    public boolean hasProperty(int property) {
+        return properties.containsKey(property);
     }
 
     public String getName() {
@@ -227,7 +238,7 @@ public final class Group implements Comparable<Group>, Storable {
         try {
             return PropertySerializer.deserializeLocation(s);
         } catch (PropertyDeserializationException ex) {
-            Politics.getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a transform!", ex);
+            Politics.getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a Location!", ex);
             return def;
         }
     }
@@ -241,28 +252,30 @@ public final class Group implements Comparable<Group>, Storable {
         properties.put(property, event.getValue());
     }
 
-    public List<UUID> getImmediatePlayers() {
-        return new ArrayList<>(players.keySet());
+    public Stream<UUID> streamImmediatePlayers() {
+        return players.keySet().stream();
+    }
+
+    public Stream<Player> streamImmediateOnlinePlayers() {
+        return streamImmediatePlayers().map(Politics.getServer()::getPlayer).filter(Objects::nonNull);
     }
 
     public List<Player> getImmediateOnlinePlayers() {
-        List<Player> players = new ArrayList<>();
-        for (UUID pn : getImmediatePlayers()) {
-            Player player = Politics.getServer().getPlayer(pn);
-            if (player != null) {
-                players.add(player);
-            }
-        }
-        return players;
+        return streamImmediateOnlinePlayers().collect(Collectors.toList());
     }
 
     public List<UUID> getPlayers() {
-        List<UUID> players = new ArrayList<>();
-        for (Group group : getGroups()) {
-            players.addAll(group.getPlayers());
-        }
-        players.addAll(this.players.keySet());
-        return players;
+        return Stream.concat(streamChildren().flatMap(Group::streamImmediatePlayers), streamImmediatePlayers())
+                .distinct().collect(Collectors.toList());
+    }
+
+    public Stream<UUID> streamPlayers() {
+        return Stream.concat(streamImmediatePlayers(), streamChildren().flatMap(Group::streamImmediatePlayers))
+                .distinct();
+    }
+
+    public int getNumPlayers() {
+        return (int) streamPlayers().count();
     }
 
     public boolean isImmediateMember(UUID player) {
@@ -270,16 +283,7 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     public boolean isMember(UUID player) {
-        if (isImmediateMember(player)) {
-            return true;
-        }
-
-        for (Group group : getGroups()) {
-            if (group.isMember(player)) {
-                return true;
-            }
-        }
-        return false;
+        return isImmediateMember(player) || streamChildren().anyMatch(child -> child.isMember(player));
     }
 
     public void addInvitation(UUID player) {
@@ -317,7 +321,7 @@ public final class Group implements Comparable<Group>, Storable {
     public Set<Privilege> getPrivileges(UUID playerId) {
         Role role = getRole(playerId);
         if (role == null) {
-            return new HashSet<>();
+            return new THashSet<>();
         }
         return role.getPrivileges();
     }
@@ -335,12 +339,7 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     public Group getParent() {
-        for (Group group : universe.getGroups()) {
-            if (group.getGroups().contains(group)) {
-                return group;
-            }
-        }
-        return null;
+        return universe.streamGroups().filter(group -> group.getChildren().contains(this)).findAny().orElse(null);
     }
 
     @Override
@@ -364,9 +363,7 @@ public final class Group implements Comparable<Group>, Storable {
         object.put("properties", propertiesBson);
 
         BasicBSONObject playersBson = new BasicBSONObject();
-        for (Map.Entry<UUID, Role> roleEntry : players.entrySet()) {
-            playersBson.put(roleEntry.getKey().toString(), roleEntry.getValue().getId());
-        }
+        BiStream.from(players).mapKeys(UUID::toString).mapValues(Role::getId).forEach(playersBson::put);
         object.put("players", playersBson);
 
         return object;
@@ -395,11 +392,7 @@ public final class Group implements Comparable<Group>, Storable {
 
         BasicBSONObject propertiesBson = (BasicBSONObject) propertiesObj;
         TIntObjectMap<Object> properties = new TIntObjectHashMap<>();
-        for (Map.Entry<String, Object> entry : propertiesBson.entrySet()) {
-            int realKey = Integer.valueOf(entry.getKey(), 16);
-            Object value = entry.getValue();
-            properties.put(realKey, value);
-        }
+        BiStream.from(propertiesBson).forEach((key, val) -> properties.put(Integer.valueOf(key, 16), val));
 
         // Players
         Object playersObj = bobject.get("players");
@@ -409,11 +402,7 @@ public final class Group implements Comparable<Group>, Storable {
 
         BasicBSONObject playersBson = (BasicBSONObject) playersObj;
         Map<UUID, Role> players = new THashMap<>();
-        for (Map.Entry<String, Object> entry : playersBson.entrySet()) {
-            String roleId = entry.getValue().toString();
-            Role role = level.getRole(roleId);
-            players.put(UUID.fromString(entry.getKey()), role);
-        }
+        BiStream.from(playersBson).forEach((key, val) -> players.put(UUID.fromString(key), level.getRole(val.toString())));
 
         return new Group(uid, level, properties, players);
     }

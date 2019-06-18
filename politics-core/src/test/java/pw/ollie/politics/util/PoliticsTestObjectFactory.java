@@ -19,6 +19,8 @@
  */
 package pw.ollie.politics.util;
 
+import gnu.trove.map.hash.THashMap;
+
 import pw.ollie.politics.AbstractPoliticsTest;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.Privileges;
@@ -31,12 +33,11 @@ import org.bukkit.configuration.MemoryConfiguration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public final class PoliticsTestObjectFactory {
     public static WorldConfig newDefaultWorldConfig() {
-        return PoliticsTestReflection.instantiateWorldConfig(AbstractPoliticsTest.TEST_WORLD_NAME, true, true, new HashMap<>(), new HashMap<>());
+        return PoliticsTestReflection.instantiateWorldConfig(AbstractPoliticsTest.TEST_WORLD_NAME, true, true, new THashMap<>(), new THashMap<>());
     }
 
     public static UniverseRules newDefaultUniverseRules() {

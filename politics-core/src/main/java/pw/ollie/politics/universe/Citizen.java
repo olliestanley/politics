@@ -21,10 +21,9 @@ package pw.ollie.politics.universe;
 
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
-import pw.ollie.politics.util.stream.CollectorUtil;
 
-import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * A Citizen is a player's representation in a single Universe in Politics.
@@ -60,25 +59,25 @@ public final class Citizen {
     }
 
     /**
-     * Gets a {@link Set} of all {@link Group}s of the {@link Citizen} - that is, all Groups the player is part of in
+     * Gets a {@link Stream} of all {@link Group}s of the {@link Citizen} - that is, all Groups the player is part of in
      * the {@link Universe} this Citizen is active in. Groups the player is part of, but which are not present in the
      * particular universe, are not included.
      *
      * @return the player's Group's in this Citizen's particular Universe
      */
-    public Set<Group> getGroups() {
-        return universe.getCitizenGroups(id);
+    public Stream<Group> streamGroups() {
+        return universe.streamCitizenGroups(id);
     }
 
     /**
-     * Gets the {@link Set} of all {@link Group} of the specified {@link GroupLevel} the player is a member of, or an
-     * empty Set if the player is not a member of a Group of that level in this Citizen's {@link Universe}.
+     * Gets a {@link Stream} of all {@link Group} of the specified {@link GroupLevel} the player is a member of, or an
+     * empty Stream if the player is not a member of a Group of that level in this Citizen's {@link Universe}.
      *
      * @param level the GroupLevel to get the player's Groups in this Citizen's Universe of
      * @return the player's Groups of the given level in this Citizen's particular Universe
      */
-    public Set<Group> getGroups(GroupLevel level) {
-        return getGroups().stream().filter(group -> group.getLevel().equals(level)).collect(CollectorUtil.toTHashSet());
+    public Stream<Group> streamGroups(GroupLevel level) {
+        return streamGroups().filter(group -> group.getLevel().equals(level));
     }
 
     /**

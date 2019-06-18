@@ -20,6 +20,7 @@
 package pw.ollie.politicstax.tax;
 
 import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.THashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
 import pw.ollie.politics.Politics;
@@ -31,7 +32,6 @@ import pw.ollie.politics.universe.Universe;
 import pw.ollie.politicstax.PoliticsTaxPlugin;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -47,7 +47,7 @@ public final class TaxationManager {
 
     public TaxationManager(PoliticsTaxPlugin plugin) {
         this.plugin = plugin;
-        this.lastCollections = new HashMap<>();
+        this.lastCollections = new THashMap<>();
     }
 
     public int getLastCollection(UUID playerId, Universe universe) {

@@ -22,7 +22,6 @@ package pw.ollie.politics.command.politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.PoliticsSubcommand;
 import pw.ollie.politics.command.args.Arguments;
-import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.util.message.MessageUtil;
 
@@ -45,10 +44,8 @@ public class PoliticsHelpCommand extends PoliticsSubcommand {
         message.newLine().append("Universe Commands: ").highlight("/universe help");
         message.newLine().append("Plot Commands: ").highlight("/plot help");
         message.newLine().append("Subplot Commands: ").highlight("/subplot help");
-        for (GroupLevel groupLevel : plugin.getUniverseManager().getGroupLevels()) {
-            message.newLine().normal(groupLevel.getName()).append(" Commands: ").highlight("/")
-                    .append(groupLevel.getId()).append(" help");
-        }
+        plugin.getUniverseManager().streamGroupLevels().forEach(level -> message.newLine().normal(level.getName())
+                .append(" Commands: ").highlight("/").append(level.getId()).append(" help"));
         message.send(sender);
     }
 

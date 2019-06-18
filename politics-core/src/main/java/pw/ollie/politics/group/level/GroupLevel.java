@@ -23,6 +23,7 @@ import gnu.trove.map.hash.THashMap;
 import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
+import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.util.collect.CollectionUtil;
 import pw.ollie.politics.util.serial.ConfigUtil;
@@ -34,8 +35,6 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +114,7 @@ public final class GroupLevel {
     }
 
     public Set<GroupLevel> getAllowedChildren() {
-        return new HashSet<>(allowedChildren);
+        return new THashSet<>(allowedChildren);
     }
 
     public boolean canBeChild(final GroupLevel level) {
@@ -123,7 +122,7 @@ public final class GroupLevel {
     }
 
     public Map<String, Role> getRoles() {
-        return new HashMap<>(roles);
+        return new THashMap<>(roles);
     }
 
     public Role getRole(String roleId) {
@@ -182,6 +181,10 @@ public final class GroupLevel {
         return otherSettings.get(key);
     }
 
+    public boolean contains(Group group) {
+        return equals(group.getLevel());
+    }
+
     public void save(ConfigurationSection node) {
         node.set("name", name);
         node.set("rank", rank);
@@ -225,14 +228,14 @@ public final class GroupLevel {
         List<String> children = node.getStringList("children");
 
         // Load roles
-        Map<String, Role> rolesMap = new HashMap<>();
+        Map<String, Role> rolesMap = new THashMap<>();
         ConfigurationSection rolesNode = node.getConfigurationSection("roles");
         if (rolesNode != null) {
             StreamUtil.biStream(rolesNode.getKeys(false).stream(), rolesNode::getConfigurationSection)
                     .filterValues(Objects::nonNull).mapValues(Role::load).forEach(rolesMap::put);
         }
 
-        Map<String, RoleTrack> tracks = new HashMap<>();
+        Map<String, RoleTrack> tracks = new THashMap<>();
         Role initial = null;
         Role founder = null;
 

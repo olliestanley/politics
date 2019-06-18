@@ -62,9 +62,7 @@ public final class PoliticsCommandManager {
         this.registerCommand(new SubplotCommand(plugin));
         this.registerCommand(new UniverseCommand(plugin));
 
-        for (GroupLevel groupLevel : plugin.getUniverseManager().getGroupLevels()) {
-            this.registerGroupCommand(groupLevel);
-        }
+        plugin.getUniverseManager().streamGroupLevels().forEach(this::registerGroupCommand);
 
         PoliticsCommandHelper.registerPermission(PoliticsCommandHelper.GROUPS_ADMIN_PERMISSION, "Allows performing functions, like land claiming, for groups you're not a member of");
         PoliticsCommandHelper.registerPermission(PoliticsCommandHelper.PLOTS_ADMIN_PERMISSION, "Allows performing functions for plots you don't own");

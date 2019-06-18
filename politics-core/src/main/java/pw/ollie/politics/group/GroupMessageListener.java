@@ -45,7 +45,7 @@ final class GroupMessageListener implements Listener {
     public void sendJoinMessage(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        plugin.getGroupManager().getAllCitizenGroups(player.getUniqueId())
+        plugin.getGroupManager().streamCitizenGroups(player.getUniqueId())
                 .forEach(group -> notifier.notifyPlayerGroupMotd(player, group));
     }
 

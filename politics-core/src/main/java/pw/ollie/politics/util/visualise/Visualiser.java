@@ -19,6 +19,9 @@
  */
 package pw.ollie.politics.util.visualise;
 
+import gnu.trove.map.hash.THashMap;
+import gnu.trove.set.hash.THashSet;
+
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.world.plot.Plot;
@@ -30,8 +33,6 @@ import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -50,7 +51,7 @@ public final class Visualiser {
      */
     public Visualiser(PoliticsPlugin plugin) {
         this.plugin = plugin;
-        this.current = new HashMap<>();
+        this.current = new THashMap<>();
     }
 
     public PoliticsPlugin getPlugin() {
@@ -88,7 +89,7 @@ public final class Visualiser {
      * @return a Visualisation of the given Cuboid
      */
     public Visualisation visualiseCuboid(Cuboid cuboid, BlockData fake) {
-        Set<VisualisedBlock> blocks = new HashSet<>();
+        Set<VisualisedBlock> blocks = new THashSet<>();
         World world = cuboid.getWorld();
 
         for (int x = cuboid.getMinX(); x <= cuboid.getMaxX(); x++) {

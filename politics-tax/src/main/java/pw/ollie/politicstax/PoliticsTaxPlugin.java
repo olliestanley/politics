@@ -21,7 +21,6 @@ package pw.ollie.politicstax;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politicstax.command.GroupSettaxCommand;
 import pw.ollie.politicstax.tax.TaxationManager;
 
@@ -46,9 +45,7 @@ public final class PoliticsTaxPlugin extends JavaPlugin {
         this.saveTask = new PoliticsTaxDataSaveTask(this);
         this.saveTask.runTaskTimer(this, PoliticsPlugin.DATA_SAVE_INTERVAL, PoliticsPlugin.DATA_SAVE_INTERVAL);
 
-        for (GroupLevel groupLevel : Politics.getGroupManager().getGroupLevels()) {
-            Politics.getCommandManager().getPoliticsCommand(groupLevel.getId()).registerSubCommand(new GroupSettaxCommand(groupLevel));
-        }
+        Politics.getGroupManager().streamGroupLevels().forEach(level -> Politics.getCommandManager().getPoliticsCommand(level.getId()).registerSubCommand(new GroupSettaxCommand(level)));
     }
 
     @Override

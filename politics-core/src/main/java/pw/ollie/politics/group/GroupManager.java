@@ -22,15 +22,15 @@ package pw.ollie.politics.group;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
-import pw.ollie.politics.util.stream.CollectorUtil;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Provides helper methods for accessing {@link Group}s and related features.
@@ -47,36 +47,23 @@ public final class GroupManager {
         pluginManager.registerEvents(new GroupProtectionListener(plugin), plugin);
     }
 
-    public Set<Universe> getUniverses() {
-        return plugin.getUniverseManager().getUniverses();
+    public Stream<Group> streamGroups() {
+        return plugin.getUniverseManager().streamUniverses().flatMap(Universe::streamGroups);
     }
 
-    public Set<Group> getAllGroups() {
-        return getUniverses().stream()
-                .map(Universe::getGroups).flatMap(List::stream).collect(CollectorUtil.toTHashSet());
+    public Stream<Group> streamCitizenGroups(UUID playerId) {
+        return plugin.getUniverseManager().streamUniverses()
+                .map(universe -> universe.streamCitizenGroups(playerId))
+                .flatMap(Function.identity());
     }
 
-    public Set<Group> getAllCitizenGroups(UUID playerId) {
-        return getUniverses().stream()
-                .map(universe -> universe.getCitizenGroups(playerId))
-                .flatMap(Set::stream)
-                .collect(CollectorUtil.toTHashSet());
+    public Stream<Group> streamCitizenGroups(UUID playerId, Collection<Universe> universes) {
+        return streamGroups().filter(group -> universes.contains(group.getUniverse()))
+                .filter(group -> group.isMember(playerId));
     }
 
-    public Set<Group> getCitizenGroups(UUID playerId, Collection<Universe> universes) {
-        return getAllGroups().stream()
-                .filter(group -> universes.contains(group.getUniverse()))
-                .filter(group -> group.isMember(playerId))
-                .collect(CollectorUtil.toTHashSet());
-    }
-
-    public List<GroupLevel> getGroupLevels() {
-        return plugin.getUniverseManager().getGroupLevels();
-    }
-
-    public GroupLevel getGroupLevel(String name) {
-        return getGroupLevels().stream()
-                .filter(l -> l.getName().equalsIgnoreCase(name)).findAny().orElse(null);
+    public Stream<GroupLevel> streamGroupLevels() {
+        return plugin.getUniverseManager().streamGroupLevels();
     }
 
     public Group getGroupById(int id) {
@@ -87,8 +74,12 @@ public final class GroupManager {
         return plugin.getUniverseManager().getGroupByTag(tag);
     }
 
+    public GroupLevel getGroupLevel(String name) {
+        return streamGroupLevels().filter(l -> l.getName().equalsIgnoreCase(name)).findAny().orElse(null);
+    }
+
     public boolean hasGroupOfLevel(Player player, GroupLevel level) {
-        return getAllCitizenGroups(player.getUniqueId()).stream().map(Group::getLevel).anyMatch(level::equals);
+        return streamCitizenGroups(player.getUniqueId()).map(Group::getLevel).anyMatch(level::equals);
     }
 
     public PoliticsPlugin getPlugin() {

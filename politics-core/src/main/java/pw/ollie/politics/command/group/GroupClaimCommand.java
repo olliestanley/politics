@@ -28,7 +28,6 @@ import pw.ollie.politics.event.group.GroupPlotClaimEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.group.privilege.Privileges;
-import pw.ollie.politics.util.math.Position;
 import pw.ollie.politics.util.message.MessageUtil;
 import pw.ollie.politics.world.plot.Plot;
 
@@ -60,8 +59,7 @@ public class GroupClaimCommand extends GroupSubcommand {
             throw new CommandException("There are no plots in that world.");
         }
 
-        Position position = Position.fromLocation(location);
-        if (!group.getUniverse().getWorlds().contains(Politics.getWorld(position.getWorld()))) {
+        if (group.getUniverse().streamWorlds().noneMatch(Politics.getWorld(location.getWorld())::equals)) {
             throw new CommandException("You can't create a plot for that group in this world.");
         }
 

@@ -156,7 +156,7 @@ public class GroupManageCommand extends GroupSubcommand {
                 throw new CommandException(parent.getName() + " has not invited " + group.getName() + " to be a sub-organisation.");
             }
 
-            if (parent.addChildGroup(group)) {
+            if (parent.addChild(group)) {
                 parent.uninviteChild(group);
                 MessageBuilder.begin().highlight(parent.getName()).normal(" has successfully joined ")
                         .highlight(group.getName()).normal(" as a sub-organisation.").send(sender);
@@ -187,7 +187,7 @@ public class GroupManageCommand extends GroupSubcommand {
             }
 
             if (group.equals(other.getParent())) {
-                if (group.removeChildGroup(other, sender)) {
+                if (group.removeChild(other, sender)) {
                     MessageBuilder.begin().highlight(group.getName() + " is no longer the parent organisation of ")
                             .highlight(other.getName()).normal(".").send(sender);
                 } else {
@@ -197,7 +197,7 @@ public class GroupManageCommand extends GroupSubcommand {
             }
 
             if (other.equals(group.getParent())) {
-                if (other.removeChildGroup(group, sender)) {
+                if (other.removeChild(group, sender)) {
                     MessageBuilder.begin().highlight(group.getName() + " is no longer the child organisation of ")
                             .highlight(other.getName()).normal(".").send(sender);
                 } else {

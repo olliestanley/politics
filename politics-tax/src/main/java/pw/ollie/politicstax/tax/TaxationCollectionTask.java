@@ -22,7 +22,6 @@ package pw.ollie.politicstax.tax;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.economy.PoliticsEconomy;
 import pw.ollie.politics.group.Group;
-import pw.ollie.politics.universe.Universe;
 import pw.ollie.politicstax.PoliticsTaxPlugin;
 
 import org.bukkit.entity.Player;
@@ -56,17 +55,17 @@ final class TaxationCollectionTask extends BukkitRunnable {
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             UUID playerId = player.getUniqueId();
 
-            for (Universe universe : Politics.getUniverseManager().getUniverses(player.getWorld())) {
+            Politics.getUniverseManager().streamUniverses(player.getWorld()).forEach(universe -> {
                 int lastCollection = taxationManager.getLastCollection(playerId, universe);
 
                 if (lastCollection >= collectionPeriod) {
-                    universe.getCitizenGroups(player).stream()
-                            .filter(this::canTax).forEach(group -> taxationManager.applyFixedTax(group, playerId));
+                    universe.streamCitizenGroups(player).filter(this::canTax)
+                            .forEach(group -> taxationManager.applyFixedTax(group, playerId));
                     taxationManager.resetLastCollection(playerId, universe);
                 } else {
                     taxationManager.incrementLastCollection(playerId, universe);
                 }
-            }
+            });
         }
     }
 

@@ -29,8 +29,6 @@ import pw.ollie.politics.util.message.MessageUtil;
 
 import org.bukkit.command.CommandSender;
 
-import java.util.Set;
-
 public class UniverseListCommand extends PoliticsSubcommand {
     UniverseListCommand() {
         super("list");
@@ -42,16 +40,12 @@ public class UniverseListCommand extends PoliticsSubcommand {
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         MessageBuilder message = MessageUtil.startBlockMessage("Universes");
-        Set<Universe> universes = plugin.getUniverseManager().getUniverses();
-        if (universes.isEmpty()) {
+        if (plugin.getUniverseManager().getNumUniverses() == 0) {
             message.newLine().error("There are no universes.").send(sender);
             return;
         }
 
-        for (Universe universe : universes) {
-            message.newLine().highlight(universe.getName());
-        }
-
+        plugin.getUniverseManager().streamUniverses().map(Universe::getName).forEach(message.newLine()::highlight);
         message.send(sender);
     }
 

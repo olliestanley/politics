@@ -27,6 +27,7 @@ import pw.ollie.politics.group.GroupProperty;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Citizen;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.WorldConfig;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.Subplot;
@@ -182,7 +183,7 @@ public abstract class PoliticsSubcommand {
         }
 
         if (sender instanceof Player) {
-            Set<Group> groups = getCitizen(level, (Player) sender).getGroups(level);
+            Set<Group> groups = getCitizen(level, (Player) sender).streamGroups(level).collect(CollectorUtil.toTHashSet());
             if (groups == null || groups.isEmpty()) {
                 throw new CommandException("You aren't currently in a " + level.getName() + ".");
             }

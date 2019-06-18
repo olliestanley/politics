@@ -49,7 +49,7 @@ public class GroupInfoCommand extends GroupSubcommand {
         message.newLine().normal("Name: ").highlight(group.getName());
         message.newLine().normal("Tag: ").highlight(group.getTag());
         message.newLine().normal("Description: ").highlight(group.getStringProperty(GroupProperty.DESCRIPTION));
-        message.newLine().normal("Members: ").highlight(Integer.toString(group.getPlayers().size()));
+        message.newLine().normal("Members: ").highlight(Integer.toString(group.getNumPlayers()));
         message.newLine().normal("Open: ").highlight(group.getBooleanProperty(GroupProperty.OPEN, false) ? "Yes" : "No");
         message.send(sender);
     }

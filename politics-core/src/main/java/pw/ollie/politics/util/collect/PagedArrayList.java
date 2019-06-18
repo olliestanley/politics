@@ -19,9 +19,10 @@
  */
 package pw.ollie.politics.util.collect;
 
+import gnu.trove.map.hash.THashMap;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -46,7 +47,7 @@ public class PagedArrayList<E> implements PagedList<E> {
 
     public PagedArrayList(List<E> delegate) {
         this.delegate = delegate;
-        this.pages = new HashMap<>();
+        this.pages = new THashMap<>();
 
         calculatePages();
     }

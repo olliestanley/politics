@@ -19,6 +19,8 @@
  */
 package pw.ollie.politics.universe;
 
+import gnu.trove.map.hash.THashMap;
+
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.util.serial.ConfigUtil;
@@ -31,10 +33,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.stream.Stream;
 
 /**
  * A configured set of rules for a {@link Universe}.
@@ -71,12 +73,20 @@ public final class UniverseRules {
         return new ArrayList<>(groupLevels.values());
     }
 
+    public Stream<GroupLevel> streamGroupLevels() {
+        return groupLevels.values().stream();
+    }
+
     public boolean areWarsEnabled() {
         return warsEnabled;
     }
 
     public GroupLevel getGroupLevel(String name) {
         return groupLevels.get(name.toLowerCase());
+    }
+
+    public boolean hasGroupLevel(GroupLevel level) {
+        return groupLevels.containsValue(level);
     }
 
     public void save(ConfigurationSection config) {
@@ -98,9 +108,9 @@ public final class UniverseRules {
         ConfigurationSection warsSection = ConfigUtil.getOrCreateSection(config, "wars");
         boolean warsEnabled = warsSection.getBoolean("enabled", false);
 
-        Map<String, GroupLevel> levelMap = new HashMap<>();
+        Map<String, GroupLevel> levelMap = new THashMap<>();
         // Get the levels turned into objects
-        Map<GroupLevel, List<String>> levels = new HashMap<>();
+        Map<GroupLevel, List<String>> levels = new THashMap<>();
 
         ConfigurationSection levelsNode = ConfigUtil.getOrCreateSection(config, "levels");
         StreamUtil.biStream(levelsNode.getKeys(false), levelsNode::getConfigurationSection).forEach((levelKey, levelNode) -> {

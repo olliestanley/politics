@@ -35,10 +35,10 @@ import org.bson.types.BasicBSONList;
 
 import org.bukkit.World;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Holds Politics data specific to a single world.
@@ -116,9 +116,11 @@ public final class PoliticsWorld implements Storable {
      * @return all Universes this world is contained by
      */
     public Set<Universe> getUniverses() {
-        return Politics.getUniverseManager().getUniverses().stream()
-                .filter(universe -> universe.containsWorld(this))
-                .collect(CollectorUtil.toTHashSet());
+        return streamUniverses().collect(CollectorUtil.toTHashSet());
+    }
+
+    public Stream<Universe> streamUniverses() {
+        return Politics.getUniverseManager().streamUniverses().filter(universe -> universe.containsWorld(this));
     }
 
     /**
@@ -142,12 +144,12 @@ public final class PoliticsWorld implements Storable {
     }
 
     /**
-     * Gets a {@link List} of all {@link GroupLevel}s present in this world.
+     * Gets a {@link Stream} of all {@link GroupLevel}s present in this world.
      *
      * @return all present GroupLevels in this world
      */
-    public List<GroupLevel> getGroupLevels() {
-        return Politics.getUniverseManager().getLevelsOfWorld(this);
+    public Stream<GroupLevel> streamWorldLevels() {
+        return Politics.getUniverseManager().streamWorldLevels(this);
     }
 
     @Override

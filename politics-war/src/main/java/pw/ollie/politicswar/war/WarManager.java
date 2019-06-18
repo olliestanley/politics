@@ -46,7 +46,6 @@ import org.bukkit.plugin.PluginManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
@@ -194,7 +193,7 @@ public final class WarManager {
         File warsDataDir = new File(dataDir, "wars");
         BSONEncoder encoder = new BasicBSONEncoder();
 
-        Set<String> storedWarFiles = new HashSet<>();
+        Set<String> storedWarFiles = new THashSet<>();
 
         for (War war : activeWars) {
             if (!war.canStore()) {

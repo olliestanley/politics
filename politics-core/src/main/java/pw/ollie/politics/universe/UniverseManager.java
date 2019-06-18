@@ -54,6 +54,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Manages data and configuration for {@link Universe}s in Politics.
@@ -77,16 +78,64 @@ public final class UniverseManager {
         return this.plugin;
     }
 
-    public Universe getUniverse(String name) {
-        return universes.get(name.toLowerCase());
+    public List<UniverseRules> listRules() {
+        return new ArrayList<>(rules.values());
+    }
+
+    public Stream<GroupLevel> streamGroupLevels() {
+        return rules.values().stream().flatMap(UniverseRules::streamGroupLevels);
+    }
+
+    public List<GroupLevel> listGroupLevels() {
+        return streamGroupLevels().collect(Collectors.toList());
+    }
+
+    public Stream<GroupLevel> streamWorldLevels(PoliticsWorld world) {
+        Map<GroupLevel, Universe> levelUniverses = worldLevels.get(world);
+        if (levelUniverses == null) {
+            return Stream.empty();
+        }
+        return levelUniverses.keySet().stream();
+    }
+
+    public List<GroupLevel> listWorldLevels(PoliticsWorld world) {
+        return streamWorldLevels(world).collect(Collectors.toList());
+    }
+
+    public Stream<Universe> streamUniverses() {
+        return universes.values().stream();
+    }
+
+    public Set<Universe> getUniverses() {
+        return new THashSet<>(universes.values());
+    }
+
+    public Stream<Universe> streamUniverses(PoliticsWorld world) {
+        return universes.values().stream().filter(universe -> universe.containsWorld(world));
+    }
+
+    public Set<Universe> getUniverses(PoliticsWorld world) {
+        return streamUniverses(world).collect(CollectorUtil.toTHashSet());
+    }
+
+    public Stream<Universe> streamUniverses(World world) {
+        return streamUniverses(plugin.getWorldManager().getWorld(world));
+    }
+
+    public Set<Universe> getUniverses(World world) {
+        return streamUniverses(world).collect(CollectorUtil.toTHashSet());
+    }
+
+    public int getNumUniverses() {
+        return universes.size();
     }
 
     public UniverseRules getRules(String rulesName) {
         return rules.get(rulesName);
     }
 
-    public List<UniverseRules> listRules() {
-        return new ArrayList<>(rules.values());
+    public Universe getUniverse(String name) {
+        return universes.get(name.toLowerCase());
     }
 
     public Universe getUniverse(World world, GroupLevel level) {
@@ -97,11 +146,12 @@ public final class UniverseManager {
         return getUniverse(cw, level);
     }
 
-    public List<GroupLevel> getGroupLevels() {
-        return rules.values().stream()
-                .map(UniverseRules::getGroupLevels)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+    public Universe getUniverse(PoliticsWorld world, GroupLevel level) {
+        Map<GroupLevel, Universe> levelUniverses = worldLevels.get(world);
+        if (levelUniverses == null) {
+            return null;
+        }
+        return levelUniverses.get(level);
     }
 
     public Group getGroupById(int id) {
@@ -114,40 +164,10 @@ public final class UniverseManager {
                 .findAny().orElse(null);
     }
 
-    public Set<Universe> getUniverses() {
-        return new THashSet<>(universes.values());
-    }
-
-    public Set<Universe> getUniverses(PoliticsWorld world) {
-        return universes.values().stream()
-                .filter(universe -> universe.containsWorld(world))
-                .collect(CollectorUtil.toTHashSet());
-    }
-
-    public Set<Universe> getUniverses(World world) {
-        return getUniverses(plugin.getWorldManager().getWorld(world));
-    }
-
-    public Universe getUniverse(PoliticsWorld world, GroupLevel level) {
-        Map<GroupLevel, Universe> levelUniverses = worldLevels.get(world);
-        if (levelUniverses == null) {
-            return null;
-        }
-        return levelUniverses.get(level);
-    }
-
-    public List<GroupLevel> getLevelsOfWorld(PoliticsWorld world) {
-        Map<GroupLevel, Universe> levelUniverses = worldLevels.get(world);
-        if (levelUniverses == null) {
-            return new ArrayList<>();
-        }
-        return new ArrayList<>(levelUniverses.keySet());
-    }
-
     public Universe createUniverse(String name, UniverseRules rules, List<PoliticsWorld> worlds) {
         if (this.rules.putIfAbsent(rules.getName().toLowerCase(), rules) == null) {
             PoliticsCommandManager commandManager = plugin.getCommandManager();
-            rules.getGroupLevels().forEach(commandManager::registerGroupCommand);
+            rules.streamGroupLevels().forEach(commandManager::registerGroupCommand);
         }
 
         Universe universe = new Universe(name, rules, worlds);
@@ -156,7 +176,7 @@ public final class UniverseManager {
         worlds.forEach(world -> {
             worldLevels.putIfAbsent(world, new THashMap<>());
             Map<GroupLevel, Universe> map = worldLevels.get(world);
-            rules.getGroupLevels().forEach(level -> map.put(level, universe));
+            rules.streamGroupLevels().forEach(level -> map.put(level, universe));
         });
 
         PoliticsEventFactory.callUniverseCreateEvent(universe);
@@ -165,7 +185,7 @@ public final class UniverseManager {
 
     public void destroyUniverse(Universe universe) {
         universes.remove(universe.getName());
-        universe.getGroups().forEach(universe::destroyGroup);
+        universe.streamGroups().forEach(universe::destroyGroup);
         PoliticsEventFactory.callUniverseDestroyEvent(universe);
     }
 
@@ -256,30 +276,28 @@ public final class UniverseManager {
             Universe universe = Universe.fromBSONObject(object);
             universes.put(universe.getName().toLowerCase(), universe);
 
-            for (Group group : universe.getGroups()) {
-                if (groups.put(group.getUid(), group) != null) {
+            universe.streamGroups().forEach(group -> {
+                if (groups.putIfAbsent(group.getUid(), group) != null) {
                     Politics.getLogger().log(Level.WARNING, "Duplicate group id " + group.getUid() + "!");
                 }
                 if (group.getUid() > nextId) {
                     nextId = group.getUid();
                 }
-            }
+            });
         }
 
         // Populate World levels
         worldLevels = new THashMap<>();
 
         for (Universe universe : universes.values()) {
-            for (GroupLevel level : universe.getRules().getGroupLevels()) {
-                for (PoliticsWorld world : universe.getWorlds()) {
-                    Map<GroupLevel, Universe> levelMap = worldLevels.computeIfAbsent(world, k -> new THashMap<>());
-                    Universe prev = levelMap.putIfAbsent(level, universe);
-                    if (prev != null) {
-                        new InvalidConfigurationException("Multiple universes are conflicting on the same world! Universe name: "
-                                + universe.getName() + "; Rules name: " + universe.getRules().getName()).printStackTrace();
-                    }
+            universe.getRules().streamGroupLevels().forEach(level -> universe.streamWorlds().forEach(world -> {
+                Map<GroupLevel, Universe> levelMap = worldLevels.computeIfAbsent(world, k -> new THashMap<>());
+                Universe prev = levelMap.putIfAbsent(level, universe);
+                if (prev != null) {
+                    new InvalidConfigurationException("Multiple universes are conflicting on the same world! Universe name: "
+                            + universe.getName() + "; Rules name: " + universe.getRules().getName()).printStackTrace();
                 }
-            }
+            }));
         }
     }
 

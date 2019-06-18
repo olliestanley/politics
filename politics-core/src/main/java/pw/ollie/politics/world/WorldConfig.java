@@ -19,11 +19,12 @@
  */
 package pw.ollie.politics.world;
 
+import gnu.trove.map.hash.THashMap;
+
 import pw.ollie.politics.util.serial.ConfigUtil;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -143,7 +144,7 @@ public final class WorldConfig {
     private static Map<String, String> searchSectionRecursiveStrings(String nodePrefix, ConfigurationSection section) {
         String adjPrefix = (nodePrefix.endsWith(".") || nodePrefix.isEmpty()) ? nodePrefix : nodePrefix + ".";
 
-        Map<String, String> result = new HashMap<>();
+        Map<String, String> result = new THashMap<>();
         for (String key : section.getKeys(false)) {
             ConfigurationSection subsection = section.getConfigurationSection(key);
             if (subsection != null) {
@@ -163,7 +164,7 @@ public final class WorldConfig {
     private static Map<String, List<String>> searchSectionRecursiveLists(String nodePrefix, ConfigurationSection section) {
         String adjPrefix = (nodePrefix.endsWith(".") || nodePrefix.isEmpty()) ? nodePrefix : nodePrefix + ".";
 
-        Map<String, List<String>> result = new HashMap<>();
+        Map<String, List<String>> result = new THashMap<>();
         for (String key : section.getKeys(false)) {
             ConfigurationSection subsection = section.getConfigurationSection(key);
             if (subsection != null) {

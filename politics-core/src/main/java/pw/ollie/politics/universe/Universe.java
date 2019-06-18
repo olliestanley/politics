@@ -20,7 +20,9 @@
 package pw.ollie.politics.universe;
 
 import gnu.trove.map.TLongObjectMap;
+import gnu.trove.map.hash.THashMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
+import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
@@ -40,8 +42,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,6 +50,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A Universe is a collection of {@link PoliticsWorld}s which are subject to a particular set of {@link UniverseRules}
@@ -67,7 +68,7 @@ public final class Universe implements Storable {
     private LoadingCache<UUID, Set<Group>> citizenGroupCache;
 
     public Universe(String name, UniverseRules properties, List<PoliticsWorld> worlds) {
-        this(name, properties, worlds, new ArrayList<>(), new HashMap<>());
+        this(name, properties, worlds, new ArrayList<>(), new THashMap<>());
     }
 
     private Universe(String name, UniverseRules rules, List<PoliticsWorld> worlds, List<Group> groups, Map<Group, Set<Group>> children) {
@@ -79,7 +80,7 @@ public final class Universe implements Storable {
 
         buildCitizenCache();
 
-        levels = new HashMap<>();
+        levels = new THashMap<>();
         for (Group group : groups) {
             getInternalGroups(group.getLevel()).add(group);
         }
@@ -97,7 +98,7 @@ public final class Universe implements Storable {
         citizenGroupCache = builder.build(new CacheLoader<UUID, Set<Group>>() {
             @Override
             public Set<Group> load(UUID id) {
-                Set<Group> myGroups = new HashSet<>();
+                Set<Group> myGroups = new THashSet<>();
                 for (Group group : groups) {
                     if (group.isImmediateMember(id)) {
                         myGroups.add(group);
@@ -137,22 +138,54 @@ public final class Universe implements Storable {
         return new ArrayList<>(groups);
     }
 
+    public List<Group> getGroups(GroupLevel level) {
+        return new ArrayList<>(getInternalGroups(level));
+    }
+
+    public Set<Group> getChildGroups(Group group) {
+        return new THashSet<>(getInternalChildGroups(group));
+    }
+
+    public Stream<Group> streamGroups() {
+        return groups.stream();
+    }
+
+    public Stream<Group> streamGroups(GroupLevel level) {
+        return getInternalGroups(level).stream();
+    }
+
+    public Stream<Group> streamChildGroups(Group group) {
+        return getInternalChildGroups(group).stream();
+    }
+
+    public Stream<Group> streamCitizenGroups(UUID player) {
+        try {
+            Set<Group> groups = citizenGroupCache.get(player);
+            if (groups == null) {
+                citizenGroupCache.refresh(player);
+                groups = citizenGroupCache.get(player);
+            }
+            return groups.stream();
+        } catch (ExecutionException e) {
+            Politics.getLogger().log(Level.SEVERE, "Could not load a set of citizen groups! This is a PROBLEM!", e);
+            return Stream.empty();
+        }
+    }
+
+    public Stream<Group> streamCitizenGroups(OfflinePlayer player) {
+        return streamCitizenGroups(player.getUniqueId());
+    }
+
     /**
-     * Gets a {@link List} of all {@link Group}s present in this Universe with the given property set to the given
+     * Gets a {@link Stream} of all {@link Group}s present in this Universe with the given property set to the given
      * value.
      *
      * @param property the id of the property to check
      * @param value    the requisite value of the property
      * @return all Groups in this Universe with the given value for the given property
      */
-    public List<Group> getGroupsByProperty(int property, Object value) {
-        List<Group> groups = new ArrayList<>();
-        for (Group group : getGroups()) {
-            if (group.getProperty(property).equals(value)) {
-                groups.add(group);
-            }
-        }
-        return groups;
+    public Stream<Group> streamGroupsByProperty(int property, Object value) {
+        return groups.stream().filter(group -> group.getProperty(property).equals(value));
     }
 
     /**
@@ -163,12 +196,7 @@ public final class Universe implements Storable {
      * @return the first Group in this Universe with the given value for the given property
      */
     public Group getFirstGroupByProperty(int property, Object value) {
-        for (Group group : getGroups()) {
-            if (group.getProperty(property).equals(value)) {
-                return group;
-            }
-        }
-        return null;
+        return groups.stream().filter(group -> group.getProperty(property).equals(value)).findFirst().orElse(null);
     }
 
     /**
@@ -181,12 +209,12 @@ public final class Universe implements Storable {
      * @return the first Group of the given GroupLevel in this Universe with the given value for the given property
      */
     public Group getFirstGroupByProperty(GroupLevel level, int property, Object value) {
-        for (Group group : getGroups(level)) {
-            if (group.getProperty(property).equals(value)) {
-                return group;
-            }
-        }
-        return null;
+        return groups.stream().filter(level::contains).filter(group -> group.getProperty(property).equals(value))
+                .findFirst().orElse(null);
+    }
+
+    public Stream<PoliticsWorld> streamWorlds() {
+        return worlds.stream();
     }
 
     /**
@@ -197,43 +225,8 @@ public final class Universe implements Storable {
      * @return whether the world was successfully added
      */
     public boolean addWorld(PoliticsWorld world) {
-        List<GroupLevel> levels = rules.getGroupLevels();
-        // Check if the rules are already there
-        if (world.getGroupLevels().stream().anyMatch(levels::contains)) {
-            return false;
-        }
-        return worlds.add(world);
-    }
-
-    public List<PoliticsWorld> getWorlds() {
-        return new ArrayList<>(worlds);
-    }
-
-    public boolean containsWorld(PoliticsWorld world) {
-        return worlds.contains(world);
-    }
-
-    public List<Group> getGroups(GroupLevel level) {
-        return new ArrayList<>(getInternalGroups(level));
-    }
-
-    private List<Group> getInternalGroups(GroupLevel level) {
-        return this.levels.computeIfAbsent(level, k -> new ArrayList<>());
-    }
-
-    public Set<Group> getChildGroups(Group group) {
-        return new HashSet<>(getInternalChildGroups(group));
-    }
-
-    private Set<Group> getInternalChildGroups(Group group) {
-        if (group == null) {
-            return new HashSet<>();
-        }
-        Set<Group> groupChildren = children.get(group);
-        if (groupChildren == null) {
-            return new HashSet<>();
-        }
-        return groupChildren;
+        // Check if the rules are already there first
+        return world.streamWorldLevels().noneMatch(rules::hasGroupLevel) && worlds.add(world);
     }
 
     public boolean addChildGroup(Group group, Group child) {
@@ -241,7 +234,7 @@ public final class Universe implements Storable {
             return false;
         }
 
-        Set<Group> groupChildren = children.computeIfAbsent(group, k -> new HashSet<>());
+        Set<Group> groupChildren = children.computeIfAbsent(group, k -> new THashSet<>());
         groupChildren.add(child);
         return true;
     }
@@ -295,9 +288,9 @@ public final class Universe implements Storable {
     public void destroyGroup(Group group, boolean deep) {
         groups.remove(group);
         getInternalGroups(group.getLevel()).remove(group);
-        group.getPlayers().forEach(this::invalidateCitizenGroups);
+        group.streamPlayers().forEach(this::invalidateCitizenGroups);
         if (deep) {
-            group.getGroups().forEach(child -> destroyGroup(child, true));
+            group.streamChildren().forEach(child -> destroyGroup(child, true));
         }
 
         Politics.getUniverseManager().removeGroup(group.getUid());
@@ -315,25 +308,26 @@ public final class Universe implements Storable {
         return getCitizen(player.getUniqueId(), player.getName());
     }
 
-    public Set<Group> getCitizenGroups(UUID player) {
-        try {
-            Set<Group> groups = citizenGroupCache.get(player);
-            if (groups == null) {
-                citizenGroupCache.refresh(player);
-                groups = citizenGroupCache.get(player);
-            }
-            return new HashSet<>(groups);
-        } catch (ExecutionException e) {
-            Politics.getLogger().log(Level.SEVERE, "Could not load a set of citizen groups! This is a PROBLEM!", e);
-            return new HashSet<>();
+    public boolean containsWorld(PoliticsWorld world) {
+        return worlds.contains(world);
+    }
+
+    private List<Group> getInternalGroups(GroupLevel level) {
+        return levels.computeIfAbsent(level, k -> new ArrayList<>());
+    }
+
+    private Set<Group> getInternalChildGroups(Group group) {
+        if (group == null) {
+            return new THashSet<>();
         }
+        Set<Group> groupChildren = children.get(group);
+        if (groupChildren == null) {
+            return new THashSet<>();
+        }
+        return groupChildren;
     }
 
-    public Set<Group> getCitizenGroups(OfflinePlayer player) {
-        return getCitizenGroups(player.getUniqueId());
-    }
-
-    void invalidateCitizenGroups(UUID citizen) {
+    private void invalidateCitizenGroups(UUID citizen) {
         citizenGroupCache.invalidate(citizen);
     }
 
@@ -356,7 +350,7 @@ public final class Universe implements Storable {
 
             // children
             childrenBson.put(Integer.toString(group.getUid()),
-                    group.getGroups().stream().map(Group::getUid).collect(Collectors.toCollection(BasicBSONList::new)));
+                    group.streamChildren().map(Group::getUid).collect(Collectors.toCollection(BasicBSONList::new)));
         }
 
         bson.put("groups", groupsBson);
@@ -415,7 +409,7 @@ public final class Universe implements Storable {
             groupMap.put(c.getUid(), c);
         }
 
-        Map<Group, Set<Group>> children = new HashMap<>();
+        Map<Group, Set<Group>> children = new THashMap<>();
         Object childrenObj = bobject.get("children");
         if (!(childrenObj instanceof BasicBSONObject)) {
             throw new IllegalStateException("Missing children report!");
@@ -435,7 +429,7 @@ public final class Universe implements Storable {
                 throw new IllegalStateException("No bson list found for childsObj");
             }
 
-            Set<Group> childrenn = new HashSet<>();
+            Set<Group> childrenn = new THashSet<>();
             BasicBSONList childs = (BasicBSONList) childsObj;
 
             for (Object childN : childs) {

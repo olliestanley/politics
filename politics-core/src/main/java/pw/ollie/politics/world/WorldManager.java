@@ -19,6 +19,8 @@
  */
 package pw.ollie.politics.world;
 
+import gnu.trove.map.hash.THashMap;
+
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.util.math.Position;
@@ -40,7 +42,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -59,7 +60,7 @@ public final class WorldManager {
     }
 
     private WorldConfig getDefaultConfig(String worldName) {
-        return new WorldConfig(worldName, true, true, new HashMap<>(), new HashMap<>());
+        return new WorldConfig(worldName, true, true, new THashMap<>(), new THashMap<>());
     }
 
     /**
@@ -82,7 +83,7 @@ public final class WorldManager {
             }
         }
 
-        configs = new HashMap<>();
+        configs = new THashMap<>();
         for (File file : Objects.requireNonNull(plugin.getFileSystem().getWorldConfigDir().listFiles())) {
             String fileName = file.getName();
             if (!fileName.endsWith(".yml") || fileName.length() <= 4) {
@@ -102,7 +103,7 @@ public final class WorldManager {
      */
     public void loadWorlds() {
         BasicBSONDecoder decoder = new BasicBSONDecoder();
-        worlds = new HashMap<>();
+        worlds = new THashMap<>();
 
         for (File file : Objects.requireNonNull(plugin.getFileSystem().getWorldsDir().listFiles())) {
             String fileName = file.getName();

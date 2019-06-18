@@ -19,12 +19,13 @@
  */
 package pw.ollie.politics.group.privilege;
 
+import gnu.trove.map.hash.THashMap;
+
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.util.FunctionalUtil;
 import pw.ollie.politics.util.stream.CollectorUtil;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,7 +35,7 @@ import java.util.Set;
 public final class PrivilegeManager {
     // todo docs
     private final PoliticsPlugin plugin;
-    private final Map<String, Privilege> privileges = new HashMap<>();
+    private final Map<String, Privilege> privileges = new THashMap<>();
 
     public PrivilegeManager(PoliticsPlugin plugin) {
         this.plugin = plugin;

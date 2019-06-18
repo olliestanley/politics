@@ -19,13 +19,14 @@
  */
 package pw.ollie.politics.group.level;
 
+import gnu.trove.set.hash.THashSet;
+
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.util.StringUtil;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,7 +57,7 @@ public final class Role implements Comparable<Role> {
     }
 
     public Set<Privilege> getPrivileges() {
-        return new HashSet<>(privileges);
+        return new THashSet<>(privileges);
     }
 
     public int getRank() {
@@ -70,7 +71,7 @@ public final class Role implements Comparable<Role> {
     public static Role load(String id, ConfigurationSection node) {
         String name = node.getString("name", StringUtil.capitaliseFirst(id));
         List<String> configuredPrivileges = node.getStringList("privileges");
-        Set<Privilege> privileges = new HashSet<>();
+        Set<Privilege> privileges = new THashSet<>();
         for (String privilegeName : configuredPrivileges) {
             Privilege privilege = Politics.getPrivilegeManager().getPrivilege(privilegeName);
             if (privilege == null) {

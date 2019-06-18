@@ -21,9 +21,7 @@ package pw.ollie.politics;
 
 import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.player.PlayerPlotChangeEvent;
-import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.GroupProperty;
-import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldManager;
 import pw.ollie.politics.world.plot.Plot;
@@ -35,7 +33,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import java.util.Set;
+import java.util.Comparator;
 import java.util.UUID;
 
 /**
@@ -70,33 +68,11 @@ final class PoliticsListener implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         UUID playerId = event.getPlayer().getUniqueId();
         PoliticsWorld world = worldManager.getWorld(event.getRespawnLocation().getWorld());
-        Set<Group> playerGroups = plugin.getGroupManager().getAllCitizenGroups(playerId).stream()
-                .filter(g -> g.getUniverse().containsWorld(world))
-                .collect(CollectorUtil.toTHashSet());
-        Group best = getHighestPrioritySpawn(playerGroups);
-        if (best != null) {
-            event.setRespawnLocation(best.getLocationProperty(GroupProperty.SPAWN));
-        }
-    }
 
-    private Group getHighestPrioritySpawn(Set<Group> groups) {
-        Group best = null;
-
-        for (Group group : groups) {
-            if (group.getLocationProperty(GroupProperty.SPAWN) == null) {
-                continue;
-            }
-
-            if (best == null) {
-                best = group;
-                continue;
-            }
-
-            if (group.getLevel().getRank() < best.getLevel().getRank()) {
-                best = group;
-            }
-        }
-
-        return best;
+        plugin.getGroupManager().streamCitizenGroups(playerId)
+                .filter(group -> group.getUniverse().containsWorld(world))
+                .filter(group -> group.hasProperty(GroupProperty.SPAWN))
+                .min(Comparator.comparing(group -> group.getLevel().getRank()))
+                .ifPresent(group -> event.setRespawnLocation(group.getLocationProperty(GroupProperty.SPAWN)));
     }
 }

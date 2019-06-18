@@ -19,12 +19,13 @@
  */
 package pw.ollie.politics.util.visualise;
 
+import gnu.trove.set.hash.THashSet;
+
 import pw.ollie.politics.Politics;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -37,7 +38,7 @@ public class Visualisation {
      * Creates a blank Visualisation, with no included blocks.
      */
     public Visualisation() {
-        this(new HashSet<>());
+        this(new THashSet<>());
     }
 
     /**
@@ -114,7 +115,7 @@ public class Visualisation {
      * @return all VisualisedBlocks this Visualisation includes
      */
     public Set<VisualisedBlock> getBlocks() {
-        return new HashSet<>(blocks);
+        return new THashSet<>(blocks);
     }
 
     /**

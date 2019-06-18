@@ -28,12 +28,12 @@ import pw.ollie.politics.universe.UniverseRules;
 import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.world.PoliticsWorld;
 
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class UniverseCreateCommand extends PoliticsSubcommand {
     UniverseCreateCommand() {
@@ -70,22 +70,10 @@ public class UniverseCreateCommand extends PoliticsSubcommand {
         String worldsStr = args.getString(2);
         List<PoliticsWorld> worlds = new ArrayList<>();
         if (worldsStr == null) {
-            for (World world : plugin.getServer().getWorlds()) {
-                worlds.add(plugin.getWorldManager().getWorld(world));
-            }
+            plugin.getServer().getWorlds().stream().map(plugin.getWorldManager()::getWorld).forEach(worlds::add);
         } else {
-            String[] worldNames = worldsStr.split(",");
-
-            for (String worldName : worldNames) {
-                String trimmed = worldName.trim();
-                World world = plugin.getServer().getWorld(trimmed);
-                if (world == null) {
-                    continue;
-                }
-
-                PoliticsWorld pw = plugin.getWorldManager().getWorld(world);
-                worlds.add(pw);
-            }
+            Arrays.stream(worldsStr.split(",")).map(String::trim).map(plugin.getServer()::getWorld)
+                    .filter(Objects::nonNull).map(plugin.getWorldManager()::getWorld).forEach(worlds::add);
         }
 
         if (worlds.size() <= 0) {
