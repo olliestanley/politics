@@ -42,6 +42,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A configured type of Group, with a name, rank, roles, role tracks and configuration settings.
@@ -125,6 +126,10 @@ public final class GroupLevel {
         return new THashMap<>(roles);
     }
 
+    public Stream<Role> streamRoles() {
+        return roles.values().stream();
+    }
+
     public Role getRole(String roleId) {
         return roles.get(roleId.toLowerCase());
     }
@@ -198,13 +203,12 @@ public final class GroupLevel {
         ConfigurationSection rolesNode = ConfigUtil.getOrCreateSection(node, "roles");
         BiStream.from(roles).forEach((roleName, role) -> {
             rolesNode.set(roleName + ".name", role.getName());
-            rolesNode.set(roleName + ".privileges", role.getPrivileges().stream()
+            rolesNode.set(roleName + ".privileges", role.streamPrivileges()
                     .map(Privilege::getName).collect(Collectors.toList()));
         });
 
         ConfigurationSection tracksNode = ConfigUtil.getOrCreateSection(node, "tracks");
-        BiStream.from(tracks)
-                .mapValues(track -> track.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+        BiStream.from(tracks).mapValues(track -> track.streamRoles().map(Role::getName).collect(Collectors.toList()))
                 .forEach(tracksNode::set);
 
         node.set("initial", initial.getId());
@@ -244,7 +248,7 @@ public final class GroupLevel {
             if (tracksNode != null) {
                 StreamUtil.biStream(tracksNode.getKeys(false).stream(), tracksNode::getStringList)
                         .mapValues((trackKey, roleNames) -> RoleTrack.load(trackKey, roleNames, rolesMap))
-                        .forEach(tracks::put);
+                        .filterValues(Objects::nonNull).forEach(tracks::put);
             }
 
             tracks.putIfAbsent(DEFAULT_TRACK, tracks.isEmpty()

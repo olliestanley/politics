@@ -19,10 +19,17 @@
  */
 package pw.ollie.politics.group.level;
 
+import pw.ollie.politics.Politics;
+import pw.ollie.politics.util.FunctionalUtil;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class RoleTrack implements Iterable<Role> {
     // todo docs
@@ -38,8 +45,8 @@ public class RoleTrack implements Iterable<Role> {
         return id;
     }
 
-    public List<Role> getRoles() {
-        return new LinkedList<>(roles);
+    public Stream<Role> streamRoles() {
+        return roles.stream();
     }
 
     public Role getPreviousRole(Role role) {
@@ -64,15 +71,13 @@ public class RoleTrack implements Iterable<Role> {
     }
 
     public static RoleTrack load(String id, List<String> rolesNames, Map<String, Role> roles) {
-        List<Role> rolesList = new LinkedList<>();
-        for (String roleName : rolesNames) {
-            Role role = roles.get(roleName);
-            if (role == null) {
-                throw new IllegalStateException("The role '" + roleName + "' does not exist.");
-            }
-            rolesList.add(role);
+        if (rolesNames.stream().anyMatch(FunctionalUtil.negate(roles::containsKey))) {
+            Politics.getLogger().log(Level.SEVERE, "RoleTrack '" + id + "' has non-existent role! The track will not be loaded.");
+            return null;
         }
 
-        return new RoleTrack(id, rolesList);
+        return new RoleTrack(id, rolesNames.stream()
+                .map(roles::get).filter(Objects::nonNull)
+                .collect(Collectors.toCollection(LinkedList::new)));
     }
 }

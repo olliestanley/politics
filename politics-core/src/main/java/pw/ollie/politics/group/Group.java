@@ -318,22 +318,15 @@ public final class Group implements Comparable<Group>, Storable {
         }
     }
 
-    public Set<Privilege> getPrivileges(UUID playerId) {
+    public Stream<Privilege> streamPrivileges(UUID playerId) {
         Role role = getRole(playerId);
-        if (role == null) {
-            return new THashSet<>();
-        }
-        return role.getPrivileges();
-    }
-
-    public Set<Privilege> getPrivileges(Player player) {
-        return getPrivileges(player.getUniqueId());
+        return role == null ? Stream.empty() : role.streamPrivileges();
     }
 
     public boolean can(CommandSender source, Privilege privilege) {
         if (source instanceof Player) {
             Role role = getRole(((Player) source).getUniqueId());
-            return role != null && role.hasPrivilege(privilege);
+            return role != null && role.can(privilege);
         }
         return true;
     }

@@ -34,7 +34,6 @@ import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
 import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.util.math.Position;
-import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bson.BSONObject;
@@ -52,6 +51,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A plot in Politics is made up of exactly one chunk, and may have sub-plots.
@@ -474,22 +474,18 @@ public final class Plot implements Storable, ProtectedRegion {
     }
 
     /**
-     * Gets a {@link Set} of all plot-type {@link Privilege}s the given {@link Player} is afforded by the {@link Group}
-     * which owns this Plot.
+     * Gets a {@link Stream} of all plot-type {@link Privilege}s the given {@link Player} is afforded by the
+     * {@link Group} which owns this Plot.
      * <p>
      * If the Plot has no owner, null is returned.
      *
-     * @param player the Player to check the privileges of
+     * @param playerId the unique id of the Player to check the privileges of
      * @return the plot-type Privileges the given Player has in this Plot
      */
-    public Set<Privilege> getPrivileges(Player player) {
+    public Stream<Privilege> streamPrivileges(UUID playerId) {
         Group owner = getOwner();
-        if (owner == null) {
-            return null;
-        }
-        return owner.getPrivileges(player).stream()
-                .filter(privilege -> privilege.getTypes().contains(PrivilegeType.PLOT))
-                .collect(CollectorUtil.toTHashSet());
+        return owner == null ? Stream.empty() : owner.streamPrivileges(playerId)
+                .filter(privilege -> privilege.getTypes().contains(PrivilegeType.PLOT));
     }
 
     /**
@@ -504,7 +500,7 @@ public final class Plot implements Storable, ProtectedRegion {
         if (owner == null) {
             return privilege.getTypes().contains(PrivilegeType.PLOT);
         }
-        return owner.getPrivileges(player).contains(privilege);
+        return owner.can(player, privilege);
     }
 
     /**

@@ -19,16 +19,16 @@
  */
 package pw.ollie.politics.group.level;
 
-import gnu.trove.set.hash.THashSet;
-
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.util.StringUtil;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Represents a role held by a player within a Group. Holding a Role affords the holder the {@link Privilege}s which are
@@ -52,12 +52,12 @@ public final class Role implements Comparable<Role> {
         return id;
     }
 
-    public boolean hasPrivilege(Privilege privilege) {
-        return privileges.contains(privilege);
+    public Stream<Privilege> streamPrivileges() {
+        return privileges.stream();
     }
 
-    public Set<Privilege> getPrivileges() {
-        return new THashSet<>(privileges);
+    public boolean can(Privilege privilege) {
+        return privileges.contains(privilege);
     }
 
     public int getRank() {
@@ -69,18 +69,10 @@ public final class Role implements Comparable<Role> {
     }
 
     public static Role load(String id, ConfigurationSection node) {
-        String name = node.getString("name", StringUtil.capitaliseFirst(id));
-        List<String> configuredPrivileges = node.getStringList("privileges");
-        Set<Privilege> privileges = new THashSet<>();
-        for (String privilegeName : configuredPrivileges) {
-            Privilege privilege = Politics.getPrivilegeManager().getPrivilege(privilegeName);
-            if (privilege == null) {
-                continue;
-            }
-            privileges.add(privilege);
-        }
-        int rank = node.getInt("rank", 1);
-        return new Role(id, name, privileges, rank);
+        return new Role(id, node.getString("name", StringUtil.capitaliseFirst(id)),
+                node.getStringList("privileges").stream().map(Politics.getPrivilegeManager()::getPrivilege)
+                        .filter(Objects::nonNull).collect(Collectors.toSet()),
+                node.getInt("rank", 1));
     }
 
     @Override
