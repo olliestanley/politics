@@ -28,8 +28,8 @@ import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.group.privilege.Privileges.GroupPlot;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.PoliticsEventCounter;
-import pw.ollie.politics.util.math.Vector3i;
 import pw.ollie.politics.util.math.Cuboid;
+import pw.ollie.politics.util.math.Vector3i;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.Subplot;
 
@@ -74,7 +74,7 @@ public final class PlotsTest extends AbstractPoliticsTest {
         // plot privilege testing
         Player groupless = server.getPlayer(1);
         for (Privilege privilege : Privileges.all()) {
-            if (privilege.getTypes().contains(PrivilegeType.PLOT)) {
+            if (privilege.isOfType(PrivilegeType.PLOT)) {
                 Assert.assertTrue(plot.can(founder, privilege));
                 Assert.assertFalse(plot.can(groupless, privilege));
             }
@@ -91,7 +91,7 @@ public final class PlotsTest extends AbstractPoliticsTest {
         // subplot privilege testing
         subplot.givePrivilege(founder, GroupPlot.BUILD);
         for (Privilege privilege : Privileges.all()) {
-            if (privilege.getTypes().contains(PrivilegeType.PLOT)) {
+            if (privilege.isOfType(PrivilegeType.PLOT)) {
                 Assert.assertTrue(subplot.can(member, privilege));
                 Assert.assertEquals(privilege == GroupPlot.BUILD, subplot.can(founder, privilege));
                 Assert.assertFalse(subplot.can(groupless, privilege));

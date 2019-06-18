@@ -26,10 +26,10 @@ import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
-import pw.ollie.politics.util.collect.PagedArrayList;
 import pw.ollie.politics.util.collect.PagedList;
 import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.util.message.MessageUtil;
+import pw.ollie.politics.util.stream.CollectorUtil;
 
 import org.bukkit.command.CommandSender;
 
@@ -49,8 +49,8 @@ public class GroupListCommand extends GroupSubcommand {
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Universe universe = findUniverse(sender, args);
 
-        List<Group> groups = universe.getGroups(level);
-        if (groups.isEmpty()) {
+        PagedList<Group> paged = universe.streamGroups(level).collect(CollectorUtil.toPagedList());
+        if (paged.isEmpty()) {
             throw new CommandException("There are no " + level.getPlural() + "!");
         }
 
@@ -64,7 +64,6 @@ public class GroupListCommand extends GroupSubcommand {
             page = arg1.asInt();
         }
 
-        PagedList<Group> paged = new PagedArrayList<>(groups);
         paged.setElementsPerPage(PAGE_HEIGHT);
         if (page > paged.pages()) {
             throw new CommandException("There are only " + paged.pages() + " pages!");

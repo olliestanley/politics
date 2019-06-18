@@ -19,10 +19,10 @@
  */
 package pw.ollie.politics;
 
+import com.carrotsearch.junitbenchmarks.BenchmarkRule;
+
 import org.junit.Rule;
 import org.junit.rules.TestRule;
-
-import com.carrotsearch.junitbenchmarks.BenchmarkRule;
 
 public abstract class AbstractPoliticsBenchmark extends AbstractPoliticsTest {
     @Rule

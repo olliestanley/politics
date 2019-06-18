@@ -32,8 +32,10 @@ import pw.ollie.politics.group.privilege.PrivilegeType;
 import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.util.math.Position;
 import pw.ollie.politics.util.math.Vector3i;
-import pw.ollie.politics.util.stream.CollectorUtil;
+import pw.ollie.politics.util.stream.StreamUtil;
 import pw.ollie.politics.world.PoliticsWorld;
+
+import com.google.mu.util.stream.BiStream;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
@@ -368,7 +370,7 @@ public final class Subplot implements Storable, ProtectedRegion {
      * @return whether the Player with the given unique id has the specified Privilege
      */
     public boolean can(UUID playerId, Privilege privilege) {
-        if (!privilege.getTypes().contains(PrivilegeType.PLOT)) {
+        if (!privilege.isOfType(PrivilegeType.PLOT)) {
             return false;
         }
 
@@ -403,7 +405,7 @@ public final class Subplot implements Storable, ProtectedRegion {
      * @return whether the Player's privileges were successfully updated
      */
     public boolean givePrivilege(UUID playerId, Privilege privilege) {
-        if (!privilege.getTypes().contains(PrivilegeType.PLOT)) {
+        if (!privilege.isOfType(PrivilegeType.PLOT)) {
             return false;
         }
 
@@ -440,7 +442,7 @@ public final class Subplot implements Storable, ProtectedRegion {
      * @return whether the Player's privileges were successfully updated
      */
     public boolean revokePrivilege(UUID playerId, Privilege privilege) {
-        if (!privilege.getTypes().contains(PrivilegeType.PLOT)) {
+        if (!privilege.isOfType(PrivilegeType.PLOT)) {
             return false;
         }
 
@@ -486,12 +488,9 @@ public final class Subplot implements Storable, ProtectedRegion {
         result.put("owner", owner.toString());
 
         BasicBSONObject privilegesObj = new BasicBSONObject();
-        for (UUID individualId : individualPrivileges.keySet()) {
-            BasicBSONList privilegeList = new BasicBSONList();
-            Set<Privilege> privileges = individualPrivileges.get(individualId);
-            privilegeList.addAll(privileges.stream().map(Privilege::getName).collect(CollectorUtil.toTHashSet()));
-            privilegesObj.put(individualId.toString(), privilegeList);
-        }
+        BiStream.from(individualPrivileges).mapKeys(UUID::toString).mapValues(Set::stream)
+                .mapValues(privStream -> StreamUtil.toBSONList(privStream.map(Privilege::getName)))
+                .forEach(privilegesObj::put);
         result.put("privileges", privilegesObj);
 
         return result;

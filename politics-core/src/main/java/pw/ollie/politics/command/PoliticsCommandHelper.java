@@ -20,10 +20,10 @@
 package pw.ollie.politics.command;
 
 import pw.ollie.politics.util.StringUtil;
-import pw.ollie.politics.util.collect.PagedArrayList;
 import pw.ollie.politics.util.collect.PagedList;
 import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.util.message.MessageUtil;
+import pw.ollie.politics.util.stream.CollectorUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -32,7 +32,7 @@ import org.bukkit.permissions.Permission;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 public final class PoliticsCommandHelper {
     // todo docs
@@ -57,9 +57,8 @@ public final class PoliticsCommandHelper {
 
     // page counts from 1 (not an index)
     public static void sendCommandHelp(CommandSender sender, PoliticsBaseCommand baseCommand, int pageNumber) {
-        PagedList<PoliticsSubcommand> pages = baseCommand.getSubCommands().stream()
-                .filter(cmd -> can(sender, cmd.getPermission()))
-                .collect(Collectors.toCollection(PagedArrayList::new));
+        PagedList<PoliticsSubcommand> pages = baseCommand.streamSubcommands()
+                .filter(cmd -> can(sender, cmd.getPermission())).collect(CollectorUtil.toPagedList());
         if (pageNumber > pages.pages()) {
             MessageBuilder.beginError().append("There are only " + pages.pages() + " pages.").send(sender);
             return;
@@ -67,9 +66,7 @@ public final class PoliticsCommandHelper {
 
         MessageBuilder message = MessageUtil.startBlockMessage("/" + baseCommand.getName() + " Help (" + pageNumber + " of " + pages.pages() + ")");
         List<PoliticsSubcommand> page = pages.getPage(pageNumber);
-        for (PoliticsSubcommand subcommand : page) {
-            message.newLine().highlight("/" + baseCommand.getName() + " " + subcommand.getName()).normal(" - " + subcommand.getDescription());
-        }
+        page.forEach(sub -> message.newLine().highlight("/" + baseCommand.getName() + " " + sub.getName()).normal(" - " + sub.getDescription()));
         message.send(sender);
     }
 
@@ -82,17 +79,16 @@ public final class PoliticsCommandHelper {
     private static PoliticsSubcommand fuzzyLookup(Collection<PoliticsSubcommand> collection, String name) {
         String adjName = name.replaceAll("[ _]", "").toLowerCase();
 
-        PoliticsSubcommand result = collection.stream()
-                .filter(cmd -> cmd.getName().toLowerCase().equals(adjName) || cmd.getAliases().contains(name))
-                .findAny().orElse(null);
-        if (result != null) {
-            return result;
+        Optional<PoliticsSubcommand> result = collection.stream()
+                .filter(cmd -> cmd.getName().equals(adjName) || cmd.getAliases().contains(adjName)).findAny();
+        if (result.isPresent()) {
+            return result.get();
         }
 
+        char char0 = adjName.charAt(0);
         int lowest = -1;
         PoliticsSubcommand best = null;
         for (PoliticsSubcommand cmd : collection) {
-            char char0 = adjName.charAt(0);
             if (cmd.getName().charAt(0) != char0 && cmd.getAliases().stream().noneMatch(alias -> alias.charAt(0) == char0)) {
                 continue;
             }

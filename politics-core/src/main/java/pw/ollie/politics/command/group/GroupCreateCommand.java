@@ -34,6 +34,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class GroupCreateCommand extends GroupSubcommand {
     GroupCreateCommand(GroupLevel groupLevel) {
@@ -69,9 +70,10 @@ public class GroupCreateCommand extends GroupSubcommand {
             throw new CommandException("The specified founder is not online.");
         }
 
+        UUID founderId = founder.getUniqueId();
         Universe universe = findUniverse(sender, args);
 
-        if (!level.allowedMultiple() && universe.streamCitizenGroups(founder).map(Group::getLevel).anyMatch(level::equals)) {
+        if (!level.allowedMultiple() && universe.streamCitizenGroups(founderId).map(Group::getLevel).anyMatch(level::equals)) {
             throw new CommandException("A " + level.getName() + " may not be founded by somebody already in one.");
         }
 
@@ -91,7 +93,7 @@ public class GroupCreateCommand extends GroupSubcommand {
         }
 
         Group group = universe.createGroup(level);
-        group.setRole(founder.getUniqueId(), level.getFounder());
+        group.setRole(founderId, level.getFounder());
         group.setProperty(GroupProperty.NAME, name);
         group.setProperty(GroupProperty.TAG, tag);
 

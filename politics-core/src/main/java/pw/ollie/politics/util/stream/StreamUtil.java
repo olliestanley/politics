@@ -21,8 +21,11 @@ package pw.ollie.politics.util.stream;
 
 import com.google.mu.util.stream.BiStream;
 
+import org.bson.types.BasicBSONList;
+
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class StreamUtil {
@@ -33,6 +36,10 @@ public final class StreamUtil {
 
     public static <K, V> BiStream<K, V> biStream(Collection<K> collection, Function<? super K, ? extends V> toValue) {
         return BiStream.biStream(collection.stream(), key -> key, toValue);
+    }
+
+    public static <T> BasicBSONList toBSONList(Stream<T> stream) {
+        return stream.collect(Collectors.toCollection(BasicBSONList::new));
     }
 
     private StreamUtil() {

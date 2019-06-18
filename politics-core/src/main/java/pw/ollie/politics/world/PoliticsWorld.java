@@ -170,7 +170,7 @@ public final class PoliticsWorld implements Storable {
         BasicBSONObject bson = new BasicBSONObject();
         bson.put("name", name);
         bson.put("plots", chunkPlots.values().stream()
-                .filter(plot -> plot.canStore() && (plot.hasOwner() || plot.getSubplotQuantity() > 0))
+                .filter(plot -> plot.canStore() && (plot.hasOwner() || plot.getNumSubplots() > 0))
                 .map(Plot::toBSONObject).collect(Collectors.toCollection(BasicBSONList::new)));
         return bson;
     }

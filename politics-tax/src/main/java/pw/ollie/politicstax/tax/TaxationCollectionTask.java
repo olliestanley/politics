@@ -59,7 +59,7 @@ final class TaxationCollectionTask extends BukkitRunnable {
                 int lastCollection = taxationManager.getLastCollection(playerId, universe);
 
                 if (lastCollection >= collectionPeriod) {
-                    universe.streamCitizenGroups(player).filter(this::canTax)
+                    universe.streamCitizenGroups(playerId).filter(this::canTax)
                             .forEach(group -> taxationManager.applyFixedTax(group, playerId));
                     taxationManager.resetLastCollection(playerId, universe);
                 } else {

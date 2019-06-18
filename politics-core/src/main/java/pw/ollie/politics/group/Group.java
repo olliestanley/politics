@@ -52,13 +52,11 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -105,12 +103,20 @@ public final class Group implements Comparable<Group>, Storable {
         return uid;
     }
 
-    public Set<Group> getChildren() {
-        return universe.getChildGroups(this);
-    }
-
     public Stream<Group> streamChildren() {
         return universe.streamChildGroups(this);
+    }
+
+    public Group getParent() {
+        return universe.streamGroups().filter(this::hasParent).findAny().orElse(null);
+    }
+
+    public boolean hasParent(Group other) {
+        return other.hasChild(this);
+    }
+
+    public boolean hasChild(Group other) {
+        return universe.streamChildGroups(other).anyMatch(this::equals);
     }
 
     public boolean addChild(Group group) {
@@ -260,15 +266,6 @@ public final class Group implements Comparable<Group>, Storable {
         return streamImmediatePlayers().map(Politics.getServer()::getPlayer).filter(Objects::nonNull);
     }
 
-    public List<Player> getImmediateOnlinePlayers() {
-        return streamImmediateOnlinePlayers().collect(Collectors.toList());
-    }
-
-    public List<UUID> getPlayers() {
-        return Stream.concat(streamChildren().flatMap(Group::streamImmediatePlayers), streamImmediatePlayers())
-                .distinct().collect(Collectors.toList());
-    }
-
     public Stream<UUID> streamPlayers() {
         return Stream.concat(streamImmediatePlayers(), streamChildren().flatMap(Group::streamImmediatePlayers))
                 .distinct();
@@ -329,10 +326,6 @@ public final class Group implements Comparable<Group>, Storable {
             return role != null && role.can(privilege);
         }
         return true;
-    }
-
-    public Group getParent() {
-        return universe.streamGroups().filter(group -> group.getChildren().contains(this)).findAny().orElse(null);
     }
 
     @Override

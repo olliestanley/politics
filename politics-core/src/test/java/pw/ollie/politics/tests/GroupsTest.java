@@ -99,7 +99,7 @@ public final class GroupsTest extends AbstractPoliticsTest {
         town.setProperty(GroupProperty.TAG, tTag);
         Assert.assertTrue(town.addChild(household));
         Assert.assertEquals(1, eventCounter.getGroupChildAdds());
-        Assert.assertTrue(universe.getChildGroups(town).contains(household));
+        Assert.assertTrue(universe.streamChildGroups(town).anyMatch(household::equals));
     }
 
     @Override

@@ -82,12 +82,10 @@ public class SubplotCreateCommand extends SubplotSubcommand {
             }
 
             Cuboid cuboid = selection.getCuboid();
-            for (Subplot existingSubplot : plot.getSubplots()) {
-                Cuboid existingCuboid = existingSubplot.getCuboid();
-                if (existingCuboid.intersects(cuboid)) {
-                    MessageBuilder.beginError().append("The selection overlaps an existing subplot!").send(sender);
-                    return;
-                }
+            if (plot.streamSubplots().map(Subplot::getCuboid).anyMatch(cuboid::intersects)) {
+                MessageBuilder.beginError().append("The selection overlaps an existing subplot!").send(sender);
+                return;
+
             }
 
             Subplot subplot = new Subplot(plot.getWorld(), plot.generateSubplotId(), plot.getBaseX(), plot.getBaseZ(),

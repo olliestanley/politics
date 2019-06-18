@@ -33,7 +33,6 @@ import com.google.mu.util.stream.BiStream;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -94,6 +93,14 @@ public final class GroupLevel {
         this.otherSettings = otherSettings;
     }
 
+    public Stream<GroupLevel> streamAllowedChildren() {
+        return allowedChildren.stream();
+    }
+
+    public Stream<Role> streamRoles() {
+        return roles.values().stream();
+    }
+
     public void setAllowedChildren(Set<GroupLevel> allowedChildren) {
         this.allowedChildren = allowedChildren;
     }
@@ -114,20 +121,8 @@ public final class GroupLevel {
         return plural;
     }
 
-    public Set<GroupLevel> getAllowedChildren() {
-        return new THashSet<>(allowedChildren);
-    }
-
     public boolean canBeChild(final GroupLevel level) {
         return allowedChildren.contains(level);
-    }
-
-    public Map<String, Role> getRoles() {
-        return new THashMap<>(roles);
-    }
-
-    public Stream<Role> streamRoles() {
-        return roles.values().stream();
     }
 
     public Role getRole(String roleId) {
@@ -193,11 +188,7 @@ public final class GroupLevel {
     public void save(ConfigurationSection node) {
         node.set("name", name);
         node.set("rank", rank);
-        List<String> children = new ArrayList<>();
-        for (GroupLevel child : getAllowedChildren()) {
-            children.add(child.getId());
-        }
-        node.set("children", children);
+        node.set("children", streamAllowedChildren().map(GroupLevel::getId).collect(Collectors.toList()));
         node.set("plural", plural);
 
         ConfigurationSection rolesNode = ConfigUtil.getOrCreateSection(node, "roles");

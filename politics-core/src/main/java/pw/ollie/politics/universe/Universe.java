@@ -28,17 +28,18 @@ import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
+import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.mu.util.stream.BiStream;
 
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -84,6 +85,8 @@ public final class Universe implements Storable {
         for (Group group : groups) {
             getInternalGroups(group.getLevel()).add(group);
         }
+
+        groups.forEach(this::initialize);
     }
 
     /**
@@ -129,21 +132,12 @@ public final class Universe implements Storable {
         return rules;
     }
 
-    /**
-     * Gets a {@link List} of all {@link Group}s which exist in this Universe.
-     *
-     * @return all Groups present in this Universe
-     */
-    public List<Group> getGroups() {
-        return new ArrayList<>(groups);
+    public boolean hasGroup(Group group) {
+        return groups.contains(group);
     }
 
-    public List<Group> getGroups(GroupLevel level) {
-        return new ArrayList<>(getInternalGroups(level));
-    }
-
-    public Set<Group> getChildGroups(Group group) {
-        return new THashSet<>(getInternalChildGroups(group));
+    public int getNumGroups() {
+        return groups.size();
     }
 
     public Stream<Group> streamGroups() {
@@ -172,10 +166,6 @@ public final class Universe implements Storable {
         }
     }
 
-    public Stream<Group> streamCitizenGroups(OfflinePlayer player) {
-        return streamCitizenGroups(player.getUniqueId());
-    }
-
     /**
      * Gets a {@link Stream} of all {@link Group}s present in this Universe with the given property set to the given
      * value.
@@ -196,7 +186,7 @@ public final class Universe implements Storable {
      * @return the first Group in this Universe with the given value for the given property
      */
     public Group getFirstGroupByProperty(int property, Object value) {
-        return groups.stream().filter(group -> group.getProperty(property).equals(value)).findFirst().orElse(null);
+        return streamGroupsByProperty(property, value).findFirst().orElse(null);
     }
 
     /**
@@ -331,6 +321,10 @@ public final class Universe implements Storable {
         citizenGroupCache.invalidate(citizen);
     }
 
+    private void initialize(Group group) {
+        group.initialize(this);
+    }
+
     @Override
     public BasicBSONObject toBSONObject() {
         BasicBSONObject bson = new BasicBSONObject();
@@ -341,17 +335,11 @@ public final class Universe implements Storable {
         BasicBSONList groupsBson = new BasicBSONList();
         BasicBSONObject childrenBson = new BasicBSONObject();
 
-        for (Group group : groups) {
-            if (!group.canStore()) {
-                continue;
-            }
-            // groups
+        groups.stream().filter(Group::canStore).forEach(group -> {
             groupsBson.add(group.toBSONObject());
-
-            // children
             childrenBson.put(Integer.toString(group.getUid()),
                     group.streamChildren().map(Group::getUid).collect(Collectors.toCollection(BasicBSONList::new)));
-        }
+        });
 
         bson.put("groups", groupsBson);
         bson.put("children", childrenBson);
@@ -363,7 +351,7 @@ public final class Universe implements Storable {
 
     public static Universe fromBSONObject(BSONObject object) {
         if (!(object instanceof BasicBSONObject)) {
-            throw new IllegalStateException("object is not a BasicBsonObject! ERROR ERROR ERROR!");
+            throw new IllegalStateException("object is not a BasicBSONObject! ERROR!");
         }
 
         BasicBSONObject bobject = (BasicBSONObject) object;
@@ -376,32 +364,30 @@ public final class Universe implements Storable {
             throw new IllegalStateException("Rules do not exist!");
         }
 
-        List<PoliticsWorld> worlds = new ArrayList<>();
         Object worldsObj = bobject.get("worlds");
         if (!(worldsObj instanceof BasicBSONList)) {
-            throw new IllegalStateException("GroupWorlds object is not a list!!! ASDFASDF");
+            throw new IllegalStateException("GroupWorlds object is not a list!");
         }
 
-        BasicBSONList worldsBson = (BasicBSONList) worldsObj;
-        for (Object worldName : worldsBson) {
-            String name = worldName.toString();
+        List<PoliticsWorld> worlds = new ArrayList<>();
+
+        ((BasicBSONList) worldsObj).stream().map(Object::toString).forEach(name -> {
             PoliticsWorld world = Politics.getWorldManager().getWorld(name);
             if (world == null) {
                 Politics.getLogger().log(Level.WARNING, "GroupWorld `" + name + "' could not be found! (Did you delete it?)");
             } else {
                 worlds.add(world);
             }
-        }
+        });
 
         Object groupsObj = bobject.get("groups");
         if (!(groupsObj instanceof BasicBSONList)) {
-            throw new IllegalStateException("groups isn't a list?! wtfhax?");
+            throw new IllegalStateException("groups isn't a list!");
         }
 
-        BasicBSONList groupsBson = (BasicBSONList) groupsObj;
-
         TLongObjectMap<Group> groupMap = new TLongObjectHashMap<>();
-        for (Object groupBson : groupsBson) {
+
+        for (Object groupBson : (BasicBSONList) groupsObj) {
             if (!(groupBson instanceof BasicBSONObject)) {
                 throw new IllegalStateException("Invalid group!");
             }
@@ -409,42 +395,27 @@ public final class Universe implements Storable {
             groupMap.put(c.getUid(), c);
         }
 
-        Map<Group, Set<Group>> children = new THashMap<>();
         Object childrenObj = bobject.get("children");
         if (!(childrenObj instanceof BasicBSONObject)) {
             throw new IllegalStateException("Missing children report!");
         }
 
-        final BasicBSONObject childrenBson = (BasicBSONObject) childrenObj;
-        for (Map.Entry<String, Object> childEntry : childrenBson.entrySet()) {
-            String groupId = childEntry.getKey();
-            int uid = Integer.parseInt(groupId);
-            Group c = groupMap.get(uid);
-            if (c == null) {
-                throw new IllegalStateException("Unknown group id " + uid);
-            }
+        Map<Group, Set<Group>> children = new THashMap<>();
 
-            Object childsObj = childEntry.getValue();
+        BiStream.from((BasicBSONObject) childrenObj).forEach((groupId, childsObj) -> {
+            Group childGroup = groupMap.get(Integer.parseInt(groupId));
+            if (childGroup == null) {
+                throw new IllegalStateException("Unknown group id " + groupId);
+            }
             if (!(childsObj instanceof BasicBSONList)) {
-                throw new IllegalStateException("No bson list found for childsObj");
+                throw new IllegalStateException("No BSON list found for childsObj");
             }
+            children.put(childGroup, ((BasicBSONList) childsObj).stream()
+                    .map(Long.class::cast).map(groupMap::get)
+                    .collect(CollectorUtil.toTHashSet()));
+        });
 
-            Set<Group> childrenn = new THashSet<>();
-            BasicBSONList childs = (BasicBSONList) childsObj;
-
-            for (Object childN : childs) {
-                long theuid = (Long) childN;
-                Group ch = groupMap.get(theuid);
-                childrenn.add(ch);
-            }
-
-            children.put(c, childrenn);
-        }
-
-        List<Group> groupList = new ArrayList<>(groupMap.valueCollection());
-        Universe universe = new Universe(aname, rules, worlds, groupList, children);
-        groupList.forEach(group -> group.initialize(universe));
-        return universe;
+        return new Universe(aname, rules, worlds, new ArrayList<>(groupMap.valueCollection()), children);
     }
 
     @Override

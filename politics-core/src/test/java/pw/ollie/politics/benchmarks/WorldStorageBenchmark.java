@@ -30,11 +30,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
+
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;

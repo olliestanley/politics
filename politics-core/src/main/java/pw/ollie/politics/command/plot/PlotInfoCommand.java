@@ -47,7 +47,7 @@ public class PlotInfoCommand extends PoliticsSubcommand {
         Plot plot = findPlot(sender, args);
 
         Group owner = plot.getOwner();
-        int numSubplots = plot.getSubplotQuantity();
+        int numSubplots = plot.getNumSubplots();
         Location base = plot.getBasePoint();
         String coordinates = base.getBlockX() + ", " + base.getBlockY() + ", " + base.getBlockZ();
 

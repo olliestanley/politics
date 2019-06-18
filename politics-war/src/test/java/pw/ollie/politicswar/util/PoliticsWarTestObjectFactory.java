@@ -22,8 +22,6 @@ package pw.ollie.politicswar.util;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.universe.UniverseRules;
-import pw.ollie.politics.world.WorldConfig;
-import pw.ollie.politicswar.AbstractPoliticsWarTest;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;

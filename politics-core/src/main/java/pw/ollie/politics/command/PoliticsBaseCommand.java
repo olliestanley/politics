@@ -22,6 +22,7 @@ package pw.ollie.politics.command;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.args.Arguments;
+import pw.ollie.politics.util.collect.CollectionUtil;
 import pw.ollie.politics.util.message.MessageBuilder;
 
 import org.bukkit.Location;
@@ -35,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class PoliticsBaseCommand extends BukkitCommand {
     // todo docs
@@ -59,13 +61,11 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
         String arg1 = args.getString(0);
         PoliticsSubcommand subcommand = findSubCommand(arg1);
 
-        if (subcommand != null) {
-            if (checkPerms(subcommand, sender)) {
-                try {
-                    subcommand.runCommand(plugin, sender, args.subArgs(1, args.length(false)));
-                } catch (CommandException e) {
-                    MessageBuilder.beginError().append(e.getMessage()).send(sender);
-                }
+        if (subcommand != null && checkPerms(subcommand, sender)) {
+            try {
+                subcommand.runCommand(plugin, sender, args.subArgs(1, args.length(false)));
+            } catch (CommandException e) {
+                MessageBuilder.beginError().append(e.getMessage()).send(sender);
             }
         } else {
             PoliticsSubcommand closestMatch = PoliticsCommandHelper.getClosestMatch(subcommands, arg1);
@@ -78,6 +78,10 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
 
             PoliticsCommandHelper.sendCommandHelp(sender, this);
         }
+    }
+
+    public Stream<PoliticsSubcommand> streamSubcommands() {
+        return subcommands.stream();
     }
 
     public boolean registerSubCommand(PoliticsSubcommand subcommand) {
@@ -95,18 +99,6 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
 
         subcommands.add(subcommand);
         return true;
-    }
-
-    public List<PoliticsSubcommand> getSubCommands() {
-        return new ArrayList<>(subcommands);
-    }
-
-    private PoliticsSubcommand findSubCommand(String arg) {
-        String lcArg = arg.toLowerCase();
-
-        return subcommands.stream()
-                .filter(cmd -> cmd.getName().equals(lcArg) || cmd.getAliases().contains(lcArg))
-                .findFirst().orElse(null);
     }
 
     /**
@@ -128,13 +120,16 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
     public List<String> tabComplete(CommandSender sender, String name, String[] args, Location location) {
         if (args.length < 2) {
             List<String> names = subcommands.stream().map(PoliticsSubcommand::getName).collect(Collectors.toList());
-            List<String> completions = new ArrayList<>();
-            StringUtil.copyPartialMatches(args[0], names, completions);
-            Collections.sort(completions);
-            return completions;
+            return CollectionUtil.sorted(StringUtil.copyPartialMatches(args[0], names, new ArrayList<>()));
         }
 
-        return new ArrayList<>();
+        return Collections.emptyList();
+    }
+
+    private PoliticsSubcommand findSubCommand(String arg) {
+        String lcArg = arg.toLowerCase();
+        return subcommands.stream().filter(cmd -> cmd.getName().equals(lcArg) || cmd.getAliases().contains(lcArg))
+                .findFirst().orElse(null);
     }
 
     private boolean checkPerms(PoliticsSubcommand subcommand, CommandSender sender) {

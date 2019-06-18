@@ -113,7 +113,7 @@ public class GroupManageCommand extends GroupSubcommand {
 
             Player player = (Player) sender;
             Universe universe = plugin.getUniverseManager().getUniverse(player.getWorld(), level);
-            if (universe == null || !universe.getGroups().contains(invited)) {
+            if (universe == null || !universe.hasGroup(invited)) {
                 throw new CommandException(invited.getName() + " does not exist in the same universe as " + level.getPlural() + ".");
             }
             if (!(group.getLevel().getRank() > invited.getLevel().getRank())) {

@@ -23,8 +23,8 @@ import pw.ollie.politics.AbstractPoliticsTest;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.util.PoliticsTestReflection;
-import pw.ollie.politics.util.math.Vector3i;
 import pw.ollie.politics.util.math.Cuboid;
+import pw.ollie.politics.util.math.Vector3i;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.Subplot;
@@ -58,7 +58,7 @@ public final class StorablesTest extends AbstractPoliticsTest {
         Universe restoredUniverse = Universe.fromBSONObject(universeBson);
         Assert.assertNotNull(restoredUniverse);
         Assert.assertEquals(universe.getName(), restoredUniverse.getName());
-        Assert.assertEquals(universe.getGroups().size(), restoredUniverse.getGroups().size());
+        Assert.assertEquals(universe.getNumGroups(), restoredUniverse.getNumGroups());
 
         // test group storage
         Group group = createTestHousehold();
@@ -86,7 +86,7 @@ public final class StorablesTest extends AbstractPoliticsTest {
         Assert.assertEquals(TEST_WORLD_NAME, restoredWorld.getName());
         Plot restoredPlot = restoredWorld.getPlotAtChunkPosition(testPlotX, testPlotY);
         Assert.assertEquals(ownerGroupId, restoredPlot.getOwnerId());
-        Assert.assertEquals(1, restoredPlot.getSubplotQuantity());
+        Assert.assertEquals(1, restoredPlot.getNumSubplots());
         Subplot subplot = restoredPlot.getSubplot(0);
         Assert.assertNotNull(subplot);
         Assert.assertEquals(memberId, subplot.getOwnerId());

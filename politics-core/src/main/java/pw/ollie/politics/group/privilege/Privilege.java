@@ -24,6 +24,7 @@ import pw.ollie.politics.util.collect.CollectionUtil;
 import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Represents a privilege which allows the holder to perform certain actions.
@@ -48,8 +49,12 @@ public final class Privilege {
         return name;
     }
 
-    public Set<PrivilegeType> getTypes() {
-        return EnumSet.copyOf(types);
+    public Stream<PrivilegeType> streamTypes() {
+        return types.stream();
+    }
+
+    public boolean isOfType(PrivilegeType type) {
+        return types.contains(type);
     }
 
     @Override

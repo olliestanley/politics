@@ -25,10 +25,10 @@ import pw.ollie.politics.command.args.Argument;
 import pw.ollie.politics.command.args.Arguments;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
-import pw.ollie.politics.util.collect.PagedArrayList;
 import pw.ollie.politics.util.collect.PagedList;
 import pw.ollie.politics.util.message.MessageBuilder;
 import pw.ollie.politics.util.message.MessageUtil;
+import pw.ollie.politics.util.stream.CollectorUtil;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -55,8 +55,7 @@ public class GroupOnlineCommand extends GroupSubcommand {
             }
         }
 
-        List<Player> online = group.getImmediateOnlinePlayers();
-        PagedList<Player> paged = new PagedArrayList<>(online);
+        PagedList<Player> paged = group.streamImmediateOnlinePlayers().collect(CollectorUtil.toPagedList());
         paged.setElementsPerPage(25); // todo make configurable?
         if (pageNo > paged.pages()) {
             throw new CommandException("There are only " + paged.pages() + " pages!");

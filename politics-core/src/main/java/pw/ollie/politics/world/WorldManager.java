@@ -23,8 +23,8 @@ import gnu.trove.map.hash.THashMap;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.PoliticsPlugin;
-import pw.ollie.politics.util.math.Position;
 import pw.ollie.politics.util.FileUtil;
+import pw.ollie.politics.util.math.Position;
 import pw.ollie.politics.world.plot.Plot;
 import pw.ollie.politics.world.plot.PlotProtectionListener;
 
@@ -59,8 +59,100 @@ public final class WorldManager {
         this.plugin = plugin;
     }
 
-    private WorldConfig getDefaultConfig(String worldName) {
-        return new WorldConfig(worldName, true, true, new THashMap<>(), new THashMap<>());
+    /**
+     * Gets the {@link PoliticsWorld} for the world with the given name.
+     * <p>
+     * If there is no current PoliticsWorld associated with the given name, a blank one is created.
+     *
+     * @param name the name of the world to get data for
+     * @return the PoliticsWorld for the world with the given name
+     */
+    public PoliticsWorld getWorld(String name) {
+        PoliticsWorld world = worlds.get(name);
+        if (world == null) {
+            world = createWorld(name);
+        }
+        return world;
+    }
+
+    /**
+     * Gets the {@link PoliticsWorld} for the given Bukkit {@link World}.
+     * <p>
+     * If there is no current PoliticsWorld associated with the given world, a blank one is created.
+     *
+     * @param world the world to get data for
+     * @return the PoliticsWorld for the given world
+     */
+    public PoliticsWorld getWorld(World world) {
+        return getWorld(world.getName());
+    }
+
+    /**
+     * Gets the {@link WorldConfig} associated with the world with the given name.
+     * <p>
+     * If there is no current WorldConfig associated with the given name, a default config is created.
+     *
+     * @param name the name of the world to get config for
+     * @return the WorldConfig for the world with the given name
+     */
+    public WorldConfig getWorldConfig(String name) {
+        WorldConfig conf = configs.get(name);
+        if (conf == null) {
+            conf = getDefaultConfig(name);
+            Politics.getFileSystem().getWorldConfigDir().mkdirs();
+            File toSave = new File(Politics.getFileSystem().getWorldConfigDir(), name + ".yml");
+            YamlConfiguration tc = YamlConfiguration.loadConfiguration(toSave);
+            conf.save(tc);
+            try {
+                tc.save(toSave);
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, "Could not write a world config file!", e);
+            }
+            configs.put(name, conf);
+        }
+        return conf;
+    }
+
+    /**
+     * Gets the {@link Plot} object for the given chunk coordinates.
+     *
+     * @param world the world to search in
+     * @param x     the chunk x coordinate
+     * @param z     the chunk z coordinate
+     * @return the Plot at the given chunk position in the given World
+     */
+    public Plot getPlotAtChunkPosition(World world, int x, int z) {
+        return getWorld(world).getPlotAtChunkPosition(x, z);
+    }
+
+    /**
+     * Gets the {@link Plot} object for the given {@link Chunk}.
+     *
+     * @param chunk the Chunk to get the Plot at
+     * @return the Plot for the given Chunk
+     */
+    public Plot getPlotAtChunk(Chunk chunk) {
+        return getWorld(chunk.getWorld()).getPlotAtChunkPosition(chunk.getX(), chunk.getZ());
+    }
+
+    /**
+     * Gets the {@link Plot} object for the chunk at the given {@link Location}.
+     *
+     * @param position the Location to get the Plot at
+     * @return the Plot at the given Location
+     */
+    public Plot getPlotAt(Location position) {
+        return getPlotAtChunkPosition(position.getWorld(), position.getChunk().getX(), position.getChunk().getZ());
+    }
+
+    /**
+     * Gets the {@link Plot} object for the chunk at the given {@link Position}.
+     *
+     * @param position the Position to get the Plot at
+     * @return the Plot at the given Position
+     */
+    public Plot getPlotAt(Position position) {
+        return getPlotAt(position.toLocation());
     }
 
     /**
@@ -137,129 +229,31 @@ public final class WorldManager {
         BSONEncoder encoder = new BasicBSONEncoder();
         Politics.getFileSystem().getWorldsDir().mkdirs();
 
-        for (PoliticsWorld world : worlds.values()) {
-            if (!world.canStore()) {
-                continue;
-            }
-
-            String fileName = world.getName() + ".ptw";
-            File worldFile = new File(Politics.getFileSystem().getWorldsDir(), fileName);
+        worlds.values().stream().filter(PoliticsWorld::canStore).forEach(world -> {
+            File worldFile = new File(Politics.getFileSystem().getWorldsDir(), world.getName() + ".ptw");
 
             try {
                 FileUtil.createBackup(worldFile);
             } catch (IOException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Could not back up world file for world '" + world.getName() + "'. Data will not be saved...", ex);
-                continue;
+                return;
             }
 
-            byte[] data = encoder.encode(world.toBSONObject());
             try {
-                Files.write(worldFile.toPath(), data);
+                Files.write(worldFile.toPath(), encoder.encode(world.toBSONObject()));
             } catch (IOException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Could not save world file `" + fileName + "' due to error! Please restore backup...", ex);
+                plugin.getLogger().log(Level.SEVERE, "Could not save world file for `" + world.getName() + "' due to error! Please restore backup...", ex);
             }
-        }
-    }
-
-    /**
-     * Gets the {@link WorldConfig} associated with the world with the given name.
-     * <p>
-     * If there is no current WorldConfig associated with the given name, a default config is created.
-     *
-     * @param name the name of the world to get config for
-     * @return the WorldConfig for the world with the given name
-     */
-    public WorldConfig getWorldConfig(String name) {
-        WorldConfig conf = configs.get(name);
-        if (conf == null) {
-            conf = getDefaultConfig(name);
-            Politics.getFileSystem().getWorldConfigDir().mkdirs();
-            File toSave = new File(Politics.getFileSystem().getWorldConfigDir(), name + ".yml");
-            YamlConfiguration tc = YamlConfiguration.loadConfiguration(toSave);
-            conf.save(tc);
-            try {
-                tc.save(toSave);
-            } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Could not write a world config file!", e);
-            }
-            configs.put(name, conf);
-        }
-        return conf;
-    }
-
-    /**
-     * Gets the {@link PoliticsWorld} for the world with the given name.
-     * <p>
-     * If there is no current PoliticsWorld associated with the given name, a blank one is created.
-     *
-     * @param name the name of the world to get data for
-     * @return the PoliticsWorld for the world with the given name
-     */
-    public PoliticsWorld getWorld(String name) {
-        PoliticsWorld world = worlds.get(name);
-        if (world == null) {
-            world = createWorld(name);
-        }
-        return world;
-    }
-
-    /**
-     * Gets the {@link PoliticsWorld} for the given Bukkit {@link World}.
-     * <p>
-     * If there is no current PoliticsWorld associated with the given world, a blank one is created.
-     *
-     * @param world the world to get data for
-     * @return the PoliticsWorld for the given world
-     */
-    public PoliticsWorld getWorld(World world) {
-        return getWorld(world.getName());
-    }
-
-    /**
-     * Gets the {@link Plot} object for the given chunk coordinates.
-     *
-     * @param world the world to search in
-     * @param x     the chunk x coordinate
-     * @param z     the chunk z coordinate
-     * @return the Plot at the given chunk position in the given World
-     */
-    public Plot getPlotAtChunkPosition(World world, int x, int z) {
-        return getWorld(world).getPlotAtChunkPosition(x, z);
-    }
-
-    /**
-     * Gets the {@link Plot} object for the given {@link Chunk}.
-     *
-     * @param chunk the Chunk to get the Plot at
-     * @return the Plot for the given Chunk
-     */
-    public Plot getPlotAtChunk(Chunk chunk) {
-        return getWorld(chunk.getWorld()).getPlotAtChunkPosition(chunk.getX(), chunk.getZ());
-    }
-
-    /**
-     * Gets the {@link Plot} object for the chunk at the given {@link Location}.
-     *
-     * @param position the Location to get the Plot at
-     * @return the Plot at the given Location
-     */
-    public Plot getPlotAt(Location position) {
-        return getPlotAtChunkPosition(position.getWorld(), position.getChunk().getX(), position.getChunk().getZ());
-    }
-
-    /**
-     * Gets the {@link Plot} object for the chunk at the given {@link Position}.
-     *
-     * @param position the Position to get the Plot at
-     * @return the Plot at the given Position
-     */
-    public Plot getPlotAt(Position position) {
-        return getPlotAt(position.toLocation());
+        });
     }
 
     private PoliticsWorld createWorld(String name) {
         PoliticsWorld world = new PoliticsWorld(name, getWorldConfig(name));
         worlds.put(name, world);
         return world;
+    }
+
+    private WorldConfig getDefaultConfig(String worldName) {
+        return new WorldConfig(worldName, true, true, new THashMap<>(), new THashMap<>());
     }
 }

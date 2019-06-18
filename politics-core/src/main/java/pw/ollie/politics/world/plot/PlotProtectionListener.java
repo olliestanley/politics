@@ -173,7 +173,7 @@ public final class PlotProtectionListener implements Listener {
     }
 
     private ProtectionCheck<Plot> checkPlotPrivileges(Player player, Location location, Privilege privilege) {
-        if (!(privilege.getTypes().contains(PrivilegeType.PLOT))) {
+        if (!(privilege.isOfType(PrivilegeType.PLOT))) {
             throw new IllegalArgumentException("Must be a plot-type privilege");
         }
 
@@ -182,7 +182,7 @@ public final class PlotProtectionListener implements Listener {
     }
 
     private ProtectionCheck<Subplot> checkSubplotPrivileges(Player player, Location location, Privilege privilege) {
-        if (!(privilege.getTypes().contains(PrivilegeType.PLOT))) {
+        if (!(privilege.isOfType(PrivilegeType.PLOT))) {
             throw new IllegalArgumentException("Must be a plot-type privilege");
         }
 

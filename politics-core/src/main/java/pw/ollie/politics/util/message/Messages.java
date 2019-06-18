@@ -90,10 +90,7 @@ public final class Messages {
 
     private Optional<String> getSourceValue(String key) {
         String raw = key == null ? null : source.getString(key, null);
-        if (raw == null) {
-            return Optional.empty();
-        }
-        return Optional.of(raw);
+        return raw == null ? Optional.empty() : Optional.of(raw);
     }
 
     private static final Map<String, String> defaultMessages = new THashMap<>();

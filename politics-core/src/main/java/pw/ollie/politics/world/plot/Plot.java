@@ -21,7 +21,6 @@ package pw.ollie.politics.world.plot;
 
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.data.Storable;
@@ -48,7 +47,6 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -199,12 +197,12 @@ public final class Plot implements Storable, ProtectedRegion {
     }
 
     /**
-     * Gets a {@link Set} of all {@link Subplot}s contained within this Plot.
+     * Gets a {@link Stream} of all {@link Subplot}s contained within this Plot.
      *
-     * @return a Set of all this Plot's Subplots
+     * @return a Stream of all this Plot's Subplots
      */
-    public Set<Subplot> getSubplots() {
-        return new THashSet<>(subplots.valueCollection());
+    public Stream<Subplot> streamSubplots() {
+        return subplots.valueCollection().stream();
     }
 
     /**
@@ -229,7 +227,7 @@ public final class Plot implements Storable, ProtectedRegion {
      *
      * @return the number of Subplots in this Plot
      */
-    public int getSubplotQuantity() {
+    public int getNumSubplots() {
         return subplots.size();
     }
 
@@ -470,7 +468,7 @@ public final class Plot implements Storable, ProtectedRegion {
      * @return whether the given Group directly or indirectly owns this Plot
      */
     public boolean isIndirectOwner(Group group) {
-        return getOwners().contains(group);
+        return isIndirectOwner(group.getUid());
     }
 
     /**
@@ -485,7 +483,7 @@ public final class Plot implements Storable, ProtectedRegion {
     public Stream<Privilege> streamPrivileges(UUID playerId) {
         Group owner = getOwner();
         return owner == null ? Stream.empty() : owner.streamPrivileges(playerId)
-                .filter(privilege -> privilege.getTypes().contains(PrivilegeType.PLOT));
+                .filter(privilege -> privilege.isOfType(PrivilegeType.PLOT));
     }
 
     /**
@@ -498,7 +496,7 @@ public final class Plot implements Storable, ProtectedRegion {
     public boolean can(Player player, Privilege privilege) {
         Group owner = getOwner();
         if (owner == null) {
-            return privilege.getTypes().contains(PrivilegeType.PLOT);
+            return privilege.isOfType(PrivilegeType.PLOT);
         }
         return owner.can(player, privilege);
     }

@@ -21,12 +21,18 @@ package pw.ollie.politics.util.stream;
 
 import gnu.trove.set.hash.THashSet;
 
+import pw.ollie.politics.util.collect.PagedArrayList;
+
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public final class CollectorUtil {
     public static <T> Collector<T, ?, THashSet<T>> toTHashSet() {
         return Collectors.toCollection(THashSet::new);
+    }
+
+    public static <T> Collector<T, ?, PagedArrayList<T>> toPagedList() {
+        return Collectors.toCollection(PagedArrayList::new);
     }
 
     private CollectorUtil() {

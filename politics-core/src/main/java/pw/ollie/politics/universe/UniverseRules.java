@@ -32,7 +32,6 @@ import com.google.mu.util.stream.BiStream;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -69,16 +68,8 @@ public final class UniverseRules {
         return wildernessMessage;
     }
 
-    public List<GroupLevel> getGroupLevels() {
-        return new ArrayList<>(groupLevels.values());
-    }
-
     public Stream<GroupLevel> streamGroupLevels() {
         return groupLevels.values().stream();
-    }
-
-    public boolean areWarsEnabled() {
-        return warsEnabled;
     }
 
     public GroupLevel getGroupLevel(String name) {
@@ -89,16 +80,17 @@ public final class UniverseRules {
         return groupLevels.containsValue(level);
     }
 
+    public boolean areWarsEnabled() {
+        return warsEnabled;
+    }
+
     public void save(ConfigurationSection config) {
         config.set("description", description);
 
         ConfigurationSection warsSection = ConfigUtil.getOrCreateSection(config, "wars");
         warsSection.set("enabled", warsEnabled);
 
-        for (GroupLevel level : groupLevels.values()) {
-            ConfigurationSection node = ConfigUtil.getOrCreateSection(config, "levels." + level.getId());
-            level.save(node);
-        }
+        groupLevels.values().forEach(level -> level.save(ConfigUtil.getOrCreateSection(config, "levels" + level.getId())));
     }
 
     public static UniverseRules load(String name, ConfigurationSection config) {
