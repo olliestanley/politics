@@ -28,6 +28,7 @@ import pw.ollie.politics.event.activity.ActivityBeginEvent;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -45,21 +46,21 @@ public final class ActivityManager {
         plugin.getServer().getPluginManager().registerEvents(new ActivityUpdateListener(plugin), plugin);
     }
 
-    public PoliticsActivity getActivity(UUID playerId) {
+    public Optional<PoliticsActivity> getActivity(UUID playerId) {
         PoliticsActivity activity = activities.get(playerId);
         if (activity != null && activity.hasCompleted()) {
             activities.remove(playerId);
             activity = null;
         }
-        return activity;
+        return activity == null ? Optional.empty() : Optional.of(activity);
     }
 
-    public PoliticsActivity getActivity(Player player) {
+    public Optional<PoliticsActivity> getActivity(Player player) {
         return getActivity(player.getUniqueId());
     }
 
     public boolean isActive(UUID playerId) {
-        return getActivity(playerId) != null;
+        return getActivity(playerId).isPresent();
     }
 
     public boolean isActive(Player player) {

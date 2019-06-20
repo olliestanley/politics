@@ -38,10 +38,6 @@ public final class StreamUtil {
         return BiStream.biStream(collection.stream(), key -> key, toValue);
     }
 
-    public static <T> BasicBSONList toBSONList(Stream<T> stream) {
-        return stream.collect(Collectors.toCollection(BasicBSONList::new));
-    }
-
     private StreamUtil() {
         throw new UnsupportedOperationException();
     }

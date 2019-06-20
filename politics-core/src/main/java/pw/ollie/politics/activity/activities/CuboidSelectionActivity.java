@@ -68,7 +68,7 @@ public final class CuboidSelectionActivity implements PoliticsActivity {
     }
 
     public Cuboid getCuboid() {
-        if (!isFirstPointSet() || !isSecondPointSet()) {
+        if (!(isFirstPointSet() && isSecondPointSet())) {
             return null;
         }
         return new Cuboid(getFirstPoint(), getSecondPoint());

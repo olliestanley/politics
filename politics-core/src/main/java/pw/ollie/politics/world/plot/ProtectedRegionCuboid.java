@@ -17,25 +17,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.data;
+package pw.ollie.politics.world.plot;
 
-import org.bson.BSONObject;
+import pw.ollie.politics.util.math.Cuboid;
 
 /**
- * Represents something that can be stored in Politics.
+ * Represents a physical region which can be subject to protections in Politics.
  */
-public interface Storable {
+public interface ProtectedRegionCuboid extends ProtectedRegion {
     /**
-     * Converts this object into a {@link BSONObject}.
+     * Gets the {@link Cuboid} representation of the physical space occupied by this region.
      *
-     * @return a BSONObject that represents this Storable object
+     * @return this region's Cuboid
      */
-    BSONObject toBSONObject();
-
-    /**
-     * Checks whether this Storable object should be stored in its current state.
-     *
-     * @return whether this object should be stored
-     */
-    boolean shouldStore();
+    Cuboid getCuboid();
 }

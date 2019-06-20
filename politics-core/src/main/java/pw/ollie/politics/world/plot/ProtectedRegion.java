@@ -19,16 +19,5 @@
  */
 package pw.ollie.politics.world.plot;
 
-import pw.ollie.politics.util.math.Cuboid;
-
-/**
- * Represents a physical region which can be subject to protections in Politics.
- */
-interface ProtectedRegion {
-    /**
-     * Gets the {@link Cuboid} representation of the physical space occupied by this region.
-     *
-     * @return this region's Cuboid
-     */
-    Cuboid getCuboid();
+public interface ProtectedRegion {
 }

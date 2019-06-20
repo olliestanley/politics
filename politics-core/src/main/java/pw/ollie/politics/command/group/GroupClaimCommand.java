@@ -68,7 +68,7 @@ public class GroupClaimCommand extends GroupSubcommand {
             throw new CommandException(group.getName() + " already owns this plot.");
         }
 
-        Group owner = plot.getOwner();
+        Group owner = plot.getOwner().orElse(null);
         if (owner != null) {
             throw new CommandException("Sorry, this plot is already owned by " + owner.getName() + ".");
         }

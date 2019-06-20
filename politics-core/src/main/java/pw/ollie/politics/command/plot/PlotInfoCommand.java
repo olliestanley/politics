@@ -46,7 +46,7 @@ public class PlotInfoCommand extends PoliticsSubcommand {
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Plot plot = findPlot(sender, args);
 
-        Group owner = plot.getOwner();
+        Group owner = plot.getOwner().orElse(null);
         int numSubplots = plot.getNumSubplots();
         Location base = plot.getBasePoint();
         String coordinates = base.getBlockX() + ", " + base.getBlockY() + ", " + base.getBlockZ();

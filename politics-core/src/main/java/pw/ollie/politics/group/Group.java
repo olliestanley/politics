@@ -54,6 +54,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -122,8 +123,8 @@ public final class Group implements Comparable<Group>, Storable {
         return level;
     }
 
-    public Group getParent() {
-        return universe.streamGroups().filter(this::isParent).findAny().orElse(null);
+    public Optional<Group> getParent() {
+        return universe.streamGroups().filter(this::isParent).findAny();
     }
 
     public boolean isParent(Group other) {
@@ -161,7 +162,7 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     public boolean inviteChild(Group group, CommandSender invitationSource) {
-        if (group == null || group.getParent() != null || group.getLevel().getRank() >= level.getRank()) {
+        if (group == null || group.getParent().isPresent() || group.getLevel().getRank() >= level.getRank()) {
             return false;
         }
 
@@ -386,7 +387,7 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     @Override
-    public boolean canStore() {
+    public boolean shouldStore() {
         return true;
     }
 

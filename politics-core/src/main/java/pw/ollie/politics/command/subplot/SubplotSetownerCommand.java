@@ -42,7 +42,7 @@ public class SubplotSetownerCommand extends SubplotSubcommand {
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Subplot subplot = findSubplot(sender, args);
-        Group group = subplot.getParent().getOwner();
+        Group group = subplot.getParent().getOwner().get();
         if (!hasPlotsAdmin(sender) && !group.can(sender, Privileges.GroupPlot.MANAGE_SUBPLOTS)) {
             throw new CommandException("You cannot set the owner for that subplot.");
         }

@@ -49,7 +49,7 @@ public class SubplotDestroyCommand extends SubplotSubcommand {
 
         Subplot subplot = findSubplot(sender, args.getString(0, false), args);
         Plot parentPlot = subplot.getParent();
-        Group plotOwner = parentPlot.getOwner();
+        Group plotOwner = parentPlot.getOwner().orElse(null);
         if ((plotOwner == null || !plotOwner.can(sender, Privileges.GroupPlot.MANAGE_SUBPLOTS)) && !hasPlotsAdmin(sender)) {
             throw new CommandException("You can't do that.");
         }

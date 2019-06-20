@@ -53,8 +53,8 @@ public final class ActivitiesTest extends AbstractPoliticsTest {
         activityManager.beginActivity(new ConfirmationActivity(subject.getUniqueId(), () -> callbackRun = true));
         Assert.assertEquals(1, eventCounter.getActivityBegins());
         Assert.assertTrue(activityManager.isActive(subject));
-        Assert.assertTrue(activityManager.getActivity(subject) instanceof ConfirmationActivity);
-        Assert.assertTrue(activityManager.getActivity(subject).complete());
+        Assert.assertTrue(activityManager.getActivity(subject).get() instanceof ConfirmationActivity);
+        Assert.assertTrue(activityManager.getActivity(subject).get().complete());
         Assert.assertTrue(callbackRun);
         activityManager.endActivity(subject);
         Assert.assertFalse(activityManager.isActive(subject));

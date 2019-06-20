@@ -81,8 +81,8 @@ public final class PoliticsCommandHelper {
         }
     }
 
-    public static PoliticsSubcommand getClosestMatch(Collection<PoliticsSubcommand> subcommands, String label) {
-        return fuzzyLookup(subcommands, label);
+    public static Optional<PoliticsSubcommand> getClosestMatch(Collection<PoliticsSubcommand> subcommands, String label) {
+        return Optional.ofNullable(fuzzyLookup(subcommands, label));
     }
 
     private static PoliticsSubcommand fuzzyLookup(Collection<PoliticsSubcommand> collection, String name) {

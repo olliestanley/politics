@@ -65,7 +65,7 @@ public final class PlotsTest extends AbstractPoliticsTest {
         // plot creation testing
         Chunk chunk11 = world.getChunkAt(1, 1);
         Plot plot = worldManager.getPlotAtChunk(chunk11);
-        Assert.assertNull(plot.getOwner());
+        Assert.assertFalse(plot.getOwner().isPresent());
         plot.setOwner(household);
         Assert.assertEquals(1, eventCounter.getPlotOwnerChanges());
         Assert.assertTrue(plot.isOwner(household));

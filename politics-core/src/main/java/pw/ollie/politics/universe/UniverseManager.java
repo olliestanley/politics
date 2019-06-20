@@ -269,7 +269,7 @@ public final class UniverseManager {
         File universesDir = this.plugin.getFileSystem().getUniversesDir();
 
         for (Universe universe : universes.values()) {
-            if (!universe.canStore()) {
+            if (!universe.shouldStore()) {
                 continue;
             }
 

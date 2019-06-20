@@ -23,9 +23,16 @@ import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.util.collect.PagedArrayList;
 
+import org.bson.types.BasicBSONList;
+
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+/**
+ * Additional {@link Collector}s on top of those provided by {@link Collectors}. Effectively shortcuts for calling
+ * {@link Collectors#toCollection(java.util.function.Supplier)} using an appropriate Supplier for the collection type in
+ * question.
+ */
 public final class CollectorUtil {
     public static <T> Collector<T, ?, THashSet<T>> toTHashSet() {
         return Collectors.toCollection(THashSet::new);
@@ -33,6 +40,10 @@ public final class CollectorUtil {
 
     public static <T> Collector<T, ?, PagedArrayList<T>> toPagedList() {
         return Collectors.toCollection(PagedArrayList::new);
+    }
+
+    public static <T> Collector<? super T, ?, BasicBSONList> toBSONList() {
+        return Collectors.toCollection(BasicBSONList::new);
     }
 
     private CollectorUtil() {

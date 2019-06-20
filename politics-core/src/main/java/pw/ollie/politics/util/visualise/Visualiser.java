@@ -54,10 +54,6 @@ public final class Visualiser {
         this.current = new THashMap<>();
     }
 
-    public PoliticsPlugin getPlugin() {
-        return plugin;
-    }
-
     /**
      * Creates a new {@link Visualisation} showing the boundaries of the given {@link Plot}, using blue stained glass
      * as a fake block marker.
@@ -66,7 +62,7 @@ public final class Visualiser {
      * @return a Visualisation of the given Plot
      */
     public Visualisation visualisePlot(Plot plot) {
-        return visualiseCuboid(Cuboid.fromChunk(plot.getChunk()), Material.BLUE_STAINED_GLASS.createBlockData());
+        return visualiseCuboid(plot.getCuboid(), Material.BLUE_STAINED_GLASS.createBlockData());
     }
 
     /**
@@ -89,9 +85,11 @@ public final class Visualiser {
      * @return a Visualisation of the given Cuboid
      */
     public Visualisation visualiseCuboid(Cuboid cuboid, BlockData fake) {
-        Set<VisualisedBlock> blocks = new THashSet<>();
-        World world = cuboid.getWorld();
+        // pre-specify size to avoid Set resizing, improving performance
+        Set<VisualisedBlock> blocks = new THashSet<>(2 * (cuboid.getXSize() * cuboid.getYSize() + cuboid.getYSize() *
+                cuboid.getZSize() + cuboid.getXSize() * cuboid.getZSize()));
 
+        World world = cuboid.getWorld();
         for (int x = cuboid.getMinX(); x <= cuboid.getMaxX(); x++) {
             for (int z = cuboid.getMinZ(); z <= cuboid.getMaxZ(); z++) {
                 for (int y = cuboid.getMinY(); y <= cuboid.getMaxY(); y++) {
@@ -128,6 +126,10 @@ public final class Visualiser {
      */
     public Visualisation getCurrentVisualisation(Player player) {
         return getCurrentVisualisation(player.getUniqueId());
+    }
+
+    public PoliticsPlugin getPlugin() {
+        return plugin;
     }
 
     void setCurrentVisualisation(UUID playerId, Visualisation visualisation) {

@@ -92,6 +92,10 @@ public final class Privileges {
             GroupPlot.BUILD, GroupPlot.INTERACT, GroupPlot.MANAGE_SUBPLOTS
     };
 
+    public static boolean isPlotType(Privilege privilege) {
+        return privilege.isOfType(PrivilegeType.PLOT);
+    }
+
     public static List<Privilege> all() {
         return Arrays.asList(ALL);
     }

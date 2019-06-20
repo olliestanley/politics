@@ -142,7 +142,7 @@ public class GroupManageCommand extends GroupSubcommand {
                 throw new CommandException("There was no " + level.getName() + " specified to join.");
             }
 
-            if (group.getParent() != null) {
+            if (group.getParent().isPresent()) {
                 throw new CommandException(group.getName() + " already has a parent organisation.");
             }
 
@@ -186,7 +186,7 @@ public class GroupManageCommand extends GroupSubcommand {
                 throw new CommandException("No " + level.getName() + " with that tag exists.");
             }
 
-            if (group.equals(other.getParent())) {
+            if (group.equals(other.getParent().orElse(null))) {
                 if (group.removeChild(other, sender)) {
                     MessageBuilder.begin().highlight(group.getName() + " is no longer the parent organisation of ")
                             .highlight(other.getName()).normal(".").send(sender);
@@ -196,7 +196,7 @@ public class GroupManageCommand extends GroupSubcommand {
                 return;
             }
 
-            if (other.equals(group.getParent())) {
+            if (other.equals(group.getParent().orElse(null))) {
                 if (other.removeChild(group, sender)) {
                     MessageBuilder.begin().highlight(group.getName() + " is no longer the child organisation of ")
                             .highlight(other.getName()).normal(".").send(sender);

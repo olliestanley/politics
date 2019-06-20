@@ -24,6 +24,7 @@ import pw.ollie.politics.data.Storable;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.level.GroupLevel;
 import pw.ollie.politics.universe.Universe;
+import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.plot.Plot;
 
 import com.google.common.collect.HashBasedTable;
@@ -36,7 +37,6 @@ import org.bson.types.BasicBSONList;
 import org.bukkit.World;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -73,7 +73,7 @@ public final class PoliticsWorld implements Storable {
     }
 
     public Stream<Universe> streamUniverses() {
-        return Politics.getUniverseManager().streamUniverses().filter(universe -> universe.containsWorld(this));
+        return Politics.getUniverseManager().streamUniverses().filter(this::hasUniverse);
     }
 
     /**
@@ -122,6 +122,10 @@ public final class PoliticsWorld implements Storable {
         return Politics.getUniverseManager().getUniverse(this, level);
     }
 
+    public boolean hasUniverse(Universe universe) {
+        return universe.containsWorld(this);
+    }
+
     public boolean hasGroup(Group group) {
         return streamUniverses().anyMatch(universe -> universe.hasGroup(group));
     }
@@ -163,14 +167,13 @@ public final class PoliticsWorld implements Storable {
     public BSONObject toBSONObject() {
         BasicBSONObject bson = new BasicBSONObject();
         bson.put("name", name);
-        bson.put("plots", chunkPlots.values().stream()
-                .filter(plot -> plot.canStore() && (plot.hasOwner() || plot.getNumSubplots() > 0))
-                .map(Plot::toBSONObject).collect(Collectors.toCollection(BasicBSONList::new)));
+        bson.put("plots", chunkPlots.values().stream().filter(Plot::shouldStore)
+                .map(Plot::toBSONObject).collect(CollectorUtil.toBSONList()));
         return bson;
     }
 
     @Override
-    public boolean canStore() {
+    public boolean shouldStore() {
         return true;
     }
 }

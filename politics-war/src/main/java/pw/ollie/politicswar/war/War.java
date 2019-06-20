@@ -154,7 +154,7 @@ public final class War implements Storable {
     }
 
     @Override
-    public boolean canStore() {
+    public boolean shouldStore() {
         return true;
     }
 }

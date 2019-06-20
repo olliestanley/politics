@@ -32,7 +32,7 @@ import pw.ollie.politics.group.privilege.PrivilegeType;
 import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.util.math.Position;
 import pw.ollie.politics.util.math.Vector3i;
-import pw.ollie.politics.util.stream.StreamUtil;
+import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import com.google.mu.util.stream.BiStream;
@@ -60,7 +60,7 @@ import java.util.stream.Stream;
  * <p>
  * A subplot may have different privilege settings to its parent plot. Subplot privileges override plot privileges.
  */
-public final class Subplot implements Storable, ProtectedRegion {
+public final class Subplot implements Storable, ProtectedRegionCuboid {
     private final PoliticsWorld world;
     private final int id;
     private final int parentX;
@@ -493,8 +493,8 @@ public final class Subplot implements Storable, ProtectedRegion {
         result.put("owner", owner.toString());
 
         BasicBSONObject privilegesObj = new BasicBSONObject();
-        BiStream.from(individualPrivileges).mapKeys(UUID::toString).mapValues(Set::stream)
-                .mapValues(privStream -> StreamUtil.toBSONList(privStream.map(Privilege::getName)))
+        BiStream.from(individualPrivileges).mapKeys(UUID::toString)
+                .mapValues(privs -> privs.stream().map(Privilege::getName).collect(CollectorUtil.toBSONList()))
                 .forEach(privilegesObj::put);
         result.put("privileges", privilegesObj);
 
@@ -502,7 +502,7 @@ public final class Subplot implements Storable, ProtectedRegion {
     }
 
     @Override
-    public boolean canStore() {
+    public boolean shouldStore() {
         return true;
     }
 }

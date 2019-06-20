@@ -30,6 +30,8 @@ import pw.ollie.politics.command.args.Arguments;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 public class PoliticsConfirmCommand extends PoliticsSubcommand {
     PoliticsConfirmCommand() {
         super("confirm");
@@ -42,11 +44,11 @@ public class PoliticsConfirmCommand extends PoliticsSubcommand {
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Player player = (Player) sender;
         ActivityManager activityManager = plugin.getActivityManager();
-        PoliticsActivity activity = activityManager.getActivity(player);
-        if (!(activity instanceof ConfirmationActivity)) {
+        Optional<PoliticsActivity> activity = activityManager.getActivity(player);
+        if (!activity.filter(ConfirmationActivity.class::isInstance).isPresent()) {
             throw new CommandException("You do not have anything to confirm.");
         }
-        activity.complete();
+        activity.get().complete();
         plugin.getActivityManager().endActivity(player);
     }
 

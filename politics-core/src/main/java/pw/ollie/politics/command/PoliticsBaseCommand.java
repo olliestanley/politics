@@ -34,6 +34,7 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -83,11 +84,11 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
                 MessageBuilder.beginError().append(e.getMessage()).send(sender);
             }
         } else {
-            PoliticsSubcommand closestMatch = PoliticsCommandHelper.getClosestMatch(subcommands, arg1);
+            Optional<PoliticsSubcommand> closestMatch = PoliticsCommandHelper.getClosestMatch(subcommands, arg1);
 
-            if (closestMatch != null) {
+            if (closestMatch.isPresent()) {
                 MessageBuilder.beginError().append("Unrecognised subcommand - did you mean '")
-                        .append(closestMatch.getName()).append("'?").send(sender);
+                        .append(closestMatch.get().getName()).append("'?").send(sender);
                 return;
             }
 

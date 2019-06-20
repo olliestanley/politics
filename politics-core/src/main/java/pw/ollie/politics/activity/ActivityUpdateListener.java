@@ -33,6 +33,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.util.Optional;
+
 /**
  * Listens for events in order to update {@link PoliticsActivity} progress for relevant players.
  */
@@ -49,8 +51,8 @@ final class ActivityUpdateListener implements Listener {
             return;
         }
 
-        PoliticsActivity activity = plugin.getActivityManager().getActivity(event.getPlayer());
-        if (!(activity instanceof CuboidSelectionActivity)) {
+        Optional<PoliticsActivity> activity = plugin.getActivityManager().getActivity(event.getPlayer());
+        if (!activity.filter(CuboidSelectionActivity.class::isInstance).isPresent()) {
             return;
         }
 
@@ -63,7 +65,7 @@ final class ActivityUpdateListener implements Listener {
         Location location = block.getLocation();
         Position position = Position.fromLocation(location);
 
-        CuboidSelectionActivity selectionActivity = (CuboidSelectionActivity) activity;
+        CuboidSelectionActivity selectionActivity = (CuboidSelectionActivity) activity.get();
         if (!selectionActivity.isFirstPointSet()) {
             MessageBuilder.begin("First point set. Please left click a block to select second point.").send(player);
             selectionActivity.setFirstPoint(position);

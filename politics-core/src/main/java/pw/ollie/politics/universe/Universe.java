@@ -50,7 +50,6 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -289,16 +288,16 @@ public final class Universe implements Storable {
         BasicBSONList groupsBson = new BasicBSONList();
         BasicBSONObject childrenBson = new BasicBSONObject();
 
-        groups.stream().filter(Group::canStore).forEach(group -> {
+        groups.stream().filter(Group::shouldStore).forEach(group -> {
             groupsBson.add(group.toBSONObject());
             childrenBson.put(Integer.toString(group.getUid()),
-                    group.streamChildren().map(Group::getUid).collect(Collectors.toCollection(BasicBSONList::new)));
+                    group.streamChildren().map(Group::getUid).collect(CollectorUtil.toBSONList()));
         });
 
         bson.put("groups", groupsBson);
         bson.put("children", childrenBson);
         bson.put("worlds", worlds.stream().map(PoliticsWorld::getName)
-                .collect(Collectors.toCollection(BasicBSONList::new)));
+                .collect(CollectorUtil.toBSONList()));
 
         return bson;
     }
@@ -364,16 +363,15 @@ public final class Universe implements Storable {
             if (!(childsObj instanceof BasicBSONList)) {
                 throw new IllegalStateException("No BSON list found for childsObj");
             }
-            children.put(childGroup, ((BasicBSONList) childsObj).stream()
-                    .map(Long.class::cast).map(groupMap::get)
-                    .collect(CollectorUtil.toTHashSet()));
+
+            children.put(childGroup, ((BasicBSONList) childsObj).stream().map(Long.class::cast).map(groupMap::get).collect(CollectorUtil.toTHashSet()));
         });
 
         return new Universe(aname, rules, worlds, new ArrayList<>(groupMap.valueCollection()), children);
     }
 
     @Override
-    public boolean canStore() {
+    public boolean shouldStore() {
         return true;
     }
 
@@ -405,14 +403,9 @@ public final class Universe implements Storable {
 
         citizenGroupCache = builder.build(new CacheLoader<UUID, Set<Group>>() {
             @Override
-            public Set<Group> load(UUID id) {
-                Set<Group> myGroups = new THashSet<>();
-                for (Group group : groups) {
-                    if (group.isImmediateMember(id)) {
-                        myGroups.add(group);
-                    }
-                }
-                return myGroups;
+            public Set<Group> load(UUID playerId) {
+                return groups.stream().filter(group -> group.isImmediateMember(playerId))
+                        .collect(CollectorUtil.toTHashSet());
             }
         });
     }

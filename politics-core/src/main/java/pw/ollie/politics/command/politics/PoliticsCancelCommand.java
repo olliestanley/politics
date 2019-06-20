@@ -30,6 +30,8 @@ import pw.ollie.politics.util.message.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 public class PoliticsCancelCommand extends PoliticsSubcommand {
     PoliticsCancelCommand() {
         super("cancel");
@@ -42,13 +44,13 @@ public class PoliticsCancelCommand extends PoliticsSubcommand {
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Player player = (Player) sender;
         ActivityManager activityManager = plugin.getActivityManager();
-        PoliticsActivity activity = activityManager.getActivity(player);
-        if (activity == null) {
+        Optional<PoliticsActivity> activity = activityManager.getActivity(player);
+        if (!activity.isPresent()) {
             throw new CommandException("You do not have an ongoing activity to cancel.");
         }
-        activity.complete();
+        activity.get().complete();
         plugin.getActivityManager().endActivity(player);
-        MessageBuilder.begin("Your ").highlight(activity.getName()).normal(" was cancelled.").send(sender);
+        MessageBuilder.begin("Your ").highlight(activity.get().getName()).normal(" was cancelled.").send(sender);
     }
 
     /**

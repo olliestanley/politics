@@ -196,7 +196,7 @@ public final class WarManager {
         Set<String> storedWarFiles = new THashSet<>();
 
         for (War war : activeWars) {
-            if (!war.canStore()) {
+            if (!war.shouldStore()) {
                 continue;
             }
 

@@ -231,7 +231,7 @@ public final class WorldManager {
         BSONEncoder encoder = new BasicBSONEncoder();
         Politics.getFileSystem().getWorldsDir().mkdirs();
 
-        worlds.values().stream().filter(PoliticsWorld::canStore).forEach(world -> {
+        worlds.values().stream().filter(PoliticsWorld::shouldStore).forEach(world -> {
             File worldFile = new File(Politics.getFileSystem().getWorldsDir(), world.getName() + ".ptw");
 
             try {

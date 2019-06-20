@@ -27,6 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Represents a visualised collection of fake blocks sent to a player to show spaces.
@@ -47,7 +48,7 @@ public class Visualisation {
      * @param blocks visualised blocks to include
      */
     public Visualisation(Set<VisualisedBlock> blocks) {
-        this.blocks = blocks;
+        this.blocks = new THashSet<>(blocks);
     }
 
     /**
@@ -61,15 +62,8 @@ public class Visualisation {
         if (Politics.getActivityManager().isActive(player)) {
             return false;
         }
-
-        for (VisualisedBlock block : blocks) {
-            if (!block.getLocation().getChunk().isLoaded()) {
-                continue;
-            }
-
-            player.sendBlockChange(block.getLocation(), block.getFakeBlock());
-        }
-
+        streamBlocks().filter(block -> block.getLocation().getChunk().isLoaded())
+                .forEach(block -> player.sendBlockChange(block.getLocation(), block.getFakeBlock()));
         visualiser.setCurrentVisualisation(player, this);
         return true;
     }
@@ -81,10 +75,7 @@ public class Visualisation {
      * @param player     the Player to stop sending the Visualisation to
      */
     public void revert(Visualiser visualiser, Player player) {
-        if (!this.equals(visualiser.getCurrentVisualisation(player))) {
-            return;
-        }
-        if (!player.isOnline()) {
+        if (!(this.equals(visualiser.getCurrentVisualisation(player)) && player.isOnline())) {
             return;
         }
 
@@ -95,27 +86,19 @@ public class Visualisation {
 
         removeOutOfRange(minx, minz, maxx, maxz);
 
-        boolean run = false;
-        for (VisualisedBlock block : blocks) {
-            if (!run) {
-                if (!player.getWorld().equals(block.getLocation().getWorld())) {
-                    return;
-                }
-                run = true;
-            }
-            player.sendBlockChange(block.getLocation(), block.getRealBlock());
+        if (streamBlocks().anyMatch(block -> player.getWorld().equals(block.getLocation().getWorld()))) {
+            blocks.forEach(block -> player.sendBlockChange(block.getLocation(), block.getRealBlock()));
+            visualiser.setCurrentVisualisation(player, null);
         }
-
-        visualiser.setCurrentVisualisation(player, null);
     }
 
     /**
-     * Gets a {@link Set} of all {@link VisualisedBlock}s in this Visualisation.
+     * Gets a {@link Stream} of all {@link VisualisedBlock}s in this Visualisation.
      *
      * @return all VisualisedBlocks this Visualisation includes
      */
-    public Set<VisualisedBlock> getBlocks() {
-        return new THashSet<>(blocks);
+    public Stream<VisualisedBlock> streamBlocks() {
+        return blocks.stream();
     }
 
     /**

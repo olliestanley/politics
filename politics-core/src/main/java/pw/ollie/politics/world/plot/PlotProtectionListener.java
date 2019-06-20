@@ -436,7 +436,7 @@ public final class PlotProtectionListener implements Listener {
         // todo prevent taking items from armor stands, item frames etc in someone else's plot/subplot
     }
 
-    public static final class ProtectionCheck<T extends ProtectedRegion> {
+    public static final class ProtectionCheck<T extends ProtectedRegionCuboid> {
         private final T checked;
         private final boolean result;
 

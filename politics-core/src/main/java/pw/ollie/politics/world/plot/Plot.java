@@ -31,8 +31,10 @@ import pw.ollie.politics.event.plot.subplot.SubplotDestroyEvent;
 import pw.ollie.politics.group.Group;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.group.privilege.PrivilegeType;
+import pw.ollie.politics.group.privilege.Privileges;
 import pw.ollie.politics.util.math.Cuboid;
 import pw.ollie.politics.util.math.Position;
+import pw.ollie.politics.util.stream.CollectorUtil;
 import pw.ollie.politics.world.PoliticsWorld;
 
 import org.bson.BSONObject;
@@ -47,14 +49,14 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * A plot in Politics is made up of exactly one chunk, and may have sub-plots.
  */
-public final class Plot implements Storable, ProtectedRegion {
+public final class Plot implements Storable, ProtectedRegionCuboid {
     private final PoliticsWorld world;
     private final Chunk chunk;
     private final int baseX;
@@ -122,9 +124,8 @@ public final class Plot implements Storable, ProtectedRegion {
      * @return the plot-type Privileges the given Player has in this Plot
      */
     public Stream<Privilege> streamPrivileges(UUID playerId) {
-        Group owner = getOwner();
-        return owner == null ? Stream.empty() : owner.streamPrivileges(playerId)
-                .filter(privilege -> privilege.isOfType(PrivilegeType.PLOT));
+        return getOwner().map(owner -> owner.streamPrivileges(playerId).filter(Privileges::isPlotType))
+                .orElseGet(Stream::empty);
     }
 
     /**
@@ -350,11 +351,11 @@ public final class Plot implements Storable, ProtectedRegion {
      *
      * @return the Group owning this Plot, or {@code null} if no Group owns the Plot
      */
-    public Group getOwner() {
+    public Optional<Group> getOwner() {
         if (owner == -1) {
-            return null;
+            return Optional.empty();
         }
-        return Politics.getUniverseManager().getGroupById(owner);
+        return Optional.ofNullable(Politics.getUniverseManager().getGroupById(owner));
     }
 
     /**
@@ -383,10 +384,10 @@ public final class Plot implements Storable, ProtectedRegion {
      */
     public List<Group> getOwners() {
         List<Group> owners = new ArrayList<>();
-        Group group = getOwner();
-        while (group != null) {
-            owners.add(group);
-            group = group.getParent();
+        Optional<Group> group = getOwner();
+        while (group.isPresent()) {
+            owners.add(group.get());
+            group = group.get().getParent();
         }
         return owners;
     }
@@ -494,11 +495,7 @@ public final class Plot implements Storable, ProtectedRegion {
      * @return whether the given Player has the given Privilege in this Plot
      */
     public boolean can(Player player, Privilege privilege) {
-        Group owner = getOwner();
-        if (owner == null) {
-            return privilege.isOfType(PrivilegeType.PLOT);
-        }
-        return owner.can(player, privilege);
+        return getOwner().map(group -> group.can(player, privilege)).orElseGet(() -> privilege.isOfType(PrivilegeType.PLOT));
     }
 
     /**
@@ -524,14 +521,14 @@ public final class Plot implements Storable, ProtectedRegion {
         obj.put("owner", owner);
         obj.put("x", getChunk().getX());
         obj.put("z", getChunk().getZ());
-        obj.put("subplots", subplots.valueCollection().stream().filter(Subplot::canStore)
-                .map(Subplot::toBSONObject).collect(Collectors.toCollection(BasicBSONList::new)));
+        obj.put("subplots", subplots.valueCollection().stream().filter(Subplot::shouldStore)
+                .map(Subplot::toBSONObject).collect(CollectorUtil.toBSONList()));
         return obj;
     }
 
     @Override
-    public boolean canStore() {
-        return true;
+    public boolean shouldStore() {
+        return hasOwner() || getNumSubplots() > 0;
     }
 
     @Override

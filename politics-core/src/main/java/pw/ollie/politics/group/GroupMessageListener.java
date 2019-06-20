@@ -52,8 +52,8 @@ final class GroupMessageListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void sendTerritoryMessage(PlayerPlotChangeEvent event) {
         Player player = event.getPlayer();
-        Group newPlotOwner = event.getTo().getOwner();
-        Group oldPlotOwner = event.getFrom().getOwner();
+        Group newPlotOwner = event.getTo().getOwner().orElse(null);
+        Group oldPlotOwner = event.getFrom().getOwner().orElse(null);
 
         if (newPlotOwner == null) {
             if (oldPlotOwner != null) {

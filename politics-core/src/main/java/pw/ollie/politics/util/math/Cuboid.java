@@ -287,8 +287,8 @@ public class Cuboid {
             return false;
         }
 
-        Cuboid cuboid = (Cuboid) obj;
-        return cuboid.size.getX() == size.getX() && cuboid.size.getY() == size.getY() && cuboid.size.getZ() == size.getZ() && cuboid.getWorld().equals(getWorld()) && cuboid.base.getX() == base.getX() && cuboid.base.getY() == base.getY() && cuboid.base.getZ() == base.getZ();
+        Cuboid c = (Cuboid) obj;
+        return c.size.getX() == size.getX() && c.size.getY() == size.getY() && c.size.getZ() == size.getZ() && c.getWorld().equals(getWorld()) && c.base.getX() == base.getX() && c.base.getY() == base.getY() && c.base.getZ() == base.getZ();
     }
 
     /**
@@ -298,8 +298,7 @@ public class Cuboid {
      * @return a Cuboid with the same boundaries as the given Chunk
      */
     public static Cuboid fromChunk(Chunk chunk) {
-        Location min = new Location(chunk.getWorld(), chunk.getX() * 16, 0, chunk.getZ() * 16);
-        Location max = new Location(chunk.getWorld(), (chunk.getX() * 16) + 15, 255, (chunk.getZ() * 16) + 15);
-        return new Cuboid(min, max);
+        return new Cuboid(new Location(chunk.getWorld(), chunk.getX() * 16, 0, chunk.getZ() * 16),
+                new Location(chunk.getWorld(), (chunk.getX() * 16) + 15, 255, (chunk.getZ() * 16) + 15));
     }
 }

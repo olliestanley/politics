@@ -59,7 +59,7 @@ public class SubplotCreateCommand extends SubplotSubcommand {
         }
 
         Plot currentPlot = worldManager.getPlotAt(player.getLocation());
-        Group ownerGroup = currentPlot.getOwner();
+        Group ownerGroup = currentPlot.getOwner().orElse(null);
         if (ownerGroup == null || !(ownerGroup.can(player, Privileges.GroupPlot.MANAGE_SUBPLOTS) || hasPlotsAdmin(sender))) {
             throw new CommandException("You aren't in the plot of an organisation you're permitted to do that for.");
         }
@@ -76,7 +76,7 @@ public class SubplotCreateCommand extends SubplotSubcommand {
                 return;
             }
 
-            Group group = plot.getOwner();
+            Group group = plot.getOwner().orElse(null);
             if (group == null || !group.can(player, Privileges.GroupPlot.MANAGE_SUBPLOTS)) {
                 MessageBuilder.beginError().append("You aren't in the plot of an organisation you're permitted to do that for.").send(sender);
             }
