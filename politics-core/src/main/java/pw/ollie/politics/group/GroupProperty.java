@@ -20,6 +20,8 @@
 package pw.ollie.politics.group;
 
 import gnu.trove.map.hash.THashMap;
+import gnu.trove.set.TIntSet;
+import gnu.trove.set.hash.TIntHashSet;
 
 import java.util.Map;
 
@@ -81,11 +83,20 @@ public final class GroupProperty {
      */
     public static final int FIXED_TAX = 0x12;
 
+    private static final TIntSet keyProperties;
     private static final Map<String, Integer> toggleableProperties = new THashMap<>();
 
     static {
-        GroupProperty.toggleableProperties.put("open", GroupProperty.OPEN);
-        GroupProperty.toggleableProperties.put("peaceful", GroupProperty.PEACEFUL);
+        keyProperties = new TIntHashSet(2);
+        keyProperties.add(NAME);
+        keyProperties.add(TAG);
+
+        toggleableProperties.put("open", GroupProperty.OPEN);
+        toggleableProperties.put("peaceful", GroupProperty.PEACEFUL);
+    }
+
+    public static boolean isKeyProperty(int propertyId) {
+        return keyProperties.contains(propertyId);
     }
 
     /**

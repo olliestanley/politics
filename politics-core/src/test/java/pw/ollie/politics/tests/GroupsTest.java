@@ -51,9 +51,9 @@ public final class GroupsTest extends AbstractPoliticsTest {
         Universe universe = this.createDefaultUniverse();
 
         // group creation testing
-        Assert.assertEquals(universe, universeManager.getUniverse("Default"));
+        Assert.assertEquals(universe, universeManager.getUniverse("Default").get());
         Assert.assertEquals(1, eventCounter.getUniverseCreates());
-        GroupLevel householdLevel = groupManager.getGroupLevel("household");
+        GroupLevel householdLevel = groupManager.getGroupLevel("household").get();
         Assert.assertNotNull(householdLevel);
         Group household = universe.createGroup(householdLevel);
         Assert.assertNotNull(household);
@@ -66,14 +66,14 @@ public final class GroupsTest extends AbstractPoliticsTest {
         household.setProperty(GroupProperty.NAME, hName);
         household.setProperty(GroupProperty.TAG, hTag);
         Assert.assertEquals(2, eventCounter.getGroupPropertySets());
-        Group lookupHousehold = groupManager.getGroupByTag(hTag);
+        Group lookupHousehold = groupManager.getGroupByTag(hTag).get();
         Assert.assertEquals(household, lookupHousehold);
 
         // group roles and membership testing
         Player member = server.getPlayer(1);
         household.setRole(member.getUniqueId(), householdLevel.getInitial());
-        Role founderRole = household.getRole(founder.getUniqueId());
-        Role memberRole = household.getRole(member.getUniqueId());
+        Role founderRole = household.getRole(founder.getUniqueId()).get();
+        Role memberRole = household.getRole(member.getUniqueId()).get();
         Assert.assertEquals("owner", founderRole.getName().toLowerCase());
         Assert.assertEquals("member", memberRole.getName().toLowerCase());
         Assert.assertTrue(household.isImmediateMember(founder.getUniqueId()));
@@ -90,7 +90,7 @@ public final class GroupsTest extends AbstractPoliticsTest {
         }
 
         // group children testing
-        GroupLevel townLevel = groupManager.getGroupLevel("town");
+        GroupLevel townLevel = groupManager.getGroupLevel("town").get();
         Group town = universe.createGroup(townLevel);
         String tName = "Test Town";
         String tTag = tName.toLowerCase().replace(" ", "-");

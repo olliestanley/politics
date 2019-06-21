@@ -33,6 +33,8 @@ import pw.ollie.politics.util.message.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 public class GroupSetroleCommand extends GroupSubcommand {
     GroupSetroleCommand(GroupLevel groupLevel) {
         super("setrole", groupLevel);
@@ -63,19 +65,20 @@ public class GroupSetroleCommand extends GroupSubcommand {
         }
 
         String rn = args.getString(1);
-        Role role = group.getLevel().getRole(rn);
-        if (role == null) {
+        Optional<Role> roleLookup = group.getLevel().getRole(rn);
+        if (!roleLookup.isPresent()) {
             throw new CommandException("There isn't a role named `" + rn + "'!");
         }
 
+        Role role = roleLookup.get();
         if (!hasAdmin(sender)) {
-            Role myRole = group.getRole(((Player) sender).getUniqueId());
+            Role myRole = group.getRole(((Player) sender).getUniqueId()).get();
             if (myRole.getRank() - role.getRank() <= 1) {
                 throw new CommandException("You can't set someone to a role equal to or higher than your own!");
             }
         }
 
-        Role oldRole = group.getRole(player.getUniqueId());
+        Role oldRole = group.getRole(player.getUniqueId()).get();
         GroupMemberRoleChangeEvent roleChangeEvent = PoliticsEventFactory.callGroupMemberRoleChangeEvent(group, player, oldRole, role, sender);
         if (roleChangeEvent.isCancelled()) {
             throw new CommandException("You can't set that player's role,");

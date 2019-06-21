@@ -21,25 +21,7 @@ package pw.ollie.politics.util.stream;
 
 import com.google.mu.util.stream.BiStream;
 
-import java.util.Collection;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-public final class StreamUtil {
-    // todo doc
-    public static <K, V> BiStream<K, V> biStream(Stream<K> stream, Function<? super K, ? extends V> toValue) {
-        return BiStream.biStream(stream, key -> key, toValue);
-    }
-
-    public static <K, V> BiStream<K, V> biStream(Collection<K> collection, Function<? super K, ? extends V> toValue) {
-        return BiStream.biStream(collection.stream(), key -> key, toValue);
-    }
-
-    public static <T, K, V> T collect(BiStream<K, V> biStream, BiCollector<T, K, V> collector) {
-        return collector.collect(biStream);
-    }
-
-    private StreamUtil() {
-        throw new UnsupportedOperationException();
-    }
+@FunctionalInterface
+public interface BiCollector<T, K, V> {
+    T collect(BiStream<K, V> stream);
 }

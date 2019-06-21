@@ -25,8 +25,10 @@ import pw.ollie.politics.util.serial.ConfigUtil;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Stores Politics configuration values specific to a single world.
@@ -90,20 +92,21 @@ public final class WorldConfig {
      * Get a raw setting from the world config. Can be used by add-on plugins to add per-world settings easily.
      *
      * @param path the config path to get the setting for
-     * @return the setting of the given node, or null if it is not set
+     * @return the setting of the given node, or empty if it is not set
      */
-    public String getRawSetting(String path) {
-        return stringSettings.get(path);
+    public Optional<String> getRawSetting(String path) {
+        return Optional.ofNullable(stringSettings.get(path));
     }
 
     /**
      * Get a {@link List} setting from the world config. Can be used by add-on plugins to add per-world settings easily.
      *
      * @param path the config path to get the setting for
-     * @return the setting of the given node, or null if it is not set
+     * @return the setting of the given node, or empty List if it is not set
      */
     public List<String> getListSetting(String path) {
-        return listSettings.get(path);
+        List<String> list = listSettings.get(path);
+        return list != null ? list : new ArrayList<>();
     }
 
     /**

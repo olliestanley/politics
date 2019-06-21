@@ -34,6 +34,8 @@ import pw.ollie.politics.util.message.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 public class GroupPromoteCommand extends GroupSubcommand {
     GroupPromoteCommand(GroupLevel groupLevel) {
         super("promote", groupLevel);
@@ -63,39 +65,40 @@ public class GroupPromoteCommand extends GroupSubcommand {
             throw new CommandException("That player is not a member of the group!");
         }
 
-        RoleTrack track;
+        Optional<RoleTrack> trackLookup;
         String trackName = null;
         if (args.hasValueFlag("t")) {
             trackName = args.getValueFlag("t").getStringValue();
-            track = group.getLevel().getTrack(args.getValueFlag("t").getStringValue().toLowerCase());
+            trackLookup = group.getLevel().getTrack(args.getValueFlag("t").getStringValue().toLowerCase());
         } else {
-            track = group.getLevel().getDefaultTrack();
+            trackLookup = Optional.ofNullable(group.getLevel().getDefaultTrack());
         }
-        if (track == null) {
+        if (!trackLookup.isPresent()) {
             throw new CommandException("There isn't a track named '" + trackName + "'!");
         }
 
-        Role role = group.getRole(player.getUniqueId());
-        Role next = track.getNextRole(role);
-        if (next == null) {
+        RoleTrack track = trackLookup.get();
+        Role role = group.getRole(player.getUniqueId()).get();
+        Optional<Role> next = track.getNextRole(role);
+        if (!next.isPresent()) {
             throw new CommandException("There is no role to promote to!");
         }
 
         if (!hasAdmin(sender)) {
             // cast is safe as a console sender is filtered out by the hasPlotsAdmin check
-            Role myRole = group.getRole(((Player) sender).getUniqueId());
-            if (myRole.getRank() - next.getRank() <= 1) {
+            Role myRole = group.getRole(((Player) sender).getUniqueId()).get();
+            if (myRole.getRank() - next.get().getRank() <= 1) {
                 throw new CommandException("You can't promote someone to a role equal to or higher than your own!");
             }
         }
 
-        GroupMemberRoleChangeEvent roleChangeEvent = PoliticsEventFactory.callGroupMemberRoleChangeEvent(group, player, role, next, sender);
+        GroupMemberRoleChangeEvent roleChangeEvent = PoliticsEventFactory.callGroupMemberRoleChangeEvent(group, player, role, next.get(), sender);
         if (roleChangeEvent.isCancelled()) {
             throw new CommandException("You can't promote that player,");
         }
 
-        group.setRole(player.getUniqueId(), next);
-        MessageBuilder.begin().highlight(player.getName()).normal(" was promoted to ").highlight(next.getName())
+        group.setRole(player.getUniqueId(), next.get());
+        MessageBuilder.begin().highlight(player.getName()).normal(" was promoted to ").highlight(next.map(Role::getName).get())
                 .normal(" in the ").append(level.getName()).append("!").send(sender);
     }
 

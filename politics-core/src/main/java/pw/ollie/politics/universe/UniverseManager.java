@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 
@@ -98,24 +99,20 @@ public final class UniverseManager {
         return new ArrayList<>(rules.values());
     }
 
-    public Universe getUniverse(String name) {
-        return universes.get(name.toLowerCase());
+    public Optional<Universe> getUniverse(String name) {
+        return Optional.ofNullable(universes.get(name.toLowerCase()));
     }
 
-    public Universe getUniverse(World world, GroupLevel level) {
-        PoliticsWorld cw = plugin.getWorldManager().getWorld(world);
-        if (cw == null) {
-            return null;
-        }
-        return getUniverse(cw, level);
+    public Optional<Universe> getUniverse(World world, GroupLevel level) {
+        return getUniverse(plugin.getWorldManager().getWorld(world), level);
     }
 
-    public Universe getUniverse(PoliticsWorld world, GroupLevel level) {
+    public Optional<Universe> getUniverse(PoliticsWorld world, GroupLevel level) {
         Map<GroupLevel, Universe> levelUniverses = worldLevels.get(world);
         if (levelUniverses == null) {
-            return null;
+            return Optional.empty();
         }
-        return levelUniverses.get(level);
+        return Optional.ofNullable(levelUniverses.get(level));
     }
 
     public int getNumUniverses() {
@@ -147,18 +144,17 @@ public final class UniverseManager {
         PoliticsEventFactory.callUniverseDestroyEvent(universe);
     }
 
+    // nullable
     public UniverseRules getRules(String rulesName) {
         return rules.get(rulesName);
     }
 
-    public Group getGroupById(int id) {
-        return groups.get(id);
+    public Optional<Group> getGroupById(int id) {
+        return Optional.ofNullable(groups.get(id));
     }
 
-    public Group getGroupByTag(String tag) {
-        return groups.valueCollection().stream()
-                .filter(g -> g.getTag().equalsIgnoreCase(tag))
-                .findAny().orElse(null);
+    public Optional<Group> getGroupByTag(String tag) {
+        return groups.valueCollection().stream().filter(g -> g.getTag().equalsIgnoreCase(tag)).findAny();
     }
 
     public PoliticsPlugin getPlugin() {
@@ -303,7 +299,7 @@ public final class UniverseManager {
     }
 
     int nextId() {
-        while (getGroupById(nextId) != null) {
+        while (getGroupById(nextId).isPresent()) {
             nextId++;
         }
         return nextId;

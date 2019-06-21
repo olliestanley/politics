@@ -34,6 +34,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 
@@ -60,8 +61,8 @@ public final class UniverseRules {
         return groupLevels.values().stream();
     }
 
-    public GroupLevel getGroupLevel(String name) {
-        return groupLevels.get(name.toLowerCase());
+    public Optional<GroupLevel> getGroupLevel(String name) {
+        return Optional.ofNullable(groupLevels.get(name.toLowerCase()));
     }
 
     public boolean hasGroupLevel(GroupLevel level) {

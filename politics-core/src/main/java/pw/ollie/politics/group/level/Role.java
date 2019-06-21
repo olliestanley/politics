@@ -22,12 +22,12 @@ package pw.ollie.politics.group.level;
 import pw.ollie.politics.Politics;
 import pw.ollie.politics.group.privilege.Privilege;
 import pw.ollie.politics.util.StringUtil;
+import pw.ollie.politics.util.stream.CollectorUtil;
 
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -71,7 +71,7 @@ public final class Role implements Comparable<Role> {
     public static Role load(String id, ConfigurationSection node) {
         return new Role(id, node.getString("name", StringUtil.capitaliseFirst(id)),
                 node.getStringList("privileges").stream().map(Politics.getPrivilegeManager()::getPrivilege)
-                        .filter(Objects::nonNull).collect(Collectors.toSet()),
+                        .filter(Objects::nonNull).collect(CollectorUtil.toTHashSet()),
                 node.getInt("rank", 1));
     }
 

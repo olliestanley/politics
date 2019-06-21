@@ -34,6 +34,8 @@ import pw.ollie.politics.util.message.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 public class GroupDemoteCommand extends GroupSubcommand {
     GroupDemoteCommand(GroupLevel groupLevel) {
         super("demote", groupLevel);
@@ -63,38 +65,39 @@ public class GroupDemoteCommand extends GroupSubcommand {
             throw new CommandException("That player is not a member of the group!");
         }
 
-        RoleTrack track;
+        Optional<RoleTrack> trackLookup;
         String trackName = null;
         if (args.hasValueFlag("t")) {
             trackName = args.getValueFlag("t").getStringValue();
-            track = group.getLevel().getTrack(args.getValueFlag("t").getStringValue().toLowerCase());
+            trackLookup = group.getLevel().getTrack(args.getValueFlag("t").getStringValue().toLowerCase());
         } else {
-            track = group.getLevel().getDefaultTrack();
+            trackLookup = Optional.of(group.getLevel().getDefaultTrack());
         }
-        if (track == null) {
+        if (!trackLookup.isPresent()) {
             throw new CommandException("There isn't a track named '" + trackName + "'!");
         }
 
-        Role role = group.getRole(player.getUniqueId());
-        Role next = track.getPreviousRole(role);
-        if (next == null) {
+        Role role = group.getRole(player.getUniqueId()).get();
+
+        Optional<Role> next = trackLookup.get().getPreviousRole(role);
+        if (!next.isPresent()) {
             throw new CommandException("There is no role to demote to!");
         }
 
         if (!hasAdmin(sender)) {
-            Role myRole = group.getRole(((Player) sender).getUniqueId());
+            Role myRole = group.getRole(((Player) sender).getUniqueId()).get();
             if (myRole.getRank() - role.getRank() <= 0) {
                 throw new CommandException("You can't demote someone with a rank higher than yours!");
             }
         }
 
-        GroupMemberRoleChangeEvent roleChangeEvent = PoliticsEventFactory.callGroupMemberRoleChangeEvent(group, player, role, next, sender);
+        GroupMemberRoleChangeEvent roleChangeEvent = PoliticsEventFactory.callGroupMemberRoleChangeEvent(group, player, role, next.get(), sender);
         if (roleChangeEvent.isCancelled()) {
             throw new CommandException("You can't demote that player,");
         }
 
-        group.setRole(player.getUniqueId(), next);
-        MessageBuilder.begin().highlight(player.getName()).normal(" was demoted to ").highlight(next.getName())
+        group.setRole(player.getUniqueId(), next.get());
+        MessageBuilder.begin().highlight(player.getName()).normal(" was demoted to ").highlight(next.map(Role::getName).get())
                 .normal(" in the ").append(level.getName()).append("!").send(sender);
     }
 

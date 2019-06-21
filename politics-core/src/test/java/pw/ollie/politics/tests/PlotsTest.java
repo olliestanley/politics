@@ -57,7 +57,7 @@ public final class PlotsTest extends AbstractPoliticsTest {
         PoliticsEventCounter eventCounter = this.registerEventCounter();
         Universe universe = this.createDefaultUniverse();
         Player founder = server.getPlayer(0);
-        GroupLevel householdLevel = groupManager.getGroupLevel("household");
+        GroupLevel householdLevel = groupManager.getGroupLevel("household").get();
         Group household = universe.createGroup(householdLevel);
         household.setRole(founder.getUniqueId(), householdLevel.getFounder());
         World world = server.getWorld(TEST_WORLD_NAME);

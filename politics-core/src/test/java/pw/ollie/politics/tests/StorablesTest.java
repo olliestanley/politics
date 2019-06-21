@@ -85,9 +85,9 @@ public final class StorablesTest extends AbstractPoliticsTest {
         PoliticsWorld restoredWorld = PoliticsTestReflection.instantiateDefaultWorld(worldBson);
         Assert.assertEquals(TEST_WORLD_NAME, restoredWorld.getName());
         Plot restoredPlot = restoredWorld.getPlotAtChunkPosition(testPlotX, testPlotY);
-        Assert.assertEquals(ownerGroupId, restoredPlot.getOwnerId());
+        Assert.assertEquals(ownerGroupId, restoredPlot.getOwnerId().orElse(-1));
         Assert.assertEquals(1, restoredPlot.getNumSubplots());
-        Subplot subplot = restoredPlot.getSubplot(0);
+        Subplot subplot = restoredPlot.getSubplot(0).orElse(null);
         Assert.assertNotNull(subplot);
         Assert.assertEquals(memberId, subplot.getOwnerId());
     }

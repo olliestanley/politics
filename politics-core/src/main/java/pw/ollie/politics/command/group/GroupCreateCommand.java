@@ -84,7 +84,7 @@ public class GroupCreateCommand extends GroupSubcommand {
 
         String name = nameBuilder.toString().trim();
         String tag = name.toLowerCase().replace(" ", "-");
-        if (plugin.getGroupManager().getGroupByTag(tag) != null) {
+        if (plugin.getGroupManager().getGroupByTag(tag).isPresent()) {
             throw new CommandException("A " + level.getName() + " with the same name already exists.");
         }
 

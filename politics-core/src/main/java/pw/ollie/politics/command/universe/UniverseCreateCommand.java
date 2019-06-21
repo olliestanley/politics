@@ -55,7 +55,7 @@ public class UniverseCreateCommand extends PoliticsSubcommand {
             throw new CommandException("Slashes are not allowed in universe names.");
         }
 
-        Universe existing = plugin.getUniverseManager().getUniverse(name);
+        Universe existing = plugin.getUniverseManager().getUniverse(name).orElse(null);
         if (existing != null) {
             throw new CommandException("A universe named '" + name
                     + "' already exists. Please destroy it via 'universe destroy' if you wish to overwrite it.");

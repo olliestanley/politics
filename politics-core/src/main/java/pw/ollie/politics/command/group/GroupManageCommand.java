@@ -36,6 +36,7 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class GroupManageCommand extends GroupSubcommand {
     private final Map<String, GroupManageSubCommand> subcommands;
@@ -106,13 +107,14 @@ public class GroupManageCommand extends GroupSubcommand {
             }
 
             String invitedGroupTag = args.getString(0, false);
-            Group invited = plugin.getGroupManager().getGroupByTag(invitedGroupTag);
-            if (invited == null) {
+            Optional<Group> lookup = plugin.getGroupManager().getGroupByTag(invitedGroupTag);
+            if (!lookup.isPresent()) {
                 throw new CommandException("No " + level.getName() + " with that tag exists.");
             }
 
+            Group invited = lookup.get();
             Player player = (Player) sender;
-            Universe universe = plugin.getUniverseManager().getUniverse(player.getWorld(), level);
+            Universe universe = plugin.getUniverseManager().getUniverse(player.getWorld(), level).orElse(null);
             if (universe == null || !universe.hasGroup(invited)) {
                 throw new CommandException(invited.getName() + " does not exist in the same universe as " + level.getPlural() + ".");
             }
@@ -147,11 +149,12 @@ public class GroupManageCommand extends GroupSubcommand {
             }
 
             String parentTag = args.getString(0, false);
-            Group parent = plugin.getGroupManager().getGroupByTag(parentTag);
-            if (parent == null) {
+            Optional<Group> lookup = plugin.getGroupManager().getGroupByTag(parentTag);
+            if (!lookup.isPresent()) {
                 throw new CommandException("No " + level.getName() + " with that tag exists.");
             }
 
+            Group parent = lookup.get();
             if (parent.isInvitedChild(group)) {
                 throw new CommandException(parent.getName() + " has not invited " + group.getName() + " to be a sub-organisation.");
             }
@@ -181,11 +184,12 @@ public class GroupManageCommand extends GroupSubcommand {
             }
 
             String otherTag = args.getString(0, false);
-            Group other = plugin.getGroupManager().getGroupByTag(otherTag);
-            if (other == null) {
+            Optional<Group> lookup = plugin.getGroupManager().getGroupByTag(otherTag);
+            if (!lookup.isPresent()) {
                 throw new CommandException("No " + level.getName() + " with that tag exists.");
             }
 
+            Group other = lookup.get();
             if (group.equals(other.getParent().orElse(null))) {
                 if (group.removeChild(other, sender)) {
                     MessageBuilder.begin().highlight(group.getName() + " is no longer the parent organisation of ")

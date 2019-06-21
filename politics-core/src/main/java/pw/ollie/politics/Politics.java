@@ -37,6 +37,7 @@ import pw.ollie.politics.world.WorldManager;
 import org.bukkit.Server;
 import org.bukkit.World;
 
+import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
@@ -222,7 +223,7 @@ public final class Politics {
      * @param id the id of the Group
      * @return the relevant Group for the given id
      */
-    public static Group getGroupById(int id) {
+    public static Optional<Group> getGroupById(int id) {
         return Politics.getUniverseManager().getGroupById(id);
     }
 

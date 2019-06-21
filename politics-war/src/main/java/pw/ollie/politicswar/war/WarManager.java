@@ -114,8 +114,8 @@ public final class WarManager {
         if (!aggressor.getLevel().canWar()) {
             return false;
         }
-        if (aggressor.getBooleanProperty(GroupProperty.PEACEFUL)
-                || defender.getBooleanProperty(GroupProperty.PEACEFUL)) {
+        if (aggressor.getBooleanProperty(GroupProperty.PEACEFUL, false)
+                || defender.getBooleanProperty(GroupProperty.PEACEFUL, false)) {
             return false;
         }
 

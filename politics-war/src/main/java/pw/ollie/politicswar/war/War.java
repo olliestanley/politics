@@ -73,7 +73,7 @@ public final class War implements Storable {
     }
 
     public Group getAggressor() {
-        return Politics.getGroupById(aggressor);
+        return Politics.getGroupById(aggressor).orElse(null);
     }
 
     public int getAggressorId() {
@@ -81,7 +81,7 @@ public final class War implements Storable {
     }
 
     public Group getDefender() {
-        return Politics.getGroupById(defender);
+        return Politics.getGroupById(defender).orElse(null);
     }
 
     public int getDefenderId() {

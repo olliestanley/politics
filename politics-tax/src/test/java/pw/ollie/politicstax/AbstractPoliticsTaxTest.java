@@ -67,7 +67,7 @@ public abstract class AbstractPoliticsTaxTest {
 
     // creates a universe named Default, in a MockWorld called world, with the default testing UniverseRules
     protected Universe createDefaultUniverse() {
-        Universe existing = universeManager.getUniverse("Default");
+        Universe existing = universeManager.getUniverse("Default").orElse(null);
         if (existing != null) {
             return existing;
         }
@@ -84,7 +84,7 @@ public abstract class AbstractPoliticsTaxTest {
 
     protected Group createTestHousehold(String hName) {
         Universe universe = createDefaultUniverse();
-        GroupLevel householdLevel = groupManager.getGroupLevel("household");
+        GroupLevel householdLevel = groupManager.getGroupLevel("household").get();
         Group household = universe.createGroup(householdLevel);
         String hTag = hName.toLowerCase().replace(" ", "-");
         household.setProperty(GroupProperty.NAME, hName);
@@ -98,7 +98,7 @@ public abstract class AbstractPoliticsTaxTest {
 
     protected Group createTestTown(String tName) {
         Universe universe = createDefaultUniverse();
-        GroupLevel townLevel = groupManager.getGroupLevel("town");
+        GroupLevel townLevel = groupManager.getGroupLevel("town").get();
         Group town = universe.createGroup(townLevel);
         String tTag = tName.toLowerCase().replace(" ", "-");
         town.setProperty(GroupProperty.NAME, tName);

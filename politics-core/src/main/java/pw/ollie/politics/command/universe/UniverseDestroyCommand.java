@@ -45,7 +45,7 @@ public class UniverseDestroyCommand extends PoliticsSubcommand {
             throw new CommandException("Please specify the name of the universe to destroy.");
         }
 
-        Universe universe = plugin.getUniverseManager().getUniverse(args.getString(0, false));
+        Universe universe = plugin.getUniverseManager().getUniverse(args.getString(0, false)).orElse(null);
         if (universe == null) {
             throw new CommandException("A universe with the name '" + args.getString(0, false) + "' doesn't exist.");
         }

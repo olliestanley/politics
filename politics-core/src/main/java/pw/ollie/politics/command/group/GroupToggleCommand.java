@@ -60,7 +60,7 @@ public class GroupToggleCommand extends GroupSubcommand {
             throw new CommandException("That setting cannot be toggled now!");
         }
 
-        boolean newVal = !group.getBooleanProperty(propertyId);
+        boolean newVal = !group.getBooleanProperty(propertyId, false);
         group.setProperty(propertyId, newVal);
         MessageBuilder.begin("State of ").highlight(toggleName).normal(" switched to: ")
                 .highlight(Boolean.toString(newVal)).normal(".").send(sender);

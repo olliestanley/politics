@@ -38,6 +38,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -119,20 +120,20 @@ public final class GroupLevel {
         return plural;
     }
 
-    public boolean canBeChild(final GroupLevel level) {
+    public boolean canBeChild(GroupLevel level) {
         return allowedChildren.contains(level);
     }
 
-    public Role getRole(String roleId) {
-        return roles.get(roleId.toLowerCase());
+    public Optional<Role> getRole(String roleId) {
+        return Optional.ofNullable(roles.get(roleId.toLowerCase()));
     }
 
-    public RoleTrack getTrack(String id) {
-        return tracks.get(id.toLowerCase());
+    public Optional<RoleTrack> getTrack(String id) {
+        return Optional.ofNullable(tracks.get(id.toLowerCase()));
     }
 
     public RoleTrack getDefaultTrack() {
-        return getTrack(DEFAULT_TRACK);
+        return getTrack(DEFAULT_TRACK).orElse(null);
     }
 
     public Role getInitial() {

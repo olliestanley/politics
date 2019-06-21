@@ -32,6 +32,7 @@ import pw.ollie.politics.util.message.MessageBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class GroupJoinCommand extends GroupSubcommand {
@@ -52,11 +53,12 @@ public class GroupJoinCommand extends GroupSubcommand {
             throw new CommandException("There was no " + level.getName() + " specified to join.");
         }
 
-        Group group = plugin.getGroupManager().getGroupByTag(args.getString(0, false));
-        if (group == null) {
+        Optional<Group> groupLookup = plugin.getGroupManager().getGroupByTag(args.getString(0, false));
+        if (!groupLookup.isPresent()) {
             throw new CommandException("That " + level.getName() + " does not exist.");
         }
 
+        Group group = groupLookup.get();
         // safe cast as isPlayerOnly() returns true
         Player player = (Player) sender;
         if (!level.allowedMultiple() && plugin.getGroupManager().hasGroupOfLevel(player, level)) {

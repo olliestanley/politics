@@ -26,10 +26,9 @@ import pw.ollie.politics.universe.Universe;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
-import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -61,16 +60,16 @@ public final class GroupManager {
         return plugin.getUniverseManager().streamGroupLevels();
     }
 
-    public Group getGroupById(int id) {
+    public Optional<Group> getGroupById(int id) {
         return plugin.getUniverseManager().getGroupById(id);
     }
 
-    public Group getGroupByTag(String tag) {
+    public Optional<Group> getGroupByTag(String tag) {
         return plugin.getUniverseManager().getGroupByTag(tag);
     }
 
-    public GroupLevel getGroupLevel(String name) {
-        return streamGroupLevels().filter(l -> l.getName().equalsIgnoreCase(name)).findAny().orElse(null);
+    public Optional<GroupLevel> getGroupLevel(String name) {
+        return streamGroupLevels().filter(l -> l.getName().equalsIgnoreCase(name)).findAny();
     }
 
     public boolean hasGroupOfLevel(Player player, GroupLevel level) {

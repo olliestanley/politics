@@ -55,7 +55,7 @@ public abstract class PoliticsEconomy {
      * @return the balance of the group
      */
     public double getBalance(Group group) {
-        return group.getDoubleProperty(GroupProperty.BALANCE);
+        return group.getDoubleProperty(GroupProperty.BALANCE, 0);
     }
 
     /**

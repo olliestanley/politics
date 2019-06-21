@@ -19,10 +19,13 @@
  */
 package pw.ollie.politics.util.stream;
 
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.util.collect.PagedArrayList;
 
+import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
 
 import java.util.stream.Collector;
@@ -44,6 +47,22 @@ public final class CollectorUtil {
 
     public static <T> Collector<? super T, ?, BasicBSONList> toBSONList() {
         return Collectors.toCollection(BasicBSONList::new);
+    }
+
+    public static <V> BiCollector<BasicBSONObject, String, V> toBSONObject() {
+        return stream -> {
+            BasicBSONObject result = new BasicBSONObject();
+            stream.forEach(result::put);
+            return result;
+        };
+    }
+
+    public static <V> BiCollector<TIntObjectMap<V>, Integer, V> toTIntObjectMap() {
+        return stream -> {
+            TIntObjectMap<V> result = new TIntObjectHashMap<>();
+            stream.forEach(result::put);
+            return result;
+        };
     }
 
     private CollectorUtil() {

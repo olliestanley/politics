@@ -40,6 +40,8 @@ import pw.ollie.politics.universe.Universe;
 import pw.ollie.politics.universe.UniverseRules;
 import pw.ollie.politics.util.serial.PropertyDeserializationException;
 import pw.ollie.politics.util.serial.PropertySerializer;
+import pw.ollie.politics.util.stream.CollectorUtil;
+import pw.ollie.politics.util.stream.StreamUtil;
 import pw.ollie.politics.world.plot.Plot;
 
 import com.google.mu.util.stream.BiStream;
@@ -55,6 +57,8 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -107,8 +111,7 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     public Stream<Privilege> streamPrivileges(UUID playerId) {
-        Role role = getRole(playerId);
-        return role == null ? Stream.empty() : role.streamPrivileges();
+        return getRole(playerId).map(Role::streamPrivileges).orElseGet(Stream::empty);
     }
 
     public Universe getUniverse() {
@@ -207,8 +210,8 @@ public final class Group implements Comparable<Group>, Storable {
         return isInvited(player.getUniqueId());
     }
 
-    public Role getRole(UUID player) {
-        return players.get(player);
+    public Optional<Role> getRole(UUID player) {
+        return Optional.ofNullable(players.get(player));
     }
 
     public void setRole(UUID player, Role role) {
@@ -225,70 +228,85 @@ public final class Group implements Comparable<Group>, Storable {
 
     public boolean can(CommandSender source, Privilege privilege) {
         if (source instanceof Player) {
-            Role role = getRole(((Player) source).getUniqueId());
-            return role != null && role.can(privilege);
+            return getRole(((Player) source).getUniqueId()).map(role -> role.can(privilege)).orElse(false);
         }
         return true;
     }
 
-    public Object getProperty(int property) {
-        return properties.get(property);
+    public Optional<Object> getProperty(int property) {
+        return Optional.ofNullable(properties.get(property));
     }
 
     public String getName() {
-        return getStringProperty(GroupProperty.NAME);
+        return getStringProperty(GroupProperty.NAME).get();
     }
 
     public String getTag() {
-        return getStringProperty(GroupProperty.TAG);
+        return getStringProperty(GroupProperty.TAG).get();
     }
 
     public boolean hasProperty(int property) {
         return properties.containsKey(property);
     }
 
-    public String getStringProperty(int property) {
-        return getStringProperty(property, null);
+    public Optional<String> getStringProperty(int property) {
+        Optional<Object> p = getProperty(property);
+        if (p.isPresent()) {
+            return p.map(String.class::cast);
+        }
+        return Optional.empty();
     }
 
     public String getStringProperty(int property, String def) {
-        Object p = getProperty(property);
-        if (p != null) {
-            return p.toString();
+        Optional<Object> p = getProperty(property);
+        if (p.isPresent()) {
+            return p.get().toString();
         }
         return def;
     }
 
-    public int getIntProperty(int property) {
-        return getIntProperty(property, -1);
+    public OptionalInt getIntProperty(int property) {
+        Object obj = getProperty(property).orElse(null);
+        if (obj instanceof Number) {
+            return OptionalInt.of(((Number) obj).intValue());
+        }
+        return OptionalInt.empty();
     }
 
     public int getIntProperty(int property, int def) {
-        Object p = getProperty(property);
-        if (p instanceof Number) {
-            return ((Number) p).intValue();
+        Object obj = getProperty(property).orElse(null);
+        if (obj instanceof Number) {
+            return ((Number) obj).intValue();
         }
         return def;
     }
 
-    public double getDoubleProperty(int property) {
-        return getDoubleProperty(property, 0.0);
+    public OptionalDouble getDoubleProperty(int property) {
+        Object obj = getProperty(property).orElse(null);
+        if (obj instanceof Number) {
+            return OptionalDouble.of(((Number) obj).doubleValue());
+        }
+        return OptionalDouble.empty();
     }
 
     public double getDoubleProperty(int property, double def) {
-        Object p = getProperty(property);
+        Object p = getProperty(property).orElse(null);
         if (p instanceof Number) {
             return ((Number) p).doubleValue();
         }
         return def;
     }
 
-    public boolean getBooleanProperty(int property) {
-        return getBooleanProperty(property, false);
+    public Optional<Boolean> getBooleanProperty(int property) {
+        Optional<Object> obj = getProperty(property);
+        if (obj.isPresent() && obj.get() instanceof Boolean) {
+            return Optional.of((Boolean) obj.get());
+        }
+        return Optional.empty();
     }
 
     public boolean getBooleanProperty(int property, boolean def) {
-        Object p = getProperty(property);
+        Object p = getProperty(property).orElse(null);
         if (p instanceof Boolean) {
             return (Boolean) p;
         }
@@ -300,13 +318,13 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     public Location getLocationProperty(int property, Location def) {
-        String s = getStringProperty(property);
-        if (s == null) {
+        Optional<String> s = getStringProperty(property);
+        if (!s.isPresent()) {
             return def;
         }
 
         try {
-            return PropertySerializer.deserializeLocation(s);
+            return PropertySerializer.deserializeLocation(s.get());
         } catch (PropertyDeserializationException ex) {
             Politics.getLogger().log(Level.WARNING, "Property '" + Integer.toHexString(property) + "' is not a Location!", ex);
             return def;
@@ -318,6 +336,10 @@ public final class Group implements Comparable<Group>, Storable {
     }
 
     public void setProperty(int property, Object value) {
+        if (GroupProperty.isKeyProperty(property) && value == null) {
+            return; // exception??
+        }
+
         GroupPropertySetEvent event = PoliticsEventFactory.callGroupPropertySetEvent(this, property, value);
         properties.put(property, event.getValue());
     }
@@ -340,12 +362,10 @@ public final class Group implements Comparable<Group>, Storable {
             pit.advance();
             propertiesBson.put(Integer.toHexString(pit.key()), pit.value());
         }
+
         object.put("properties", propertiesBson);
-
-        BasicBSONObject playersBson = new BasicBSONObject();
-        BiStream.from(players).mapKeys(UUID::toString).mapValues(Role::getId).forEach(playersBson::put);
-        object.put("players", playersBson);
-
+        object.put("players", StreamUtil.collect(BiStream.from(players).mapKeys(UUID::toString).mapValues(Role::getId),
+                CollectorUtil.toBSONObject()));
         return object;
     }
 
@@ -359,20 +379,21 @@ public final class Group implements Comparable<Group>, Storable {
         int uid = bobject.getInt("uid");
 
         String levelName = bobject.getString("level");
-        GroupLevel level = rules.getGroupLevel(levelName);
-        if (level == null) {
+        Optional<GroupLevel> levelLookup = rules.getGroupLevel(levelName);
+        if (!levelLookup.isPresent()) {
             throw new IllegalStateException("Unknown level type '" + levelName + "'! (Did the universe rules change?)");
         }
 
+        GroupLevel level = levelLookup.get();
         // Properties
         Object propertiesObj = bobject.get("properties");
         if (!(propertiesObj instanceof BasicBSONObject)) {
             throw new IllegalStateException("WTF you screwed up the properties! CORRUPT!");
         }
 
-        BasicBSONObject propertiesBson = (BasicBSONObject) propertiesObj;
-        TIntObjectMap<Object> properties = new TIntObjectHashMap<>();
-        BiStream.from(propertiesBson).forEach((key, val) -> properties.put(Integer.valueOf(key, 16), val));
+        TIntObjectMap<Object> properties = StreamUtil.collect(BiStream.from((BasicBSONObject) propertiesObj)
+                        .mapKeys(key -> Integer.valueOf(key, 16)),
+                CollectorUtil.toTIntObjectMap());
 
         // Players
         Object playersObj = bobject.get("players");
@@ -380,10 +401,9 @@ public final class Group implements Comparable<Group>, Storable {
             throw new IllegalStateException("Stupid server admin... don't mess with the data!");
         }
 
-        Map<UUID, Role> players = new THashMap<>(BiStream.from((BasicBSONObject) playersObj).mapKeys(UUID::fromString)
-                .mapValues(Object::toString).mapValues(level::getRole).toMap());
-
-        return new Group(uid, level, properties, players);
+        return new Group(uid, level, properties, new THashMap<>(BiStream.from((BasicBSONObject) playersObj)
+                .mapKeys(UUID::fromString).mapValues(Object::toString).mapValues(level::getRole).mapValues(Optional::get)
+                .toMap()));
     }
 
     @Override

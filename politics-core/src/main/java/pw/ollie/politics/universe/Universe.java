@@ -45,6 +45,8 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -127,7 +129,7 @@ public final class Universe implements Storable {
      * @return all Groups in this Universe with the given value for the given property
      */
     public Stream<Group> streamGroupsByProperty(int property, Object value) {
-        return groups.stream().filter(group -> group.getProperty(property).equals(value));
+        return groups.stream().filter(group -> Objects.equals(group.getProperty(property).orElse(null), value));
     }
 
     /**
@@ -181,8 +183,8 @@ public final class Universe implements Storable {
      * @param value    the requisite value of the property
      * @return the first Group in this Universe with the given value for the given property
      */
-    public Group getFirstGroupByProperty(int property, Object value) {
-        return streamGroupsByProperty(property, value).findFirst().orElse(null);
+    public Optional<Group> getFirstGroupByProperty(int property, Object value) {
+        return streamGroupsByProperty(property, value).findFirst();
     }
 
     /**
@@ -194,9 +196,10 @@ public final class Universe implements Storable {
      * @param value    the requisite value of the property
      * @return the first Group of the given GroupLevel in this Universe with the given value for the given property
      */
-    public Group getFirstGroupByProperty(GroupLevel level, int property, Object value) {
-        return groups.stream().filter(level::contains).filter(group -> group.getProperty(property).equals(value))
-                .findFirst().orElse(null);
+    public Optional<Group> getFirstGroupByProperty(GroupLevel level, int property, Object value) {
+        return groups.stream().filter(level::contains)
+                .filter(group -> Objects.equals(group.getProperty(property).orElse(null), value))
+                .findFirst();
     }
 
     public boolean addChildGroup(Group group, Group child) {

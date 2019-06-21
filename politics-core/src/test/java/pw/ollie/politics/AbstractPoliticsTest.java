@@ -36,6 +36,7 @@ import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldManager;
 
 import java.util.Collections;
+import java.util.Optional;
 
 public abstract class AbstractPoliticsTest {
     public static final String TEST_WORLD_NAME = "world";
@@ -66,9 +67,9 @@ public abstract class AbstractPoliticsTest {
 
     // creates a universe named Default, in a MockWorld called world, with the default testing UniverseRules
     protected Universe createDefaultUniverse() {
-        Universe existing = universeManager.getUniverse("Default");
-        if (existing != null) {
-            return existing;
+        Optional<Universe> existingLookup = universeManager.getUniverse("Default");
+        if (existingLookup.isPresent()) {
+            return existingLookup.get();
         }
         // creates mock world with name 'World'
         WorldMock world = server.addSimpleWorld(TEST_WORLD_NAME);
@@ -83,7 +84,7 @@ public abstract class AbstractPoliticsTest {
 
     protected Group createTestHousehold(String hName) {
         Universe universe = createDefaultUniverse();
-        GroupLevel householdLevel = groupManager.getGroupLevel("household");
+        GroupLevel householdLevel = groupManager.getGroupLevel("household").get();
         Group household = universe.createGroup(householdLevel);
         String hTag = hName.toLowerCase().replace(" ", "-");
         household.setProperty(GroupProperty.NAME, hName);
@@ -97,7 +98,7 @@ public abstract class AbstractPoliticsTest {
 
     protected Group createTestTown(String tName) {
         Universe universe = createDefaultUniverse();
-        GroupLevel townLevel = groupManager.getGroupLevel("town");
+        GroupLevel townLevel = groupManager.getGroupLevel("town").get();
         Group town = universe.createGroup(townLevel);
         String tTag = tName.toLowerCase().replace(" ", "-");
         town.setProperty(GroupProperty.NAME, tName);

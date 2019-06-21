@@ -40,6 +40,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -150,7 +151,7 @@ public abstract class PoliticsSubcommand {
     }
 
     protected Universe getUniverse(GroupLevel level, Player player) {
-        return Politics.getUniverseManager().getUniverse(player.getWorld(), level);
+        return Politics.getUniverseManager().getUniverse(player.getWorld(), level).orElse(null);
     }
 
     /**
@@ -167,7 +168,7 @@ public abstract class PoliticsSubcommand {
         Universe universe;
         if (context.hasValueFlag("u")) {
             String universeName = context.getValueFlag("u").getStringValue();
-            universe = Politics.getUniverseManager().getUniverse(universeName);
+            universe = Politics.getUniverseManager().getUniverse(universeName).orElse(null);
             if (universe == null) {
                 throw new CommandException("There is no universe named '" + universeName + "'");
             }
@@ -201,11 +202,11 @@ public abstract class PoliticsSubcommand {
         Group group;
         if (context.hasValueFlag("g")) {
             String groupName = context.getValueFlag("g").getStringValue();
-            group = universe.getFirstGroupByProperty(level, GroupProperty.TAG, groupName.toLowerCase());
-            if (group == null) {
+            Optional<Group> groupLookup = universe.getFirstGroupByProperty(level, GroupProperty.TAG, groupName.toLowerCase());
+            if (!groupLookup.isPresent()) {
                 throw new CommandException("There is no " + level.getName() + " by that tag.");
             }
-            return group;
+            return groupLookup.get();
         }
 
         if (sender instanceof Player) {
@@ -321,12 +322,11 @@ public abstract class PoliticsSubcommand {
                     throw new CommandException("There are no subplots in that world.");
                 }
 
-                Subplot subplot = Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
-                if (subplot == null) {
+                Optional<Subplot> subplot = Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
+                if (!subplot.isPresent()) {
                     throw new CommandException("You are not situated inside a subplot and did not specify one.");
                 }
-
-                return subplot;
+                return subplot.get();
             }
 
             Plot plot = findPlot(sender, args);
@@ -337,12 +337,12 @@ public abstract class PoliticsSubcommand {
                 throw new CommandException(spArg + " is not a valid subplot id.");
             }
 
-            Subplot subplot = plot.getSubplot(subplotId);
-            if (subplot == null) {
+            Optional<Subplot> subplot = plot.getSubplot(subplotId);
+            if (!subplot.isPresent()) {
                 throw new CommandException(spArg + " is not a valid subplot id.");
             }
 
-            return subplot;
+            return subplot.get();
         } else {
             if (!(sender instanceof Player)) {
                 throw new CommandException("Please specify subplot coordinates in the format <-sp world,x,y,z>");
@@ -354,12 +354,11 @@ public abstract class PoliticsSubcommand {
                 throw new CommandException("There are no subplots in that world.");
             }
 
-            Subplot subplot = Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
-            if (subplot == null) {
+            Optional<Subplot> subplot = Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
+            if (!subplot.isPresent()) {
                 throw new CommandException("You are not situated inside a subplot and did not specify one.");
             }
-
-            return subplot;
+            return subplot.get();
         }
     }
 }

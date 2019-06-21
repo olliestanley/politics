@@ -33,6 +33,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 public abstract class SubplotSubcommand extends PoliticsSubcommand {
     protected SubplotSubcommand(String name) {
         super(name);
@@ -45,7 +47,11 @@ public abstract class SubplotSubcommand extends PoliticsSubcommand {
             }
 
             Location location = ((Player) sender).getLocation();
-            return Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
+            Optional<Subplot> subplot = Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
+            if (!subplot.isPresent()) {
+                throw new CommandException("There is no subplot here.");
+            }
+            return subplot.get();
         }
 
         if (!relevantArg.contains(",")) {
@@ -56,11 +62,11 @@ public abstract class SubplotSubcommand extends PoliticsSubcommand {
                 throw new CommandException("The specified subplot id is not valid.");
             }
 
-            Subplot result = findPlot(sender, context).getSubplot(subplotId);
-            if (result == null) {
+            Optional<Subplot> subplot = findPlot(sender, context).getSubplot(subplotId);
+            if (!subplot.isPresent()) {
                 throw new CommandException("There is no subplot with that id in the specified plot.");
             }
-            return result;
+            return subplot.get();
         }
 
         String[] split = relevantArg.split(",");
@@ -98,11 +104,11 @@ public abstract class SubplotSubcommand extends PoliticsSubcommand {
         }
 
         Location location = new Location(world, x, y, z);
-        Subplot result = Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
-        if (result == null) {
+        Optional<Subplot> result = Politics.getWorldManager().getPlotAt(location).getSubplotAt(location);
+        if (!result.isPresent()) {
             throw new CommandException("There is no subplot at that location.");
         }
-        return result;
+        return result.get();
     }
 
     public boolean hasPlotsAdmin(CommandSender source) {

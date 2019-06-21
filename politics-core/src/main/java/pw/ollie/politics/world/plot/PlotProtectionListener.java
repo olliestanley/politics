@@ -106,7 +106,7 @@ public final class PlotProtectionListener implements Listener {
             ProtectionCheck<Subplot> subplotCheck = checkSubplotPrivileges(player, location, privilege);
             if (!subplotCheck.getResult()) {
                 SubplotProtectionTriggerEvent triggerEvent = PoliticsEventFactory.callSubplotProtectionTriggerEvent(
-                        subplotCheck.getChecked().getParent(), subplotCheck.getChecked(), block, source, type, (Event) event);
+                        subplotCheck.getChecked().getParent(), subplotCheck.getChecked(), block, source, type, event);
                 if (!triggerEvent.isCancelled()) {
                     event.setCancelled(true);
                     MessageUtil.error(player, "You can't do that in this subplot.");
@@ -143,7 +143,7 @@ public final class PlotProtectionListener implements Listener {
             // a block in an owned plot is being moved by a piston in a plot which either does not have an owner or
             // is owned by a different group to the owner of the plot the moved block is within - get rid
             PlotProtectionTriggerEvent protectEvent = PoliticsEventFactory.callPlotProtectionTriggerEvent(
-                    blockPlot, target, new PlotDamageSource(sourceBlock), type, (Event) event);
+                    blockPlot, target, new PlotDamageSource(sourceBlock), type, event);
             if (!protectEvent.isCancelled()) {
                 event.setCancelled(true);
                 return;
@@ -156,7 +156,7 @@ public final class PlotProtectionListener implements Listener {
 
         // both piston and invaded blocks are in the same plot - time to check subplots
 
-        Subplot blockSubplot = blockPlot.getSubplotAt(targetLoc);
+        Subplot blockSubplot = blockPlot.getSubplotAt(targetLoc).orElse(null);
         if (blockSubplot == null) {
             return;
         }
@@ -187,7 +187,7 @@ public final class PlotProtectionListener implements Listener {
         }
 
         Plot plot = worldManager.getPlotAt(location);
-        Subplot subplot = plot.getSubplotAt(location);
+        Subplot subplot = plot.getSubplotAt(location).orElse(null);
         if (subplot == null) {
             return new ProtectionCheck<>(null, true);
         }
@@ -223,7 +223,7 @@ public final class PlotProtectionListener implements Listener {
         Location pistonLoc = pistonBlock.getLocation();
 
         Plot pistonPlot = worldManager.getPlotAt(pistonLoc);
-        Subplot pistonSubplot = pistonPlot.getSubplotAt(pistonLoc);
+        Subplot pistonSubplot = pistonPlot.getSubplotAt(pistonLoc).orElse(null);
 
         // prevent pulling blocks out of plots
         for (Block moved : event.getBlocks()) {
@@ -243,7 +243,7 @@ public final class PlotProtectionListener implements Listener {
         List<Block> blocks = event.getBlocks();
 
         Plot pistonPlot = worldManager.getPlotAt(pistonLoc);
-        Subplot pistonSubplot = pistonPlot.getSubplotAt(pistonLoc);
+        Subplot pistonSubplot = pistonPlot.getSubplotAt(pistonLoc).orElse(null);
 
         // no blocks moving, check if push into (sub)plot from outside to prevent breaking flimsy blocks (e.g torches)
         if (blocks.isEmpty()) {
@@ -282,7 +282,7 @@ public final class PlotProtectionListener implements Listener {
         Dispenser dispenser = new Dispenser(Material.DISPENSER, dispenserBlock.getData());
 
         Plot sourcePlot = worldManager.getPlotAt(dispenserLoc);
-        Subplot sourceSubplot = sourcePlot.getSubplotAt(dispenserLoc);
+        Subplot sourceSubplot = sourcePlot.getSubplotAt(dispenserLoc).orElse(null);
 
         Block targetBlock = dispenserBlock.getRelative(dispenser.getFacing());
 
@@ -296,7 +296,7 @@ public final class PlotProtectionListener implements Listener {
         Location sourceLoc = sourceBlock.getLocation();
 
         Plot sourcePlot = worldManager.getPlotAt(sourceLoc);
-        Subplot sourceSubplot = sourcePlot.getSubplotAt(sourceLoc);
+        Subplot sourceSubplot = sourcePlot.getSubplotAt(sourceLoc).orElse(null);
 
         Block targetBlock = event.getToBlock();
 

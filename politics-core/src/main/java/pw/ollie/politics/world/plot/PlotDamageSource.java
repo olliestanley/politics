@@ -23,6 +23,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -58,29 +59,23 @@ public class PlotDamageSource {
     }
 
     /**
-     * Gets the unique id of the {@link Player} represented by this PlotDamageSource object, or null if this object does
+     * Gets the unique id of the {@link Player} represented by this PlotDamageSource object, empty if this object does
      * not represent a Player.
      *
-     * @return the unique id of the relevant Player, or {@code null} if there is no relevant Player
+     * @return the unique id of the relevant Player, or empty if there is no relevant Player
      */
-    public UUID getPlayerId() {
-        if (!isPlayer()) {
-            return null;
-        }
-        return getPlayer().getUniqueId();
+    public Optional<UUID> getPlayerId() {
+        return entity instanceof Player ? Optional.of(entity.getUniqueId()) : Optional.empty();
     }
 
     /**
-     * Gets the {@link Player} represented by this PlotDamageSource object, or null if this object does not represent a
+     * Gets the {@link Player} represented by this PlotDamageSource object, or empty if this object does not represent a
      * Player.
      *
-     * @return the relevant Player, or {@code null} if there is no relevant Player
+     * @return the relevant Player, or empty if there is no relevant Player
      */
-    public Player getPlayer() {
-        if (!isPlayer()) {
-            return null;
-        }
-        return (Player) entity;
+    public Optional<Player> getPlayer() {
+        return entity instanceof Player ? Optional.of((Player) entity) : Optional.empty();
     }
 
     /**
@@ -93,13 +88,13 @@ public class PlotDamageSource {
     }
 
     /**
-     * Gets the {@link Entity} represented by this PlotDamageSource object, or null if this object does not represent a
+     * Gets the {@link Entity} represented by this PlotDamageSource object, or empty if this object does not represent a
      * Entity.
      *
-     * @return the relevant Entity, or {@code null} if there is no relevant Entity
+     * @return the relevant Entity, or empty if there is no relevant Entity
      */
-    public Entity getEntity() {
-        return entity;
+    public Optional<Entity> getEntity() {
+        return Optional.ofNullable(entity);
     }
 
     /**
@@ -108,17 +103,17 @@ public class PlotDamageSource {
      * @return whether the source of damage is an Entity
      */
     public boolean isEntity() {
-        return getEntity() != null;
+        return getEntity().isPresent();
     }
 
     /**
-     * Gets the {@link Block} represented by this PlotDamageSource object, or null if this object does not represent a
+     * Gets the {@link Block} represented by this PlotDamageSource object, or empty if this object does not represent a
      * Block.
      *
-     * @return the relevant Block, or {@code null} if there is no relevant Block
+     * @return the relevant Block, or empty if there is no relevant Block
      */
-    public Block getBlock() {
-        return block;
+    public Optional<Block> getBlock() {
+        return Optional.ofNullable(block);
     }
 
     /**
@@ -127,6 +122,6 @@ public class PlotDamageSource {
      * @return whether the source of damage is an Block
      */
     public boolean isBlock() {
-        return getBlock() != null;
+        return getBlock().isPresent();
     }
 }

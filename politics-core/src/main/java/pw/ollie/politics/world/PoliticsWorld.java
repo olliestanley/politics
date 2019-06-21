@@ -37,6 +37,7 @@ import org.bson.types.BasicBSONList;
 import org.bukkit.World;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -118,7 +119,7 @@ public final class PoliticsWorld implements Storable {
      * @param level the GroupLevel of the universe to get
      * @return the universe of the given level for this world
      */
-    public Universe getUniverse(GroupLevel level) {
+    public Optional<Universe> getUniverse(GroupLevel level) {
         return Politics.getUniverseManager().getUniverse(this, level);
     }
 

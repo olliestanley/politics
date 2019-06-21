@@ -45,7 +45,7 @@ public class PlotOwnerChangeEvent extends PlotEvent implements Cancellable {
     }
 
     public Group getGroup() {
-        return Politics.getGroupById(group);
+        return Politics.getGroupById(group).orElse(null);
     }
 
     public boolean isAdd() {

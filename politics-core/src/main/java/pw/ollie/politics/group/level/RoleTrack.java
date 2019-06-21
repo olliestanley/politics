@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,20 +50,20 @@ public class RoleTrack implements Iterable<Role> {
         return id;
     }
 
-    public Role getPreviousRole(Role role) {
+    public Optional<Role> getPreviousRole(Role role) {
         int index = roles.indexOf(role);
         if (index < 0 || index >= roles.size()) {
-            return null;
+            return Optional.empty();
         }
-        return roles.get(index - 1);
+        return Optional.of(roles.get(index - 1));
     }
 
-    public Role getNextRole(Role role) {
+    public Optional<Role> getNextRole(Role role) {
         int index = roles.indexOf(role);
         if (index < 0 || index + 2 > roles.size()) {
-            return null;
+            return Optional.empty();
         }
-        return roles.get(index + 1);
+        return Optional.of(roles.get(index + 1));
     }
 
     @Override

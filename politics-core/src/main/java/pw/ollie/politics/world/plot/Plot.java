@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -225,17 +226,17 @@ public final class Plot implements Storable, ProtectedRegionCuboid {
      * Gets the {@link Subplot} within this Plot with the given id.
      * <p>
      * Note that Subplot ids are unique within a Plot but multiple Subplots in different Plots may have the same id. If
-     * there is no Subplot with the given id inside this Plot, null is returned.
+     * there is no Subplot with the given id inside this Plot, am empty Optional is returned.
      *
      * @param id the id of the Subplot to get
-     * @return the Subplot with the given id, or {@code null} if there isn't one with that id
+     * @return the Subplot with the given id, or empty if there isn't one with that id
      */
-    public Subplot getSubplot(int id) {
+    public Optional<Subplot> getSubplot(int id) {
         if (!world.getConfig().hasSubplots()) {
-            return null;
+            return Optional.empty();
         }
 
-        return subplots.get(id);
+        return Optional.ofNullable(subplots.get(id));
     }
 
     /**
@@ -244,17 +245,12 @@ public final class Plot implements Storable, ProtectedRegionCuboid {
      * @param location the Location to get the Subplot at
      * @return the relevant Subplot, or {@code null} if there isn't one at the Location
      */
-    public Subplot getSubplotAt(Location location) {
+    public Optional<Subplot> getSubplotAt(Location location) {
         if (!world.getConfig().hasSubplots()) {
-            return null;
+            return Optional.empty();
         }
 
-        for (Subplot subplot : subplots.valueCollection()) {
-            if (subplot.contains(location)) {
-                return subplot;
-            }
-        }
-        return null;
+        return streamSubplots().filter(subplot -> subplot.contains(location)).findAny();
     }
 
     /**
@@ -263,7 +259,7 @@ public final class Plot implements Storable, ProtectedRegionCuboid {
      * @param position the Position to get the Subplot at
      * @return the relevant Subplot, or {@code null} if there isn't one at the Position
      */
-    public Subplot getSubplotAt(Position position) {
+    public Optional<Subplot> getSubplotAt(Position position) {
         return getSubplotAt(position.toLocation());
     }
 
@@ -355,7 +351,7 @@ public final class Plot implements Storable, ProtectedRegionCuboid {
         if (owner == -1) {
             return Optional.empty();
         }
-        return Optional.ofNullable(Politics.getUniverseManager().getGroupById(owner));
+        return Politics.getUniverseManager().getGroupById(owner);
     }
 
     /**
@@ -363,8 +359,8 @@ public final class Plot implements Storable, ProtectedRegionCuboid {
      *
      * @return the group id of this Plot's owner, or -1 if there is no owner
      */
-    public int getOwnerId() {
-        return owner;
+    public OptionalInt getOwnerId() {
+        return owner == -1 ? OptionalInt.empty() : OptionalInt.of(owner);
     }
 
     /**
@@ -402,8 +398,8 @@ public final class Plot implements Storable, ProtectedRegionCuboid {
      * @return whether the owner of the Plot was successfully changed
      */
     public boolean setOwner(int id) {
-        Group group = Politics.getGroupById(id);
-        if (group == null) {
+        Optional<Group> group = Politics.getGroupById(id);
+        if (!group.isPresent()) {
             return false;
         }
 

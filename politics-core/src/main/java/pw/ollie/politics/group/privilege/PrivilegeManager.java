@@ -43,10 +43,6 @@ public final class PrivilegeManager {
         loadDefaultPrivileges();
     }
 
-    public PoliticsPlugin getPlugin() {
-        return plugin;
-    }
-
     private void loadDefaultPrivileges() {
         registerPrivileges(Privileges.Group.ALL);
         registerPrivileges(Privileges.Plot.ALL);
@@ -77,5 +73,9 @@ public final class PrivilegeManager {
 
     public Privilege getPrivilege(String name) {
         return privileges.get(name.toUpperCase().replaceAll(" ", "_"));
+    }
+
+    public PoliticsPlugin getPlugin() {
+        return plugin;
     }
 }
