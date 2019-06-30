@@ -22,7 +22,7 @@ package pw.ollie.politics.command.subplot;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.command.CommandException;
 import pw.ollie.politics.command.args.Arguments;
-import pw.ollie.politics.util.visualise.Visualisation;
+import pw.ollie.politics.visualise.Visualisation;
 import pw.ollie.politics.world.WorldConfig;
 import pw.ollie.politics.world.plot.Subplot;
 

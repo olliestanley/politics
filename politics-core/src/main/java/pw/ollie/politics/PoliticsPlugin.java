@@ -30,7 +30,7 @@ import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.message.Messenger;
 import pw.ollie.politics.util.message.Notifier;
-import pw.ollie.politics.util.visualise.Visualiser;
+import pw.ollie.politics.visualise.Visualiser;
 import pw.ollie.politics.world.WorldManager;
 
 import com.google.mu.util.stream.BiStream;

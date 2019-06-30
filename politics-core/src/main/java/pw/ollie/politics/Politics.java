@@ -30,7 +30,7 @@ import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.message.ColourScheme;
 import pw.ollie.politics.util.message.Messenger;
 import pw.ollie.politics.util.message.Notifier;
-import pw.ollie.politics.util.visualise.Visualiser;
+import pw.ollie.politics.visualise.Visualiser;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldManager;
 
