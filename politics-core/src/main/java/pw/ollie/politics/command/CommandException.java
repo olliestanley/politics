@@ -19,10 +19,27 @@
  */
 package pw.ollie.politics.command;
 
+import gnu.trove.map.hash.THashMap;
+
+import com.google.mu.util.stream.BiStream;
+
+import java.util.Map;
+
 public class CommandException extends Exception {
     private static final long serialVersionUID = -5692868272498195396L;
 
-    public CommandException(String s) {
-        super(s);
+    private Map<String, String> errorMessageVars;
+
+    public CommandException(String key) {
+        this(key, new THashMap<>());
+    }
+
+    public CommandException(String key, Map<String, String> errorMessageVars) {
+        super(key);
+        this.errorMessageVars = errorMessageVars;
+    }
+
+    public BiStream<String, String> streamErrorMessageVars() {
+        return BiStream.from(errorMessageVars);
     }
 }

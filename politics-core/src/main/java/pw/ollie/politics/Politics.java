@@ -28,7 +28,7 @@ import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
 import pw.ollie.politics.util.message.ColourScheme;
-import pw.ollie.politics.util.message.Messages;
+import pw.ollie.politics.util.message.Messenger;
 import pw.ollie.politics.util.message.Notifier;
 import pw.ollie.politics.util.visualise.Visualiser;
 import pw.ollie.politics.world.PoliticsWorld;
@@ -40,6 +40,7 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -88,20 +89,24 @@ public final class Politics {
     }
 
     /**
-     * Gets the {@link Messages} instance which is used for handling configurable messages in Politics.
+     * Gets the {@link Messenger} instance which is used for handling configurable messages in Politics.
      *
-     * @return the plugin Messages instance
+     * @return the plugin Messenger instance
      */
-    public static Messages getMessageConfig() {
-        return Politics.getPlugin().getMessageConfig();
+    public static Messenger getMessenger() {
+        return Politics.getPlugin().getMessenger();
     }
 
     public static void sendConfiguredMessage(CommandSender recipient, String key) {
-        Politics.getMessageConfig().sendConfiguredMessage(recipient, key);
+        Politics.getMessenger().sendConfiguredMessage(recipient, key);
     }
 
     public static void sendConfiguredMessage(CommandSender recipient, String key, BiStream<String, String> vars) {
-        Politics.getMessageConfig().sendConfiguredMessage(recipient, key, vars);
+        Politics.getMessenger().sendConfiguredMessage(recipient, key, vars);
+    }
+
+    public static void sendConfiguredMessage(CommandSender recipient, String key, Map<String, String> vars) {
+        Politics.getMessenger().sendConfiguredMessage(recipient, key, vars);
     }
 
     /**

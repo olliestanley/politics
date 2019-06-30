@@ -42,34 +42,25 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
-public final class Messages {
-    // todo docs
-    public static final class PoliticsKeys {
-        public static final String ACTIVITY_SELECTION_FIRST_POINT_SET = "Activity.Selection.First-Point-Set";
-        // todo add keys
-
-        private PoliticsKeys() {
-            throw new UnsupportedOperationException();
-        }
-    }
+public final class Messenger {
 
     private final Map<String, String> messages;
     private final Function<String, String> transformer;
 
     private Configuration source;
 
-    public Messages(Configuration source) {
+    public Messenger(Configuration source) {
         this.messages = new THashMap<>();
 
         this.transformer = value -> {
-            value = ChatColor.translateAlternateColorCodes('&', value);
             value = Politics.getColourScheme().transform('&', value);
+            value = ChatColor.translateAlternateColorCodes('&', value);
             return value;
         };
 
         this.source = source;
 
-        for (String missingKey : this.loadValues(PoliticsKeys.class)) {
+        for (String missingKey : loadValues(MessageKeys.class)) {
             Politics.getLogger().log(Level.WARNING, "No configured message found for message key '" + missingKey + "'. Default value will be used.");
         }
     }
@@ -79,7 +70,11 @@ public final class Messages {
     }
 
     public void sendConfiguredMessage(CommandSender recipient, String key, BiStream<String, String> vars) {
-        get(key).ifPresent(msg -> send(recipient, new MutableString(msg).transform(transformer).replace(vars)));
+        send(recipient, new MutableString(transformer.apply(get(key))).replace(vars.mapKeys(k -> "%" + k + "%")));
+    }
+
+    public void sendConfiguredMessage(CommandSender recipient, String key, Map<String, String> vars) {
+        sendConfiguredMessage(recipient, key, BiStream.from(vars));
     }
 
     public void setMessage(String key, String value) {
@@ -99,8 +94,8 @@ public final class Messages {
         defaultMessages.put(key, def);
     }
 
-    private Optional<String> get(String key) {
-        return Optional.ofNullable(messages.getOrDefault(key, defaultMessages.get(key)));
+    private String get(String key) {
+        return messages.computeIfAbsent(key, k -> defaultMessages.getOrDefault(k, k));
     }
 
     private void send(CommandSender recipient, MutableString message) {
@@ -115,14 +110,22 @@ public final class Messages {
     }
 
     private Optional<String> getSourceValue(String key) {
-        String raw = key == null ? null : source.getString(key, null);
-        return raw == null ? Optional.empty() : Optional.of(raw);
+        return Optional.ofNullable(key == null ? null : source.getString(key, null));
     }
 
     private static final Map<String, String> defaultMessages = new THashMap<>();
 
     static {
-        setDefault(PoliticsKeys.ACTIVITY_SELECTION_FIRST_POINT_SET, "First point set. Please left click a block to select second point.");
+        setDefault(MessageKeys.ACTIVITY_SELECTION_FIRST_POINT_SET, "&normalFirst point set. Please left click a block to select second point.");
+
+        setDefault(MessageKeys.COMMAND_SPECIFY_PLAYER, "&errorYou must specify a player for that.");
+        setDefault(MessageKeys.COMMAND_NO_PERMISSION, "&errorYou don't have permission to do that.");
+        setDefault(MessageKeys.COMMAND_PLAYER_OFFLINE, "&errorThat player is not online.");
+
+        setDefault(MessageKeys.COMMAND_GROUP_ADD_PLAYER_HAS_GROUP, "&errorThat player is already part of a %level%.");
+        setDefault(MessageKeys.COMMAND_GROUP_ADD_NO_IMMEDIATE_MEMBERS, "&errorYou cannot add to a %level% other than through a sub-organisation.");
+        setDefault(MessageKeys.COMMAND_GROUP_ADD_DISALLOWED, "&errorYou may not add that player to that %level%.");
+        setDefault(MessageKeys.COMMAND_GROUP_ADD_SUCCESS, "&normalAdded the player to the %level% with role &highlight%role% &normal.");
         // todo more defaults
     }
 

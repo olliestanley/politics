@@ -22,7 +22,7 @@ package pw.ollie.politics.activity;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.activity.activities.CuboidSelectionActivity;
 import pw.ollie.politics.util.math.Position;
-import pw.ollie.politics.util.message.Messages.PoliticsKeys;
+import pw.ollie.politics.util.message.MessageKeys;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -67,7 +67,7 @@ final class ActivityUpdateListener implements Listener {
 
         CuboidSelectionActivity selectionActivity = (CuboidSelectionActivity) activity.get();
         if (!selectionActivity.isFirstPointSet()) {
-            plugin.sendConfiguredMessage(player, PoliticsKeys.ACTIVITY_SELECTION_FIRST_POINT_SET);
+            plugin.sendConfiguredMessage(player, MessageKeys.ACTIVITY_SELECTION_FIRST_POINT_SET);
             selectionActivity.setFirstPoint(position);
             return;
         }

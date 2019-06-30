@@ -22,7 +22,6 @@ package pw.ollie.politics.util;
 import com.google.mu.util.stream.BiStream;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 /**
  * Wrapper around a {@link String} which provides functionality equivalent to that of a mutable String, for usage in
@@ -52,10 +51,6 @@ public final class MutableString {
     public MutableString replace(BiStream<? extends CharSequence, ? extends CharSequence> targetReplacementStream) {
         targetReplacementStream.forEach(this::replace);
         return this;
-    }
-
-    public MutableString transform(Function<String, String> transformer) {
-        return set(transformer.apply(value));
     }
 
     @Override

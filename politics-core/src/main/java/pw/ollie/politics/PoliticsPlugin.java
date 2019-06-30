@@ -28,7 +28,7 @@ import pw.ollie.politics.economy.vault.PoliticsEconomyVault;
 import pw.ollie.politics.group.GroupManager;
 import pw.ollie.politics.group.privilege.PrivilegeManager;
 import pw.ollie.politics.universe.UniverseManager;
-import pw.ollie.politics.util.message.Messages;
+import pw.ollie.politics.util.message.Messenger;
 import pw.ollie.politics.util.message.Notifier;
 import pw.ollie.politics.util.visualise.Visualiser;
 import pw.ollie.politics.world.WorldManager;
@@ -43,6 +43,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 
 import java.io.File;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -59,7 +60,7 @@ public final class PoliticsPlugin extends JavaPlugin {
 
     private PoliticsConfig config;
 
-    private Messages messages;
+    private Messenger messenger;
     private Notifier notifier;
     private PrivilegeManager privilegeManager;
     private WorldManager worldManager;
@@ -86,7 +87,7 @@ public final class PoliticsPlugin extends JavaPlugin {
         this.config = new PoliticsConfig(this);
         this.config.loadConfig();
 
-        this.messages = new Messages(YamlConfiguration.loadConfiguration(new File(this.fileSystem.getBaseDir(), "messages.yml")));
+        this.messenger = new Messenger(YamlConfiguration.loadConfiguration(new File(this.fileSystem.getBaseDir(), "messages.yml")));
 
         this.notifier = new Notifier(this);
 
@@ -164,20 +165,24 @@ public final class PoliticsPlugin extends JavaPlugin {
     }
 
     /**
-     * Gets the {@link Messages} instance which is used for handling configurable messages in Politics.
+     * Gets the {@link Messenger} instance which is used for handling configurable messages in Politics.
      *
-     * @return the plugin Messages instance
+     * @return the plugin Messenger instance
      */
-    public Messages getMessageConfig() {
-        return messages;
+    public Messenger getMessenger() {
+        return messenger;
     }
 
     public void sendConfiguredMessage(CommandSender recipient, String key) {
-        messages.sendConfiguredMessage(recipient, key);
+        messenger.sendConfiguredMessage(recipient, key);
     }
 
     public void sendConfiguredMessage(CommandSender recipient, String key, BiStream<String, String> vars) {
-        messages.sendConfiguredMessage(recipient, key, vars);
+        messenger.sendConfiguredMessage(recipient, key, vars);
+    }
+
+    public void sendConfiguredMessage(CommandSender recipient, String key, Map<String, String> vars) {
+        messenger.sendConfiguredMessage(recipient, key, vars);
     }
 
     /**

@@ -81,7 +81,7 @@ public abstract class PoliticsBaseCommand extends BukkitCommand {
             try {
                 subcommand.runCommand(plugin, sender, args.subArgs(1, args.length(false)));
             } catch (CommandException e) {
-                MessageBuilder.beginError().append(e.getMessage()).send(sender);
+                plugin.sendConfiguredMessage(sender, e.getMessage(), e.streamErrorMessageVars());
             }
         } else {
             Optional<PoliticsSubcommand> closestMatch = PoliticsCommandHelper.getClosestMatch(subcommands, arg1);
