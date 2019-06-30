@@ -34,8 +34,11 @@ import pw.ollie.politics.util.visualise.Visualiser;
 import pw.ollie.politics.world.PoliticsWorld;
 import pw.ollie.politics.world.WorldManager;
 
+import com.google.mu.util.stream.BiStream;
+
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -93,14 +96,12 @@ public final class Politics {
         return Politics.getPlugin().getMessageConfig();
     }
 
-    /**
-     * Gets the configured message for the given key, or the default if none has been configured.
-     *
-     * @param key the key to get the configured message for
-     * @return configured message associated with given key
-     */
-    public static String getConfiguredMessage(String key) {
-        return Politics.getMessageConfig().getMessage(key);
+    public static void sendConfiguredMessage(CommandSender recipient, String key) {
+        Politics.getMessageConfig().sendConfiguredMessage(recipient, key);
+    }
+
+    public static void sendConfiguredMessage(CommandSender recipient, String key, BiStream<String, String> vars) {
+        Politics.getMessageConfig().sendConfiguredMessage(recipient, key, vars);
     }
 
     /**

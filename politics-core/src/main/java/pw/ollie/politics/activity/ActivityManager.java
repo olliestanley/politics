@@ -25,6 +25,8 @@ import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.event.PoliticsEventFactory;
 import pw.ollie.politics.event.activity.ActivityBeginEvent;
 
+import com.google.mu.util.stream.BiStream;
+
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -44,6 +46,10 @@ public final class ActivityManager {
         this.activities = new THashMap<>();
 
         plugin.getServer().getPluginManager().registerEvents(new ActivityUpdateListener(plugin), plugin);
+    }
+
+    public BiStream<Player, PoliticsActivity> streamActivities() {
+        return BiStream.from(activities).mapKeys(plugin.getServer()::getPlayer);
     }
 
     public Optional<PoliticsActivity> getActivity(UUID playerId) {

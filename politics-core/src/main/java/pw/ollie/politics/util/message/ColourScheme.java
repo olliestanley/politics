@@ -80,4 +80,11 @@ public final class ColourScheme {
     public ChatColor getPrefix() {
         return prefix;
     }
+
+    public String transform(char prefix, String message) {
+        return message.replace(prefix + "normal", normal.toString())
+                .replace(prefix + "highlight", highlight.toString())
+                .replace(prefix + "error", error.toString())
+                .replace(prefix + "prefix", this.prefix.toString());
+    }
 }

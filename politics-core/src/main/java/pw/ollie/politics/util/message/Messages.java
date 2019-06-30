@@ -22,23 +22,30 @@ package pw.ollie.politics.util.message;
 import gnu.trove.map.hash.THashMap;
 
 import pw.ollie.politics.Politics;
+import pw.ollie.politics.util.MutableString;
+import pw.ollie.politics.util.reflect.ReflectionUtil;
 import pw.ollie.politics.util.stream.CollectorUtil;
 
+import com.google.mu.util.stream.BiStream;
+
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
 public final class Messages {
     // todo docs
     public static final class PoliticsKeys {
+        public static final String ACTIVITY_SELECTION_FIRST_POINT_SET = "Activity.Selection.First-Point-Set";
         // todo add keys
 
         private PoliticsKeys() {
@@ -47,11 +54,19 @@ public final class Messages {
     }
 
     private final Map<String, String> messages;
+    private final Function<String, String> transformer;
 
     private Configuration source;
 
     public Messages(Configuration source) {
         this.messages = new THashMap<>();
+
+        this.transformer = value -> {
+            value = ChatColor.translateAlternateColorCodes('&', value);
+            value = Politics.getColourScheme().transform('&', value);
+            return value;
+        };
+
         this.source = source;
 
         for (String missingKey : this.loadValues(PoliticsKeys.class)) {
@@ -59,8 +74,12 @@ public final class Messages {
         }
     }
 
-    public String getMessage(String key) {
-        return messages.getOrDefault(key, defaultMessages.get(key));
+    public void sendConfiguredMessage(CommandSender recipient, String key) {
+        sendConfiguredMessage(recipient, key, BiStream.empty());
+    }
+
+    public void sendConfiguredMessage(CommandSender recipient, String key, BiStream<String, String> vars) {
+        get(key).ifPresent(msg -> send(recipient, new MutableString(msg).transform(transformer).replace(vars)));
     }
 
     public void setMessage(String key, String value) {
@@ -72,13 +91,20 @@ public final class Messages {
     }
 
     public Set<String> loadValues(Class<?>... keyHolders) {
-        return Arrays.stream(keyHolders)
-                .map(Class::getDeclaredFields)
-                .flatMap(Arrays::stream)
-                .filter(isKeyHolder)
-                .map(this::loadValue)
-                .filter(Objects::nonNull)
-                .collect(CollectorUtil.toTHashSet());
+        return Arrays.stream(keyHolders).map(Class::getDeclaredFields).flatMap(Arrays::stream)
+                .filter(isKeyHolder).map(this::loadValue).filter(Objects::nonNull).collect(CollectorUtil.toTHashSet());
+    }
+
+    public static void setDefault(String key, String def) {
+        defaultMessages.put(key, def);
+    }
+
+    private Optional<String> get(String key) {
+        return Optional.ofNullable(messages.getOrDefault(key, defaultMessages.get(key)));
+    }
+
+    private void send(CommandSender recipient, MutableString message) {
+        recipient.sendMessage(message.get());
     }
 
     private String loadValue(Field field) {
@@ -95,22 +121,14 @@ public final class Messages {
 
     private static final Map<String, String> defaultMessages = new THashMap<>();
 
-    public static void setDefault(String key, String def) {
-        defaultMessages.put(key, def);
-    }
-
     static {
-        // todo add default messages
+        setDefault(PoliticsKeys.ACTIVITY_SELECTION_FIRST_POINT_SET, "First point set. Please left click a block to select second point.");
+        // todo more defaults
     }
 
-    private static Predicate<Integer> isConst = mod -> Modifier.isFinal(mod) && Modifier.isStatic(mod) && Modifier.isPublic(mod);
-    private static Predicate<Field> isKeyHolder = field -> isConst.test(field.getModifiers()) && String.class.isAssignableFrom(field.getType());
+    private static Predicate<Field> isKeyHolder = field -> ReflectionUtil.isConstant(field) && String.class.isAssignableFrom(field.getType());
 
     private static String getStringFieldValue(Field field) {
-        try {
-            return (String) field.get(null);
-        } catch (IllegalAccessException e) {
-            return null;
-        }
+        return (String) ReflectionUtil.getAccessibleFieldValue(field, null);
     }
 }

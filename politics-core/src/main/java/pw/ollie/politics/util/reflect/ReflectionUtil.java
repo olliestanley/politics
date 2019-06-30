@@ -17,29 +17,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pw.ollie.politics.util.stream;
+package pw.ollie.politics.util.reflect;
 
-import com.google.mu.util.stream.BiStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.function.Predicate;
 
-import java.util.Collection;
-import java.util.function.Function;
-import java.util.stream.Stream;
+public final class ReflectionUtil {
+    private static Predicate<Integer> constantTest = mod -> Modifier.isFinal(mod) && Modifier.isStatic(mod) && Modifier.isPublic(mod);
 
-public final class StreamUtil {
-    // todo doc
-    public static <K, V> BiStream<K, V> biStream(Stream<K> stream, Function<? super K, ? extends V> toValue) {
-        return BiStream.from(stream, key -> key, toValue);
+    public static Object getAccessibleFieldValue(Field field, Object instance) {
+        try {
+            return field.get(instance);
+        } catch (IllegalAccessException e) {
+            return null;
+        }
     }
 
-    public static <K, V> BiStream<K, V> biStream(Collection<K> collection, Function<? super K, ? extends V> toValue) {
-        return BiStream.from(collection.stream(), key -> key, toValue);
+    public static boolean isConstant(Field field) {
+        return constantTest.test(field.getModifiers());
     }
 
-    public static <T, K, V> T collect(BiStream<K, V> biStream, BiCollector<T, K, V> collector) {
-        return collector.collect(biStream);
-    }
-
-    private StreamUtil() {
+    private ReflectionUtil() {
         throw new UnsupportedOperationException();
     }
 }

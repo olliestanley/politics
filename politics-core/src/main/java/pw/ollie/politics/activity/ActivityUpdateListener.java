@@ -22,7 +22,7 @@ package pw.ollie.politics.activity;
 import pw.ollie.politics.PoliticsPlugin;
 import pw.ollie.politics.activity.activities.CuboidSelectionActivity;
 import pw.ollie.politics.util.math.Position;
-import pw.ollie.politics.util.message.MessageBuilder;
+import pw.ollie.politics.util.message.Messages.PoliticsKeys;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -67,7 +67,7 @@ final class ActivityUpdateListener implements Listener {
 
         CuboidSelectionActivity selectionActivity = (CuboidSelectionActivity) activity.get();
         if (!selectionActivity.isFirstPointSet()) {
-            MessageBuilder.begin("First point set. Please left click a block to select second point.").send(player);
+            plugin.sendConfiguredMessage(player, PoliticsKeys.ACTIVITY_SELECTION_FIRST_POINT_SET);
             selectionActivity.setFirstPoint(position);
             return;
         }
