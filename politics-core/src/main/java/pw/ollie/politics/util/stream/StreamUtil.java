@@ -35,10 +35,6 @@ public final class StreamUtil {
         return BiStream.from(collection.stream(), key -> key, toValue);
     }
 
-    public static <T, K, V> T collect(BiStream<K, V> biStream, BiCollector<T, K, V> collector) {
-        return collector.collect(biStream);
-    }
-
     private StreamUtil() {
         throw new UnsupportedOperationException();
     }

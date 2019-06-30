@@ -19,15 +19,17 @@
  */
 package pw.ollie.politics.util.stream;
 
-import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.hash.THashSet;
 
 import pw.ollie.politics.util.collect.PagedArrayList;
 
+import com.google.mu.util.stream.BiCollector;
+
 import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
 
+import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -49,20 +51,28 @@ public final class CollectorUtil {
         return Collectors.toCollection(BasicBSONList::new);
     }
 
-    public static <V> BiCollector<BasicBSONObject, String, V> toBSONObject() {
-        return stream -> {
-            BasicBSONObject result = new BasicBSONObject();
-            stream.forEach(result::put);
-            return result;
-        };
+    public static BiCollector<String, Object, BasicBSONObject> toBasicBSONObject() {
+        return CollectorUtil::toBasicBSONObject;
     }
 
-    public static <V> BiCollector<TIntObjectMap<V>, Integer, V> toTIntObjectMap() {
-        return stream -> {
-            TIntObjectMap<V> result = new TIntObjectHashMap<>();
-            stream.forEach(result::put);
+    public static <V> BiCollector<Integer, V, TIntObjectHashMap<V>> toIntObjectHashMap() {
+        return CollectorUtil::toIntObjectHashMap;
+    }
+
+    private static <T, V> Collector<T, V, TIntObjectHashMap<V>> toIntObjectHashMap(Function<? super T, Integer> toInt, Function<? super T, ? extends V> toVal) {
+        return Collectors.collectingAndThen(Collectors.toMap(toInt, toVal), m -> {
+            TIntObjectHashMap<V> result = new TIntObjectHashMap<>();
+            result.putAll(m);
             return result;
-        };
+        });
+    }
+
+    private static <T> Collector<T, Object, BasicBSONObject> toBasicBSONObject(Function<? super T, String> toKey, Function<? super T, ?> toVal) {
+        return Collectors.collectingAndThen(Collectors.toMap(toKey, toVal), m -> {
+            BasicBSONObject result = new BasicBSONObject();
+            result.putAll(m);
+            return result;
+        });
     }
 
     private CollectorUtil() {

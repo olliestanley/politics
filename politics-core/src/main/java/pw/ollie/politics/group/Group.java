@@ -364,8 +364,8 @@ public final class Group implements Comparable<Group>, Storable {
         }
 
         object.put("properties", propertiesBson);
-        object.put("players", StreamUtil.collect(BiStream.from(players).mapKeys(UUID::toString).mapValues(Role::getId),
-                CollectorUtil.toBSONObject()));
+        object.put("players", BiStream.from(players).mapKeys(UUID::toString).mapValues(Role::getId)
+                .collect(CollectorUtil.toBasicBSONObject()));
         return object;
     }
 
@@ -391,9 +391,8 @@ public final class Group implements Comparable<Group>, Storable {
             throw new IllegalStateException("WTF you screwed up the properties! CORRUPT!");
         }
 
-        TIntObjectMap<Object> properties = StreamUtil.collect(BiStream.from((BasicBSONObject) propertiesObj)
-                        .mapKeys(key -> Integer.valueOf(key, 16)),
-                CollectorUtil.toTIntObjectMap());
+        TIntObjectMap<Object> properties = BiStream.from((BasicBSONObject) propertiesObj)
+                .mapKeys(key -> Integer.valueOf(key, 16)).collect(CollectorUtil.toIntObjectHashMap());
 
         // Players
         Object playersObj = bobject.get("players");
