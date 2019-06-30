@@ -60,11 +60,6 @@
         <url>http://github.com/dzineit/${project.name}/issues</url>
     </issueManagement>
 
-    <ciManagement>
-        <system>jenkins-ci</system>
-        <url>https://ci.codemc.org/job/dzineit/job/politics/</url>
-    </ciManagement>
-
     <!-- Repository locations -->
     <repositories>
         <repository>
