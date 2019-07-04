@@ -59,10 +59,6 @@ public class GroupDescriptionCommand extends GroupSubcommand {
             group.setProperty(GroupProperty.DESCRIPTION, descriptionBuilder.toString());
             MessageUtil.message(sender, "The description of your " + level.getName() + " was set successfully!");
         } else {
-            if (sender instanceof Player && !group.isMember(((Player) sender).getUniqueId())) {
-                throw new CommandException("You must be a member of the group to view its MOTD.");
-            }
-
             MessageUtil.message(sender, group.getStringProperty(GroupProperty.DESCRIPTION, "The " + level.getName() + " has no description."));
         }
     }

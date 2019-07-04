@@ -34,10 +34,14 @@ import pw.ollie.politics.world.plot.Plot;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
+import java.util.Optional;
+
 public class GroupClaimCommand extends GroupSubcommand {
     GroupClaimCommand(GroupLevel groupLevel) {
         super("claim", groupLevel);
     }
+
+    // todo convert to configurable
 
     /**
      * {@inheritDoc}
@@ -59,26 +63,18 @@ public class GroupClaimCommand extends GroupSubcommand {
             throw new CommandException("There are no plots in that world.");
         }
 
-        if (group.getUniverse().streamWorlds().noneMatch(Politics.getWorld(location.getWorld())::equals)) {
-            throw new CommandException("You can't create a plot for that group in this world.");
+        if (!group.getUniverse().containsWorld(Politics.getWorld(location.getWorld()))) {
+            throw new CommandException("You can't create a plot for that " + level.getName() + " in this world.");
         }
 
         Plot plot = plugin.getWorldManager().getPlotAtChunk(location.getChunk());
-        if (plot.isOwner(group)) {
-            throw new CommandException(group.getName() + " already owns this plot.");
-        }
-
-        Group owner = plot.getOwner().orElse(null);
-        if (owner != null) {
-            throw new CommandException("Sorry, this plot is already owned by " + owner.getName() + ".");
+        Optional<Group> owner = plot.getOwner();
+        if (owner.isPresent()) {
+            throw new CommandException("Sorry, this plot is already owned by " + owner.get().getName() + ".");
         }
 
         GroupPlotClaimEvent claimEvent = PoliticsEventFactory.callGroupPlotClaimEvent(group, plot, sender);
-        if (claimEvent.isCancelled()) {
-            throw new CommandException("You cannot claim this plot!");
-        }
-
-        if (!plot.setOwner(group)) {
+        if (claimEvent.isCancelled() || !plot.setOwner(group)) {
             throw new CommandException("You cannot claim this plot!");
         }
 

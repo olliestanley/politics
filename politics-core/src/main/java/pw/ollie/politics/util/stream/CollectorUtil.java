@@ -60,25 +60,24 @@ public final class CollectorUtil {
         return CollectorUtil::toIntObjectHashMap;
     }
 
-    private static <T, V> Collector<T, ?, TIntObjectHashMap<V>> toIntObjectHashMap(Function<? super T, Integer> toKey,
-                                                                                   Function<? super T, ? extends V> toVal) {
-        return Collector.of(TIntObjectHashMap::new,
-                (m, input) -> m.put(toKey.apply(input), toVal.apply(input)),
-                (m1, m2) -> {
-                    TIntObjectHashMap<V> result = new TIntObjectHashMap<>(m1.size() + m2.size());
-                    result.putAll(m1);
-                    result.putAll(m2);
-                    return result;
-                }, Characteristics.IDENTITY_FINISH);
+    private static <T, V> Collector<T, ?, TIntObjectHashMap<V>> toIntObjectHashMap(Function<? super T, Integer> toKey, Function<? super T, ? extends V> toVal) {
+        return Collector.of(TIntObjectHashMap::new, (m, input) -> m.put(toKey.apply(input), toVal.apply(input)),
+                CollectorUtil::combine, Characteristics.IDENTITY_FINISH);
     }
 
-    private static <T> Collector<T, Object, BasicBSONObject> toBasicBSONObject(Function<? super T, String> toKey,
-                                                                               Function<? super T, ?> toVal) {
+    private static <T> Collector<T, Object, BasicBSONObject> toBasicBSONObject(Function<? super T, String> toKey, Function<? super T, ?> toVal) {
         return Collectors.collectingAndThen(Collectors.toMap(toKey, toVal), m -> {
             BasicBSONObject result = new BasicBSONObject();
             result.putAll(m);
             return result;
         });
+    }
+
+    private static <V> TIntObjectHashMap<V> combine(TIntObjectHashMap<V> map1, TIntObjectHashMap<V> map2) {
+        TIntObjectHashMap<V> result = new TIntObjectHashMap<>(map1.size() + map2.size());
+        result.putAll(map1);
+        result.putAll(map2);
+        return result;
     }
 
     private CollectorUtil() {

@@ -56,10 +56,6 @@ public class GroupExitCommand extends GroupSubcommand {
             group.setProperty(GroupProperty.EXIT_MESSAGE, messageBuilder.toString());
             MessageUtil.message(sender, "The exit message of your " + level.getName() + " was set successfully!");
         } else {
-            if (sender instanceof Player && !group.isMember(((Player) sender).getUniqueId())) {
-                throw new CommandException("You must be a member of the group to view its exit message.");
-            }
-
             MessageUtil.message(sender, group.getStringProperty(GroupProperty.EXIT_MESSAGE, "The " + level.getName() + " has no exit message."));
         }
     }

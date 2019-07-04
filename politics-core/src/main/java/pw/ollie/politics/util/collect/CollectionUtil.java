@@ -22,6 +22,8 @@ package pw.ollie.politics.util.collect;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Utilities relating to {@link Collection}s used by Politics.

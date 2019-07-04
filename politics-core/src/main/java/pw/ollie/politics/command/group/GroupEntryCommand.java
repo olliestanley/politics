@@ -56,10 +56,6 @@ public class GroupEntryCommand extends GroupSubcommand {
             group.setProperty(GroupProperty.ENTRY_MESSAGE, messageBuilder.toString());
             MessageUtil.message(sender, "The entry message of your " + level.getName() + " was set successfully!");
         } else {
-            if (sender instanceof Player && !group.isMember(((Player) sender).getUniqueId())) {
-                throw new CommandException("You must be a member of the group to view its entry message.");
-            }
-
             MessageUtil.message(sender, group.getStringProperty(GroupProperty.ENTRY_MESSAGE, "The " + level.getName() + " has no entry message."));
         }
     }

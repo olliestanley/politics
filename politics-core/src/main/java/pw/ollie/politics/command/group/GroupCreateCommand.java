@@ -41,6 +41,8 @@ public class GroupCreateCommand extends GroupSubcommand {
         super("create", groupLevel);
     }
 
+    // todo convert to configurable
+
     /**
      * {@inheritDoc}
      */

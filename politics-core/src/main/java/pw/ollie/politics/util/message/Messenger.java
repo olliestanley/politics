@@ -90,6 +90,8 @@ public final class Messenger {
                 .filter(isKeyHolder).map(this::loadValue).filter(Objects::nonNull).collect(CollectorUtil.toTHashSet());
     }
 
+    public static final Predicate<Field> isKeyHolder = field -> ReflectionUtil.isConstant(field) && String.class.isAssignableFrom(field.getType());
+
     public static void setDefault(String key, String def) {
         defaultMessages.put(key, def);
     }
@@ -128,8 +130,6 @@ public final class Messenger {
         setDefault(MessageKeys.COMMAND_GROUP_ADD_SUCCESS, "&normalAdded the player to the %level% with role &highlight%role% &normal.");
         // todo more defaults
     }
-
-    private static Predicate<Field> isKeyHolder = field -> ReflectionUtil.isConstant(field) && String.class.isAssignableFrom(field.getType());
 
     private static String getStringFieldValue(Field field) {
         return (String) ReflectionUtil.getAccessibleFieldValue(field, null);
