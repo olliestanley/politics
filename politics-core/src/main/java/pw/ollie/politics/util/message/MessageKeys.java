@@ -31,6 +31,7 @@ public final class MessageKeys {
     public static final String COMMAND_PAGE_NOT_EXISTS = "Command-Responses.Page-Not-Exists";
     public static final String COMMAND_BAD_PLAYER = "Command-Responses.Invalid-Player";
     public static final String COMMAND_NO_PLOTS = "Command-Responses.No-Plots";
+    public static final String COMMAND_NO_PLOT_AT_LOCATION = "Command-Responses.No-Plot-There";
 
     public static final String COMMAND_GROUP_NO_PRIVILEGE = "Command-Responses.Group.No-Privilege";
     public static final String COMMAND_GROUP_BAD_WORLD = "Command-Responses.Group.Invalid-World";
@@ -38,6 +39,7 @@ public final class MessageKeys {
     public static final String COMMAND_GROUP_TRACK_BAD_TRACK = "Command-Responses.Group.Invalid-Track";
     public static final String COMMAND_GROUP_BAD_GROUP = "Command-Responses.Group.Invalid-Group";
     public static final String COMMAND_GROUP_NOT_MEMBER = "Command-Responses.Group.Not-Member";
+    public static final String COMMAND_GROUP_BAD_ROLE = "Command-Responses.Group.Bad-Role";
     // end
 
     public static final String COMMAND_GROUP_ADD_PLAYER_HAS_GROUP = "Command-Responses.Group.Add.Already-Has-Group";
@@ -121,6 +123,15 @@ public final class MessageKeys {
     public static final String COMMAND_GROUP_PROMOTE_NO_ROLE = "Command-Responses.Group.Promote.No-Role";
     public static final String COMMAND_GROUP_PROMOTE_DISALLOWED = "Command-Responses.Group.Promote.Disallowed";
     public static final String COMMAND_GROUP_PROMOTE_SUCCESS = "Command-Responses.Group.Promote.Success";
+
+    public static final String COMMAND_GROUP_SETROLE_SPECIFY_ARGS = "Command-Responses.Group.Setrole.Specify-Args";
+    public static final String COMMAND_GROUP_SETROLE_ROLE_TOO_HIGH = "Command-Responses.Group.Setrole.Role-Too-High";
+    public static final String COMMAND_GROUP_SETROLE_DISALLOWED = "Command-Responses.Group.Setrole.Disallowed";
+    public static final String COMMAND_GROUP_SETROLE_SUCCESS = "Command-Responses.Group.Setrole.Success";
+
+    public static final String COMMAND_GROUP_SETSPAWN_SPECIFY_PLAYER = "Command-Responses.Group.Setspawn.Specify-Player";
+    public static final String COMMAND_GROUP_SETSPAWN_PLOT_NOT_OWNED = "Command-Responses.Group.Setspawn.Plot-Not-Owned";
+    public static final String COMMAND_GROUP_SETSPAWN_SUCCESS = "Command-Responses.Group.Setspawn.Success";
     // end
 
     // todo add keys
