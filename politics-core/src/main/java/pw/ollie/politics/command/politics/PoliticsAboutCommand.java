@@ -39,6 +39,7 @@ public class PoliticsAboutCommand extends PoliticsSubcommand {
      */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+        // todo configurable block message
         MessageBuilder.begin().highlight("Politics ").normal(plugin.getDescription().getVersion())
                 .newLine().normal("Politics is a self-serve community management system.")
                 .newLine().normal("Type ").highlight("/politics help").normal(" for general command help.")

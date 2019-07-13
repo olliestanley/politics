@@ -40,6 +40,7 @@ public class PoliticsHelpCommand extends PoliticsSubcommand {
      */
     @Override
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) {
+        // todo configurable block message
         MessageBuilder message = MessageUtil.startBlockMessage("Politics - Command Overview");
         message.newLine().append("Universe Commands: ").highlight("/universe help");
         message.newLine().append("Plot Commands: ").highlight("/plot help");

@@ -51,6 +51,7 @@ public class PlotInfoCommand extends PoliticsSubcommand {
         Location base = plot.getBasePoint();
         String coordinates = base.getBlockX() + ", " + base.getBlockY() + ", " + base.getBlockZ();
 
+        // todo convert to configurable block message
         MessageBuilder message = MessageUtil.startBlockMessage("Plot Info");
         message.newLine().normal("Owner: ").highlight(owner == null ? "None" : owner.getName());
         message.newLine().normal("Subplots: ").highlight(Integer.toString(numSubplots));

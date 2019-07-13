@@ -45,6 +45,7 @@ public class GroupInfoCommand extends GroupSubcommand {
     public void runCommand(PoliticsPlugin plugin, CommandSender sender, Arguments args) throws CommandException {
         Group group = findGroup(sender, args);
 
+        // todo convert to configurable block message
         MessageBuilder message = MessageUtil.startBlockMessage(level.getName() + " Info");
         message.newLine().normal("Name: ").highlight(group.getName());
         message.newLine().normal("Tag: ").highlight(group.getTag());

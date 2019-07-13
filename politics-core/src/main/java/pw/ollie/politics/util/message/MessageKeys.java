@@ -32,6 +32,7 @@ public final class MessageKeys {
     public static final String COMMAND_BAD_PLAYER = "Command-Responses.Invalid-Player";
     public static final String COMMAND_NO_PLOTS = "Command-Responses.No-Plots";
     public static final String COMMAND_NO_PLOT_AT_LOCATION = "Command-Responses.No-Plot-There";
+    public static final String COMMAND_ACTIVITY_BUSY = "Command-Responses.Complete-Current-Activity";
 
     public static final String COMMAND_GROUP_NO_PRIVILEGE = "Command-Responses.Group.No-Privilege";
     public static final String COMMAND_GROUP_BAD_WORLD = "Command-Responses.Group.Invalid-World";
@@ -132,6 +133,29 @@ public final class MessageKeys {
     public static final String COMMAND_GROUP_SETSPAWN_SPECIFY_PLAYER = "Command-Responses.Group.Setspawn.Specify-Player";
     public static final String COMMAND_GROUP_SETSPAWN_PLOT_NOT_OWNED = "Command-Responses.Group.Setspawn.Plot-Not-Owned";
     public static final String COMMAND_GROUP_SETSPAWN_SUCCESS = "Command-Responses.Group.Setspawn.Success";
+
+    public static final String COMMAND_GROUP_SPAWN_NO_SPAWN = "Command-Responses.Group.Spawn.No-Spawn";
+    public static final String COMMAND_GROUP_SPAWN_SPECIFY_PLAYER = "Command-Responses.Group.Spawn.Specify-Player";
+    public static final String COMMAND_GROUP_SPAWN_DISALLOWED = "Command-Responses.Group.Spawn.Disallowed";
+    public static final String COMMAND_GROUP_SPAWN_SUCCESS_SELF = "Command-Responses.Group.Spawn.Success-Self";
+    public static final String COMMAND_GROUP_SPAWN_SUCCESS_OTHER = "Command-Responses.Group.Spawn.Success-Other";
+
+    public static final String COMMAND_GROUP_TOGGLE_SPECIFY_TOGGLE = "Command-Responses.Group.Toggle.Specify-Toggle";
+    public static final String COMMAND_GROUP_TOGGLE_BAD_TOGGLE = "Command-Responses.Group.Toggle.Invalid-Toggle";
+    public static final String COMMAND_GROUP_TOGGLE_CANNOT_TOGGLE = "Command-Responses.Group.Toggle.Cannot-Toggle";
+    public static final String COMMAND_GROUP_TOGGLE_SUCCESS = "Command-Responses.Group.Toggle.Success";
+
+    public static final String COMMAND_GROUP_UNCLAIM_NOT_OWNER = "Command-Responses.Group.Unclaim.Not-Owner";
+    public static final String COMMAND_GROUP_UNCLAIM_DISALLOWED = "Command-Responses.Group.Unclaim.Disallowed";
+    public static final String COMMAND_GROUP_UNCLAIM_SUCCESS = "Command-Responses.Group.Unclaim.Success";
+
+    public static final String COMMAND_GROUP_UNINVITE_SPECIFY_PLAYER = "Command-Responses.Group.Uninvite.Specify-Player";
+    public static final String COMMAND_GROUP_UNINVITE_NOT_INVITED = "Command-Responses.Group.Uninvite.Not-Invited";
+    public static final String COMMAND_GROUP_UNINVITE_SUCCESS = "Command-Responses.Group.Uninvite.Success";
+
+    public static final String COMMAND_POLITICS_CANCEL_NO_ACTIVITY = "Command-Responses.Politics.Cancel.No-Activity";
+
+    public static final String COMMAND_POLITICS_CONFIRM_NO_ACTIVITY = "Command-Responses.Politics.Confirm.No-Activity";
     // end
 
     // todo add keys
