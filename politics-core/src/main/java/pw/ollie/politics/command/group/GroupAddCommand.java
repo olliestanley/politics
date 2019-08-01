@@ -35,7 +35,7 @@ import pw.ollie.politics.util.message.MessageKeys;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static pw.ollie.politics.util.message.VarMapFiller.*;
+import static pw.ollie.politics.util.collect.MapBuilder.*;
 
 // note: admin command for force adding a player to a group
 public class GroupAddCommand extends GroupSubcommand {
@@ -79,7 +79,7 @@ public class GroupAddCommand extends GroupSubcommand {
 
         group.setRole(player.getUniqueId(), level.getInitial());
         plugin.sendConfiguredMessage(sender, MessageKeys.COMMAND_GROUP_ADD_SUCCESS,
-                filler().vars("level", "role").vals(level.getName(), level.getInitial().getName()).fill(new THashMap<>(2)));
+                builder().keys("level", "role").vals(level.getName(), level.getInitial().getName()).build(new THashMap<>(2)));
         MessageBuilder.begin("Added the player to the ").append(level.getName()).append(" with role ")
                 .highlight(level.getInitial().getName()).normal(".").send(sender);
     }

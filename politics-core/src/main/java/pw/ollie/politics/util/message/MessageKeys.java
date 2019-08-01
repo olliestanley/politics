@@ -32,6 +32,7 @@ public final class MessageKeys {
     public static final String COMMAND_BAD_PLAYER = "Command-Responses.Invalid-Player";
     public static final String COMMAND_NO_PLOTS = "Command-Responses.No-Plots";
     public static final String COMMAND_NO_PLOT_AT_LOCATION = "Command-Responses.No-Plot-There";
+    public static final String COMMAND_NO_SUBPLOTS = "Command-Responses.No-Subplots";
     public static final String COMMAND_ACTIVITY_BUSY = "Command-Responses.Complete-Current-Activity";
 
     public static final String COMMAND_GROUP_NO_PRIVILEGE = "Command-Responses.Group.No-Privilege";
