@@ -1,0 +1,40 @@
+acf-core:
+  permission_denied: §4You don't have permission to do that.
+  permission_denied_parameter: §4You don't have permission to do that.
+  error_generic_logged: §4An error occurred.
+  unknown_command: §4Unrecognised command.
+  invalid_syntax: §4Invalid syntax. §f{command} {syntax}
+  error_prefix: '§4Error:§f {message}'
+  error_performing_command: §4There was an error performing this command.
+  info_message: {message}
+  please_specify_one_of: §4You must specify one of {valid}.
+  must_be_a_number: §4{num} must be a number.
+  must_be_a_min_length: §4Must be at least {min} characters long.
+  must_be_a_max_length: §4Must be at most {max} characters long.
+  please_specify_at_most: §4The value must not be greater than {max}.
+  please_specify_at_least: §4The value must not be smaller than {min}.
+  not_allowed_on_console: §4That command cannot be executed from console.
+  could_not_find_player: §4There is no player by the name '{search}'.
+  no_command_matched_search: §4There is no command matching '{search}'.
+  help_page_information: §fPage {page} of {totalpages}.
+  help_no_results: §4No more results.
+  help_header: §fShowing help for {commandprefix}{command}.
+  help_format: '{command} {parameters} - {description}'
+  help_detailed_header: Showing detailed help for {commandprefix}{command}.
+  help_detailed_command_format: '{command} {parameters} - {description}'
+  help_detailed_parameter_format: '{name}: {description}'
+  help_search_header: §fSearch results for {commandprefix}{command} {search}
+
+acf-minecraft:
+  invalid_world: §4That world does not exist.
+  you_must_be_holding_item: §4You must be holding an item in your main hand.
+  player_is_vanished_confirm: '§4{vanished} is vanished. To confirm your action, add :confirm to the end of their name.'
+  username_too_short: §4Username must be at least three characters.
+  is_not_a_valid_name: §4{name} is not a valid username.
+  multiple_players_match: §4Multiple players matched {search} ({all}). Please be more specific.
+  no_player_found_server: §4No player matching {search} is online.
+  no_player_found_offline: §4No player matching {search} could be found.
+  no_player_found: §4No player matching {search} could be found.
+  location_please_specify_world: §4Please specify a world name in the location.
+  location_please_specify_xyz: §4Please specify x, y and z coordinates in the location.
+  location_console_not_relative: §4Console cannot use relative coordinates for locations.

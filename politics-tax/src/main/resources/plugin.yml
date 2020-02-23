@@ -1,5 +1,0 @@
-name: PoliticsTax
-version: ${project.version}
-main: pw.ollie.politicstax.PoliticsTaxPlugin
-
-depend: [Politics]

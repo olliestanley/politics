@@ -288,7 +288,7 @@
     </dependencies>
     <properties>
         <apiVersion>dev-SNAPSHOT</apiVersion>
-        <mainClass>pw.ollie.politics.PoliticsPlugin</mainClass>
+        <mainClass>PoliticsPlugin</mainClass>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.7.1</powermock.version>
         <buildNumber>0</buildNumber>

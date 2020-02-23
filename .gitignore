@@ -1,6 +1,6 @@
-politics-core/target/
-politics-war/target/
-politics-tax/target/
+politics-bukkit/target/*
+
+dependency-reduced-pom.xml
 
 .idea/
 *.iml

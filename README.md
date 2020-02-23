@@ -7,9 +7,7 @@ A detailed guide to configuring and using Politics on your Bukkit server will be
 
 Documentation (Wiki): https://github.com/dzineit/politics/wiki
 
-JavaDocs (politics-core): https://dzineit.github.io/politics/apidocs/politics-core
-
-JavaDocs (politics-war): https://dzineit.github.io/politics/apidocs/politics-war
+JavaDocs (politics-bukkit): N/A
 
 ### Downloads
 

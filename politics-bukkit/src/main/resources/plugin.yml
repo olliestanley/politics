@@ -1,0 +1,5 @@
+name: Politics
+version: ${project.version}
+main: net.oliverstanley.politics.PoliticsPlugin
+
+softdepend: [Vault]

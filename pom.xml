@@ -3,15 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>pw.ollie</groupId>
+    <groupId>net.oliverstanley</groupId>
     <artifactId>politics</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <inceptionYear>2019</inceptionYear>
     <modules>
-        <module>politics-core</module>
-        <module>politics-war</module>
-        <module>politics-tax</module>
+        <module>politics-bukkit</module>
     </modules>
 
     <!-- Description -->
@@ -63,32 +61,34 @@
     <!-- Repository locations -->
     <repositories>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
             <id>snapshot-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-        <repository>
-            <id>vault-repo</id>
-            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
-        </repository>
     </repositories>
 
     <!-- Dependencies -->
     <dependencies>
-        <!-- Bukkit API -->
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.14-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>2.8.0</version>
+            <scope>compile</scope>
         </dependency>
-
+        <dependency>
+            <groupId>net.sf.trove4j</groupId>
+            <artifactId>trove4j</artifactId>
+            <version>3.0.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.mug</groupId>
+            <artifactId>mug</artifactId>
+            <version>3.0</version>
+            <scope>compile</scope>
+        </dependency>
         <!-- Test -->
         <!-- JUnit - Unit Testing -->
         <dependency>
@@ -97,12 +97,6 @@
             <version>4.12</version>
             <scope>test</scope>
             <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>com.github.seeseemelk</groupId>
-            <artifactId>MockBukkit-v1.13-spigot</artifactId>
-            <version>0.1.1</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.carrotsearch</groupId>
@@ -188,6 +182,7 @@
                     <compilerArguments>
                         <O>-Xlint:all</O>
                         <O>-Xlint:-path</O>
+                        <O>-parameters</O>
                     </compilerArguments>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
